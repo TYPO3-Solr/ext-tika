@@ -33,6 +33,7 @@ Can either use a stand alone tika executable or tika integrated in a Solr server
 	'version' => '0.0.0',
 	'constraints' => array(
 		'depends' => array(
+			'typo3' => '4.3.0-'
 		),
 		'conflicts' => array(
 		),
