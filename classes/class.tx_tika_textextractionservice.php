@@ -32,43 +32,55 @@
  */
 class tx_tika_TextExtractionService extends t3lib_svbase {
 
-	public $prefixId = 'tx_tika_TextExtractionService';
+	public $prefixId      = 'tx_tika_TextExtractionService';
 	public $scriptRelPath = 'classes/class.tx_tika_textextractionservice.php';
-	public $extKey = 'tika';
+	public $extKey        = 'tika';
+
+	protected $tikaConfiguration;
 
 	/**
-	 * [Put your description here]
+	 * Checks whether the service is available, reads the extension's
+	 * configuration.
 	 *
-	 * @return	[type]		...
+	 * @return	boolean	True if the service is available, false otherwise.
 	 */
 	public function init() {
 		$available = parent::init();
 
-		// Here you can initialize your class.
+		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-		// The class have to do a strict check if the service is available.
-		// The needed external programs are already checked in the parent class.
-
-		// If there's no reason for initialization you can remove this function.
+		if (!is_file($this->tikaConfiguration['pathTika'])) {
+			throw new Exception(
+				'Invalid path or filename for tika application jar.',
+				1266864929
+			);
+		}
 
 		return $available;
 	}
 
 	/**
-	 * [Put your description here]
-	 * performs the service processing
+	 * Extracs text from a file using Apache Tika
 	 *
 	 * @param	string		Content which should be processed.
 	 * @param	string		Content type
 	 * @param	array		Configuration array
 	 * @return	boolean
 	 */
-	public function process($content = '', $type = '', $conf = array()) {
+	public function process($content = '', $type = '', $configuration = array()) {
+		$this->out = '';
 
-		// Depending on the service type there's not a process() function.
-		// You have to implement the API of that service type.
+		if ($inputFile = $this->getInputFile()) {
+			$tikaCommand = t3lib_exec::getCommand('java')
+				. ' -jar ' . escapeshellarg($this->tikaConfiguration['pathTika'])
+				. ' -t ' . escapeshellarg($inputFile);
 
-		return false;
+			$this->out = shell_exec($tikaCommand);
+		} else {
+			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
+		}
+
+		return $this->getLastError();
 	}
 }
 

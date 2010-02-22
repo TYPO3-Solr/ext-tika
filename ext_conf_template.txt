@@ -4,8 +4,5 @@
   $Id$
 */
 
-  # cat=basic//10; type=string; label= Java: The absolute path to your Java executable
-pathJava =
-
-  # cat=basic//20; type=string; label= Tika: The absolute path to your Apache Tika App jar file
+  # cat=basic//10; type=string; label= Tika: The absolute path to your Apache Tika App jar file
 pathTika =
