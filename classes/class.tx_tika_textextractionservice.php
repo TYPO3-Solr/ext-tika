@@ -72,6 +72,7 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 
 		if ($inputFile = $this->getInputFile()) {
 			$tikaCommand = t3lib_exec::getCommand('java')
+				. ' -Dfile.encoding=UTF8'
 				. ' -jar ' . escapeshellarg($this->tikaConfiguration['pathTika'])
 				. ' -t ' . escapeshellarg($inputFile);
 
