@@ -223,6 +223,22 @@ class tx_tika_TextExtractionService_testcase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
+	public function extractsTextFromSxwFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'sxw');
+
+			// OOo 1
+		$service->setInputFile($this->testDocumentsPath . 'testSXW.sxw', 'sxw');
+		$service->process();
+
+		$expectedText  = 'Apache Tika Test Document';
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
+	}
+
+	/**
+	 * @test
+	 */
 	public function extractsTextFromTxtFile() {
 		$service = t3lib_div::makeInstanceService('textExtract', 'txt');
 		$service->setInputFile($this->testDocumentsPath . 'testTXT.txt', 'txt');
