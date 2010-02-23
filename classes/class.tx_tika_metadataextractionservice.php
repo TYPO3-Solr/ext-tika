@@ -126,13 +126,23 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 
 				// clean / add values under alternative names
 			switch($key) {
+				case 'height':
+					$height = $value;
+					unset($metaDataCleaned[$key]);
+					$metaDataCleaned['Height'] = $height;
+					break;
+				case 'width':
+					$width = $value;
+					unset($metaDataCleaned[$key]);
+					$metaDataCleaned['Width'] = $width;
+					break;
 				case 'Image Height':
 					list($height) = explode(' ', $value, 2);
-					$metaDataCleaned['Height']  = $height;
+					$metaDataCleaned['Height'] = $height;
 					break;
 				case 'Image Width':
 					list($width) = explode(' ', $value, 2);
-					$metaDataCleaned['Width']   = $width;
+					$metaDataCleaned['Width']  = $width;
 					break;
 			}
 		}
