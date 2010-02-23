@@ -36,39 +36,182 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	public $scriptRelPath = 'classes/class.tx_tika_metadataextractionservice.php';
 	public $extKey        = 'tika';
 
+	protected $tikaConfiguration;
+
 	/**
-	 * [Put your description here]
+	 * Checks whether the service is available, reads the extension's
+	 * configuration.
 	 *
-	 * @return	[type]		...
+	 * @return	boolean	True if the service is available, false otherwise.
 	 */
 	public function init() {
 		$available = parent::init();
 
-		// Here you can initialize your class.
+		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-		// The class have to do a strict check if the service is available.
-		// The needed external programs are already checked in the parent class.
-
-		// If there's no reason for initialization you can remove this function.
+		if (!is_file($this->tikaConfiguration['pathTika'])) {
+			throw new Exception(
+				'Invalid path or filename for tika application jar.',
+				1266864929
+			);
+		}
 
 		return $available;
 	}
 
 	/**
-	 * [Put your description here]
-	 * performs the service processing
+	 * Extracs meta data from a file using Apache Tika
 	 *
 	 * @param	string		Content which should be processed.
 	 * @param	string		Content type
 	 * @param	array		Configuration array
 	 * @return	boolean
 	 */
-	public function process($content = '', $type = '', $conf = array()) {
+	public function process($content = '', $type = '', $configuration = array()) {
+		$this->out =  array();
+		$this->out['fields'] = array();
 
-		// Depending on the service type there's not a process() function.
-		// You have to implement the API of that service type.
+		if ($inputFile = $this->getInputFile()) {
+			$tikaCommand = t3lib_exec::getCommand('java')
+				. ' -Dfile.encoding=UTF8'
+				. ' -jar ' . escapeshellarg($this->tikaConfiguration['pathTika'])
+				. ' -m ' . escapeshellarg($inputFile);
 
-		return false;
+			$shellOutput = array();
+			exec($tikaCommand, $shellOutput);
+
+			$metaData  = $this->shellOutputToArray($shellOutput);
+			$cleanData = $this->normalizeMetaData($metaData);
+			$this->out = $cleanData;
+
+				// DAMnizing ;)
+			$this->damnizeData($cleanData);
+		} else {
+			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
+		}
+
+		return $this->getLastError();
+	}
+
+	/**
+	 * Takes shell output from exec() and turns it into an array of key => value
+	 * meta data pairs.
+	 *
+	 * @param	array	An array containing shell output from exec() with one line per entry
+	 * @return	array	Array of key => value pairs of meta data
+	 */
+	protected function shellOutputToArray(array $shellOutputMetaData) {
+		$metaData = array();
+
+		foreach ($shellOutputMetaData as $line) {
+			list($dataName, $dataValue) = explode(':', $line, 2);
+			$metaData[$dataName] = trim($dataValue);
+		}
+
+		return $metaData;
+	}
+
+	/**
+	 * Normalizes the names / keys of the meta data found.
+	 *
+	 * @param	array	An array of raw meta data from a file
+	 * @return	array	An array with cleaned meta data keys
+	 */
+	protected function normalizeMetaData(array $metaData) {
+		$metaDataCleaned = array();
+
+		foreach ($metaData as $key => $value) {
+				// still add the value
+			$metaDataCleaned[$key] = $value;
+
+				// clean / add values under alternative names
+			switch($key) {
+				case 'Image Height':
+					list($height) = explode(' ', $value, 2);
+					$metaDataCleaned['Height']  = $height;
+					break;
+				case 'Image Width':
+					list($width) = explode(' ', $value, 2);
+					$metaDataCleaned['Width']   = $width;
+					break;
+			}
+		}
+
+		return $metaDataCleaned;
+	}
+
+	/**
+	 * Turns the data into a format / fills the fields so that DAM can use the
+	 * meta data.
+	 *
+	 * @param	array	An array with cleaned meta data keys
+	 */
+	protected function damnizeData(array $metaData) {
+		$this->out['fields']['meta'] = $metaData;
+
+		$this->out['fields']['vpixels']      = $metaData['Width'];
+		$this->out['fields']['hpixels']      = $metaData['Height'];
+
+			// JPEG comment
+		if (!empty($metaData['Jpeg Comment'])) {
+			$this->out['fields']['description'] = $metaData['Jpeg Comment'];
+		}
+
+			// EXIF data
+		if (isset($metaData['Color Space']) && $metaData['Color Space'] != 'Undefined') {
+			$this->out['fields']['color_space'] = $metaData['Color Space'];
+		}
+
+		$copyright = array();
+		if(!empty($metaData['Copyright'])) {
+			$copyright[] = $metaData['Copyright'];
+		}
+		if(!empty($metaData['Copyright Notice'])) {
+			$copyright[] = $metaData['Copyright Notice'];
+		}
+		if (!empty($copyright)) {
+			$this->out['fields']['copyright'] = implode("\n", $copyright);
+		}
+
+		if(isset($metaData['Date/Time Original'])) {
+			$this->out['fields']['date_cr'] = $this->exifDateToTimestamp($metaData['Date/Time Original']);
+		}
+
+		if (isset($metaData['Keywords'])) {
+			$this->out['fields']['keywords'] = implode(', ', explode(' ', $metaData['Keywords']));
+		}
+
+		if(isset($metaData['Model'])) {
+			$this->out['fields']['file_creator'] = $metaData['Model'];
+		}
+
+		if (isset($metaData['X Resolution'])) {
+			list($horizontalResolution) = explode(' ', $metaData['X Resolution'], 2);
+			$this->out['fields']['hres'] = $horizontalResolution;
+		}
+		if (isset($metaData['Y Resolution'])) {
+			list($verticalResolution) = explode(' ', $metaData['Y Resolution'], 2);
+			$this->out['fields']['vres'] = $verticalResolution;
+		}
+	}
+
+	/**
+	 * Converts a date string into timestamp
+	 * exiftags: 2002:09:07 15:29:52
+	 *
+	 * @param	string	An exif date string
+	 * @return	integer	Unix timestamp
+	 */
+	protected function exifDateToTimestamp($date)	{
+		if (is_string($date)) {
+			if (($timestamp = strtotime($date)) === -1) {
+				$date = 0;
+			} else {
+				$date = $timestamp;
+			}
+		}
+
+		return $date;
 	}
 }
 

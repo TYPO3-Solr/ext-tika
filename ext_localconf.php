@@ -10,7 +10,7 @@ t3lib_extMgm::addService($_EXTKEY, 'metaExtract', 'tx_tika_metaExtract',
 		'title'       => 'Tika meta data extraction',
 		'description' => 'Uses Apache Tika to extract meta data',
 
-		'subtype'     => 'pdf',
+		'subtype'     => 'bmp,gif,image:exif,jpg,jpeg,png,svg,tiff',
 
 		'available'   => TRUE,
 		'priority'    => 50,

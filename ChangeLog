@@ -1,7 +1,8 @@
 2010-02-23 Ingo Renner  <ingo@typo3.org>
 
 	* Fixed an UTF8 issue with the text extraction service when using local Tika
-	* Added support for OOo 1/ .sxw documents
+	* Added support for text extraction from OOo 1/ .sxw documents
+	* Added the meta data extraction service
 
 2010-02-22 Ingo Renner  <ingo@typo3.org>
 
