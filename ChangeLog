@@ -1,3 +1,7 @@
+2010-02-24 Ingo Renner  <ingo@typo3.org>
+
+	* Added the language detection service
+
 2010-02-23 Ingo Renner  <ingo@typo3.org>
 
 	* Fixed an UTF8 issue with the text extraction service when using local Tika

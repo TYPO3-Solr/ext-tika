@@ -42,29 +42,21 @@ class tx_tika_LanguageDetectionService extends t3lib_svbase {
 	protected $configuration;
 
 	/**
-	 * "Constructor"
+	 * Checks whether the service is available, reads the extension's
+	 * configuration.
 	 *
-	 * @return	boolean	TRUE if the service is available, FALSE otherwise
+	 * @return	boolean	True if the service is available, false otherwise.
 	 */
 	public function init() {
 		$available = parent::init();
 
-		$this->configuration = unserialize(
-			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']
-		);
+		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-			// checking for proper Java and Tika configuration
-		if (empty($this->configuration['pathJava']) || !is_file($this->configuration['pathJava'])) {
-			$available = FALSE;
-		}
-
-		if (empty($this->configuration['pathTika']) || !is_file($this->configuration['pathTika'])) {
-			$available = FALSE;
-		}
-
-		if (!$available) {
-			$registry = t3lib_div::makeInstance('t3lib_Registry');
-			$registry->set('tx_tika', 'availability.tika', FALSE);
+		if (!is_file($this->tikaConfiguration['pathTika'])) {
+			throw new Exception(
+				'Invalid path or filename for tika application jar.',
+				1266864929
+			);
 		}
 
 		return $available;
@@ -79,11 +71,24 @@ class tx_tika_LanguageDetectionService extends t3lib_svbase {
 	 * @return	boolean
 	 */
 	public function process($content = '', $type = '', $configuration = array()) {
+		$this->out = '';
 
-		// Depending on the service type there's not a process() function.
-		// You have to implement the API of that service type.
+		if ($content) {
+			$this->setInput($content);
+		}
 
-		return FALSE;
+		if ($inputFile = $this->getInputFile()) {
+			$tikaCommand = t3lib_exec::getCommand('java')
+				. ' -Dfile.encoding=UTF8'
+				. ' -jar ' . escapeshellarg($this->tikaConfiguration['pathTika'])
+				. ' -l ' . escapeshellarg($inputFile);
+
+			$this->out = trim(shell_exec($tikaCommand));
+		} else {
+			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
+		}
+
+		return $this->getLastError();
 	}
 }
 
