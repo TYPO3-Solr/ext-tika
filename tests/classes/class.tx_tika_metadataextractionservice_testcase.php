@@ -181,8 +181,8 @@ class tx_tika_MetaDataExtractionService_testcase extends tx_phpunit_testcase {
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_textextractionservice_testcase.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_textextractionservice_testcase.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_metadataextractionservice_testcase.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_metadataextractionservice_testcase.php']);
 }
 
 ?>
