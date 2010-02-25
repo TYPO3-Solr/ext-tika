@@ -49,7 +49,7 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-		if (!is_file($this->tikaConfiguration['pathTika'])) {
+		if (!is_file($this->tikaConfiguration['tikaPath'])) {
 			throw new Exception(
 				'Invalid path or filename for tika application jar.',
 				1266864929
@@ -74,7 +74,7 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 		if ($inputFile = $this->getInputFile()) {
 			$tikaCommand = t3lib_exec::getCommand('java')
 				. ' -Dfile.encoding=UTF8'
-				. ' -jar ' . escapeshellarg($this->tikaConfiguration['pathTika'])
+				. ' -jar ' . escapeshellarg($this->tikaConfiguration['tikaPath'])
 				. ' -m ' . escapeshellarg($inputFile);
 
 			$shellOutput = array();

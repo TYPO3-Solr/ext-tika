@@ -4,5 +4,5 @@
   $Id$
 */
 
-  # cat=basic//10; type=string; label= Tika: The absolute path to your Apache Tika App jar file (Java is detected automatically)
-pathTika =
+  # cat=basic//20; type=string; label= Tika: The absolute path to your Apache Tika App jar file (Java is detected automatically)
+tikaPath =
