@@ -36,6 +36,11 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 	public $scriptRelPath = 'classes/class.tx_tika_textextractionservice.php';
 	public $extKey        = 'tika';
 
+	/**
+	 * Holds the extension's configuration coming from the Extension Manager.
+	 *
+	 * @var	array
+	 */
 	protected $tikaConfiguration;
 
 	/**
@@ -71,18 +76,61 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 		$this->out = '';
 
 		if ($inputFile = $this->getInputFile()) {
-			$tikaCommand = t3lib_exec::getCommand('java')
-				. ' -Dfile.encoding=UTF8'
-				. ' -jar ' . escapeshellarg($this->tikaConfiguration['tikaPath'])
-				. ' -t ' . escapeshellarg($inputFile);
-
-			$this->out = shell_exec($tikaCommand);
+			if ($this->tikaConfiguration['extractor'] == 'solr') {
+				$this->out = $this->extractUsingSolr($inputFile);
+			} else {
+				$this->out = $this->extractUsingTika($inputFile);
+			}
 		} else {
 			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
 		}
 
 		return $this->getLastError();
 	}
+
+	/**
+	 * Extracts content from a given file using a local Apache Tika jar.
+	 *
+	 * @param	string	Absolute path to the file to extract content from.
+	 * @return	string	Content extracted from the given file.
+	 */
+	protected function extractUsingTika($file) {
+		$tikaCommand = t3lib_exec::getCommand('java')
+			. ' -Dfile.encoding=UTF8' // forces UTF8 output
+			. ' -jar ' . escapeshellarg($this->tikaConfiguration['tikaPath'])
+			. ' -t ' . escapeshellarg($file);
+
+		$shellOutput = shell_exec($tikaCommand);
+
+		return $shellOutput;
+	}
+
+	/**
+	 * Extracts content from a given file using a Solr server.
+	 *
+	 * @param	string	Absolute path to the file to extract content from.
+	 * @return	string	Content extracted from the given file.
+	 */
+	protected function extractUsingSolr($file) {
+			// FIXME move connection building to EXT:solr
+			// explicitly using "new" to bypass t3lib_div::makeInstance() or
+			// providing a Factory
+
+			// EM might define a different connection than already in use by
+			// Index Queue
+		$solr =  new tx_solr_SolrService(
+			$this->tikaConfiguration['solrHost'],
+			$this->tikaConfiguration['solrPort'],
+			$this->tikaConfiguration['solrPath']
+		);
+
+		$query = t3lib_div::makeInstance('tx_solr_ExtractingQuery', $file);
+		$query->setExtractOnly();
+		$response = $solr->extract($query);
+
+		return $response[0];
+	}
+
 }
 
 

@@ -2,7 +2,21 @@
 /*
   ### SVN id ###
   $Id$
+
+  TODO add a custom field type to select the solr server instead of providing the host, port, and path again
 */
 
-  # cat=basic//20; type=string; label= Tika: The absolute path to your Apache Tika App jar file (Java is detected automatically)
+  # cat=basic//10; type=options[Tika (local java application)=tika,Solr (remote server)=solr]; label= Extract using: Extraction will be faster if run locally using Tika.
+extractor = tika
+
+  # cat=basic//20; type=string; label= Tika Path: The absolute path to your Apache Tika App jar file (Java is detected automatically)
 tikaPath =
+
+  # cat=basic//30; type=string; label= Solr Host
+solrHost =
+
+  # cat=basic//40; type=string; label= Solr Port
+solrPort =
+
+  # cat=basic//50; type=string; label= Solr Path
+solrPath =
