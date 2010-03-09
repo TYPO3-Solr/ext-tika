@@ -1,6 +1,7 @@
 2010-03-09 Ingo Renner  <ingo@typo3.org>
 
 	* Added an option to use a Solr server for meta data extraction instead of Tika
+	* Added a test for text extraction from odf files
 
 2010-03-08 Ingo Renner  <ingo@typo3.org>
 

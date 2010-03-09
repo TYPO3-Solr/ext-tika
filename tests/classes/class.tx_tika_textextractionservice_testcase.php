@@ -142,6 +142,19 @@ class tx_tika_TextExtractionService_testcase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
+	public function extractsTextFromOdfFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'odf');
+		$service->setInputFile($this->testDocumentsPath . 'testODFwithOOo3.odt', 'odf');
+		$service->process();
+
+		$expectedText  = 'Tika is part of the Lucene project.';
+		$extractedText = $service->getOutput();
+		$this->assertContains($expectedText, $extractedText);
+	}
+
+	/**
+	 * @test
+	 */
 	public function extractsTextFromOdtFile() {
 		$service = t3lib_div::makeInstanceService('textExtract', 'odt');
 
@@ -158,7 +171,7 @@ class tx_tika_TextExtractionService_testcase extends tx_phpunit_testcase {
 		$service->setInputFile($this->testDocumentsPath . 'testOpenOffice2.odt', 'odt');
 		$service->process();
 
-		$expectedText  = 'sample Open Office document';
+		$expectedText  = 'This is a sample Open Office document';
 		$extractedText = $service->getOutput();
 
 		$this->assertContains($expectedText, $extractedText);
