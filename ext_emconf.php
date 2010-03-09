@@ -30,7 +30,7 @@ Can either use a stand alone tika executable or tika integrated in a Solr server
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '0.6.0',
+	'version' => '0.7.0',
 	'constraints' => array(
 		'depends' => array(
 			'typo3' => '4.3.0-0.0.0',
