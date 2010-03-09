@@ -36,6 +36,11 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	public $scriptRelPath = 'classes/class.tx_tika_metadataextractionservice.php';
 	public $extKey        = 'tika';
 
+	/**
+	 * Holds the extension's configuration coming from the Extension Manager.
+	 *
+	 * @var	array
+	 */
 	protected $tikaConfiguration;
 
 	/**
@@ -68,19 +73,16 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	 * @return	boolean
 	 */
 	public function process($content = '', $type = '', $configuration = array()) {
-		$this->out =  array();
+		$this->out = array();
 		$this->out['fields'] = array();
 
 		if ($inputFile = $this->getInputFile()) {
-			$tikaCommand = t3lib_exec::getCommand('java')
-				. ' -Dfile.encoding=UTF8'
-				. ' -jar ' . escapeshellarg($this->tikaConfiguration['tikaPath'])
-				. ' -m ' . escapeshellarg($inputFile);
+			if ($this->tikaConfiguration['extractor'] == 'solr') {
+				$metaData = $this->extractUsingSolr($inputFile);
+			} else {
+				$metaData = $this->extractUsingTika($inputFile);
+			}
 
-			$shellOutput = array();
-			exec($tikaCommand, $shellOutput);
-
-			$metaData  = $this->shellOutputToArray($shellOutput);
 			$cleanData = $this->normalizeMetaData($metaData);
 			$this->out = $cleanData;
 
@@ -222,6 +224,70 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 		}
 
 		return $date;
+	}
+
+	/**
+	 * Extracts meta data from a given file using a local Apache Tika jar.
+	 *
+	 * @param	string	Absolute path to the file to extract meta data from.
+	 * @return	string	Meta data extracted from the given file.
+	 */
+	protected function extractUsingTika($file) {
+		$tikaCommand = t3lib_exec::getCommand('java')
+			. ' -Dfile.encoding=UTF8'
+			. ' -jar ' . escapeshellarg($this->tikaConfiguration['tikaPath'])
+			. ' -m ' . escapeshellarg($file);
+
+		$shellOutput = array();
+		exec($tikaCommand, $shellOutput);
+		$metaData  = $this->shellOutputToArray($shellOutput);
+
+		return $metaData;
+	}
+
+	/**
+	 * Extracts meta data from a given file using a Solr server.
+	 *
+	 * @param	string	Absolute path to the file to extract meta data from.
+	 * @return	string	Meta data extracted from the given file.
+	 */
+	protected function extractUsingSolr($file) {
+			// FIXME move connection building to EXT:solr
+			// explicitly using "new" to bypass t3lib_div::makeInstance() or
+			// providing a Factory
+
+			// EM might define a different connection than already in use by
+			// Index Queue
+		$solr =  new tx_solr_SolrService(
+			$this->tikaConfiguration['solrHost'],
+			$this->tikaConfiguration['solrPort'],
+			$this->tikaConfiguration['solrPath']
+		);
+
+		$query = t3lib_div::makeInstance('tx_solr_ExtractingQuery', $file);
+		$query->setExtractOnly();
+		$response = $solr->extract($query);
+
+		$metaData = $this->solrResponseToArray($response[1]);
+
+		return $metaData;
+	}
+
+	/**
+	 * Turns the nested Solr response into the same format as produced by a
+	 * local Tika jar call
+	 *
+	 * @param	array	The part of the Solr response containing the meta data
+	 * @return	array	The cleaned meta data, matching the Tika jar call format
+	 */
+	protected function solrResponseToArray(array $metaDataResponse) {
+		$cleanedData = array();
+
+		foreach ($metaDataResponse as $dataName => $dataArray) {
+			$cleanedData[$dataName] = $dataArray[0];
+		}
+
+		return $cleanedData;
 	}
 }
 

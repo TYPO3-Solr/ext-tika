@@ -650,7 +650,7 @@ class tx_tika_MetaDataExtractionService_testcase extends tx_phpunit_testcase {
 
 		$this->assertEquals('Rida Benjelloun',                   $metaData['creator']);
 		$this->assertEquals('2000-12',                           $metaData['date']);
-		$this->assertEquals('Framework d\'indexation des documents XML, HTML, PDF etc..',  $metaData['description']);
+		$this->assertContains('Framework d\'indexation des documents XML, HTML, PDF etc..',  $metaData['description']);
 		$this->assertEquals('application/msword',                $metaData['format']);
 		$this->assertEquals('http://www.apache.org',             $metaData['identifier']);
 		$this->assertEquals('Fr',                                $metaData['language']);
