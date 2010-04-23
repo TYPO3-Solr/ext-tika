@@ -54,7 +54,7 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-		if (!is_file($this->tikaConfiguration['tikaPath'])) {
+		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file($this->tikaConfiguration['tikaPath'])) {
 			throw new Exception(
 				'Invalid path or filename for tika application jar.',
 				1266864929

@@ -1,3 +1,7 @@
+2010-04-23 Ingo Renner  <ingo@typo3.org>
+
+	* Fixed a bug where using Solr and having no path set for Tika results in an exception
+
 2010-03-09 Ingo Renner  <ingo@typo3.org>
 
 	* Increased version to 0.7.0
