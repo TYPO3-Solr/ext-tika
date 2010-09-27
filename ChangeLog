@@ -1,3 +1,7 @@
+2010-09-27 Ingo Renner  <ingo@typo3.org>
+
+	* Disabled the configuration report for now, it's not fully implemented yet
+
 2010-04-23 Ingo Renner  <ingo@typo3.org>
 
 	* Fixed a bug where using Solr and having no path set for Tika results in an exception
