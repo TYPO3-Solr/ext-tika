@@ -30,7 +30,7 @@
  * @package TYPO3
  * @subpackage tika
  */
-class tx_tika_TextExtractionService_testcase extends tx_phpunit_testcase {
+class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 
 	private $testDocumentsPath;
 	private $originalServices;
