@@ -38,6 +38,7 @@ class tx_tika_MetaDataExtractionService_testcase extends tx_phpunit_testcase {
 	public function setUp() {
 			// deactivate all other services, so that we can be sure to get a
 			// tika service when using makeInstanceService()
+
 			// backup
 		$this->originalServices = $GLOBALS['T3_SERVICES'];
 
