@@ -59,8 +59,13 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$GLOBALS['T3_SERVICES'] = $this->originalServices;
 	}
 
-	/*
+	/**
+	 * @test
+	 */
 	public function extractsMetaDataFromAiffFile() {
+
+		$this->markTestIncomplete('aiff currently not working correctly.');
+
 		$service = t3lib_div::makeInstanceService('metaExtract', 'aiff');
 		$service->setInputFile($this->testDocumentsPath . 'testAIFF.aiff', 'aiff');
 		$service->process();
@@ -74,7 +79,6 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('PCM_SIGNED', $metaData['encoding']);
 		$this->assertEquals('44100',      $metaData['samplerate']);
 	}
-	*/
 
 	/**
 	 * @test
