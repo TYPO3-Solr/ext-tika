@@ -33,6 +33,20 @@
 class tx_tika_report_TikaStatus implements tx_reports_StatusProvider {
 
 	/**
+	 * Tika extension configuration.
+	 *
+	 * @var	array
+	 */
+	protected $tikaConfiguration = array();
+
+	/**
+	 * Constructor, reads the extension configuration.
+	 */
+	public function __construct() {
+		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+	}
+
+	/**
 	 * Checks whether Tika is properly configured
 	 *
 	 * @see typo3/sysext/reports/interfaces/tx_reports_StatusProvider::getStatus()
@@ -40,19 +54,97 @@ class tx_tika_report_TikaStatus implements tx_reports_StatusProvider {
 	public function getStatus() {
 		$reports = array();
 
-		$registry = t3lib_div::makeInstance('t3lib_Registry');
-		$tikaProperlyConfigured = $registry->get('tx_tika', 'availability.tika', FALSE);
+		/* @var $status tx_reports_reports_status_Status */
+		$status = t3lib_div::makeInstance('tx_reports_reports_status_Status',
+			'Apache Tika',
+			'Configuration OK'
+		);
 
-		if (!$tikaProperlyConfigured) {
-			$reports[] = t3lib_div::makeInstance('tx_reports_reports_status_Status',
+		if (!$this->isConfigured()) {
+			$status = t3lib_div::makeInstance('tx_reports_reports_status_Status',
 				'Apache Tika',
 				'Configuration Incomplete',
-				'Please check your configuration for Apache Tika. Java, Tika or both are not configured properly yet.',
+				'<p>Please check your configuration for Apache Tika.</p><p>
+				Either use a local Tika jar binary app and make sure Java is
+				available or use a remote Solr server\'s Extracting Request
+				Handler.</p>',
 				tx_reports_reports_status_Status::ERROR
 			);
 		}
 
+		$reports[] = $status;
+
 		return $reports;
+	}
+
+	/**
+	 * Checks whether the extension is properly configured, either using a local
+	 * Tika binary or a remote Solr extraction request handler which internally
+	 * uses Tika.
+	 *
+	 * @return	boolean	TRUE if a working configuration was detected, FALSE otherwise.
+	 */
+	protected function isConfigured() {
+		$isConfigured = (
+			$this->hasCompleteLocalTikaConfiguration()
+			||
+			$this->hasCompleteRemoteSolrExtractingRequestHandlerConfiguration()
+		);
+
+		return $isConfigured;
+	}
+
+	/**
+	 * Checks whether the extension is configured to use a local Tika
+	 * application, and if so whether it's correctly configured.
+	 *
+	 * @return	boolean	TRUE if the extension is configured to use a local Tika app and if it's correctly configured, FALSE otherwise
+	 */
+	protected function hasCompleteLocalTikaConfiguration() {
+		$localConfigurationComplete = FALSE;
+
+		if ($this->tikaConfiguration['extractor'] == 'tika'
+			&& is_file($this->tikaConfiguration['tikaPath'])
+			&& t3lib_exec::checkCommand('java')) {
+
+			$localConfigurationComplete = TRUE;
+		}
+
+		return $localConfigurationComplete;
+	}
+
+	/**
+	 * Checks whether the extension is configured to use a remote Solr server
+	 * and its Extracting Request Handler. If that's the case we try to ping the
+	 * Solr server, too.
+	 *
+	 * @return	boolean	TRUE if the extension is configured to use a remote Solr server and if it's correctly configured, FALSE otherwise
+	 */
+	protected function hasCompleteRemoteSolrExtractingRequestHandlerConfiguration() {
+		$remoteConfigurationComplete = FALSE;
+
+		if ($this->tikaConfiguration['extractor'] == 'solr') {
+
+			try {
+				/* @var $solr tx_solr_SolrService */
+				$solr = t3lib_div::makeInstance('tx_solr_ConnectionManager')->getConnection(
+					$this->tikaConfiguration['solrHost'],
+					$this->tikaConfiguration['solrPort'],
+					$this->tikaConfiguration['solrPath']
+				);
+
+				$solr->ping();
+				$plugins = $solr->getPluginsInformation();
+
+				if (array_key_exists('/update/extract', $plugins->plugins->QUERYHANDLER)) {
+					$remoteConfigurationComplete = TRUE;
+				}
+			} catch (Exception $e) {
+				$remoteConfigurationComplete = FALSE;
+			}
+		}
+
+		return $remoteConfigurationComplete;
 	}
 }
 
