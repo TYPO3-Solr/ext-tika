@@ -161,8 +161,13 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	protected function damnizeData(array $metaData) {
 		$this->out['fields']['meta'] = $metaData;
 
-		$this->out['fields']['vpixels']      = $metaData['Width'];
-		$this->out['fields']['hpixels']      = $metaData['Height'];
+		if ($metaData['Width']) {
+			$this->out['fields']['vpixels'] = $metaData['Width'];
+		}
+
+		if ($metaData['Height']) {
+			$this->out['fields']['hpixels'] = $metaData['Height'];
+		}
 
 			// JPEG comment
 		if (!empty($metaData['Jpeg Comment'])) {
