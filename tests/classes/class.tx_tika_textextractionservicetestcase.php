@@ -144,7 +144,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromOdfFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'odf');
+		$service = t3lib_div::makeInstanceService('textExtract', 'odf');
 		$service->setInputFile($this->testDocumentsPath . 'testODFwithOOo3.odt', 'odf');
 		$service->process();
 
