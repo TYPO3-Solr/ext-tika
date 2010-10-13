@@ -3,6 +3,7 @@
 	* Uncommented a test for aiff file meta data extractions, marked as incomplete though, currently not working...
 	* Added a configuration check status for the reports module
 	* Fixed DAM compatibility: created vpixels and hpixels fields even for text file meta data
+	* Disabled language tests in meta data extraction services for now, seems to be brocken in Tika 0.8-trunk
 
 2010-09-27 Ingo Renner  <ingo@typo3.org>
 
