@@ -355,7 +355,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 
 		$this->assertEquals('Jukka Zitting',                   $metaData['Author']);
 #		$this->assertEquals('MIME registry use cases',         $metaData['subject']);
-		$this->assertEquals('MIME registry use cases1000001F', $metaData['title']);
+		$this->assertEquals('MIME registry use cases', $metaData['title']);
 	}
 
 	/**
