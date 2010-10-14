@@ -5,6 +5,7 @@
 	* Added a registry entry to store whether tika is available - which is the case if it is detected to be configured properly
 	* Changed required executable for the services to be determined dynamically, based on whether Tika or Solr is used for extraction
 	* Added a minimal manual, pointing to the forge wiki
+	* Changed extension status to stable
 
 2010-10-13 Ingo Renner  <ingo@typo3.org>
 
