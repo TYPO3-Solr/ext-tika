@@ -11,8 +11,7 @@ t3lib_extMgm::addService($_EXTKEY, 'metaExtract', 'tx_tika_metaExtract', array(
 
 	'subtype'     => 'au,bmp,doc,docx,epub,flv,gif,htm,html,image:exif,jpg,jpeg,mid,mp3,msg,odf,odt,pdf,png,ppt,pptx,rtf,svg,sxw,tiff,txt,wav,xls,xlsx,xml',
 
-		// TODO might need to check whether we're using Solr or Tika, and whether configuration is ok
-	'available'   => TRUE,
+	'available'   => FALSE,
 	'priority'    => 50,
 	'quality'     => 50,
 
@@ -30,8 +29,7 @@ t3lib_extMgm::addService($_EXTKEY, 'textExtract', 'tx_tika_textExtract', array(
 
 	'subtype'     => 'doc,docx,epub,htm,html,msg,odf,odt,pdf,ppt,pptx,rtf,sxw,txt,xls,xlsx,xml',
 
-		// TODO might need to check whether we're using Solr or Tika, and whether configuration is ok
-	'available'   => TRUE,
+	'available'   => FALSE,
 	'priority'    => 50,
 	'quality'     => 50,
 
@@ -49,8 +47,7 @@ t3lib_extMgm::addService($_EXTKEY, 'textLang', 'tx_tika_textLang', array(
 
 	'subtype'     => '',
 
-		// TODO might need to check whether we're using Solr or Tika, and whether configuration is ok
-	'available'   => TRUE,
+	'available'   => FALSE,
 	'priority'    => 50,
 	'quality'     => 50,
 
