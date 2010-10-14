@@ -5,6 +5,12 @@ if (!defined('TYPO3_MODE')) {
 
 $PATH_tika = t3lib_extMgm::extPath($_EXTKEY);
 
+$tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+$requiredExecutable = '';
+if ($tikaConfiguration['extractor'] == 'tika') {
+	$requiredExecutable = 'java';
+}
+
 t3lib_extMgm::addService($_EXTKEY, 'metaExtract', 'tx_tika_metaExtract', array(
 	'title'       => 'Tika meta data extraction',
 	'description' => 'Uses Apache Tika to extract meta data',
@@ -16,7 +22,7 @@ t3lib_extMgm::addService($_EXTKEY, 'metaExtract', 'tx_tika_metaExtract', array(
 	'quality'     => 50,
 
 	'os'          => '',
-	'exec'        => 'java',
+	'exec'        => $requiredExecutable,
 
 	'classFile'   => $PATH_tika . 'classes/class.tx_tika_metadataextractionservice.php',
 	'className'   => 'tx_tika_MetaDataExtractionService',
@@ -34,7 +40,7 @@ t3lib_extMgm::addService($_EXTKEY, 'textExtract', 'tx_tika_textExtract', array(
 	'quality'     => 50,
 
 	'os'          => '',
-	'exec'        => 'java',
+	'exec'        => $requiredExecutable,
 
 	'classFile'   => $PATH_tika . 'classes/class.tx_tika_textextractionservice.php',
 	'className'   => 'tx_tika_TextExtractionService',
@@ -52,7 +58,7 @@ t3lib_extMgm::addService($_EXTKEY, 'textLang', 'tx_tika_textLang', array(
 	'quality'     => 50,
 
 	'os'          => '',
-	'exec'        => 'java',
+	'exec'        => $requiredExecutable,
 
 	'classFile'   => $PATH_tika . 'classes/class.tx_tika_languagedetectionservice.php',
 	'className'   => 'tx_tika_LanguageDetectionService',
