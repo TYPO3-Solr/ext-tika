@@ -1,3 +1,7 @@
+2010-10-14 Ingo Renner  <ingo@typo3.org>
+
+	* Added a registry entry to store whether tika is available - which is the case if it is detected to be configured properly
+
 2010-10-13 Ingo Renner  <ingo@typo3.org>
 
 	* Uncommented a test for aiff file meta data extractions, marked as incomplete though, currently not working...
