@@ -91,10 +91,6 @@ class tx_tika_report_TikaStatus implements tx_reports_StatusProvider {
 			$this->hasCompleteRemoteSolrExtractingRequestHandlerConfiguration()
 		);
 
-		/* @var $registry t3lib_Registry */
-		$registry = t3lib_div::makeInstance('t3lib_Registry');
-		$registry->set('tx_tika', 'available', $isConfigured);
-
 		return $isConfigured;
 	}
 
