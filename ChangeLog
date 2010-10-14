@@ -1,7 +1,7 @@
 2010-10-14 Ingo Renner  <ingo@typo3.org>
 
-	* Increased version to 0.8.0-dev
-	
+	* Release of version 1.0.0
+		
 	* Added a registry entry to store whether tika is available - which is the case if it is detected to be configured properly
 	* Changed required executable for the services to be determined dynamically, based on whether Tika or Solr is used for extraction
 	* Added a minimal manual, pointing to the forge wiki
