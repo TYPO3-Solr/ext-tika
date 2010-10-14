@@ -22,7 +22,7 @@ Can either use a stand alone tika executable or tika integrated in a Solr server
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
-	'state' => 'beta',
+	'state' => 'stable',
 	'internal' => '',
 	'uploadfolder' => 0,
 	'createDirs' => '',
