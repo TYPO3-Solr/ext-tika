@@ -1,5 +1,7 @@
 2010-10-15 Ingo Renner  <ingo@typo3.org>
 
+	* Release of version v1.0.1
+
 	* Fixed rendering of the first paragraph in the manual
 	* Changed extension status to stable
 
