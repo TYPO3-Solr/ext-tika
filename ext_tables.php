@@ -10,6 +10,7 @@ if (TYPO3_MODE == 'BE') {
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'][$statusSection][] = 'tx_tika_report_TikaStatus';
 }
 
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'EXT:tika/classes/class.tx_tika_statuscheck.php:tx_tika_StatusCheck->updateStatus';
 	// checking availability. Must do this here, DB connection is not available yet when ext_localconf.php is loaded
 $registry = t3lib_div::makeInstance('t3lib_Registry');
 $servicesAvailable = $registry->get('tx_tika', 'available', FALSE);
