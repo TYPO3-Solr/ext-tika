@@ -1,6 +1,7 @@
 2011-04-19 Ingo Renner  <ingo@typo3.org>
 
 	* Fixed missing XCLASS in tx_tika_StatusCheck
+	* Fixed wrong entry in ext_autoload.php for class tx_tika_StatusCheck
 
 2011-04-06 Ingo Renner  <ingo@typo3.org>
 
