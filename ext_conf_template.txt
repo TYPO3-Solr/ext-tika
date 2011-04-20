@@ -12,11 +12,17 @@ extractor = tika
   # cat=basic//20; type=string; label= Tika Path: The absolute path to your Apache Tika App jar file (Java is detected automatically)
 tikaPath =
 
-  # cat=basic//30; type=string; label= Solr Host
-solrHost =
+  # cat=basic//30; type=options[http,https]; label= Solr Scheme
+solrScheme = http
 
-  # cat=basic//40; type=string; label= Solr Port
-solrPort =
+  # cat=basic//40; type=string; label= Solr Host
+solrHost = localhost
 
-  # cat=basic//50; type=string; label= Solr Path
-solrPath =
+  # cat=basic//50; type=string; label= Solr Port
+solrPort = 8080
+
+  # cat=basic//60; type=string; label= Solr Path
+solrPath = /solr/
+
+  # cat=basic//70; type=boolean; label= Use curl HTTP transport
+solrUseCurl = 0

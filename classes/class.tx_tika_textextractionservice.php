@@ -121,7 +121,9 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 		$solr =  new tx_solr_SolrService(
 			$this->tikaConfiguration['solrHost'],
 			$this->tikaConfiguration['solrPort'],
-			$this->tikaConfiguration['solrPath']
+			$this->tikaConfiguration['solrPath'],
+			$this->tikaConfiguration['solrScheme'],
+			$this->tikaConfiguration['solrUseCurl']
 		);
 
 		$query = t3lib_div::makeInstance('tx_solr_ExtractingQuery', $file);
