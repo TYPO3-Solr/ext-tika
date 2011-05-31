@@ -113,8 +113,8 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 	 */
 	protected function extractUsingSolr($file) {
 			// FIXME move connection building to EXT:solr
-			// explicitly using "new" to bypass t3lib_div::makeInstance() or
-			// providing a Factory
+			// currently explicitly using "new" to bypass
+			// t3lib_div::makeInstance() or providing a Factory
 
 			// EM might define a different connection than already in use by
 			// Index Queue
