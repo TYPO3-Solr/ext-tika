@@ -162,11 +162,11 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 		$this->out['fields']['meta'] = $metaData;
 
 		if ($metaData['Width']) {
-			$this->out['fields']['vpixels'] = $metaData['Width'];
+			$this->out['fields']['hpixels'] = $metaData['Width'];
 		}
 
 		if ($metaData['Height']) {
-			$this->out['fields']['hpixels'] = $metaData['Height'];
+			$this->out['fields']['vpixels'] = $metaData['Height'];
 		}
 
 			// JPEG comment

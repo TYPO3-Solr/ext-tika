@@ -1,3 +1,7 @@
+2011-06-15  Ingo Renner  <ingo@typo3.org>
+
+	* Fixed issue #27473: wrong height and width pixels in DAM (credits Ivan Kartolo)
+
 2011-04-20 Ingo Renner  <ingo@typo3.org>
 
 	* Added support for curl HTTP transport
