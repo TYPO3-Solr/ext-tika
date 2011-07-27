@@ -82,7 +82,7 @@ class tx_tika_StatusCheck {
 		$localConfigurationComplete = FALSE;
 
 		if ($this->tikaConfiguration['extractor'] == 'tika'
-			&& is_file($this->tikaConfiguration['tikaPath'])
+			&& is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath']))
 			&& t3lib_exec::checkCommand('java')) {
 
 			$localConfigurationComplete = TRUE;
