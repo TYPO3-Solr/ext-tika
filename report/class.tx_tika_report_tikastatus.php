@@ -45,14 +45,15 @@ class tx_tika_report_TikaStatus implements tx_reports_StatusProvider {
 	 * @see typo3/sysext/reports/interfaces/tx_reports_StatusProvider::getStatus()
 	 */
 	public function getStatus() {
-		$reports = array();
+		$reports    = array();
 		$tikaStatus = t3lib_div::makeInstance('tx_tika_StatusCheck');
+		/* @var $tikaStatus tx_tika_StatusCheck */
 
-		/* @var $status tx_reports_reports_status_Status */
 		$status = t3lib_div::makeInstance('tx_reports_reports_status_Status',
 			'Apache Tika',
 			'Configuration OK'
 		);
+		/* @var $status tx_reports_reports_status_Status */
 
 		if (!$tikaStatus->getStatus()) {
 			$status = t3lib_div::makeInstance('tx_reports_reports_status_Status',
@@ -71,7 +72,7 @@ class tx_tika_report_TikaStatus implements tx_reports_StatusProvider {
 		return $reports;
 	}
 
-	}
+}
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/report/class.tx_tika_report_tikastatus.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/report/class.tx_tika_report_tikastatus.php']);
