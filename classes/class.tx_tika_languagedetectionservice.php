@@ -52,7 +52,7 @@ class tx_tika_LanguageDetectionService extends t3lib_svbase {
 
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath']))) {
+		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))) {
 			throw new Exception(
 				'Invalid path or filename for tika application jar.',
 				1266864929
@@ -80,7 +80,7 @@ class tx_tika_LanguageDetectionService extends t3lib_svbase {
 		if ($inputFile = $this->getInputFile()) {
 			$tikaCommand = t3lib_exec::getCommand('java')
 				. ' -Dfile.encoding=UTF8'
-				. ' -jar ' . escapeshellarg(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath']))
+				. ' -jar ' . escapeshellarg(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
 				. ' -l ' . escapeshellarg($inputFile);
 
 			$this->out = trim(shell_exec($tikaCommand));

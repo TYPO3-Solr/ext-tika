@@ -54,7 +54,7 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath']))) {
+		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))) {
 			throw new Exception(
 				'Invalid path or filename for tika application jar.',
 				1266864929
@@ -97,7 +97,7 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 	protected function extractUsingTika($file) {
 		$tikaCommand = t3lib_exec::getCommand('java')
 			. ' -Dfile.encoding=UTF8' // forces UTF8 output
-			. ' -jar ' . escapeshellarg(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath']))
+			. ' -jar ' . escapeshellarg(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
 			. ' -t ' . escapeshellarg($file);
 
 		$shellOutput = shell_exec($tikaCommand);

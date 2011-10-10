@@ -82,11 +82,23 @@ class tx_tika_StatusCheck {
 		$localConfigurationComplete = FALSE;
 
 		if ($this->tikaConfiguration['extractor'] == 'tika'
-			&& is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath']))
+			&& is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
 			&& t3lib_exec::checkCommand('java')) {
 
 			$localConfigurationComplete = TRUE;
 		}
+
+			// give us some debug messages
+		t3lib_div::devLog(
+			'Has complete local Tika configuration? ' . $localConfigurationComplete == TRUE ? 'yes' : 'no',
+			'tika', 0,
+			array(
+				'configuration'        => $this->tikaConfiguration,
+				'tikaPath'             => $this->tikaConfiguration['tikaPath'],
+				'absExtractorPath'     => t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE),
+				'extractorClassExists' => is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE)) == TRUE ? 'yes' : 'no',
+			)
+		);
 
 		return $localConfigurationComplete;
 	}
