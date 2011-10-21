@@ -443,17 +443,17 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$metaData = $service->getOutput();
 
 		$this->assertEquals('application/vnd.ms-powerpoint', $metaData['Content-Type']);
-		$this->assertEquals('testPPT.ppt', $metaData['resourceName']);
+		$this->assertEquals('testPPT.ppt',                   $metaData['resourceName']);
 
-		$this->assertEquals('Microsoft PowerPoint',          $metaData['Application-Name']);
-		$this->assertEquals('Keith Bennett',                 $metaData['Author']);
-		$this->assertEquals('-',                             $metaData['Company']);
-		$this->assertEquals('2007-09-14T17:33:12Z', $metaData['Creation-Date'], 'wrong creation date');
-		$this->assertEquals('Keith Bennett',                 $metaData['Last-Author']);
-		$this->assertEquals('2007-09-14T19:16:39Z', $metaData['Last-Save-Date'], 'wrong last-save date');
-		$this->assertEquals('1',                             $metaData['Revision-Number']);
-		$this->assertEquals('13',                            $metaData['Word-Count']);
-		$this->assertEquals('Sample Powerpoint Slide',       $metaData['title']);
+		$this->assertEquals('Microsoft PowerPoint',    $metaData['Application-Name']);
+		$this->assertEquals('Keith Bennett',           $metaData['Author']);
+		$this->assertEquals('-',                       $metaData['Company']);
+		$this->assertEquals('2007-09-14T17:33:12Z',    $metaData['Creation-Date'], 'wrong creation date');
+		$this->assertEquals('Keith Bennett',           $metaData['Last-Author']);
+		$this->assertEquals('2007-09-14T19:16:39Z',    $metaData['Last-Save-Date'], 'wrong last-save date');
+		$this->assertEquals('1',                       $metaData['Revision-Number']);
+		$this->assertEquals('13',                      $metaData['Word-Count']);
+		$this->assertEquals('Sample Powerpoint Slide', $metaData['title']);
 	}
 
 	/**
