@@ -128,10 +128,10 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('Microsoft Word 10.1',           $metaData['Application-Name']);
 		$this->assertEquals('Keith Bennett',                 $metaData['Author']);
 		$this->assertEquals('-',                             $metaData['Company']);
-		$this->assertEquals('Wed Sep 12 22:31:00 CEST 2007', $metaData['Creation-Date']);
+		$this->assertEquals('2007-09-12T20:31:00Z', $metaData['Creation-Date']);
 		$this->assertArrayHasKey('Keywords', $metaData); // no keywords filled out in test file
 		$this->assertEquals('Keith Bennett',                 $metaData['Last-Author']);
-		$this->assertEquals('Wed Sep 12 22:38:00 CEST 2007', $metaData['Last-Save-Date']);
+		$this->assertEquals('2007-09-12T20:38:00Z', $metaData['Last-Save-Date']);
 		$this->assertEquals('1',                             $metaData['Page-Count']);
 		$this->assertEquals('1',                             $metaData['Revision-Number']);
 		$this->assertEquals('Normal',                        $metaData['Template']);
