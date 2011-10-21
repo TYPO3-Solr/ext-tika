@@ -304,7 +304,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals(240,             $metaData['fields']['hres'], 'Failed to provide horizontal resolution');
 		$this->assertEquals(240,             $metaData['fields']['vres'], 'Failed to provide vertical resolution');
 //		$this->assertArrayHasKey('color_space', $metaData['fields']); // test file has "undefined" color space
-		$this->assertEquals('canon-55-250, moscow-birds, serbor', $metaData['fields']['keywords']);
+		$this->assertContains('canon-55-250', $metaData['fields']['keywords']);
 		$this->assertArrayHasKey('copyright', $metaData['fields']);
 	}
 
