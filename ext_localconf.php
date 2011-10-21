@@ -49,7 +49,9 @@ t3lib_extMgm::addService($_EXTKEY, 'textExtract', 'tx_tika_textExtract', array(
 
 t3lib_extMgm::addService($_EXTKEY, 'textLang', 'tx_tika_textLang', array(
 	'title'       => 'Tika language detection',
-	'description' => 'Uses Apache Tika to detect a document\'s language.',
+	'description' => 'Uses Apache Tika to detect a document\'s language.
+						Currently supports Danish, German, English, Spanish,
+						Finnish, French, Italian, Dutch, Portuguese, and Swedish',
 
 	'subtype'     => '',
 
