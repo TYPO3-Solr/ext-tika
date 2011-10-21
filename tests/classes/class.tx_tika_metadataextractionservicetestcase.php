@@ -367,12 +367,12 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$service->process();
 		$metaData = $service->getOutput();
 
-		$this->assertEquals('application/vnd.oasis.opendocument.formula', $metaData['Content-Type']);
-		$this->assertEquals('testOpenOffice2.odf', $metaData['resourceName']);
-		$this->assertEquals('2006-01-27T11:55:22', $metaData['Creation-Date']);
+		$this->assertEquals('application/vnd.oasis.opendocument.formula',  $metaData['Content-Type']);
+		$this->assertEquals('testOpenOffice2.odf',                         $metaData['resourceName']);
+		$this->assertEquals('2006-01-27T11:55:22',                         $metaData['Creation-Date']);
 		$this->assertEquals('The quick brown fox jumps over the lazy dog', $metaData['title']);
 		$this->assertEquals('OpenOffice.org/2.2$Win32 OpenOffice.org_project/680m14$Build-9134', $metaData['generator']);
-		$this->assertEquals('Pangram, fox, dog', $metaData['Keywords']);
+		$this->assertEquals('Pangram, fox, dog',                           $metaData['Keywords']);
 	}
 
 	/**
