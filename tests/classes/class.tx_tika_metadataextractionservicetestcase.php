@@ -448,9 +448,9 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('Microsoft PowerPoint',          $metaData['Application-Name']);
 		$this->assertEquals('Keith Bennett',                 $metaData['Author']);
 		$this->assertEquals('-',                             $metaData['Company']);
-		$this->assertEquals('Fri Sep 14 19:33:12 CEST 2007', $metaData['Creation-Date']);
+		$this->assertEquals('2007-09-14T17:33:12Z', $metaData['Creation-Date'], 'wrong creation date');
 		$this->assertEquals('Keith Bennett',                 $metaData['Last-Author']);
-		$this->assertEquals('Fri Sep 14 21:16:39 CEST 2007', $metaData['Last-Save-Date']);
+		$this->assertEquals('2007-09-14T19:16:39Z', $metaData['Last-Save-Date'], 'wrong last-save date');
 		$this->assertEquals('1',                             $metaData['Revision-Number']);
 		$this->assertEquals('13',                            $metaData['Word-Count']);
 		$this->assertEquals('Sample Powerpoint Slide',       $metaData['title']);
