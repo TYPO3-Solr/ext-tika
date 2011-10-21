@@ -241,7 +241,8 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 		$tikaCommand = t3lib_exec::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
 			. ' -jar ' . escapeshellarg(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
-			. ' -m ' . escapeshellarg($file);
+			. ' -m'
+			. ' ' . escapeshellarg($file);
 
 		$shellOutput = array();
 		exec($tikaCommand, $shellOutput);
