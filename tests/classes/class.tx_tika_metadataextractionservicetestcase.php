@@ -612,9 +612,9 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('Microsoft Excel',               $metaData['Application-Name']);
 		$this->assertEquals('Keith Bennett',                 $metaData['Author']);
 		$this->assertEquals('',                              $metaData['Company']);
-		$this->assertEquals('Mon Oct 01 18:13:56 CEST 2007', $metaData['Creation-Date']);
+		$this->assertEquals('2007-10-01T16:13:56Z', $metaData['Creation-Date'], 'wrong creation date');
 		$this->assertEquals('RIBEN9',                        $metaData['Last-Author']);
-		$this->assertEquals('Mon Oct 01 18:31:43 CEST 2007', $metaData['Last-Save-Date']);
+		$this->assertEquals('2007-10-01T16:31:43Z', $metaData['Last-Save-Date'], 'wrong last-saved date');
 		$this->assertEquals('Simple Excel document',         $metaData['title']);
 	}
 
