@@ -468,19 +468,19 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('application/vnd.openxmlformats-officedocument.presentationml.presentation', $metaData['Content-Type']); // sick
 		$this->assertEquals('testPPT.pptx', $metaData['resourceName']);
 
-		$this->assertEquals('Microsoft PowerPoint',  $metaData['Application-Name']);
-		$this->assertEquals('12.0000',               $metaData['Application-Version']);
-		$this->assertEquals('Keith Bennett',         $metaData['Author']);
-		$this->assertEquals('garribas',              $metaData['Last-Author']);
-		$this->assertEquals('2008-12-11T16:00:38Z',  $metaData['Last-Modified']);
-		$this->assertEquals('4',                     $metaData['Paragraph-Count']);
-		$this->assertEquals('On-screen Show (4:3)',  $metaData['Presentation-Format']);
-		$this->assertEquals('1',                     $metaData['Revision-Number']);
-		$this->assertEquals('1',                     $metaData['Slide-Count']);
-		$this->assertEquals('13',                    $metaData['Word-Count']);
-		$this->assertEquals('Keith Bennett',         $metaData['creator']);
-		$this->assertEquals('2007-09-14T17:33:12Z',  $metaData['date']);
-		$this->assertEquals('-',                     $metaData['publisher']);
+		$this->assertEquals('Microsoft PowerPoint',     $metaData['Application-Name']);
+		$this->assertEquals('12.0000',                  $metaData['Application-Version']);
+		$this->assertEquals('Keith Bennett',            $metaData['Author']);
+		$this->assertEquals('garribas',                 $metaData['Last-Author']);
+		$this->assertEquals('2008-12-11T16:00:38Z',     $metaData['Last-Modified']);
+		$this->assertEquals('4',                        $metaData['Paragraph-Count']);
+		$this->assertEquals('On-screen Show (4:3)',     $metaData['Presentation-Format']);
+		$this->assertEquals('1',                        $metaData['Revision-Number']);
+		$this->assertEquals('1',                        $metaData['Slide-Count']);
+		$this->assertEquals('13',                       $metaData['Word-Count']);
+		$this->assertEquals('Keith Bennett',            $metaData['creator']);
+		$this->assertEquals('2007-09-14T17:33:12Z',     $metaData['date']);
+		$this->assertEquals('-',                        $metaData['publisher']);
 		$this->assertEquals('Sample Powerpoint Slide',  $metaData['title']);
 	}
 
