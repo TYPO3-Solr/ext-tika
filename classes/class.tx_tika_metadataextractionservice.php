@@ -245,7 +245,7 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 
 		$shellOutput = array();
 		exec($tikaCommand, $shellOutput);
-		$metaData  = $this->shellOutputToArray($shellOutput);
+		$metaData = $this->shellOutputToArray($shellOutput);
 
 		return $metaData;
 	}
