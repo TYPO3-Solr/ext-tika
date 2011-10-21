@@ -473,7 +473,6 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('Keith Bennett',         $metaData['Author']);
 		$this->assertEquals('garribas',              $metaData['Last-Author']);
 		$this->assertEquals('2008-12-11T16:00:38Z',  $metaData['Last-Modified']);
-		$this->assertEquals('2007-09-14T17:33:12Z',  $metaData['Last-Printed']);
 		$this->assertEquals('4',                     $metaData['Paragraph-Count']);
 		$this->assertEquals('On-screen Show (4:3)',  $metaData['Presentation-Format']);
 		$this->assertEquals('1',                     $metaData['Revision-Number']);
