@@ -411,7 +411,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('testPDF.pdf',     $metaData['resourceName']);
 
 		$this->assertEquals('Bertrand Delacrétaz',               $metaData['Author']);
-		$this->assertEquals('Sat Sep 15 11:02:31 CEST 2007',      $metaData['Last-Modified']);
+		$this->assertEquals('2007-09-15T09:02:31Z',               $metaData['Last-Modified']);
 		$this->assertEquals('Sat Sep 15 11:02:31 CEST 2007',      $metaData['created']);
 		$this->assertEquals('Firefox',                            $metaData['creator']);
 		$this->assertEquals('Mac OS X 10.4.10 Quartz PDFContext', $metaData['producer']);
