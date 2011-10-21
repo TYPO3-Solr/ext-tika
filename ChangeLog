@@ -1,3 +1,7 @@
+2011-10-21  Ingo Renner  <ingo@typo3.org>
+
+	* Added support for aiff audio files
+
 2011-10-10  Ingo Renner  <ingo@typo3.org>
 
 	* Fixed issue #28922: TIKA class is not accepted if not in TYPO3 path (credits Michael Knoll)
