@@ -609,13 +609,13 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('application/vnd.ms-excel', $metaData['Content-Type']);
 		$this->assertEquals('testEXCEL.xls',            $metaData['resourceName']);
 
-		$this->assertEquals('Microsoft Excel',               $metaData['Application-Name']);
-		$this->assertEquals('Keith Bennett',                 $metaData['Author']);
-		$this->assertEquals('',                              $metaData['Company']);
-		$this->assertEquals('2007-10-01T16:13:56Z', $metaData['Creation-Date'], 'wrong creation date');
-		$this->assertEquals('RIBEN9',                        $metaData['Last-Author']);
-		$this->assertEquals('2007-10-01T16:31:43Z', $metaData['Last-Save-Date'], 'wrong last-saved date');
-		$this->assertEquals('Simple Excel document',         $metaData['title']);
+		$this->assertEquals('Microsoft Excel',       $metaData['Application-Name']);
+		$this->assertEquals('Keith Bennett',         $metaData['Author']);
+		$this->assertEquals('',                      $metaData['Company']);
+		$this->assertEquals('2007-10-01T16:13:56Z',  $metaData['Creation-Date'], 'wrong creation date');
+		$this->assertEquals('RIBEN9',                $metaData['Last-Author']);
+		$this->assertEquals('2007-10-01T16:31:43Z',  $metaData['Last-Save-Date'], 'wrong last-saved date');
+		$this->assertEquals('Simple Excel document', $metaData['title']);
 	}
 
 	/**
