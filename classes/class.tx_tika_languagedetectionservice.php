@@ -81,7 +81,8 @@ class tx_tika_LanguageDetectionService extends t3lib_svbase {
 			$tikaCommand = t3lib_exec::getCommand('java')
 				. ' -Dfile.encoding=UTF8'
 				. ' -jar ' . escapeshellarg(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
-				. ' -l ' . escapeshellarg($inputFile);
+				. ' -l'
+				. ' ' . escapeshellarg($inputFile);
 
 			$this->out = trim(shell_exec($tikaCommand));
 		} else {
