@@ -51,7 +51,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 			$GLOBALS['T3_SERVICES']['textLang'][$serviceKey]['available'] = FALSE;
 		}
 
-		$this->testDocumentsPath = t3lib_extMgm::extPath('tika') . 'tests/test-documents/';
+		$this->testDocumentsPath = t3lib_extMgm::extPath('tika') . 'tests/test-languages/';
 	}
 
 	public function tearDown() {
@@ -62,20 +62,33 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function detectsEnglishLanguageFromString() {
+	public function detectsDanishLanguage() {
 		$service = t3lib_div::makeInstanceService('textLang');
-		$service->process('The quick brown fox jumps over the lazy dog.');
+		$service->setInputFile($this->testDocumentsPath . 'da.test', 'txt');
+		$service->process();
 		$language = $service->getOutput();
 
-		$this->assertEquals('en', $language);
+		$this->assertEquals('da', $language);
 	}
 
 	/**
 	 * @test
 	 */
-	public function detectsEnglishLanguageFromFile() {
+	public function detectsDutchLanguage() {
 		$service = t3lib_div::makeInstanceService('textLang');
-		$service->setInputFile($this->testDocumentsPath . 'testTXT_en.txt', 'txt');
+		$service->setInputFile($this->testDocumentsPath . 'nl.test', 'txt');
+		$service->process();
+		$language = $service->getOutput();
+
+		$this->assertEquals('nl', $language);
+	}
+
+	/**
+	 * @test
+	 */
+	public function detectsEnglishLanguage() {
+		$service = t3lib_div::makeInstanceService('textLang');
+		$service->setInputFile($this->testDocumentsPath . 'en.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
 
@@ -85,9 +98,34 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function detectsGermanLanguageFromString() {
+	public function detectsFinnishLanguage() {
 		$service = t3lib_div::makeInstanceService('textLang');
-		$service->process('Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.');
+		$service->setInputFile($this->testDocumentsPath . 'fi.test', 'txt');
+		$service->process();
+		$language = $service->getOutput();
+
+		$this->assertEquals('fi', $language);
+	}
+
+	/**
+	 * @test
+	 */
+	public function detectsFrenchLanguage() {
+		$service = t3lib_div::makeInstanceService('textLang');
+		$service->setInputFile($this->testDocumentsPath . 'fr.test', 'txt');
+		$service->process();
+		$language = $service->getOutput();
+
+		$this->assertEquals('fr', $language);
+	}
+
+	/**
+	 * @test
+	 */
+	public function detectsGermanLanguage() {
+		$service = t3lib_div::makeInstanceService('textLang');
+		$service->setInputFile($this->testDocumentsPath . 'de.test', 'txt');
+		$service->process();
 		$language = $service->getOutput();
 
 		$this->assertEquals('de', $language);
@@ -96,13 +134,49 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function detectsGermanLanguageFromFile() {
+	public function detectsItalianLanguage() {
 		$service = t3lib_div::makeInstanceService('textLang');
-		$service->setInputFile($this->testDocumentsPath . 'testTXT_de.txt', 'txt');
+		$service->setInputFile($this->testDocumentsPath . 'it.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
 
-		$this->assertEquals('de', $language);
+		$this->assertEquals('it', $language);
+	}
+
+	/**
+	 * @test
+	 */
+	public function detectsPortugueseLanguage() {
+		$service = t3lib_div::makeInstanceService('textLang');
+		$service->setInputFile($this->testDocumentsPath . 'pt.test', 'txt');
+		$service->process();
+		$language = $service->getOutput();
+
+		$this->assertEquals('pt', $language);
+	}
+
+	/**
+	 * @test
+	 */
+	public function detectsSpanishLanguage() {
+		$service = t3lib_div::makeInstanceService('textLang');
+		$service->setInputFile($this->testDocumentsPath . 'es.test', 'txt');
+		$service->process();
+		$language = $service->getOutput();
+
+		$this->assertEquals('es', $language);
+	}
+
+	/**
+	 * @test
+	 */
+	public function detectsSwedishLanguage() {
+		$service = t3lib_div::makeInstanceService('textLang');
+		$service->setInputFile($this->testDocumentsPath . 'sv.test', 'txt');
+		$service->process();
+		$language = $service->getOutput();
+
+		$this->assertEquals('sv', $language);
 	}
 }
 

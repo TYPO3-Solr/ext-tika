@@ -1,3 +1,7 @@
+2011-10-24  Ingo Renner  <ingo@typo3.org>
+
+	* Added unit test for language detection
+
 2011-10-21  Ingo Renner  <ingo@typo3.org>
 
 	* Added support for aiff audio files
