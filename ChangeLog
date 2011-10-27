@@ -3,6 +3,7 @@
 	* Added support for text extraction from zip files
 	* Added support for meta data extraction from zip files
 	* Added support for text extraction from tgz files
+	* Added support for meta data extraction from tgz files
 
 2011-10-24  Ingo Renner  <ingo@typo3.org>
 

@@ -688,6 +688,19 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
+	public function extractsMetaDataFromTgzFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'tgz');
+		$service->setInputFile($this->testDocumentsPath . 'test-documents.tgz', 'zip');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('application/x-gzip', $metaData['Content-Type']);
+		$this->assertEquals('test-documents.tgz', $metaData['resourceName']);
+	}
+
+	/**
+	 * @test
+	 */
 	public function extractsMetaDataFromZipFile() {
 		$service = t3lib_div::makeInstanceService('metaExtract', 'zip');
 		$service->setInputFile($this->testDocumentsPath . 'test-documents.zip', 'zip');
