@@ -59,6 +59,10 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$GLOBALS['T3_SERVICES'] = $this->originalServices;
 	}
 
+
+	// Audio
+
+
 	/**
 	 * @test
 	 */
@@ -101,6 +105,61 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
+	public function extractsMetaDataFromMidFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'mid');
+		$service->setInputFile($this->testDocumentsPath . 'testMID.mid', 'mid');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('audio/midi',  $metaData['Content-Type']);
+		$this->assertEquals('testMID.mid', $metaData['resourceName']);
+
+		$this->assertEquals('PPQ', $metaData['divisionType']);
+		$this->assertEquals('0',   $metaData['patches']);
+		$this->assertEquals('2',   $metaData['tracks']);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsMetaDataFromMp3File() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'mp3');
+		$service->setInputFile($this->testDocumentsPath . 'testMP3.mp3', 'mp3');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('audio/mpeg',  $metaData['Content-Type']);
+		$this->assertEquals('testMP3.mp3', $metaData['resourceName']);
+
+		$this->assertEquals('Test Artist', $metaData['Author']);
+		$this->assertEquals('Test Title',  $metaData['title']);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsMetaDataFromWavFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'wav');
+		$service->setInputFile($this->testDocumentsPath . 'testWAV.wav', 'wav');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('audio/x-wav',  $metaData['Content-Type']);
+		$this->assertEquals('testWAV.wav', $metaData['resourceName']);
+
+		$this->assertEquals('16',         $metaData['bits']);
+		$this->assertEquals('2',          $metaData['channels']);
+		$this->assertEquals('PCM_SIGNED', $metaData['encoding']);
+		$this->assertEquals('44100',      $metaData['samplerate']);
+	}
+
+
+	// Image
+
+
+	/**
+	 * @test
+	 */
 	public function extractsMetaDataFromBmpFile() {
 		$service = t3lib_div::makeInstanceService('metaExtract', 'bmp');
 		$service->setInputFile($this->testDocumentsPath . 'testBMP.bmp', 'bmp');
@@ -112,6 +171,116 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals(100,              $metaData['Width']);
 		$this->assertEquals('testBMP.bmp',    $metaData['resourceName']);
 	}
+
+	/**
+	 * @test
+	 */
+	public function extractsMetaDataFromGifFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'gif');
+		$service->setInputFile($this->testDocumentsPath . 'testGIF.gif', 'gif');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('image/gif', $metaData['Content-Type']);
+		$this->assertEquals(75, $metaData['Height']);
+		$this->assertEquals(100, $metaData['Width']);
+		$this->assertEquals('testGIF.gif', $metaData['resourceName']);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsMetaDataFromJpgFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'jpg');
+		$service->setInputFile($this->testDocumentsPath . 'testJPEG.jpg', 'jpg');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('image/jpeg', $metaData['Content-Type']);
+		$this->assertEquals(75, $metaData['Height']);
+		$this->assertEquals(100, $metaData['Width']);
+		$this->assertEquals('testJPEG.jpg', $metaData['resourceName']);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsExifMetaDataFromJpgFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'image:exif');
+		$service->setInputFile($this->testDocumentsPath . 'testJPEG_EXIF.jpg', 'jpg');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('image/jpeg', $metaData['Content-Type']);
+		$this->assertEquals(68, $metaData['Height']);
+		$this->assertEquals(100, $metaData['Width']);
+		$this->assertEquals('testJPEG_EXIF.jpg', $metaData['resourceName']);
+		$this->assertEquals('Canon EOS 40D', $metaData['Model']);
+		$this->assertEquals('2009:08:11 09:09:45', $metaData['Date/Time Original']);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsExifMetaDataFromJpgFileIntoDamFields() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'image:exif');
+		$service->setInputFile($this->testDocumentsPath . 'testJPEG_EXIF.jpg', 'jpg');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('Canon EOS 40D', $metaData['fields']['file_creator']);
+		$this->assertEquals(1249974585,      $metaData['fields']['date_cr']);
+		$this->assertEquals(240,             $metaData['fields']['hres'], 'Failed to provide horizontal resolution');
+		$this->assertEquals(240,             $metaData['fields']['vres'], 'Failed to provide vertical resolution');
+//		$this->assertArrayHasKey('color_space', $metaData['fields']); // test file has "undefined" color space
+		$this->assertContains('canon-55-250', $metaData['fields']['keywords']);
+		$this->assertArrayHasKey('copyright', $metaData['fields']);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsMetaDataFromPngFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'png');
+		$service->setInputFile($this->testDocumentsPath . 'testPNG.png', 'png');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('image/png', $metaData['Content-Type']);
+		$this->assertEquals(75, $metaData['Height']);
+		$this->assertEquals(100, $metaData['Width']);
+		$this->assertEquals('testPNG.png', $metaData['resourceName']);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsMetaDataFromSvgFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'svg');
+		$service->setInputFile($this->testDocumentsPath . 'testSVG.svg', 'svg');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('image/svg+xml', $metaData['Content-Type']);
+		$this->assertEquals('testSVG.svg', $metaData['resourceName']);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsMetaDataFromTiffFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'tiff');
+		$service->setInputFile($this->testDocumentsPath . 'testTIFF.tif', 'tif');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('image/tiff', $metaData['Content-Type']);
+		$this->assertEquals('testTIFF.tif', $metaData['resourceName']);
+	}
+
+
+	// Text
+
 
 	/**
 	 * @test
@@ -187,49 +356,6 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function extractsMetaDataFromFlvFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'flv');
-		$service->setInputFile($this->testDocumentsPath . 'testFLV.flv', 'flv');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('video/x-flv', $metaData['Content-Type']);
-		$this->assertEquals('testFLV.flv', $metaData['resourceName']);
-
-		$this->assertEquals('true',      $metaData['hasAudio']);
-		$this->assertEquals('false',     $metaData['stereo']);
-		$this->assertEquals('2.0',       $metaData['audiocodecid']);
-		$this->assertEquals('51.421875', $metaData['audiodatarate']);
-		$this->assertEquals('22050.0',   $metaData['audiosamplerate']);
-		$this->assertEquals('16.0',      $metaData['audiosamplesize']);
-		$this->assertEquals('true',      $metaData['hasVideo']);
-		$this->assertEquals('2.0',       $metaData['videocodecid']);
-		$this->assertEquals('781.25',    $metaData['videodatarate']);
-		$this->assertEquals('24.0',      $metaData['framerate']);
-		$this->assertEquals('120',       $metaData['Height']);
-		$this->assertEquals('170',       $metaData['Width']);
-		$this->assertEquals('1.167',     $metaData['duration']);
-		$this->assertEquals('90580.0',   $metaData['filesize']);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsMetaDataFromGifFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'gif');
-		$service->setInputFile($this->testDocumentsPath . 'testGIF.gif', 'gif');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('image/gif', $metaData['Content-Type']);
-		$this->assertEquals(75, $metaData['Height']);
-		$this->assertEquals(100, $metaData['Width']);
-		$this->assertEquals('testGIF.gif', $metaData['resourceName']);
-	}
-
-	/**
-	 * @test
-	 */
 	public function extractsMetaDataFromHtmlFile() {
 		$service = t3lib_div::makeInstanceService('metaExtract', 'html');
 
@@ -256,89 +382,6 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 
 		$this->assertEquals('UTF-8',                                 $metaData['Content-Encoding']);
 		$this->assertEquals('Title : Tilte with UTF-8 chars öäå', $metaData['title']);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsMetaDataFromJpgFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'jpg');
-		$service->setInputFile($this->testDocumentsPath . 'testJPEG.jpg', 'jpg');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('image/jpeg', $metaData['Content-Type']);
-		$this->assertEquals(75, $metaData['Height']);
-		$this->assertEquals(100, $metaData['Width']);
-		$this->assertEquals('testJPEG.jpg', $metaData['resourceName']);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsExifMetaDataFromJpgFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'image:exif');
-		$service->setInputFile($this->testDocumentsPath . 'testJPEG_EXIF.jpg', 'jpg');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('image/jpeg', $metaData['Content-Type']);
-		$this->assertEquals(68, $metaData['Height']);
-		$this->assertEquals(100, $metaData['Width']);
-		$this->assertEquals('testJPEG_EXIF.jpg', $metaData['resourceName']);
-		$this->assertEquals('Canon EOS 40D', $metaData['Model']);
-		$this->assertEquals('2009:08:11 09:09:45', $metaData['Date/Time Original']);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsExifMetaDataFromJpgFileIntoDamFields() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'image:exif');
-		$service->setInputFile($this->testDocumentsPath . 'testJPEG_EXIF.jpg', 'jpg');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('Canon EOS 40D', $metaData['fields']['file_creator']);
-		$this->assertEquals(1249974585,      $metaData['fields']['date_cr']);
-		$this->assertEquals(240,             $metaData['fields']['hres'], 'Failed to provide horizontal resolution');
-		$this->assertEquals(240,             $metaData['fields']['vres'], 'Failed to provide vertical resolution');
-//		$this->assertArrayHasKey('color_space', $metaData['fields']); // test file has "undefined" color space
-		$this->assertContains('canon-55-250', $metaData['fields']['keywords']);
-		$this->assertArrayHasKey('copyright', $metaData['fields']);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsMetaDataFromMidFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'mid');
-		$service->setInputFile($this->testDocumentsPath . 'testMID.mid', 'mid');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('audio/midi',  $metaData['Content-Type']);
-		$this->assertEquals('testMID.mid', $metaData['resourceName']);
-
-		$this->assertEquals('PPQ', $metaData['divisionType']);
-		$this->assertEquals('0',   $metaData['patches']);
-		$this->assertEquals('2',   $metaData['tracks']);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsMetaDataFromMp3File() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'mp3');
-		$service->setInputFile($this->testDocumentsPath . 'testMP3.mp3', 'mp3');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('audio/mpeg',  $metaData['Content-Type']);
-		$this->assertEquals('testMP3.mp3', $metaData['resourceName']);
-
-		$this->assertEquals('Test Artist', $metaData['Author']);
-		$this->assertEquals('Test Title',  $metaData['title']);
 	}
 
 	/**
@@ -421,21 +464,6 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function extractsMetaDataFromPngFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'png');
-		$service->setInputFile($this->testDocumentsPath . 'testPNG.png', 'png');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('image/png', $metaData['Content-Type']);
-		$this->assertEquals(75, $metaData['Height']);
-		$this->assertEquals(100, $metaData['Width']);
-		$this->assertEquals('testPNG.png', $metaData['resourceName']);
-	}
-
-	/**
-	 * @test
-	 */
 	public function extractsMetaDataFromPptFile() {
 		$service = t3lib_div::makeInstanceService('metaExtract', 'ppt');
 		$service->setInputFile($this->testDocumentsPath . 'testPPT.ppt', 'ppt');
@@ -513,32 +541,6 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function extractsMetaDataFromSvgFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'svg');
-		$service->setInputFile($this->testDocumentsPath . 'testSVG.svg', 'svg');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('image/svg+xml', $metaData['Content-Type']);
-		$this->assertEquals('testSVG.svg', $metaData['resourceName']);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsMetaDataFromTiffFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'tiff');
-		$service->setInputFile($this->testDocumentsPath . 'testTIFF.tif', 'tif');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('image/tiff', $metaData['Content-Type']);
-		$this->assertEquals('testTIFF.tif', $metaData['resourceName']);
-	}
-
-	/**
-	 * @test
-	 */
 	public function extractsMetaDataFromTxtFile() {
 		$service = t3lib_div::makeInstanceService('metaExtract', 'txt');
 
@@ -577,24 +579,6 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('ISO-8859-1', $metaData['Content-Encoding']);
 #		$this->assertEquals('fr',         $metaData['Content-Language']);
 #		$this->assertEquals('fr',         $metaData['language']);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsMetaDataFromWavFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'wav');
-		$service->setInputFile($this->testDocumentsPath . 'testWAV.wav', 'wav');
-		$service->process();
-		$metaData = $service->getOutput();
-
-		$this->assertEquals('audio/x-wav',  $metaData['Content-Type']);
-		$this->assertEquals('testWAV.wav', $metaData['resourceName']);
-
-		$this->assertEquals('16',         $metaData['bits']);
-		$this->assertEquals('2',          $metaData['channels']);
-		$this->assertEquals('PCM_SIGNED', $metaData['encoding']);
-		$this->assertEquals('44100',      $metaData['samplerate']);
 	}
 
 	/**
@@ -664,6 +648,42 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('Tika test document',                $metaData['title']);
 		$this->assertEquals('test',                              $metaData['type']);
 	}
+
+
+	// Video
+
+
+	/**
+	 * @test
+	 */
+	public function extractsMetaDataFromFlvFile() {
+		$service = t3lib_div::makeInstanceService('metaExtract', 'flv');
+		$service->setInputFile($this->testDocumentsPath . 'testFLV.flv', 'flv');
+		$service->process();
+		$metaData = $service->getOutput();
+
+		$this->assertEquals('video/x-flv', $metaData['Content-Type']);
+		$this->assertEquals('testFLV.flv', $metaData['resourceName']);
+
+		$this->assertEquals('true',      $metaData['hasAudio']);
+		$this->assertEquals('false',     $metaData['stereo']);
+		$this->assertEquals('2.0',       $metaData['audiocodecid']);
+		$this->assertEquals('51.421875', $metaData['audiodatarate']);
+		$this->assertEquals('22050.0',   $metaData['audiosamplerate']);
+		$this->assertEquals('16.0',      $metaData['audiosamplesize']);
+		$this->assertEquals('true',      $metaData['hasVideo']);
+		$this->assertEquals('2.0',       $metaData['videocodecid']);
+		$this->assertEquals('781.25',    $metaData['videodatarate']);
+		$this->assertEquals('24.0',      $metaData['framerate']);
+		$this->assertEquals('120',       $metaData['Height']);
+		$this->assertEquals('170',       $metaData['Width']);
+		$this->assertEquals('1.167',     $metaData['duration']);
+		$this->assertEquals('90580.0',   $metaData['filesize']);
+	}
+
+
+	// Other
+
 
 	/**
 	 * @test
