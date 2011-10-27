@@ -107,10 +107,10 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$service->process();
 		$metaData = $service->getOutput();
 
-		$this->assertEquals('image/bmp',   $metaData['Content-Type']);
-		$this->assertEquals(75,            $metaData['Height']);
-		$this->assertEquals(100,           $metaData['Width']);
-		$this->assertEquals('testBMP.bmp', $metaData['resourceName']);
+		$this->assertEquals('image/x-ms-bmp', $metaData['Content-Type']);
+		$this->assertEquals(75,               $metaData['Height']);
+		$this->assertEquals(100,              $metaData['Width']);
+		$this->assertEquals('testBMP.bmp',    $metaData['resourceName']);
 	}
 
 	/**
