@@ -59,6 +59,10 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 		$GLOBALS['T3_SERVICES'] = $this->originalServices;
 	}
 
+
+	// MS Office
+
+
 	/**
 	 * @test
 	 */
@@ -90,12 +94,12 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function extractsTextFromEpubFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'epub');
-		$service->setInputFile($this->testDocumentsPath . 'testEPUB.epub', 'epub');
+	public function extractsTextFromXlsFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'xls');
+		$service->setInputFile($this->testDocumentsPath . 'testEXCEL.xls', 'xls');
 		$service->process();
 
-		$expectedText  = 'This is the text for chapter One';
+		$expectedText  = 'Sample Excel Worksheet';
 		$extractedText = $service->getOutput();
 
 		$this->assertContains($expectedText, $extractedText);
@@ -104,23 +108,12 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function extractsTextFromHtmlFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'html');
-
-			// HTML
-		$service->setInputFile($this->testDocumentsPath . 'testHTML.html', 'html');
+	public function extractsTextFromXlsxFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'xlsx');
+		$service->setInputFile($this->testDocumentsPath . 'testEXCEL.xlsx', 'xlsx');
 		$service->process();
 
-		$expectedText  = 'Test Indexation Html';
-		$extractedText = $service->getOutput();
-
-		$this->assertContains($expectedText, $extractedText);
-
-			// HTML, utf8
-		$service->setInputFile($this->testDocumentsPath . 'testHTML_utf8.html', 'html');
-		$service->process();
-
-		$expectedText  = 'åäö';	// &aring;&auml;&ouml;
+		$expectedText  = 'Sample Excel Worksheet';
 		$extractedText = $service->getOutput();
 
 		$this->assertContains($expectedText, $extractedText);
@@ -129,16 +122,34 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function extractsTextFromMsgFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'msg');
-		$service->setInputFile($this->testDocumentsPath . 'testMSG.msg', 'msg');
+	public function extractsTextFromPptFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'ppt');
+		$service->setInputFile($this->testDocumentsPath . 'testPPT.ppt', 'ppt');
 		$service->process();
 
-		$expectedText  = 'work has progressed pretty well';
+		$expectedText  = 'Sample Powerpoint Slide';
 		$extractedText = $service->getOutput();
 
 		$this->assertContains($expectedText, $extractedText);
 	}
+
+	/**
+	 * @test
+	 */
+	public function extractsTextFromPptxFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'pptx');
+		$service->setInputFile($this->testDocumentsPath . 'testPPT.pptx', 'pptx');
+		$service->process();
+
+		$expectedText  = 'Sample Powerpoint Slide';
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
+	}
+
+
+	// OpenOffice.org
+
 
 	/**
 	 * @test
@@ -181,62 +192,6 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function extractsTextFromPdfFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'pdf');
-		$service->setInputFile($this->testDocumentsPath . 'testPDF.pdf', 'pdf');
-		$service->process();
-
-		$expectedText  = 'Tika - Content Analysis Toolkit';
-		$extractedText = $service->getOutput();
-
-		$this->assertContains($expectedText, $extractedText);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsTextFromPptFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'ppt');
-		$service->setInputFile($this->testDocumentsPath . 'testPPT.ppt', 'ppt');
-		$service->process();
-
-		$expectedText  = 'Sample Powerpoint Slide';
-		$extractedText = $service->getOutput();
-
-		$this->assertContains($expectedText, $extractedText);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsTextFromPptxFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'pptx');
-		$service->setInputFile($this->testDocumentsPath . 'testPPT.pptx', 'pptx');
-		$service->process();
-
-		$expectedText  = 'Sample Powerpoint Slide';
-		$extractedText = $service->getOutput();
-
-		$this->assertContains($expectedText, $extractedText);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsTextFromRtfFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'rtf');
-		$service->setInputFile($this->testDocumentsPath . 'testRTF.rtf', 'rtf');
-		$service->process();
-
-		$expectedText  = 'Test';
-		$extractedText = $service->getOutput();
-
-		$this->assertContains($expectedText, $extractedText);
-	}
-
-	/**
-	 * @test
-	 */
 	public function extractsTextFromSxwFile() {
 		$service = t3lib_div::makeInstanceService('textExtract', 'sxw');
 
@@ -250,47 +205,9 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertContains($expectedText, $extractedText);
 	}
 
-	/**
-	 * @test
-	 */
-	public function extractsTextFromTxtFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'txt');
-		$service->setInputFile($this->testDocumentsPath . 'testTXT.txt', 'txt');
-		$service->process();
 
-		$expectedText  = 'Test';
-		$extractedText = $service->getOutput();
+	// XML and markup
 
-		$this->assertContains($expectedText, $extractedText);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsTextFromXlsFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'xls');
-		$service->setInputFile($this->testDocumentsPath . 'testEXCEL.xls', 'xls');
-		$service->process();
-
-		$expectedText  = 'Sample Excel Worksheet';
-		$extractedText = $service->getOutput();
-
-		$this->assertContains($expectedText, $extractedText);
-	}
-
-	/**
-	 * @test
-	 */
-	public function extractsTextFromXlsxFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'xlsx');
-		$service->setInputFile($this->testDocumentsPath . 'testEXCEL.xlsx', 'xlsx');
-		$service->process();
-
-		$expectedText  = 'Sample Excel Worksheet';
-		$extractedText = $service->getOutput();
-
-		$this->assertContains($expectedText, $extractedText);
-	}
 
 	/**
 	 * @test
@@ -305,6 +222,49 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 
 		$this->assertContains($expectedText, $extractedText);
 	}
+
+	/**
+	 * @test
+	 */
+	public function extractsTextFromHtmlFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'html');
+
+			// HTML
+		$service->setInputFile($this->testDocumentsPath . 'testHTML.html', 'html');
+		$service->process();
+
+		$expectedText  = 'Test Indexation Html';
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
+
+			// HTML, utf8
+		$service->setInputFile($this->testDocumentsPath . 'testHTML_utf8.html', 'html');
+		$service->process();
+
+		$expectedText  = 'åäö';	// &aring;&auml;&ouml;
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsTextFromEpubFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'epub');
+		$service->setInputFile($this->testDocumentsPath . 'testEPUB.epub', 'epub');
+		$service->process();
+
+		$expectedText  = 'This is the text for chapter One';
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
+	}
+
+
+	// Packages
+
 
 	/**
 	 * @test
@@ -342,6 +302,66 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 
 		$this->assertContains('testXML.xml',     $extractedText);
 		$this->assertContains('Rida Benjelloun', $extractedText);
+	}
+
+
+	// Other
+
+
+	/**
+	 * @test
+	 */
+	public function extractsTextFromMsgFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'msg');
+		$service->setInputFile($this->testDocumentsPath . 'testMSG.msg', 'msg');
+		$service->process();
+
+		$expectedText  = 'work has progressed pretty well';
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsTextFromPdfFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'pdf');
+		$service->setInputFile($this->testDocumentsPath . 'testPDF.pdf', 'pdf');
+		$service->process();
+
+		$expectedText  = 'Tika - Content Analysis Toolkit';
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsTextFromRtfFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'rtf');
+		$service->setInputFile($this->testDocumentsPath . 'testRTF.rtf', 'rtf');
+		$service->process();
+
+		$expectedText  = 'Test';
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractsTextFromTxtFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'txt');
+		$service->setInputFile($this->testDocumentsPath . 'testTXT.txt', 'txt');
+		$service->process();
+
+		$expectedText  = 'Test';
+		$extractedText = $service->getOutput();
+
+		$this->assertContains($expectedText, $extractedText);
 	}
 }
 
