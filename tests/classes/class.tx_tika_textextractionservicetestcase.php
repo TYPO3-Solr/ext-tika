@@ -305,6 +305,44 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 
 		$this->assertContains($expectedText, $extractedText);
 	}
+
+	/**
+	 * @test
+	 */
+	public function extractsTextFromZipFile() {
+		$service = t3lib_div::makeInstanceService('textExtract', 'zip');
+		$service->setInputFile($this->testDocumentsPath . 'test-documents.zip', 'zip');
+		$service->process();
+
+		$extractedText = $service->getOutput();
+
+		$this->assertContains('testEXCEL.xls',          $extractedText);
+		$this->assertContains('Sample Excel Worksheet', $extractedText);
+
+		$this->assertContains('testHTML.html',        $extractedText);
+		$this->assertContains('Test Indexation Html', $extractedText);
+
+		$this->assertContains('testOpenOffice2.odt',                   $extractedText);
+		$this->assertContains('This is a sample Open Office document', $extractedText);
+
+		$this->assertContains('testPDF.pdf', $extractedText);
+		$this->assertContains('Apache Tika', $extractedText);
+
+		$this->assertContains('testPPT.ppt',             $extractedText);
+		$this->assertContains('Sample Powerpoint Slide', $extractedText);
+
+		$this->assertContains('testRTF.rtf',     $extractedText);
+		$this->assertContains('indexation Word', $extractedText);
+
+		$this->assertContains('testTXT.txt',               $extractedText);
+		$this->assertContains('Test d\'indexation de Txt', $extractedText);
+
+		$this->assertContains('testWORD.doc',                             $extractedText);
+		$this->assertContains('This is a sample Microsoft Word Document', $extractedText);
+
+		$this->assertContains('testXML.xml',     $extractedText);
+		$this->assertContains('Rida Benjelloun', $extractedText);
+	}
 }
 
 

@@ -33,7 +33,7 @@ t3lib_extMgm::addService($_EXTKEY, 'textExtract', 'tx_tika_textExtract', array(
 	'title'       => 'Tika text extraction',
 	'description' => 'Uses Apache Tika to extract text from files.',
 
-	'subtype'     => 'doc,docx,epub,htm,html,msg,odf,odt,pdf,ppt,pptx,rtf,sxw,txt,xls,xlsx,xml',
+	'subtype'     => 'doc,docx,epub,htm,html,msg,odf,odt,pdf,ppt,pptx,rtf,sxw,txt,xls,xlsx,xml,zip',
 
 	'available'   => FALSE,
 	'priority'    => 50,
