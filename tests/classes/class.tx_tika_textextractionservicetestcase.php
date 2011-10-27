@@ -276,32 +276,32 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 
 		$extractedText = $service->getOutput();
 
-		$this->assertContains('test-documents/testEXCEL.xls',          $extractedText);
-		$this->assertContains('Sample Excel Worksheet', $extractedText);
+		$this->assertContains('test-documents/testEXCEL.xls', $extractedText);
+		$this->assertContains('Sample Excel Worksheet',       $extractedText);
 
-		$this->assertContains('test-documents/testHTML.html',        $extractedText);
-		$this->assertContains('Test Indexation Html', $extractedText);
+		$this->assertContains('test-documents/testHTML.html', $extractedText);
+		$this->assertContains('Test Indexation Html',         $extractedText);
 
-		$this->assertContains('test-documents/testOpenOffice2.odt',                   $extractedText);
+		$this->assertContains('test-documents/testOpenOffice2.odt',    $extractedText);
 		$this->assertContains('This is a sample Open Office document', $extractedText);
 
 		$this->assertContains('test-documents/testPDF.pdf', $extractedText);
-		$this->assertContains('Apache Tika', $extractedText);
+		$this->assertContains('Apache Tika',                $extractedText);
 
-		$this->assertContains('test-documents/testPPT.ppt',             $extractedText);
-		$this->assertContains('Sample Powerpoint Slide', $extractedText);
+		$this->assertContains('test-documents/testPPT.ppt', $extractedText);
+		$this->assertContains('Sample Powerpoint Slide',    $extractedText);
 
-		$this->assertContains('test-documents/testRTF.rtf',     $extractedText);
-		$this->assertContains('indexation Word', $extractedText);
+		$this->assertContains('test-documents/testRTF.rtf', $extractedText);
+		$this->assertContains('indexation Word',            $extractedText);
 
-		$this->assertContains('test-documents/testTXT.txt',               $extractedText);
-		$this->assertContains('Test d\'indexation de Txt', $extractedText);
+		$this->assertContains('test-documents/testTXT.txt', $extractedText);
+		$this->assertContains('Test d\'indexation de Txt',  $extractedText);
 
-		$this->assertContains('test-documents/testWORD.doc',                             $extractedText);
+		$this->assertContains('test-documents/testWORD.doc',              $extractedText);
 		$this->assertContains('This is a sample Microsoft Word Document', $extractedText);
 
-		$this->assertContains('test-documents/testXML.xml',     $extractedText);
-		$this->assertContains('Rida Benjelloun', $extractedText);
+		$this->assertContains('test-documents/testXML.xml', $extractedText);
+		$this->assertContains('Rida Benjelloun',            $extractedText);
 	}
 
 	/**
