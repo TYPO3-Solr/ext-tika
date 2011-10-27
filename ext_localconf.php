@@ -15,7 +15,7 @@ t3lib_extMgm::addService($_EXTKEY, 'metaExtract', 'tx_tika_metaExtract', array(
 	'title'       => 'Tika meta data extraction',
 	'description' => 'Uses Apache Tika to extract meta data.',
 
-	'subtype'     => 'aiff,au,bmp,doc,docx,epub,flv,gif,htm,html,image:exif,jpg,jpeg,mid,mp3,msg,odf,odt,pdf,png,ppt,pptx,rtf,svg,sxw,tiff,txt,wav,xls,xlsx,xml',
+	'subtype'     => 'aiff,au,bmp,doc,docx,epub,flv,gif,htm,html,image:exif,jpg,jpeg,mid,mp3,msg,odf,odt,pdf,png,ppt,pptx,rtf,svg,sxw,tiff,txt,wav,xls,xlsx,xml,zip',
 
 	'available'   => FALSE,
 	'priority'    => 50,
