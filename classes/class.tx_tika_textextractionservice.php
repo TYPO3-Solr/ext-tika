@@ -103,6 +103,14 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 
 		$shellOutput = shell_exec($tikaCommand);
 
+		if ($this->tikaConfiguration['logging']) {
+			t3lib_div::devLog('Text Extraction using local Tika', 'tika', 0, array(
+				'file'         => $file,
+				'tika command' => $tikaCommand,
+				'shell output' => $shellOutput
+			));
+		}
+
 		return $shellOutput;
 	}
 
@@ -130,6 +138,15 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 		$query = t3lib_div::makeInstance('tx_solr_ExtractingQuery', $file);
 		$query->setExtractOnly();
 		$response = $solr->extract($query);
+
+		if ($this->tikaConfiguration['logging']) {
+			t3lib_div::devLog('Text Extraction using Solr', 'tika', 0, array(
+				'file'            => $file,
+				'solr connection' => (array) $solr,
+				'query'           => (array) $query,
+				'response'        => $response
+			));
+		}
 
 		return $response[0];
 	}

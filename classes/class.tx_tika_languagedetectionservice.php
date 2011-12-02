@@ -84,7 +84,17 @@ class tx_tika_LanguageDetectionService extends t3lib_svbase {
 				. ' -l'
 				. ' ' . escapeshellarg($inputFile);
 
-			$this->out = trim(shell_exec($tikaCommand));
+			$shellOutput = trim(shell_exec($tikaCommand));
+
+			if ($this->tikaConfiguration['logging']) {
+				t3lib_div::devLog('Meta Data Extraction using local Tika', 'tika', 0, array(
+					'file'         => $inputFile,
+					'tika command' => $tikaCommand,
+					'shell output' => $shellOutput
+				));
+			}
+
+			$this->out = $shellOutput;
 		} else {
 			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
 		}

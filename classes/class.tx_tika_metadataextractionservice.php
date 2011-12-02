@@ -248,6 +248,15 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 		exec($tikaCommand, $shellOutput);
 		$metaData = $this->shellOutputToArray($shellOutput);
 
+		if ($this->tikaConfiguration['logging']) {
+			t3lib_div::devLog('Meta Data Extraction using local Tika', 'tika', 0, array(
+				'file'         => $file,
+				'tika command' => $tikaCommand,
+				'shell output' => $shellOutput,
+				'meta data'    => $metaData
+			));
+		}
+
 		return $metaData;
 	}
 
@@ -277,6 +286,16 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 		$response = $solr->extract($query);
 
 		$metaData = $this->solrResponseToArray($response[1]);
+
+		if ($this->tikaConfiguration['logging']) {
+			t3lib_div::devLog('Meta Data Extraction using Solr', 'tika', 0, array(
+				'file'            => $file,
+				'solr connection' => (array) $solr,
+				'query'           => (array) $query,
+				'response'        => $response,
+				'meta data'       => $metaData
+			));
+		}
 
 		return $metaData;
 	}
