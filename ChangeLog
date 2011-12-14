@@ -1,3 +1,7 @@
+2011-12-14  Ingo Renner  <ingo@typo3.org>
+
+	* Fixed an issue that would lead to re-evaluating Tika's availability everytime any cache is cleared
+
 2011-12-02  Ingo Renner  <ingo@typo3.org>
 
 	* Added logging in all services

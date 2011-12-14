@@ -47,14 +47,21 @@ class tx_tika_StatusCheck {
 	}
 
 	/**
-	 * Update the tika status in the registry
+	 * Updates the Tika availability status in the registry when clearing the
+	 * configuration cache.
 	 *
+	 * @param array $parameters An array of commands from TCEmain.
+	 * @param t3lib_TCEmain $tceMain Back reference to the TCEmain (not used)
 	 */
-	public function updateStatus() {
-		$status = $this->getStatus();
+	public function updateStatus(array $parameters, t3lib_TCEmain $tceMain) {
+		$clearCacheCommand = $parameters['cacheCmd'];
 
-		$registry = t3lib_div::makeInstance('t3lib_Registry');
-		$registry->set('tx_tika', 'available', $status);
+		if ($clearCacheCommand == 'all' || $clearCacheCommand == 'temp_CACHED') {
+			$status = $this->getStatus();
+
+			$registry = t3lib_div::makeInstance('t3lib_Registry');
+			$registry->set('tx_tika', 'available', $status);
+		}
 	}
 
 	/**
@@ -88,17 +95,18 @@ class tx_tika_StatusCheck {
 			$localConfigurationComplete = TRUE;
 		}
 
-			// give us some debug messages
-		t3lib_div::devLog(
-			'Has complete local Tika configuration? ' . $localConfigurationComplete == TRUE ? 'yes' : 'no',
-			'tika', 0,
-			array(
-				'configuration'        => $this->tikaConfiguration,
-				'tikaPath'             => $this->tikaConfiguration['tikaPath'],
-				'absExtractorPath'     => t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE),
-				'extractorClassExists' => is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE)) == TRUE ? 'yes' : 'no',
-			)
-		);
+		if ($this->tikaConfiguration['logging']) {
+			t3lib_div::devLog(
+				'Has complete local Tika configuration: ' . ($localConfigurationComplete == TRUE ? 'yes' : 'no'),
+				'tika', 0,
+				array(
+					'configuration'        => $this->tikaConfiguration,
+					'tikaPath'             => $this->tikaConfiguration['tikaPath'],
+					'absExtractorPath'     => t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE),
+					'extractorClassExists' => is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE)) == TRUE ? 'yes' : 'no',
+				)
+			);
+		}
 
 		return $localConfigurationComplete;
 	}
