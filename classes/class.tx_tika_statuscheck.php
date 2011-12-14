@@ -98,7 +98,8 @@ class tx_tika_StatusCheck {
 		if ($this->tikaConfiguration['logging']) {
 			t3lib_div::devLog(
 				'Has complete local Tika configuration: ' . ($localConfigurationComplete == TRUE ? 'yes' : 'no'),
-				'tika', 0,
+				'tika',
+				0,
 				array(
 					'configuration'        => $this->tikaConfiguration,
 					'tikaPath'             => $this->tikaConfiguration['tikaPath'],
