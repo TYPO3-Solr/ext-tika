@@ -1,3 +1,7 @@
+2012-01-03  Ingo Renner  <ingo@typo3.org>
+
+	* Changed priority and quality settings of the services to take precedence over other service
+
 2011-12-14  Ingo Renner  <ingo@typo3.org>
 
 	* Fixed an issue that would lead to re-evaluating Tika's availability everytime any cache is cleared

@@ -19,8 +19,8 @@ t3lib_extMgm::addService($_EXTKEY, 'metaExtract', 'tx_tika_metaExtract', array(
 	'subtype'     => 'aiff,au,bmp,doc,docx,epub,flv,gif,htm,html,image:exif,jpg,jpeg,mid,mp3,msg,odf,odt,pdf,png,ppt,pptx,rtf,svg,sxw,tgz,tiff,txt,wav,xls,xlsx,xml,zip',
 
 	'available'   => FALSE,
-	'priority'    => 50,
-	'quality'     => 50,
+	'priority'    => 100,
+	'quality'     => 80,
 
 	'os'          => '',
 	'exec'        => $requiredExecutable,
@@ -37,8 +37,8 @@ t3lib_extMgm::addService($_EXTKEY, 'textExtract', 'tx_tika_textExtract', array(
 	'subtype'     => 'doc,docx,epub,htm,html,msg,odf,odt,pdf,ppt,pptx,rtf,sxw,tgz,txt,xls,xlsx,xml,zip',
 
 	'available'   => FALSE,
-	'priority'    => 50,
-	'quality'     => 50,
+	'priority'    => 60,
+	'quality'     => 80,
 
 	'os'          => '',
 	'exec'        => $requiredExecutable,
@@ -58,8 +58,8 @@ t3lib_extMgm::addService($_EXTKEY, 'textLang', 'tx_tika_textLang', array(
 	'subtype'     => '',
 
 	'available'   => FALSE,
-	'priority'    => 50,
-	'quality'     => 50,
+	'priority'    => 60,
+	'quality'     => 60,
 
 	'os'          => '',
 	'exec'        => $requiredExecutable,
