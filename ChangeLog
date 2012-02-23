@@ -1,3 +1,7 @@
+2012-02-23  Ingo Renner  <ingo@typo3.org>
+
+	* Release of version 1.2.0
+
 2012-01-03  Ingo Renner  <ingo@typo3.org>
 
 	* Changed priority and quality settings of the services to take precedence over other service
