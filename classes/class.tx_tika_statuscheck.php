@@ -96,6 +96,9 @@ class tx_tika_StatusCheck {
 		}
 
 		if ($this->tikaConfiguration['logging']) {
+			$registry = t3lib_div::makeInstance('t3lib_Registry');
+			$registryStatus = $registry->get('tx_tika', 'available');
+
 			t3lib_div::devLog(
 				'Has complete local Tika configuration: ' . ($localConfigurationComplete == TRUE ? 'yes' : 'no'),
 				'tika',
@@ -106,6 +109,7 @@ class tx_tika_StatusCheck {
 					'tikaPath'           => $this->tikaConfiguration['tikaPath'],
 					'absoluteTikaPath'   => t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE),
 					'absoluteTikaExists' => is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE)) == TRUE ? 'yes' : 'no',
+					'registryStatus'     => $registryStatus,
 				)
 			);
 		}
