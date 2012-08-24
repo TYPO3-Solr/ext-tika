@@ -101,10 +101,11 @@ class tx_tika_StatusCheck {
 				'tika',
 				0,
 				array(
-					'configuration'        => $this->tikaConfiguration,
-					'tikaPath'             => $this->tikaConfiguration['tikaPath'],
-					'absExtractorPath'     => t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE),
-					'extractorClassExists' => is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE)) == TRUE ? 'yes' : 'no',
+					'configuration'      => $this->tikaConfiguration,
+					'javaFound'          => t3lib_exec::checkCommand('java'),
+					'tikaPath'           => $this->tikaConfiguration['tikaPath'],
+					'absoluteTikaPath'   => t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE),
+					'absoluteTikaExists' => is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE)) == TRUE ? 'yes' : 'no',
 				)
 			);
 		}

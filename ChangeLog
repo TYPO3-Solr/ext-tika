@@ -1,3 +1,7 @@
+2012-08-24  Ingo Renner  <ingo@typo3.org>
+
+	* Changed local configuration check to include resutls for Java check
+
 2012-02-23  Ingo Renner  <ingo@typo3.org>
 
 	* Release of version 1.2.0
