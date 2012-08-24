@@ -79,7 +79,7 @@ class tx_tika_StatusCheck {
 		return $isConfigured;
 	}
 
-		/**
+	/**
 	 * Checks whether the extension is configured to use a local Tika
 	 * application, and if so whether it's correctly configured.
 	 *
