@@ -1,3 +1,7 @@
+2012-08-28  Ingo Renner  <ingo@typo3.org>
+
+	* Removed option to use curl as HTTP transport between TYPO3 and the Solr server
+
 2012-08-24  Ingo Renner  <ingo@typo3.org>
 
 	* Changed local configuration check to include resutls for Java check

@@ -24,8 +24,5 @@ solrPort = 8080
   # cat=basic//60; type=string; label= Solr Path
 solrPath = /solr/
 
-  # cat=basic//70; type=boolean; label= Use curl HTTP transport
-solrUseCurl = 0
-
   # cat=basic//80; type=boolean; label= Log Tika calls
 logging = 0
