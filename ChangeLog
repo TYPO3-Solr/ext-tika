@@ -4,7 +4,7 @@
 
 2012-08-24  Ingo Renner  <ingo@typo3.org>
 
-	* Changed local configuration check to include resutls for Java check
+	* Changed local configuration check to include results for Java check
 	* Changed local configuration check to include availability status as stored in registry
 
 2012-02-23  Ingo Renner  <ingo@typo3.org>
