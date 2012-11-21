@@ -15,6 +15,7 @@ return array(
 
 	'tx_tika_languagedetectionpostprocessor'  => $extensionPath . 'interfaces/interface.tx_tika_languagedetectionpostprocessor.php',
 	'tx_tika_metadataextractionpostprocessor' => $extensionPath . 'interfaces/interface.tx_tika_metadataextractionpostprocessor.php',
+	'tx_tika_textextractionpostprocessor'     => $extensionPath . 'interfaces/interface.tx_tika_textextractionpostprocessor.php'
 
 );
 ?>

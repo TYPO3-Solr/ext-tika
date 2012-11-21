@@ -85,7 +85,31 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
 		}
 
+		$this->postProcessTextExtraction();
+
 		return $this->getLastError();
+	}
+
+	/**
+	 * Allows to post-process the results of the text extracted by Tika.
+	 *
+	 * @return void
+	 */
+	protected function postProcessTextExtraction() {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['TextExtraction']['postProcessTextExtraction'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['TextExtraction']['postProcessTextExtraction'] as $classReference) {
+				$postProcessor = t3lib_div::getUserObj($classReference);
+
+				if ($postProcessor instanceof tx_tika_TextExtractionPostProcessor) {
+					$postProcessor->postProcessTextExtraction($this);
+				} else {
+					throw new UnexpectedValueException(
+						get_class($postProcessor) . ' must implement interface tx_tika_TextExtractionPostProcessor.',
+						1353497580
+					);
+				}
+			}
+		}
 	}
 
 	/**
