@@ -37,9 +37,11 @@ class tx_tika_LanguageDetectionService extends t3lib_svbase {
 	public $extKey        = 'tika'; // The extension key.
 
 	/**
-	 * @var	array
+	 * Holds the extension's configuration coming from the Extension Manager.
+	 *
+	 * @var array
 	 */
-	protected $configuration;
+	protected $tikaConfiguration;
 
 	/**
 	 * Checks whether the service is available, reads the extension's
