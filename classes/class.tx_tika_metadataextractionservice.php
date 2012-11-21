@@ -92,7 +92,31 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
 		}
 
+		$this->postProcessMetaDataExtraction();
+
 		return $this->getLastError();
+	}
+
+	/**
+	 * Allows to post-process the results of the meta data extracted by Tika.
+	 *
+	 * @return void
+	 */
+	protected function postProcessMetaDataExtraction() {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['MetaDataExtraction']['postProcessMetaDataExtraction'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['MetaDataExtraction']['postProcessMetaDataExtraction'] as $classReference) {
+				$postProcessor = t3lib_div::getUserObj($classReference);
+
+				if ($postProcessor instanceof tx_tika_MetaDataExtractionPostProcessor) {
+					$postProcessor->postProcessMetaDataExtraction($this);
+				} else {
+					throw new UnexpectedValueException(
+						get_class($postProcessor) . ' must implement interface tx_tika_MetaDataExtractionPostProcessor.',
+						1353496594
+					);
+				}
+			}
+		}
 	}
 
 	/**

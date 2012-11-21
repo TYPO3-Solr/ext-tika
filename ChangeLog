@@ -1,6 +1,7 @@
 2012-11-21  Ingo Renner  <ingo@typo3.org>
 
 	* Added a post processing hook for the language detection service
+	* Added a post processing hook for the meta data extraction service
 
 2012-08-28  Ingo Renner  <ingo@typo3.org>
 
