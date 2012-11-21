@@ -9,6 +9,11 @@ return array(
 	'tx_tika_metadataextractionservice' => $extensionPath . 'classes/class.tx_tika_metadataextractionservice.php',
 	'tx_tika_textextractionservice'     => $extensionPath . 'classes/class.tx_tika_textextractionservice.php',
 
-	'tx_tika_report_tikastatus'         => $extensionPath . 'report/class.tx_tika_report_tikastatus.php'
+	'tx_tika_report_tikastatus'         => $extensionPath . 'report/class.tx_tika_report_tikastatus.php',
+
+	// interfaces
+
+	'tx_tika_languagedetectionpostprocessor'  => $extensionPath . 'interfaces/interface.tx_tika_languagedetectionpostprocessor.php',
+
 );
 ?>

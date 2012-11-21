@@ -101,7 +101,31 @@ class tx_tika_LanguageDetectionService extends t3lib_svbase {
 			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
 		}
 
+		$this->postProcessLanguageDetection();
+
 		return $this->getLastError();
+	}
+
+	/**
+	 * Allows to post-process the results of the language detected by Tika.
+	 *
+	 * @return void
+	 */
+	protected function postProcessLanguageDetection() {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['LanguageDetection']['postProcessLanguageDetection'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['LanguageDetection']['postProcessLanguageDetection'] as $classReference) {
+				$postProcessor = t3lib_div::getUserObj($classReference);
+
+				if ($postProcessor instanceof tx_tika_LanguageDetectionPostProcessor) {
+					$postProcessor->postProcessLanguageDetection($this);
+				} else {
+					throw new UnexpectedValueException(
+						get_class($postProcessor) . ' must implement interface tx_tika_LanguageDetectionPostProcessor.',
+						1353495493
+					);
+				}
+			}
+		}
 	}
 }
 
