@@ -9,7 +9,7 @@ return array(
 	'tx_tika_metadataextractionservice' => $extensionPath . 'classes/class.tx_tika_metadataextractionservice.php',
 	'tx_tika_textextractionservice'     => $extensionPath . 'classes/class.tx_tika_textextractionservice.php',
 
-	'tx_tika_report_tikastatus'         => $extensionPath . 'report/class.tx_tika_report_tikastatus.php',
+	'apachesolrfortypo3\tika\report\tikastatus' => $extensionPath . 'Classes/Report/TikaStatus.php',
 
 	// interfaces
 

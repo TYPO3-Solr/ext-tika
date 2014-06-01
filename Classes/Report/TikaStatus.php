@@ -1,8 +1,10 @@
 <?php
+namespace ApacheSolrForTypo3\Tika\Report;
+
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010-2011 Ingo Renner <ingo@typo3.org>
+*  (c) 2010-2014 Ingo Renner <ingo@typo3.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,48 +24,51 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Reports\Report\Status\Status;
+use TYPO3\CMS\Reports\StatusProviderInterface;
+
 
 /**
  * Provides a status report about whether Tika is properly configured
  *
- * @author	Ingo Renner <ingo@typo3.org>
- * @package	TYPO3
- * @subpackage	tika
+ * @author Ingo Renner <ingo@typo3.org>
+ * @package TYPO3
+ * @subpackage tika
  */
-class tx_tika_report_TikaStatus implements tx_reports_StatusProvider {
+class TikaStatus implements StatusProviderInterface {
 
 	/**
 	 * EXT:tika configuration.
 	 *
-	 * @var	array
+	 * @var array
 	 */
 	protected $tikaConfiguration = array();
 
 	/**
 	 * Checks whether Tika is properly configured
 	 *
-	 * @see typo3/sysext/reports/interfaces/tx_reports_StatusProvider::getStatus()
 	 */
 	public function getStatus() {
 		$reports    = array();
-		$tikaStatus = t3lib_div::makeInstance('tx_tika_StatusCheck');
+		$tikaStatus = GeneralUtility::makeInstance('tx_tika_StatusCheck');
 		/* @var $tikaStatus tx_tika_StatusCheck */
 
-		$status = t3lib_div::makeInstance('tx_reports_reports_status_Status',
+		$status = GeneralUtility::makeInstance('tx_reports_reports_status_Status',
 			'Apache Tika',
 			'Configuration OK'
 		);
 		/* @var $status tx_reports_reports_status_Status */
 
 		if (!$tikaStatus->getStatus()) {
-			$status = t3lib_div::makeInstance('tx_reports_reports_status_Status',
+			$status = GeneralUtility::makeInstance('tx_reports_reports_status_Status',
 				'Apache Tika',
 				'Configuration Incomplete',
 				'<p>Please check your configuration for Apache Tika.</p><p>
 				Either use a local Tika jar binary app and make sure Java is
 				available or use a remote Solr server\'s Extracting Request
 				Handler.</p>',
-				tx_reports_reports_status_Status::ERROR
+				Status::ERROR
 			);
 		}
 
@@ -73,9 +78,3 @@ class tx_tika_report_TikaStatus implements tx_reports_StatusProvider {
 	}
 
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/report/class.tx_tika_report_tikastatus.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/report/class.tx_tika_report_tikastatus.php']);
-}
-
-?>
