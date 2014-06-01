@@ -49,7 +49,7 @@ class TextExtractionServiceTestCase extends \Tx_Phpunit_TestCase {
 
 			// deactivate all services except tika
 		foreach ($GLOBALS['T3_SERVICES']['textExtract'] as $serviceKey => $serviceInfo) {
-			if ($serviceKey == 'tx_tika_textExtract') {
+			if ($serviceKey == 'Tx_Tika_TextExtract') {
 				continue;
 			}
 

@@ -49,7 +49,7 @@ class LanguageDetectionServiceTestCase extends \Tx_Phpunit_TestCase {
 
 			// deactivate all services except tika
 		foreach ($GLOBALS['T3_SERVICES']['textLang'] as $serviceKey => $serviceInfo) {
-			if ($serviceKey == 'tx_tika_textLang') {
+			if ($serviceKey == 'Tx_Tika_TextLang') {
 				continue;
 			}
 

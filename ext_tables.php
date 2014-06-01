@@ -19,6 +19,6 @@ $GLOBALS['T3_SERVICES']['metaExtract']['Tx_Tika_MetaExtract']['available'] = $se
 $GLOBALS['T3_SERVICES']['textExtract']['Tx_Tika_TextExtract']['available'] = $servicesAvailable;
 $GLOBALS['T3_SERVICES']['textLang']['Tx_Tika_TextLang']['available'] = $servicesAvailable;
 
-$GLOBALS['T3_SERVICES']['tx_tika_metaExtract']['tx_tika_metaExtract']['available'] = $servicesAvailable;
-$GLOBALS['T3_SERVICES']['tx_tika_textExtract']['tx_tika_textExtract']['available'] = $servicesAvailable;
-$GLOBALS['T3_SERVICES']['tx_tika_textLang']['tx_tika_textLang']['available'] = $servicesAvailable;
+$GLOBALS['T3_SERVICES']['Tx_Tika_MetaExtract']['Tx_Tika_MetaExtract']['available'] = $servicesAvailable;
+$GLOBALS['T3_SERVICES']['Tx_Tika_TextExtract']['Tx_Tika_TextExtract']['available'] = $servicesAvailable;
+$GLOBALS['T3_SERVICES']['Tx_Tika_TextLang']['Tx_Tika_TextLang']['available'] = $servicesAvailable;
