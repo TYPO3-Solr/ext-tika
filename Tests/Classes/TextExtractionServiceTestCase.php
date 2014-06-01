@@ -1,8 +1,10 @@
 <?php
+namespace ApacheSolrForTypo3\Tika\Service;
+
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 Ingo Renner <ingo@typo3.org>
+*  (c) 2010-2014 Ingo Renner <ingo@typo3.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,15 +24,18 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 /**
  * Unit tests for the text extraction service
  *
- * @author	Ingo Renner <ingo@typo3.org>
+ * @author Ingo Renner <ingo@typo3.org>
  * @package TYPO3
  * @subpackage tika
  */
-class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
+class tx_tika_TextExtractionServiceTestCase extends \Tx_Phpunit_TestCase {
 
 	private $testDocumentsPath;
 	private $originalServices;
@@ -51,7 +56,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 			$GLOBALS['T3_SERVICES']['textExtract'][$serviceKey]['available'] = FALSE;
 		}
 
-		$this->testDocumentsPath = t3lib_extMgm::extPath('tika') . 'tests/test-documents/';
+		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika') . 'tests/test-documents/';
 	}
 
 	public function tearDown() {
@@ -67,7 +72,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromDocFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'doc');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'doc');
 		$service->setInputFile($this->testDocumentsPath . 'testWORD.doc', 'doc');
 		$service->process();
 
@@ -81,7 +86,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromDocxFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'docx');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'docx');
 		$service->setInputFile($this->testDocumentsPath . 'testWORD.docx', 'docx');
 		$service->process();
 
@@ -95,7 +100,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromXlsFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'xls');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'xls');
 		$service->setInputFile($this->testDocumentsPath . 'testEXCEL.xls', 'xls');
 		$service->process();
 
@@ -109,7 +114,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromXlsxFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'xlsx');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'xlsx');
 		$service->setInputFile($this->testDocumentsPath . 'testEXCEL.xlsx', 'xlsx');
 		$service->process();
 
@@ -123,7 +128,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromPptFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'ppt');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'ppt');
 		$service->setInputFile($this->testDocumentsPath . 'testPPT.ppt', 'ppt');
 		$service->process();
 
@@ -137,7 +142,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromPptxFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'pptx');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'pptx');
 		$service->setInputFile($this->testDocumentsPath . 'testPPT.pptx', 'pptx');
 		$service->process();
 
@@ -155,7 +160,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromOdfFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'odf');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'odf');
 		$service->setInputFile($this->testDocumentsPath . 'testODFwithOOo3.odt', 'odf');
 		$service->process();
 
@@ -168,7 +173,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromOdtFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'odt');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'odt');
 
 			// OOo 3
 		$service->setInputFile($this->testDocumentsPath . 'testODFwithOOo3.odt', 'odt');
@@ -193,7 +198,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromSxwFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'sxw');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'sxw');
 
 			// OOo 1
 		$service->setInputFile($this->testDocumentsPath . 'testSXW.sxw', 'sxw');
@@ -213,7 +218,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromXmlFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'xml');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'xml');
 		$service->setInputFile($this->testDocumentsPath . 'testXML.xml', 'xml');
 		$service->process();
 
@@ -227,7 +232,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromHtmlFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'html');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'html');
 
 			// HTML
 		$service->setInputFile($this->testDocumentsPath . 'testHTML.html', 'html');
@@ -252,7 +257,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromEpubFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'epub');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'epub');
 		$service->setInputFile($this->testDocumentsPath . 'testEPUB.epub', 'epub');
 		$service->process();
 
@@ -270,7 +275,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromTgzFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'tgz');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'tgz');
 		$service->setInputFile($this->testDocumentsPath . 'test-documents.tgz', 'zip');
 		$service->process();
 
@@ -308,7 +313,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromZipFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'zip');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'zip');
 		$service->setInputFile($this->testDocumentsPath . 'test-documents.zip', 'zip');
 		$service->process();
 
@@ -350,7 +355,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromMsgFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'msg');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'msg');
 		$service->setInputFile($this->testDocumentsPath . 'testMSG.msg', 'msg');
 		$service->process();
 
@@ -364,7 +369,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromPdfFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'pdf');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'pdf');
 		$service->setInputFile($this->testDocumentsPath . 'testPDF.pdf', 'pdf');
 		$service->process();
 
@@ -378,7 +383,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromRtfFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'rtf');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'rtf');
 		$service->setInputFile($this->testDocumentsPath . 'testRTF.rtf', 'rtf');
 		$service->process();
 
@@ -392,7 +397,7 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsTextFromTxtFile() {
-		$service = t3lib_div::makeInstanceService('textExtract', 'txt');
+		$service = GeneralUtility::makeInstanceService('textExtract', 'txt');
 		$service->setInputFile($this->testDocumentsPath . 'testTXT.txt', 'txt');
 		$service->process();
 
@@ -402,10 +407,3 @@ class tx_tika_TextExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertContains($expectedText, $extractedText);
 	}
 }
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_textextractionservice_testcase.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_textextractionservice_testcase.php']);
-}
-
-?>

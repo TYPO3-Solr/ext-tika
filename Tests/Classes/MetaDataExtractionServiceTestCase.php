@@ -1,8 +1,10 @@
 <?php
+namespace ApacheSolrForTypo3\Tika\Service;
+
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 Ingo Renner <ingo@typo3.org>
+*  (c) 2010-2014 Ingo Renner <ingo@typo3.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,15 +24,18 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 /**
  * Unit tests for the meta data extraction service
  *
- * @author	Ingo Renner <ingo@typo3.org>
+ * @author Ingo Renner <ingo@typo3.org>
  * @package TYPO3
  * @subpackage tika
  */
-class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
+class tx_tika_MetaDataExtractionServiceTestCase extends \Tx_Phpunit_TestCase {
 
 	private $testDocumentsPath;
 	private $originalServices;
@@ -51,7 +56,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 			$GLOBALS['T3_SERVICES']['metaExtract'][$serviceKey]['available'] = FALSE;
 		}
 
-		$this->testDocumentsPath = t3lib_extMgm::extPath('tika') . 'tests/test-documents/';
+		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika') . 'tests/test-documents/';
 	}
 
 	public function tearDown() {
@@ -70,7 +75,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 
 #		$this->markTestIncomplete('aiff currently not working correctly.');
 
-		$service = t3lib_div::makeInstanceService('metaExtract', 'aiff');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'aiff');
 		$service->setInputFile($this->testDocumentsPath . 'testAIFF.aif', 'aiff');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -88,7 +93,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromAuFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'au');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'au');
 		$service->setInputFile($this->testDocumentsPath . 'testAU.au', 'au');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -106,7 +111,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromMidFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'mid');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'mid');
 		$service->setInputFile($this->testDocumentsPath . 'testMID.mid', 'mid');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -123,7 +128,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromMp3File() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'mp3');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'mp3');
 		$service->setInputFile($this->testDocumentsPath . 'testMP3.mp3', 'mp3');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -139,7 +144,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromWavFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'wav');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'wav');
 		$service->setInputFile($this->testDocumentsPath . 'testWAV.wav', 'wav');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -161,7 +166,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromBmpFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'bmp');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'bmp');
 		$service->setInputFile($this->testDocumentsPath . 'testBMP.bmp', 'bmp');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -176,7 +181,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromGifFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'gif');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'gif');
 		$service->setInputFile($this->testDocumentsPath . 'testGIF.gif', 'gif');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -191,7 +196,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromJpgFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'jpg');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'jpg');
 		$service->setInputFile($this->testDocumentsPath . 'testJPEG.jpg', 'jpg');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -206,7 +211,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsExifMetaDataFromJpgFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'image:exif');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'image:exif');
 		$service->setInputFile($this->testDocumentsPath . 'testJPEG_EXIF.jpg', 'jpg');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -223,7 +228,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsExifMetaDataFromJpgFileIntoDamFields() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'image:exif');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'image:exif');
 		$service->setInputFile($this->testDocumentsPath . 'testJPEG_EXIF.jpg', 'jpg');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -241,7 +246,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromPngFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'png');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'png');
 		$service->setInputFile($this->testDocumentsPath . 'testPNG.png', 'png');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -256,7 +261,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromSvgFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'svg');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'svg');
 		$service->setInputFile($this->testDocumentsPath . 'testSVG.svg', 'svg');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -269,7 +274,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromTiffFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'tiff');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'tiff');
 		$service->setInputFile($this->testDocumentsPath . 'testTIFF.tif', 'tif');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -286,7 +291,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromDocFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'doc');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'doc');
 		$service->setInputFile($this->testDocumentsPath . 'testWORD.doc', 'doc');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -312,7 +317,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromDocxFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'docx');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'docx');
 		$service->setInputFile($this->testDocumentsPath . 'testWORD.docx', 'docx');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -344,7 +349,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromEpubFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'epub');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'epub');
 		$service->setInputFile($this->testDocumentsPath . 'testEPUB.epub', 'epub');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -357,7 +362,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromHtmlFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'html');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'html');
 
 			// HTML
 		$service->setInputFile($this->testDocumentsPath . 'testHTML.html', 'html');
@@ -388,7 +393,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromMsgFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'msg');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'msg');
 		$service->setInputFile($this->testDocumentsPath . 'testMSG.msg', 'msg');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -405,7 +410,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromOdfFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'odf');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'odf');
 		$service->setInputFile($this->testDocumentsPath . 'testOpenOffice2.odf', 'odf');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -422,7 +427,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromOdtFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'odt');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'odt');
 
 			// OOo 2
 		$service->setInputFile($this->testDocumentsPath . 'testOpenOffice2.odt', 'odt');
@@ -445,7 +450,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromPdfFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'pdf');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'pdf');
 		$service->setInputFile($this->testDocumentsPath . 'testPDF.pdf', 'pdf');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -465,7 +470,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromPptFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'ppt');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'ppt');
 		$service->setInputFile($this->testDocumentsPath . 'testPPT.ppt', 'ppt');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -488,7 +493,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromPptxFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'pptx');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'pptx');
 		$service->setInputFile($this->testDocumentsPath . 'testPPT.pptx', 'pptx');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -516,7 +521,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromRtfFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'rtf');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'rtf');
 		$service->setInputFile($this->testDocumentsPath . 'testRTF.rtf', 'rtf');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -529,7 +534,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromSxwFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'sxw');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'sxw');
 		$service->setInputFile($this->testDocumentsPath . 'testSXW.sxw', 'sxw');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -542,7 +547,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromTxtFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'txt');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'txt');
 
 			// en
 		$service->setInputFile($this->testDocumentsPath . 'testTXT_en.txt', 'txt');
@@ -585,7 +590,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromXlsFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'xls');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'xls');
 		$service->setInputFile($this->testDocumentsPath . 'testEXCEL.xls', 'xls');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -606,7 +611,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromXlsxFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'xlsx');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'xlsx');
 		$service->setInputFile($this->testDocumentsPath . 'testEXCEL.xlsx', 'xlsx');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -630,7 +635,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromXmlFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'xml');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'xml');
 		$service->setInputFile($this->testDocumentsPath . 'testXML.xml', 'xml');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -657,7 +662,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromFlvFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'flv');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'flv');
 		$service->setInputFile($this->testDocumentsPath . 'testFLV.flv', 'flv');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -689,7 +694,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromTgzFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'tgz');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'tgz');
 		$service->setInputFile($this->testDocumentsPath . 'test-documents.tgz', 'zip');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -702,7 +707,7 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function extractsMetaDataFromZipFile() {
-		$service = t3lib_div::makeInstanceService('metaExtract', 'zip');
+		$service = GeneralUtility::makeInstanceService('metaExtract', 'zip');
 		$service->setInputFile($this->testDocumentsPath . 'test-documents.zip', 'zip');
 		$service->process();
 		$metaData = $service->getOutput();
@@ -711,10 +716,3 @@ class tx_tika_MetaDataExtractionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('test-documents.zip', $metaData['resourceName']);
 	}
 }
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_metadataextractionservice_testcase.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_metadataextractionservice_testcase.php']);
-}
-
-?>

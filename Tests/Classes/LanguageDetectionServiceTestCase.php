@@ -1,8 +1,10 @@
 <?php
+namespace ApacheSolrForTypo3\Tika\Service;
+
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 Ingo Renner <ingo@typo3.org>
+*  (c) 2010-2014 Ingo Renner <ingo@typo3.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,15 +24,18 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 /**
  * Unit tests for the meta data extraction service
  *
- * @author	Ingo Renner <ingo@typo3.org>
+ * @author Ingo Renner <ingo@typo3.org>
  * @package TYPO3
  * @subpackage tika
  */
-class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
+class LanguageDetectionServiceTestCase extends \Tx_Phpunit_TestCase {
 
 	private $testDocumentsPath;
 	private $originalServices;
@@ -51,7 +56,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 			$GLOBALS['T3_SERVICES']['textLang'][$serviceKey]['available'] = FALSE;
 		}
 
-		$this->testDocumentsPath = t3lib_extMgm::extPath('tika') . 'tests/test-languages/';
+		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika') . 'tests/test-languages/';
 	}
 
 	public function tearDown() {
@@ -63,7 +68,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsDanishLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'da.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -75,7 +80,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsDutchLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'nl.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -87,7 +92,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsEnglishLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'en.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -99,7 +104,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsFinnishLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'fi.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -111,7 +116,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsFrenchLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'fr.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -123,7 +128,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsGermanLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'de.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -135,7 +140,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsItalianLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'it.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -147,7 +152,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsPortugueseLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'pt.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -159,7 +164,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsSpanishLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'es.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -171,7 +176,7 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function detectsSwedishLanguage() {
-		$service = t3lib_div::makeInstanceService('textLang');
+		$service = GeneralUtility::makeInstanceService('textLang');
 		$service->setInputFile($this->testDocumentsPath . 'sv.test', 'txt');
 		$service->process();
 		$language = $service->getOutput();
@@ -179,10 +184,3 @@ class tx_tika_LanguageDetectionServiceTestCase extends tx_phpunit_testcase {
 		$this->assertEquals('sv', $language);
 	}
 }
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_languagedetectionservice_testcase.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['class.tx_tika_languagedetectionservice_testcase.php']);
-}
-
-?>
