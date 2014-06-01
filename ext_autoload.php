@@ -9,13 +9,6 @@ return array(
 	'apachesolrfortypo3\tika\service\metadataextractionservice' => $extensionPath . 'classes/service/metadataextractionservice.php',
 	'apachesolrfortypo3\tika\service\textextractionservice'     => $extensionPath . 'classes/service/textextractionservice.php',
 
-	'apachesolrfortypo3\tika\report\tikastatus' => $extensionPath . 'Classes/Report/TikaStatus.php',
-
-	// interfaces
-
-	'tx_tika_languagedetectionpostprocessor'  => $extensionPath . 'interfaces/interface.tx_tika_languagedetectionpostprocessor.php',
-	'tx_tika_metadataextractionpostprocessor' => $extensionPath . 'interfaces/interface.tx_tika_metadataextractionpostprocessor.php',
-	'tx_tika_textextractionpostprocessor'     => $extensionPath . 'interfaces/interface.tx_tika_textextractionpostprocessor.php'
-
+	'apachesolrfortypo3\tika\report\tikastatus' => $extensionPath . 'Classes/Report/TikaStatus.php'
 );
 ?>
