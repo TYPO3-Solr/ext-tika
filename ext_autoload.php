@@ -1,5 +1,5 @@
 <?php
-$extensionPath = t3lib_extMgm::extPath('tika');
+$extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tika');
 return array(
 	'tx_tika_statuscheck'               => $extensionPath . 'classes/class.tx_tika_statuscheck.php',
 
