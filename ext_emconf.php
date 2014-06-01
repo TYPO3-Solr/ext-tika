@@ -15,8 +15,8 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Provides Tika services for TYPO3 to detect a document\'s language, extract meta data, and extract content from files.
 Can either use a stand alone Tika executable or Tika integrated in a Solr server with an activated extracting request handler.',
 	'category' => 'services',
-	'author' => 'Ingo Renner',
-	'author_email' => 'ingo@typo3.org',
+	'author' => 'Ingo Renner, Phuong Doan',
+	'author_email' => 'ingo@typo3.org, phuong.doan@dkd.de',
 	'shy' => '',
 	'dependencies' => '',
 	'conflicts' => '',
@@ -30,15 +30,15 @@ Can either use a stand alone Tika executable or Tika integrated in a Solr server
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '1.3.0-dev',
+	'version' => '2.0.0-dev',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.3.0-0.0.0',
+			'typo3' => '6.0.0-0.0.0',
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
-			'solr' => '',
+			'solr' => '3.0.0-',
 			'devlog' => '',
 		),
 	),
