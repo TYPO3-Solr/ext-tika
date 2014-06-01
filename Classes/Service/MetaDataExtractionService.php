@@ -116,7 +116,34 @@ class MetaDataExtractionService extends AbstractService {
 
 		foreach ($shellOutputMetaData as $line) {
 			list($dataName, $dataValue) = explode(':', $line, 2);
-			$metaData[$dataName] = trim($dataValue);
+			$dataValue = trim($dataValue);
+
+			if (in_array($dataName, array('dc', 'dcterms', 'meta', 'tiff', 'xmp', 'xmpTPg'))) {
+				// Dublin Core metadata and co
+				$dataNamePrefix = $dataName;
+				list($dataName, $dataValue) = explode(':', $dataValue, 2);
+				$dataName = $dataNamePrefix . ':' . $dataName;
+				$dataValue = trim($dataValue);
+			}
+
+			if (array_key_exists($dataName, $metaData)) {
+				if ($metaData[$dataName] == $dataValue) {
+					// first duplicate key hit, but also duplicate value
+					continue;
+				}
+
+				// allow a meta data key to appear multiple times
+				if (!is_array($metaData[$dataName])) {
+					$metaData[$dataName] = array($metaData[$dataName]);
+				}
+
+				// but do not allow duplicate values
+				if (!in_array($dataValue, $metaData[$dataName])) {
+					$metaData[$dataName][] = $dataValue;
+				}
+			} else {
+				$metaData[$dataName] = $dataValue;
+			}
 		}
 
 		return $metaData;
@@ -132,7 +159,11 @@ class MetaDataExtractionService extends AbstractService {
 		$metaDataCleaned = array();
 
 		foreach ($metaData as $key => $value) {
-			// still add the value
+			if (is_array($value)) {
+				$value = implode(', ', $value);
+			}
+
+			// in any case add the value
 			$metaDataCleaned[$key] = $value;
 
 			// clean / add values under alternative names
@@ -214,8 +245,14 @@ class MetaDataExtractionService extends AbstractService {
 			$this->out['fields']['date_cr'] = $this->exifDateToTimestamp($metaData['Date/Time Original']);
 		}
 
-		if (isset($metaData['Keywords'])) {
-			$this->out['fields']['keywords'] = implode(', ', explode(' ', $metaData['Keywords']));
+		if (isset($metaData['keywords'])) {
+			$keywords = explode(' ', $metaData['keywords']);
+			foreach ($keywords as $i => $keyword) {
+				// prevent double comma if it was imploded from an array before
+				$keywords[$i] = trim($keyword, ',');
+			}
+
+			$this->out['fields']['keywords'] = implode(', ', $keywords);
 		}
 
 		if (isset($metaData['Model'])) {

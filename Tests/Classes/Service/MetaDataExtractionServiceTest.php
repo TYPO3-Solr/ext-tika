@@ -172,8 +172,8 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$metaData = $service->getOutput();
 
 		$this->assertEquals('image/x-ms-bmp', $metaData['Content-Type']);
-		$this->assertEquals(75,               $metaData['Height']);
-		$this->assertEquals(100,              $metaData['Width']);
+		$this->assertEquals(75,               $metaData['height']);
+		$this->assertEquals(100,              $metaData['width']);
 		$this->assertEquals('testBMP.bmp',    $metaData['resourceName']);
 	}
 
@@ -187,8 +187,8 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$metaData = $service->getOutput();
 
 		$this->assertEquals('image/gif', $metaData['Content-Type']);
-		$this->assertEquals(75, $metaData['Height']);
-		$this->assertEquals(100, $metaData['Width']);
+		$this->assertEquals(75, $metaData['height']);
+		$this->assertEquals(100, $metaData['width']);
 		$this->assertEquals('testGIF.gif', $metaData['resourceName']);
 	}
 
@@ -202,8 +202,8 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$metaData = $service->getOutput();
 
 		$this->assertEquals('image/jpeg', $metaData['Content-Type']);
-		$this->assertEquals(75, $metaData['Height']);
-		$this->assertEquals(100, $metaData['Width']);
+		$this->assertEquals(75, $metaData['height']);
+		$this->assertEquals(100, $metaData['width']);
 		$this->assertEquals('testJPEG.jpg', $metaData['resourceName']);
 	}
 
@@ -217,8 +217,8 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$metaData = $service->getOutput();
 
 		$this->assertEquals('image/jpeg', $metaData['Content-Type']);
-		$this->assertEquals(68, $metaData['Height']);
-		$this->assertEquals(100, $metaData['Width']);
+		$this->assertEquals(68, $metaData['height']);
+		$this->assertEquals(100, $metaData['width']);
 		$this->assertEquals('testJPEG_EXIF.jpg', $metaData['resourceName']);
 		$this->assertEquals('Canon EOS 40D', $metaData['Model']);
 		$this->assertEquals('2009:08:11 09:09:45', $metaData['Date/Time Original']);
@@ -234,7 +234,7 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$metaData = $service->getOutput();
 
 		$this->assertEquals('Canon EOS 40D', $metaData['fields']['file_creator']);
-		$this->assertEquals(1249974585,      $metaData['fields']['date_cr']);
+		$this->assertEquals(1250006985,      $metaData['fields']['date_cr']);
 		$this->assertEquals(240,             $metaData['fields']['hres'], 'Failed to provide horizontal resolution');
 		$this->assertEquals(240,             $metaData['fields']['vres'], 'Failed to provide vertical resolution');
 //		$this->assertArrayHasKey('color_space', $metaData['fields']); // test file has "undefined" color space
@@ -252,8 +252,8 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$metaData = $service->getOutput();
 
 		$this->assertEquals('image/png', $metaData['Content-Type']);
-		$this->assertEquals(75, $metaData['Height']);
-		$this->assertEquals(100, $metaData['Width']);
+		$this->assertEquals(75, $metaData['height']);
+		$this->assertEquals(100, $metaData['width']);
 		$this->assertEquals('testPNG.png', $metaData['resourceName']);
 	}
 
@@ -303,13 +303,13 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$this->assertEquals('Keith Bennett',                 $metaData['Author']);
 		$this->assertEquals('-',                             $metaData['Company']);
 		$this->assertEquals('2007-09-12T20:31:00Z', $metaData['Creation-Date']);
-		$this->assertArrayHasKey('Keywords', $metaData); // no keywords filled out in test file
+		$this->assertArrayHasKey('keywords', $metaData); // no keywords filled out in test file
 		$this->assertEquals('Keith Bennett',                 $metaData['Last-Author']);
 		$this->assertEquals('2007-09-12T20:38:00Z', $metaData['Last-Save-Date']);
 		$this->assertEquals('1',                             $metaData['Page-Count']);
 		$this->assertEquals('1',                             $metaData['Revision-Number']);
 		$this->assertEquals('Normal',                        $metaData['Template']);
-		$this->assertArrayHasKey('subject', $metaData); // no subject filled out in test file
+		$this->assertArrayHasKey('description',              $metaData);
 		$this->assertEquals('Sample Word Document',          $metaData['title']);
 	}
 
@@ -369,7 +369,7 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$service->process();
 		$metaData = $service->getOutput();
 
-		$this->assertEquals('text/html',     $metaData['Content-Type']);
+		$this->assertEquals('text/html; charset=ISO-8859-1', $metaData['Content-Type']);
 		$this->assertEquals('testHTML.html', $metaData['resourceName']);
 
 		$this->assertEquals('Tika Developers',              $metaData['Author']);
@@ -382,7 +382,7 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$service->process();
 		$metaData = $service->getOutput();
 
-		$this->assertEquals('text/html',          $metaData['Content-Type']);
+		$this->assertEquals('text/html; charset=UTF-8',          $metaData['Content-Type']);
 		$this->assertEquals('testHTML_utf8.html', $metaData['resourceName']);
 
 		$this->assertEquals('UTF-8',                                 $metaData['Content-Encoding']);
@@ -420,7 +420,7 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$this->assertEquals('2006-01-27T11:55:22',                         $metaData['Creation-Date']);
 		$this->assertEquals('The quick brown fox jumps over the lazy dog', $metaData['title']);
 		$this->assertEquals('OpenOffice.org/2.2$Win32 OpenOffice.org_project/680m14$Build-9134', $metaData['generator']);
-		$this->assertEquals('Pangram, fox, dog',                           $metaData['Keywords']);
+		$this->assertEquals('Pangram, fox, dog',                           $metaData['keywords']);
 	}
 
 	/**
@@ -458,10 +458,9 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$this->assertEquals('application/pdf', $metaData['Content-Type']);
 		$this->assertEquals('testPDF.pdf',     $metaData['resourceName']);
 
-		$this->assertEquals('Bertrand Delacrétaz',               $metaData['Author']);
+		$this->assertEquals('Bertrand Delacrétaz',                $metaData['Author']);
 		$this->assertEquals('2007-09-15T09:02:31Z',               $metaData['Last-Modified']);
-		$this->assertEquals('Sat Sep 15 11:02:31 CEST 2007',      $metaData['created']);
-		$this->assertEquals('Firefox',                            $metaData['creator']);
+		$this->assertEquals('Bertrand Delacrétaz',                $metaData['creator']);
 		$this->assertEquals('Mac OS X 10.4.10 Quartz PDFContext', $metaData['producer']);
 		$this->assertEquals('Apache Tika - Apache Tika',          $metaData['title']);
 	}
@@ -512,7 +511,7 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$this->assertEquals('1',                        $metaData['Slide-Count']);
 		$this->assertEquals('13',                       $metaData['Word-Count']);
 		$this->assertEquals('Keith Bennett',            $metaData['creator']);
-		$this->assertEquals('2007-09-14T17:33:12Z',     $metaData['date']);
+		$this->assertEquals('2008-12-11T16:00:38Z',     $metaData['date']);
 		$this->assertEquals('-',                        $metaData['publisher']);
 		$this->assertEquals('Sample Powerpoint Slide',  $metaData['title']);
 	}
@@ -554,7 +553,7 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$service->process();
 		$metaData = $service->getOutput();
 
-		$this->assertEquals('text/plain',     $metaData['Content-Type']);
+		$this->assertEquals('text/plain; charset=ISO-8859-1', $metaData['Content-Type']);
 		$this->assertEquals('testTXT_en.txt', $metaData['resourceName']);
 
 		$this->assertEquals('ISO-8859-1', $metaData['Content-Encoding']);
@@ -566,7 +565,7 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$service->process();
 		$metaData = $service->getOutput();
 
-		$this->assertEquals('text/plain',     $metaData['Content-Type']);
+		$this->assertEquals('text/plain; charset=ISO-8859-1', $metaData['Content-Type']);
 		$this->assertEquals('testTXT_de.txt', $metaData['resourceName']);
 
 		$this->assertEquals('ISO-8859-1', $metaData['Content-Encoding']);
@@ -578,7 +577,7 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$service->process();
 		$metaData = $service->getOutput();
 
-		$this->assertEquals('text/plain',  $metaData['Content-Type']);
+		$this->assertEquals('text/plain; charset=ISO-8859-1', $metaData['Content-Type']);
 		$this->assertEquals('testTXT.txt', $metaData['resourceName']);
 
 		$this->assertEquals('ISO-8859-1', $metaData['Content-Encoding']);
@@ -644,12 +643,11 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$this->assertEquals('testXML.xml',     $metaData['resourceName']);
 
 		$this->assertEquals('Rida Benjelloun',                   $metaData['creator']);
-		$this->assertEquals('2000-12',                           $metaData['date']);
-		$this->assertContains('Framework d\'indexation des documents XML, HTML, PDF etc..',  $metaData['description']);
+		$this->assertContains('Indexation',  $metaData['description']);
 		$this->assertEquals('application/msword',                $metaData['format']);
 		$this->assertEquals('http://www.apache.org',             $metaData['identifier']);
 		$this->assertEquals('Fr',                                $metaData['language']);
-		$this->assertEquals('Java, XML, XSLT, JDOM, Indexation', $metaData['subject']);
+		$this->assertEquals('Java, XML, XSLT, JDOM, Indexation', $metaData['description']);
 		$this->assertEquals('Tika test document',                $metaData['title']);
 		$this->assertEquals('test',                              $metaData['type']);
 	}
@@ -680,8 +678,8 @@ class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
 		$this->assertEquals('2.0',       $metaData['videocodecid']);
 		$this->assertEquals('781.25',    $metaData['videodatarate']);
 		$this->assertEquals('24.0',      $metaData['framerate']);
-		$this->assertEquals('120',       $metaData['Height']);
-		$this->assertEquals('170',       $metaData['Width']);
+		$this->assertEquals('120',       $metaData['height']);
+		$this->assertEquals('170',       $metaData['width']);
 		$this->assertEquals('1.167',     $metaData['duration']);
 		$this->assertEquals('90580.0',   $metaData['filesize']);
 	}
