@@ -77,8 +77,8 @@ class MetaDataExtractionService extends AbstractService {
 	 * Extracts meta data from a file using Apache Tika
 	 *
 	 * @param string $content Content which should be processed.
-	 * @param string $type Content type
-	 * @param array $configuration Configuration array
+	 * @param string $type unused
+	 * @param array $configuration unused
 	 * @return boolean
 	 */
 	public function process($content = '', $type = '', $configuration = array()) {
