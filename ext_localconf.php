@@ -25,8 +25,7 @@ t3lib_extMgm::addService($_EXTKEY, 'metaExtract', 'tx_tika_metaExtract', array(
 	'os'          => '',
 	'exec'        => $requiredExecutable,
 
-	'classFile'   => $PATH_tika . 'classes/class.tx_tika_metadataextractionservice.php',
-	'className'   => 'tx_tika_MetaDataExtractionService',
+	'className'   => 'ApacheSolrForTypo3\\Tika\\Service\\MetaDataExtractionService',
 ));
 
 	// text extraction service
@@ -43,8 +42,7 @@ t3lib_extMgm::addService($_EXTKEY, 'textExtract', 'tx_tika_textExtract', array(
 	'os'          => '',
 	'exec'        => $requiredExecutable,
 
-	'classFile'   => $PATH_tika . 'classes/class.tx_tika_textextractionservice.php',
-	'className'   => 'tx_tika_TextExtractionService',
+	'className'   => 'ApacheSolrForTypo3\\Tika\\Service\\TextExtractionService',
 ));
 
 	// language detection service
@@ -64,8 +62,7 @@ t3lib_extMgm::addService($_EXTKEY, 'textLang', 'tx_tika_textLang', array(
 	'os'          => '',
 	'exec'        => $requiredExecutable,
 
-	'classFile'   => $PATH_tika . 'classes/class.tx_tika_languagedetectionservice.php',
-	'className'   => 'tx_tika_LanguageDetectionService',
+	'className'   => 'ApacheSolrForTypo3\\Tika\\Service\\LanguageDetectionService',
 ));
 
 ?>

@@ -5,9 +5,9 @@ return array(
 
 	// services
 
-	'tx_tika_languagedetectionservice'  => $extensionPath . 'classes/class.tx_tika_languagedetectionservice.php',
-	'tx_tika_metadataextractionservice' => $extensionPath . 'classes/class.tx_tika_metadataextractionservice.php',
-	'tx_tika_textextractionservice'     => $extensionPath . 'classes/class.tx_tika_textextractionservice.php',
+	'apachesolrfortypo3\tika\service\languagedetectionservice'  => $extensionPath . 'classes/service/languagedetectionservice.php',
+	'apachesolrfortypo3\tika\service\metadataextractionservice' => $extensionPath . 'classes/service/metadataextractionservice.php',
+	'apachesolrfortypo3\tika\service\textextractionservice'     => $extensionPath . 'classes/service/textextractionservice.php',
 
 	'apachesolrfortypo3\tika\report\tikastatus' => $extensionPath . 'Classes/Report/TikaStatus.php',
 
