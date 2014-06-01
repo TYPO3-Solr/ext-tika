@@ -15,9 +15,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clea
 $registry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_Registry');
 $servicesAvailable = $registry->get('tx_tika', 'available', FALSE);
 
-$GLOBALS['T3_SERVICES']['metaExtract']['tx_tika_metaExtract']['available'] = $servicesAvailable;
-$GLOBALS['T3_SERVICES']['textExtract']['tx_tika_textExtract']['available'] = $servicesAvailable;
-$GLOBALS['T3_SERVICES']['textLang']['tx_tika_textLang']['available'] = $servicesAvailable;
+$GLOBALS['T3_SERVICES']['metaExtract']['Tx_Tika_MetaExtract']['available'] = $servicesAvailable;
+$GLOBALS['T3_SERVICES']['textExtract']['Tx_Tika_TextExtract']['available'] = $servicesAvailable;
+$GLOBALS['T3_SERVICES']['textLang']['Tx_Tika_TextLang']['available'] = $servicesAvailable;
 
 $GLOBALS['T3_SERVICES']['tx_tika_metaExtract']['tx_tika_metaExtract']['available'] = $servicesAvailable;
 $GLOBALS['T3_SERVICES']['tx_tika_textExtract']['tx_tika_textExtract']['available'] = $servicesAvailable;

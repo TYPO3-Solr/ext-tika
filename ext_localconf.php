@@ -15,7 +15,7 @@ if ($tikaConfiguration['extractor'] == 'tika') {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
 	$_EXTKEY,
 	'metaExtract',
-	'tx_tika_metaExtract',
+	'Tx_Tika_MetaExtract',
 	array(
 		'title' => 'Tika meta data extraction',
 		'description' => 'Uses Apache Tika to extract meta data.',
@@ -37,7 +37,7 @@ if ($tikaConfiguration['extractor'] == 'tika') {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
 	$_EXTKEY,
 	'textExtract',
-	'tx_tika_textExtract',
+	'Tx_Tika_TextExtract',
 	array(
 		'title' => 'Tika text extraction',
 		'description' => 'Uses Apache Tika to extract text from files.',
@@ -59,7 +59,7 @@ if ($tikaConfiguration['extractor'] == 'tika') {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
 	$_EXTKEY,
 	'textLang',
-	'tx_tika_textLang',
+	'Tx_Tika_TextLang',
 	array(
 		'title' => 'Tika language detection',
 		'description' => 'Uses Apache Tika to detect a document\'s language.
