@@ -1,8 +1,10 @@
 <?php
+namespace ApacheSolrForTypo3\Tika\Service;
+
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 Ingo Renner <ingo@typo3.org>
+*  (c) 2010-2014 Ingo Renner <ingo@typo3.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,40 +24,47 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\Service\AbstractService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\CommandUtility;
+
 
 /**
  * A service to extract text from files using Apache Tika
  *
- * @author	Ingo Renner <ingo@typo3.org>
+ * @author Ingo Renner <ingo@typo3.org>
+ * @author Phuong Doan <phuong.doan@dkd.de>
  * @package TYPO3
  * @subpackage tika
  */
-class tx_tika_TextExtractionService extends t3lib_svbase {
+class TextExtractionService extends AbstractService {
 
-	public $prefixId      = 'tx_tika_TextExtractionService';
-	public $scriptRelPath = 'classes/class.tx_tika_textextractionservice.php';
+	public $prefixId      = 'TextExtractionService';
+	public $scriptRelPath = 'Classes/Service/TextExtractionService.php';
 	public $extKey        = 'tika';
 
 	/**
 	 * Holds the extension's configuration coming from the Extension Manager.
 	 *
-	 * @var	array
+	 * @var    array
 	 */
 	protected $tikaConfiguration;
+
 
 	/**
 	 * Checks whether the service is available, reads the extension's
 	 * configuration.
 	 *
-	 * @return	boolean	True if the service is available, false otherwise.
+	 * @return boolean True if the service is available, false otherwise.
+	 * @throws \RuntimeException if the configured Tika path is invalid
 	 */
 	public function init() {
 		$available = parent::init();
 
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))) {
-			throw new Exception(
+		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))) {
+			throw new \RuntimeException(
 				'Invalid path or filename for tika application jar.',
 				1266864929
 			);
@@ -65,12 +74,12 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 	}
 
 	/**
-	 * Extracs text from a file using Apache Tika
+	 * Extracts text from a file using Apache Tika
 	 *
-	 * @param	string		Content which should be processed.
-	 * @param	string		Content type
-	 * @param	array		Configuration array
-	 * @return	boolean
+	 * @param string $content Content which should be processed.
+	 * @param string $type unused
+	 * @param array $configuration unused
+	 * @return boolean
 	 */
 	public function process($content = '', $type = '', $configuration = array()) {
 		$this->out = '';
@@ -85,50 +94,26 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
 		}
 
-		$this->postProcessTextExtraction();
-
 		return $this->getLastError();
-	}
-
-	/**
-	 * Allows to post-process the results of the text extracted by Tika.
-	 *
-	 * @return void
-	 */
-	protected function postProcessTextExtraction() {
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['TextExtraction']['postProcessTextExtraction'])) {
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['TextExtraction']['postProcessTextExtraction'] as $classReference) {
-				$postProcessor = t3lib_div::getUserObj($classReference);
-
-				if ($postProcessor instanceof tx_tika_TextExtractionPostProcessor) {
-					$postProcessor->postProcessTextExtraction($this);
-				} else {
-					throw new UnexpectedValueException(
-						get_class($postProcessor) . ' must implement interface tx_tika_TextExtractionPostProcessor.',
-						1353497580
-					);
-				}
-			}
-		}
 	}
 
 	/**
 	 * Extracts content from a given file using a local Apache Tika jar.
 	 *
-	 * @param	string	Absolute path to the file to extract content from.
-	 * @return	string	Content extracted from the given file.
+	 * @param string $file Absolute path to the file to extract content from.
+	 * @return string Content extracted from the given file.
 	 */
 	protected function extractUsingTika($file) {
-		$tikaCommand = t3lib_exec::getCommand('java')
+		$tikaCommand = CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8' // forces UTF8 output
-			. ' -jar ' . escapeshellarg(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
 			. ' -t'
 			. ' ' . escapeshellarg($file);
 
 		$shellOutput = shell_exec($tikaCommand);
 
 		if ($this->tikaConfiguration['logging']) {
-			t3lib_div::devLog('Text Extraction using local Tika', 'tika', 0, array(
+			GeneralUtility::devLog('Text Extraction using local Tika', 'tika', 0, array(
 				'file'         => $file,
 				'tika command' => $tikaCommand,
 				'shell output' => $shellOutput
@@ -141,29 +126,29 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 	/**
 	 * Extracts content from a given file using a Solr server.
 	 *
-	 * @param	string	Absolute path to the file to extract content from.
-	 * @return	string	Content extracted from the given file.
+	 * @param string $file Absolute path to the file to extract content from.
+	 * @return string Content extracted from the given file.
 	 */
 	protected function extractUsingSolr($file) {
-			// FIXME move connection building to EXT:solr
-			// currently explicitly using "new" to bypass
-			// t3lib_div::makeInstance() or providing a Factory
+		// FIXME move connection building to EXT:solr
+		// currently explicitly using "new" to bypass
+		// \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or providing a Factory
 
-			// EM might define a different connection than already in use by
-			// Index Queue
-		$solr =  new tx_solr_SolrService(
+		// EM might define a different connection than already in use by
+		// Index Queue
+		$solr = new \tx_solr_SolrService(
 			$this->tikaConfiguration['solrHost'],
 			$this->tikaConfiguration['solrPort'],
 			$this->tikaConfiguration['solrPath'],
 			$this->tikaConfiguration['solrScheme']
 		);
 
-		$query = t3lib_div::makeInstance('tx_solr_ExtractingQuery', $file);
+		$query = GeneralUtility::makeInstance('tx_solr_ExtractingQuery', $file);
 		$query->setExtractOnly();
 		$response = $solr->extract($query);
 
 		if ($this->tikaConfiguration['logging']) {
-			t3lib_div::devLog('Text Extraction using Solr', 'tika', 0, array(
+			GeneralUtility::devLog('Text Extraction using Solr', 'tika', 0, array(
 				'file'            => $file,
 				'solr connection' => (array) $solr,
 				'query'           => (array) $query,
@@ -173,12 +158,4 @@ class tx_tika_TextExtractionService extends t3lib_svbase {
 
 		return $response[0];
 	}
-
 }
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/classes/class.tx_tika_textextractionservice.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/classes/class.tx_tika_textextractionservice.php']);
-}
-
-?>
