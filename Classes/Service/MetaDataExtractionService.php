@@ -1,61 +1,70 @@
 <?php
+namespace ApacheSolrForTypo3\Tika\Service;
+
 /***************************************************************
-*  Copyright notice
-*
-*  (c) 2010 Ingo Renner <ingo@typo3.org>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+ *  Copyright notice
+ *
+ *  (c) 2010-2014 Ingo Renner <ingo@typo3.org>
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
+
+use TYPO3\CMS\Core\Service\AbstractService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\CommandUtility;
 
 
 /**
  * A service to extract meta data from files using Apache Tika
  *
- * @author	Ingo Renner <ingo@typo3.org>
+ * @author Ingo Renner <ingo@typo3.org>
+ * @author Phuong Doan <phuong.doan@dkd.de>
  * @package TYPO3
  * @subpackage tika
  */
-class tx_tika_MetaDataExtractionService extends t3lib_svbase {
+class MetaDataExtractionService extends AbstractService {
 
-	public $prefixId      = 'tx_tika_MetaDataExtractionService';
-	public $scriptRelPath = 'classes/class.tx_tika_metadataextractionservice.php';
-	public $extKey        = 'tika';
+	public $prefixId = 'MetaDataExtractionService';
+	public $scriptRelPath = 'Classes/Service/MetaDataExtractionService.php';
+	public $extKey = 'tika';
 
 	/**
 	 * Holds the extension's configuration coming from the Extension Manager.
 	 *
-	 * @var	array
+	 * @var array
 	 */
 	protected $tikaConfiguration;
+
 
 	/**
 	 * Checks whether the service is available, reads the extension's
 	 * configuration.
 	 *
-	 * @return	boolean	True if the service is available, false otherwise.
+	 * @return boolean True if the service is available, false otherwise.
+	 * @throws \RuntimeException if the configured Tika path is invalid
 	 */
 	public function init() {
 		$available = parent::init();
 
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
 
-		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))) {
-			throw new Exception(
+		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))) {
+			throw new \RuntimeException(
 				'Invalid path or filename for tika application jar.',
 				1266864929
 			);
@@ -65,12 +74,12 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	}
 
 	/**
-	 * Extracs meta data from a file using Apache Tika
+	 * Extracts meta data from a file using Apache Tika
 	 *
-	 * @param	string		Content which should be processed.
-	 * @param	string		Content type
-	 * @param	array		Configuration array
-	 * @return	boolean
+	 * @param string $content Content which should be processed.
+	 * @param string $type Content type
+	 * @param array $configuration Configuration array
+	 * @return boolean
 	 */
 	public function process($content = '', $type = '', $configuration = array()) {
 		$this->out = array();
@@ -86,45 +95,21 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 			$cleanData = $this->normalizeMetaData($metaData);
 			$this->out = $cleanData;
 
-				// DAMnizing ;)
+			// DAMnizing ;)
 			$this->damnizeData($cleanData);
 		} else {
 			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
 		}
 
-		$this->postProcessMetaDataExtraction();
-
 		return $this->getLastError();
-	}
-
-	/**
-	 * Allows to post-process the results of the meta data extracted by Tika.
-	 *
-	 * @return void
-	 */
-	protected function postProcessMetaDataExtraction() {
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['MetaDataExtraction']['postProcessMetaDataExtraction'])) {
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['MetaDataExtraction']['postProcessMetaDataExtraction'] as $classReference) {
-				$postProcessor = t3lib_div::getUserObj($classReference);
-
-				if ($postProcessor instanceof tx_tika_MetaDataExtractionPostProcessor) {
-					$postProcessor->postProcessMetaDataExtraction($this);
-				} else {
-					throw new UnexpectedValueException(
-						get_class($postProcessor) . ' must implement interface tx_tika_MetaDataExtractionPostProcessor.',
-						1353496594
-					);
-				}
-			}
-		}
 	}
 
 	/**
 	 * Takes shell output from exec() and turns it into an array of key => value
 	 * meta data pairs.
 	 *
-	 * @param	array	An array containing shell output from exec() with one line per entry
-	 * @return	array	Array of key => value pairs of meta data
+	 * @param array $shellOutputMetaData An array containing shell output from exec() with one line per entry
+	 * @return array Array of key => value pairs of meta data
 	 */
 	protected function shellOutputToArray(array $shellOutputMetaData) {
 		$metaData = array();
@@ -140,35 +125,46 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	/**
 	 * Normalizes the names / keys of the meta data found.
 	 *
-	 * @param	array	An array of raw meta data from a file
-	 * @return	array	An array with cleaned meta data keys
+	 * @param array $metaData An array of raw meta data from a file
+	 * @return array An array with cleaned meta data keys
 	 */
 	protected function normalizeMetaData(array $metaData) {
 		$metaDataCleaned = array();
 
 		foreach ($metaData as $key => $value) {
-				// still add the value
+			// still add the value
 			$metaDataCleaned[$key] = $value;
 
-				// clean / add values under alternative names
-			switch($key) {
-				case 'height':
-					$height = $value;
-					unset($metaDataCleaned[$key]);
-					$metaDataCleaned['Height'] = $height;
-					break;
-				case 'width':
-					$width = $value;
-					unset($metaDataCleaned[$key]);
-					$metaDataCleaned['Width'] = $width;
-					break;
+			// clean / add values under alternative names
+			switch ($key) {
 				case 'Image Height':
 					list($height) = explode(' ', $value, 2);
-					$metaDataCleaned['Height'] = $height;
+					$metaDataCleaned['height'] = $height;
 					break;
 				case 'Image Width':
 					list($width) = explode(' ', $value, 2);
-					$metaDataCleaned['Width']  = $width;
+					$metaDataCleaned['width'] = $width;
+					break;
+				case 'Color space':
+					$colorSpace = $value;
+					unset($metaDataCleaned[$key]);
+					$metaDataCleaned['color_space'] = $colorSpace;
+					break;
+				case 'Image Description':
+				case 'subject':
+					$description = $value;
+					unset($metaDataCleaned[$key]);
+					$metaDataCleaned['description'] = $description;
+					break;
+				case 'Headline':
+					$alternative = $value;
+					unset($metaDataCleaned[$key]);
+					$metaDataCleaned['alternative'] = $alternative;
+					break;
+				case 'Keywords':
+					$keywords = $value;
+					unset($metaDataCleaned[$key]);
+					$metaDataCleaned['keywords'] = $keywords;
 					break;
 			}
 		}
@@ -180,7 +176,7 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	 * Turns the data into a format / fills the fields so that DAM can use the
 	 * meta data.
 	 *
-	 * @param	array	An array with cleaned meta data keys
+	 * @param array $metaData An array with cleaned meta data keys
 	 */
 	protected function damnizeData(array $metaData) {
 		$this->out['fields']['meta'] = $metaData;
@@ -193,28 +189,28 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 			$this->out['fields']['vpixels'] = $metaData['Height'];
 		}
 
-			// JPEG comment
+		// JPEG comment
 		if (!empty($metaData['Jpeg Comment'])) {
 			$this->out['fields']['description'] = $metaData['Jpeg Comment'];
 		}
 
-			// EXIF data
+		// EXIF data
 		if (isset($metaData['Color Space']) && $metaData['Color Space'] != 'Undefined') {
 			$this->out['fields']['color_space'] = $metaData['Color Space'];
 		}
 
 		$copyright = array();
-		if(!empty($metaData['Copyright'])) {
+		if (!empty($metaData['Copyright'])) {
 			$copyright[] = $metaData['Copyright'];
 		}
-		if(!empty($metaData['Copyright Notice'])) {
+		if (!empty($metaData['Copyright Notice'])) {
 			$copyright[] = $metaData['Copyright Notice'];
 		}
 		if (!empty($copyright)) {
 			$this->out['fields']['copyright'] = implode("\n", $copyright);
 		}
 
-		if(isset($metaData['Date/Time Original'])) {
+		if (isset($metaData['Date/Time Original'])) {
 			$this->out['fields']['date_cr'] = $this->exifDateToTimestamp($metaData['Date/Time Original']);
 		}
 
@@ -222,7 +218,7 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 			$this->out['fields']['keywords'] = implode(', ', explode(' ', $metaData['Keywords']));
 		}
 
-		if(isset($metaData['Model'])) {
+		if (isset($metaData['Model'])) {
 			$this->out['fields']['file_creator'] = $metaData['Model'];
 		}
 
@@ -240,10 +236,10 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	 * Converts a date string into timestamp
 	 * exiftags: 2002:09:07 15:29:52
 	 *
-	 * @param	string	An exif date string
-	 * @return	integer	Unix timestamp
+	 * @param string $date An exif date string
+	 * @return integer Unix timestamp
 	 */
-	protected function exifDateToTimestamp($date)	{
+	protected function exifDateToTimestamp($date) {
 		if (is_string($date)) {
 			if (($timestamp = strtotime($date)) === -1) {
 				$date = 0;
@@ -258,13 +254,13 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	/**
 	 * Extracts meta data from a given file using a local Apache Tika jar.
 	 *
-	 * @param	string	Absolute path to the file to extract meta data from.
-	 * @return	string	Meta data extracted from the given file.
+	 * @param string $file Absolute path to the file to extract meta data from.
+	 * @return string Meta data extracted from the given file.
 	 */
 	protected function extractUsingTika($file) {
-		$tikaCommand = t3lib_exec::getCommand('java')
+		$tikaCommand = CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
-			. ' -jar ' . escapeshellarg(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
 			. ' -m'
 			. ' ' . escapeshellarg($file);
 
@@ -273,7 +269,7 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 		$metaData = $this->shellOutputToArray($shellOutput);
 
 		if ($this->tikaConfiguration['logging']) {
-			t3lib_div::devLog('Meta Data Extraction using local Tika', 'tika', 0, array(
+			GeneralUtility::devLog('Meta Data Extraction using local Tika', 'tika', 0, array(
 				'file'         => $file,
 				'tika command' => $tikaCommand,
 				'shell output' => $shellOutput,
@@ -287,31 +283,31 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	/**
 	 * Extracts meta data from a given file using a Solr server.
 	 *
-	 * @param	string	Absolute path to the file to extract meta data from.
-	 * @return	string	Meta data extracted from the given file.
+	 * @param  string $file Absolute path to the file to extract meta data from.
+	 * @return string Meta data extracted from the given file.
 	 */
 	protected function extractUsingSolr($file) {
-			// FIXME move connection building to EXT:solr
-			// explicitly using "new" to bypass t3lib_div::makeInstance() or
-			// providing a Factory
+		// FIXME move connection building to EXT:solr
+		// explicitly using "new" to bypass \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or
+		// providing a Factory
 
-			// EM might define a different connection than already in use by
-			// Index Queue
-		$solr =  new tx_solr_SolrService(
+		// EM might define a different connection than already in use by
+		// Index Queue
+		$solr = new \tx_solr_SolrService(
 			$this->tikaConfiguration['solrHost'],
 			$this->tikaConfiguration['solrPort'],
 			$this->tikaConfiguration['solrPath'],
 			$this->tikaConfiguration['solrScheme']
 		);
 
-		$query = t3lib_div::makeInstance('tx_solr_ExtractingQuery', $file);
+		$query = GeneralUtility::makeInstance('tx_solr_ExtractingQuery', $file);
 		$query->setExtractOnly();
 		$response = $solr->extract($query);
 
 		$metaData = $this->solrResponseToArray($response[1]);
 
 		if ($this->tikaConfiguration['logging']) {
-			t3lib_div::devLog('Meta Data Extraction using Solr', 'tika', 0, array(
+			GeneralUtility::devLog('Meta Data Extraction using Solr', 'tika', 0, array(
 				'file'            => $file,
 				'solr connection' => (array) $solr,
 				'query'           => (array) $query,
@@ -327,8 +323,8 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 	 * Turns the nested Solr response into the same format as produced by a
 	 * local Tika jar call
 	 *
-	 * @param	array	The part of the Solr response containing the meta data
-	 * @return	array	The cleaned meta data, matching the Tika jar call format
+	 * @param array $metaDataResponse The part of the Solr response containing the meta data
+	 * @return array The cleaned meta data, matching the Tika jar call format
 	 */
 	protected function solrResponseToArray(array $metaDataResponse) {
 		$cleanedData = array();
@@ -340,10 +336,3 @@ class tx_tika_MetaDataExtractionService extends t3lib_svbase {
 		return $cleanedData;
 	}
 }
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/classes/class.tx_tika_metadataextractionservice.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/classes/class.tx_tika_metadataextractionservice.php']);
-}
-
-?>
