@@ -40,7 +40,7 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 class MetaDataExtractionService extends AbstractService {
 
 	public $prefixId      = 'tx_tika_MetaDataExtractionService';
-	public $scriptRelPath = 'classes/class.tx_tika_metadataextractionservice.php';
+	public $scriptRelPath = 'Classes/Service/MetaDataExtractionService.php';
 	public $extKey        = 'tika';
 
 	/**
