@@ -56,7 +56,7 @@ class LanguageDetectionServiceTestCase extends \Tx_Phpunit_TestCase {
 			$GLOBALS['T3_SERVICES']['textLang'][$serviceKey]['available'] = FALSE;
 		}
 
-		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika') . 'tests/test-languages/';
+		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika') . 'Tests/TestLanguages/';
 	}
 
 	public function tearDown() {

@@ -56,7 +56,7 @@ class MetaDataExtractionServiceTestCase extends \Tx_Phpunit_TestCase {
 			$GLOBALS['T3_SERVICES']['metaExtract'][$serviceKey]['available'] = FALSE;
 		}
 
-		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika') . 'tests/test-documents/';
+		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika') . 'Tests/TestDocuments/';
 	}
 
 	public function tearDown() {
