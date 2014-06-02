@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Report;
 ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Reports\Report\Status\Status;
+use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
 
 
@@ -51,17 +51,17 @@ class TikaStatus implements StatusProviderInterface {
 	 */
 	public function getStatus() {
 		$reports    = array();
-		$tikaStatus = GeneralUtility::makeInstance('tx_tika_StatusCheck');
-		/* @var $tikaStatus tx_tika_StatusCheck */
+		$tikaStatus = GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\StatusCheck');
+		/* @var $tikaStatus ApacheSolrForTypo3\Tika\StatusCheck */
 
-		$status = GeneralUtility::makeInstance('tx_reports_reports_status_Status',
+		$status = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
 			'Apache Tika',
 			'Configuration OK'
 		);
-		/* @var $status tx_reports_reports_status_Status */
+		/* @var $status Status */
 
 		if (!$tikaStatus->getStatus()) {
-			$status = GeneralUtility::makeInstance('tx_reports_reports_status_Status',
+			$status = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
 				'Apache Tika',
 				'Configuration Incomplete',
 				'<p>Please check your configuration for Apache Tika.</p><p>

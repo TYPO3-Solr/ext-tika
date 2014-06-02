@@ -1,8 +1,10 @@
 <?php
+namespace ApacheSolrForTypo3\Tika;
+
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2011 Ingo Renner <ingo@typo3.org>
+*  (c) 2011-2014 Ingo Renner <ingo@typo3.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,25 +24,31 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\CommandUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 /**
- * Updates the registry to add infortmation whether tika is available or not.
+ * Updates the registry to add information whether tika is available or not.
  *
- * @author	2011 Ingo Renner <ingo@typo3.org>
- * @package	TYPO3
- * @subpackage	tika
+ * @author Ingo Renner <ingo@typo3.org>
+ * @package TYPO3
+ * @subpackage tika
  */
-class tx_tika_StatusCheck {
+class StatusCheck {
 
 	/**
 	 * EXT:tika configuration.
 	 *
-	 * @var	array
+	 * @var array
 	 */
 	protected $tikaConfiguration = array();
 
+
 	/**
 	 * Constructor, reads the configuration of the extension
+	 *
 	 */
 	public function __construct() {
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
@@ -50,24 +58,24 @@ class tx_tika_StatusCheck {
 	 * Updates the Tika availability status in the registry when clearing the
 	 * configuration cache.
 	 *
-	 * @param array $parameters An array of commands from TCEmain.
-	 * @param t3lib_TCEmain $tceMain Back reference to the TCEmain (not used)
+	 * @param array $parameters An array of commands from data handler.
+	 * @param DataHandler $dataHandler Back reference to the data handler (not used)
 	 */
-	public function updateStatus(array $parameters, t3lib_TCEmain $tceMain) {
+	public function updateStatus(array $parameters, DataHandler $dataHandler) {
 		$clearCacheCommand = $parameters['cacheCmd'];
 
 		if ($clearCacheCommand == 'all' || $clearCacheCommand == 'temp_CACHED') {
 			$status = $this->getStatus();
 
-			$registry = t3lib_div::makeInstance('t3lib_Registry');
-			$registry->set('tx_tika', 'available', $status);
+			$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+			$registry->set('Tx_Tika', 'available', $status);
 		}
 	}
 
 	/**
 	 * Check the Status if the configuration of tika ist correct
 	 *
-	 * @return boolean	TRUE if the extension is correct configured
+	 * @return boolean TRUE if the extension is correct configured
 	 */
 	public function getStatus() {
 		$isConfigured = (
@@ -83,32 +91,32 @@ class tx_tika_StatusCheck {
 	 * Checks whether the extension is configured to use a local Tika
 	 * application, and if so whether it's correctly configured.
 	 *
-	 * @return	boolean	TRUE if the extension is configured to use a local Tika app and if it's correctly configured, FALSE otherwise
+	 * @return boolean TRUE if the extension is configured to use a local Tika app and if it's correctly configured, FALSE otherwise
 	 */
 	protected function hasCompleteLocalTikaConfiguration() {
 		$localConfigurationComplete = FALSE;
 
 		if ($this->tikaConfiguration['extractor'] == 'tika'
-			&& is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
-			&& t3lib_exec::checkCommand('java')) {
+			&& is_file(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
+			&& CommandUtility::checkCommand('java')) {
 
 			$localConfigurationComplete = TRUE;
 		}
 
 		if ($this->tikaConfiguration['logging']) {
-			$registry = t3lib_div::makeInstance('t3lib_Registry');
-			$registryStatus = $registry->get('tx_tika', 'available');
+			$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+			$registryStatus = $registry->get('Tx_Tika', 'available');
 
-			t3lib_div::devLog(
+			GeneralUtility::devLog(
 				'Has complete local Tika configuration: ' . ($localConfigurationComplete == TRUE ? 'yes' : 'no'),
 				'tika',
 				0,
 				array(
 					'configuration'      => $this->tikaConfiguration,
-					'javaFound'          => t3lib_exec::checkCommand('java'),
+					'javaFound'          => CommandUtility::checkCommand('java'),
 					'tikaPath'           => $this->tikaConfiguration['tikaPath'],
-					'absoluteTikaPath'   => t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE),
-					'absoluteTikaExists' => is_file(t3lib_div::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE)) == TRUE ? 'yes' : 'no',
+					'absoluteTikaPath'   => GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE),
+					'absoluteTikaExists' => is_file(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE)) == TRUE ? 'yes' : 'no',
 					'registryStatus'     => $registryStatus,
 				)
 			);
@@ -122,7 +130,7 @@ class tx_tika_StatusCheck {
 	 * and its Extracting Request Handler. If that's the case we try to ping the
 	 * Solr server, too.
 	 *
-	 * @return	boolean	TRUE if the extension is configured to use a remote Solr server and if it's correctly configured, FALSE otherwise
+	 * @return boolean TRUE if the extension is configured to use a remote Solr server and if it's correctly configured, FALSE otherwise
 	 */
 	protected function hasCompleteRemoteSolrExtractingRequestHandlerConfiguration() {
 		$remoteConfigurationComplete = FALSE;
@@ -130,8 +138,8 @@ class tx_tika_StatusCheck {
 		if ($this->tikaConfiguration['extractor'] == 'solr') {
 
 			try {
-				/* @var $solr tx_solr_SolrService */
-				$solr = t3lib_div::makeInstance('tx_solr_ConnectionManager')->getConnection(
+				/* @var $solr \Tx_Solr_SolrService */
+				$solr = GeneralUtility::makeInstance('tx_solr_ConnectionManager')->getConnection(
 					$this->tikaConfiguration['solrHost'],
 					$this->tikaConfiguration['solrPort'],
 					$this->tikaConfiguration['solrPath']
@@ -143,7 +151,7 @@ class tx_tika_StatusCheck {
 				if (array_key_exists('/update/extract', $plugins->plugins->QUERYHANDLER)) {
 					$remoteConfigurationComplete = TRUE;
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$remoteConfigurationComplete = FALSE;
 			}
 		}
@@ -153,9 +161,3 @@ class tx_tika_StatusCheck {
 
 
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/classes/class.tx_tika_statuscheck.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tika/classes/class.tx_tika_statuscheck.php']);
-}
-
-?>
