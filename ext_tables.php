@@ -11,9 +11,13 @@ if (TYPO3_MODE == 'BE') {
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'EXT:tika/Classes/class.tx_tika_statuscheck.php:tx_tika_StatusCheck->updateStatus';
-	// checking availability. Must do this here, DB connection is not available yet when ext_localconf.php is loaded
-$registry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_Registry');
-$servicesAvailable = $registry->get('tx_tika', 'available', FALSE);
+// checking availability. Must do this here, DB connection is not available yet when ext_localconf.php is loaded
+#$registry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_Registry');
+#$servicesAvailable = $registry->get('Tx_Tika', 'available', FALSE);
+
+// Permanently enabled for now
+#TODO use registry with TYPO3 CMS 6.x, too. Must figure out earliest availability of DB
+$servicesAvailable = true;
 
 $GLOBALS['T3_SERVICES']['metaExtract']['Tx_Tika_MetaExtract']['available'] = $servicesAvailable;
 $GLOBALS['T3_SERVICES']['textExtract']['Tx_Tika_TextExtract']['available'] = $servicesAvailable;
