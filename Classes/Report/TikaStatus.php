@@ -49,6 +49,7 @@ class TikaStatus implements StatusProviderInterface {
 	/**
 	 * Checks whether Tika is properly configured
 	 *
+	 * TODO Check whether EXT:tika is installed AFTER EXT:solr
 	 */
 	public function getStatus() {
 		$reports    = array();
