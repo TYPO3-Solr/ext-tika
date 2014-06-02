@@ -27,6 +27,7 @@ namespace ApacheSolrForTypo3\Tika\Report;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
+use ApacheSolrForTypo3\Tika\StatusCheck;
 
 
 /**
@@ -52,7 +53,7 @@ class TikaStatus implements StatusProviderInterface {
 	public function getStatus() {
 		$reports    = array();
 		$tikaStatus = GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\StatusCheck');
-		/* @var $tikaStatus ApacheSolrForTypo3\Tika\StatusCheck */
+		/* @var $tikaStatus StatusCheck */
 
 		$status = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
 			'Apache Tika',
