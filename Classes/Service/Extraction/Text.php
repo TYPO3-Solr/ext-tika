@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Service;
+namespace ApacheSolrForTypo3\Tika\Service\Extraction;
 
 /***************************************************************
 *  Copyright notice
@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * @package TYPO3
  * @subpackage tika
  */
-class TextExtractionService extends AbstractService {
+class Text extends AbstractService {
 
 	public $prefixId      = 'TextExtractionService';
 	public $scriptRelPath = 'Classes/Service/TextExtractionService.php';
