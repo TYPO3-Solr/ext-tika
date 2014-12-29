@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Service\Extraction;
+namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 /***************************************************************
 *  Copyright notice
