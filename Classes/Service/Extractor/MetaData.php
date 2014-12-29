@@ -4,7 +4,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010-2014 Ingo Renner <ingo@typo3.org>
+*  (c) 2010-2015 Ingo Renner <ingo@typo3.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,7 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use TYPO3\CMS\Core\Service\AbstractService;
+use TYPO3\CMS\Core\Resource;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
@@ -33,75 +33,46 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * A service to extract meta data from files using Apache Tika
  *
  * @author Ingo Renner <ingo@typo3.org>
- * @author Phuong Doan <phuong.doan@dkd.de>
- * @package TYPO3
- * @subpackage tika
+ * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
-class MetaData extends AbstractService {
+class MetaData extends AbstractExtractor {
 
-	public $prefixId      = 'tx_tika_MetaDataExtractionService';
-	public $scriptRelPath = 'Classes/Service/MetaDataExtractionService.php';
-	public $extKey        = 'tika';
-
-	/**
-	 * Holds the extension's configuration coming from the Extension Manager.
-	 *
-	 * @var array
-	 */
-	protected $tikaConfiguration;
-
+	protected $supportedFileTypes = array(
+		'aiff','au','bmp','doc','docx','epub','flv','gif','htm','html','jpg',
+		'jpeg','mid','mp3','msg','odf','odt','pdf','png','ppt','pptx','rtf',
+		'svg','sxw','tgz','tiff','txt','wav','xls','xlsx','xml','zip'
+	);
 
 	/**
-	 * Checks whether the service is available, reads the extension's
-	 * configuration.
+	 * Checks if the given file can be processed by this Extractor
 	 *
-	 * @return boolean True if the service is available, false otherwise.
-	 * @throws \RuntimeException if the configured Tika path is invalid
+	 * @param Resource\File $file
+	 * @return boolean
 	 */
-	public function init() {
-		$available = parent::init();
-
-		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-
-		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))) {
-			throw new \RuntimeException(
-				'Invalid path or filename for tika application jar.',
-				1266864929
-			);
-		}
-
-		return $available;
+	public function canProcess(Resource\File $file) {
+		return in_array($file->getProperty('extension'), $this->supportedFileTypes);
 	}
 
 	/**
 	 * Extracts meta data from a file using Apache Tika
 	 *
-	 * @param string $content Content which should be processed.
-	 * @param string $type unused
-	 * @param array $configuration unused
-	 * @return boolean
+	 * @param Resource\File $file
+	 * @param array $previousExtractedData Already extracted/existing data
+	 * @return array
 	 */
-	public function process($content = '', $type = '', $configuration = array()) {
-		$this->out = array();
-		$this->out['fields'] = array();
+	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
+		$metaData = array();
 
-		if ($inputFile = $this->getInputFile()) {
-			if ($this->tikaConfiguration['extractor'] == 'solr') {
-				$metaData = $this->extractUsingSolr($inputFile);
-			} else {
-				$metaData = $this->extractUsingTika($inputFile);
-			}
-
-			$cleanData = $this->normalizeMetaData($metaData);
-			$this->out = $cleanData;
-
-			// DAMnizing ;)
-			$this->damnizeData($cleanData);
+		$localFilePath = $file->getForLocalProcessing(FALSE);
+		if ($this->configuration['extractor'] == 'solr') {
+			$extractedMetaData = $this->extractUsingSolr($localFilePath);
 		} else {
-			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
+			$extractedMetaData = $this->extractUsingTika($localFilePath);
 		}
 
-		return $this->getLastError();
+		$metaData = $this->normalizeMetaData($extractedMetaData);
+
+		return $metaData;
 	}
 
 	/**
@@ -163,110 +134,84 @@ class MetaData extends AbstractService {
 				$value = implode(', ', $value);
 			}
 
-			// in any case add the value
-			$metaDataCleaned[$key] = $value;
+			if (empty($value)) {
+				continue;
+			}
 
 			// clean / add values under alternative names
 			switch ($key) {
+				case 'dc:title':
+				case 'title':
+					$metaDataCleaned['title'] = $value;
+					break;
+				case 'dc:creator':
+				case 'meta:author':
+				case 'Author':
+				case 'creator':
+					$metaDataCleaned['creator'] = $value;
+					break;
+				case 'dc:publisher':
+					$metaDataCleaned['publisher'] = $value;
+					break;
+				case 'height':
+					$metaDataCleaned['height'] = $value;
+					break;
 				case 'Image Height':
 					list($height) = explode(' ', $value, 2);
 					$metaDataCleaned['height'] = $height;
+					break;
+				case 'width':
+					$metaDataCleaned['width'] = $value;
 					break;
 				case 'Image Width':
 					list($width) = explode(' ', $value, 2);
 					$metaDataCleaned['width'] = $width;
 					break;
 				case 'Color space':
-					$colorSpace = $value;
-					unset($metaDataCleaned[$key]);
-					$metaDataCleaned['color_space'] = $colorSpace;
+					if ($value != 'Undefined') {
+						$metaDataCleaned['color_space'] = $value;
+					}
 					break;
 				case 'Image Description':
+				case 'Jpeg Comment':
 				case 'subject':
-					$description = $value;
-					unset($metaDataCleaned[$key]);
-					$metaDataCleaned['description'] = $description;
+					$metaDataCleaned['description'] = $value;
 					break;
 				case 'Headline':
-					$alternative = $value;
-					unset($metaDataCleaned[$key]);
-					$metaDataCleaned['alternative'] = $alternative;
+					$metaDataCleaned['alternative'] = $value;
 					break;
+				case 'dc:subject':
+				case 'meta:keyword':
 				case 'Keywords':
-					$keywords = $value;
-					unset($metaDataCleaned[$key]);
-					$metaDataCleaned['keywords'] = $keywords;
+					$metaDataCleaned['keywords'] = $value;
 					break;
+				case 'Copyright Notice':
+					$metaDataCleaned['note'] = $value;
+					break;
+				case 'dcterms:created':
+				case 'meta:creation-date':
+				case 'Creation-Date':
+					$metaDataCleaned['content_creation_date'] = strtotime($value);
+					break;
+				case 'Date/Time Original':
+					$metaDataCleaned['content_creation_date'] = $this->exifDateToTimestamp($value);
+					break;
+				case 'dcterms:modified':
+				case 'meta:save-date':
+				case 'Last-Save-Date':
+				case 'Last-Modified':
+					$metaDataCleaned['content_modification_date'] = strtotime($value);
+					break;
+				case 'xmpTPg:NPages':
+				case 'Page-Count':
+					$metaDataCleaned['pages'] = $value;
+					break;
+				case 'xmp:CreatorTool':
+					$metaDataCleaned['creator_tool'] = $value;
 			}
 		}
 
 		return $metaDataCleaned;
-	}
-
-	/**
-	 * Turns the data into a format / fills the fields so that DAM can use the
-	 * meta data.
-	 *
-	 * @param array $metaData An array with cleaned meta data keys
-	 */
-	protected function damnizeData(array $metaData) {
-		$this->out['fields']['meta'] = $metaData;
-
-		if ($metaData['Width']) {
-			$this->out['fields']['hpixels'] = $metaData['Width'];
-		}
-
-		if ($metaData['Height']) {
-			$this->out['fields']['vpixels'] = $metaData['Height'];
-		}
-
-		// JPEG comment
-		if (!empty($metaData['Jpeg Comment'])) {
-			$this->out['fields']['description'] = $metaData['Jpeg Comment'];
-		}
-
-		// EXIF data
-		if (isset($metaData['Color Space']) && $metaData['Color Space'] != 'Undefined') {
-			$this->out['fields']['color_space'] = $metaData['Color Space'];
-		}
-
-		$copyright = array();
-		if (!empty($metaData['Copyright'])) {
-			$copyright[] = $metaData['Copyright'];
-		}
-		if (!empty($metaData['Copyright Notice'])) {
-			$copyright[] = $metaData['Copyright Notice'];
-		}
-		if (!empty($copyright)) {
-			$this->out['fields']['copyright'] = implode("\n", $copyright);
-		}
-
-		if (isset($metaData['Date/Time Original'])) {
-			$this->out['fields']['date_cr'] = $this->exifDateToTimestamp($metaData['Date/Time Original']);
-		}
-
-		if (isset($metaData['keywords'])) {
-			$keywords = explode(' ', $metaData['keywords']);
-			foreach ($keywords as $i => $keyword) {
-				// prevent double comma if it was imploded from an array before
-				$keywords[$i] = trim($keyword, ',');
-			}
-
-			$this->out['fields']['keywords'] = implode(', ', $keywords);
-		}
-
-		if (isset($metaData['Model'])) {
-			$this->out['fields']['file_creator'] = $metaData['Model'];
-		}
-
-		if (isset($metaData['X Resolution'])) {
-			list($horizontalResolution) = explode(' ', $metaData['X Resolution'], 2);
-			$this->out['fields']['hres'] = $horizontalResolution;
-		}
-		if (isset($metaData['Y Resolution'])) {
-			list($verticalResolution) = explode(' ', $metaData['Y Resolution'], 2);
-			$this->out['fields']['vres'] = $verticalResolution;
-		}
 	}
 
 	/**
@@ -297,7 +242,7 @@ class MetaData extends AbstractService {
 	protected function extractUsingTika($file) {
 		$tikaCommand = CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
-			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -m'
 			. ' ' . escapeshellarg($file);
 
@@ -305,7 +250,7 @@ class MetaData extends AbstractService {
 		exec($tikaCommand, $shellOutput);
 		$metaData = $this->shellOutputToArray($shellOutput);
 
-		if ($this->tikaConfiguration['logging']) {
+		if ($this->configuration['logging']) {
 			GeneralUtility::devLog('Meta Data Extraction using local Tika', 'tika', 0, array(
 				'file'         => $file,
 				'tika command' => $tikaCommand,
@@ -331,10 +276,10 @@ class MetaData extends AbstractService {
 		// EM might define a different connection than already in use by
 		// Index Queue
 		$solr = new \tx_solr_SolrService(
-			$this->tikaConfiguration['solrHost'],
-			$this->tikaConfiguration['solrPort'],
-			$this->tikaConfiguration['solrPath'],
-			$this->tikaConfiguration['solrScheme']
+			$this->configuration['solrHost'],
+			$this->configuration['solrPort'],
+			$this->configuration['solrPath'],
+			$this->configuration['solrScheme']
 		);
 
 		$query = GeneralUtility::makeInstance('tx_solr_ExtractingQuery', $file);
@@ -343,7 +288,7 @@ class MetaData extends AbstractService {
 
 		$metaData = $this->solrResponseToArray($response[1]);
 
-		if ($this->tikaConfiguration['logging']) {
+		if ($this->configuration['logging']) {
 			GeneralUtility::devLog('Meta Data Extraction using Solr', 'tika', 0, array(
 				'file'            => $file,
 				'solr connection' => (array) $solr,
