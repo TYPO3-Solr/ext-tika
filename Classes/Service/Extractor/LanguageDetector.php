@@ -89,7 +89,7 @@ class LanguageDetector extends AbstractExtractor {
 
 		$shellOutput = trim(shell_exec($tikaCommand));
 
-		$this->log('Meta Data Extraction using local Tika', array(
+		$this->log('Language Detection using local Tika', array(
 			'file'         => $file,
 			'tika command' => $tikaCommand,
 			'shell output' => $shellOutput
