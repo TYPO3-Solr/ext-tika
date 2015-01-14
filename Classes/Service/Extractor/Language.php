@@ -24,7 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use TYPO3\CMS\Core\Service\AbstractService;
+use TYPO3\CMS\Core\Resource;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
@@ -33,86 +33,69 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * A service to detect a text's language using Apache Tika
  *
  * @author Ingo Renner <ingo@typo3.org>
- * @author Phuong Doan <phuong.doan@dkd.de>
- * @package TYPO3
- * @subpackage tika
+ * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
-class Language extends AbstractService {
+class Language extends AbstractExtractor {
 
-	public $prefixId      = 'LanguageDetectionService';
-	public $scriptRelPath = 'Classes/Service/LanguageDetectionService.php';
-	public $extKey        = 'tika';
-
-	/**
-	 * Holds the extension's configuration coming from the Extension Manager.
-	 *
-	 * @var array
-	 */
-	protected $tikaConfiguration;
+	protected $supportedFileTypes = array(
+		'doc','docx','epub','htm','html','msg','odf','odt','pdf','ppt','pptx',
+		'rtf','sxw','txt','xls','xlsx'
+	);
 
 
 	/**
-	 * Checks whether the service is available, reads the extension's
-	 * configuration.
+	 * Checks if the given file can be processed by this Extractor
 	 *
-	 * @return boolean True if the service is available, false otherwise.
-	 * @throws \RuntimeException if the configured Tika path is invalid
+	 * @param Resource\File $file
+	 * @return boolean
 	 */
-	public function init() {
-		$available = parent::init();
-
-		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-
-		if ($this->tikaConfiguration['extractor'] == 'tika' && !is_file(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))) {
-			throw new \RuntimeException(
-				'Invalid path or filename for tika application jar.',
-				1266864929
-			);
-		}
-
-		return $available;
+	public function canProcess(Resource\File $file) {
+		return in_array($file->getProperty('extension'), $this->supportedFileTypes);
 	}
 
 	/**
-	 * Performs the language detection.
+	 * Extracts meta data from a file using Apache Tika
 	 *
-	 * @param string $content Content which should be processed.
-	 * @param string $type unused
-	 * @param array $configuration unused
-	 * @return boolean
+	 * @param Resource\File $file
+	 * @param array $previousExtractedData Already extracted/existing data
+	 * @return array
 	 */
-	public function process($content = '', $type = '', $configuration = array()) {
-		$this->out = '';
+	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
+		$metaData = array();
 
-		if ($content) {
-			$this->setInput($content);
+		$localFilePath = $file->getForLocalProcessing(FALSE);
+		$metaData['language'] = $this->extractUsingTika($localFilePath);
+
+		return $metaData;
+	}
+
+	/**
+	 * Extracts the language from a given file using a local Apache Tika jar.
+	 *
+	 * @param string $file Absolute path to the file to extract meta data from.
+	 * @return string Meta data extracted from the given file.
+	 * @throws \RuntimeException if Java can't be found
+	 */
+	protected function extractUsingTika($file) {
+		if (!CommandUtility::checkCommand('java')) {
+			throw new \RuntimeException('Could not find Java', 1421208775);
 		}
 
-		if ($inputFile = $this->getInputFile()) {
-			if (CommandUtility::checkCommand('java')) {
-				$tikaCommand = CommandUtility::getCommand('java')
-					. ' -Dfile.encoding=UTF8'
-					. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
-					. ' -l'
-					. ' ' . escapeshellarg($inputFile);
+		$tikaCommand   = CommandUtility::getCommand('java')
+			. ' -Dfile.encoding=UTF8'
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -l'
+			. ' ' . escapeshellarg($file);
 
-				$shellOutput = trim(shell_exec($tikaCommand));
+		$shellOutput = trim(shell_exec($tikaCommand));
 
-				if ($this->tikaConfiguration['logging']) {
-					GeneralUtility::devLog('Meta Data Extraction using local Tika', 'tika', 0, array(
-						'file' => $inputFile,
-						'tika command' => $tikaCommand,
-						'shell output' => $shellOutput
-					));
-				}
+		$this->log('Meta Data Extraction using local Tika', array(
+			'file'         => $file,
+			'tika command' => $tikaCommand,
+			'shell output' => $shellOutput
+		));
 
-				$this->out = $shellOutput;
-			}
-		} else {
-			$this->errorPush(T3_ERR_SV_NO_INPUT, 'No or empty input.');
-		}
-
-		return $this->getLastError();
+		return $shellOutput;
 	}
 
 }
