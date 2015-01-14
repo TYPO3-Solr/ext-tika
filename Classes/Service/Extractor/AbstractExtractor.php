@@ -51,7 +51,7 @@ abstract class AbstractExtractor implements ExtractorInterface {
 
 		if ($this->configuration['extractor'] == 'tika' && !is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))) {
 			throw new \RuntimeException(
-				'Invalid path or filename for tika application jar.',
+				'Invalid path or filename for Tika application jar.',
 				1266864929
 			);
 		}
