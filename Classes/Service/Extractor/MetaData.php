@@ -43,6 +43,7 @@ class MetaData extends AbstractExtractor {
 		'svg','sxw','tgz','tiff','txt','wav','xls','xlsx','xml','zip'
 	);
 
+
 	/**
 	 * Checks if the given file can be processed by this Extractor
 	 *
