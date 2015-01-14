@@ -42,6 +42,11 @@ class LanguageDetector extends AbstractExtractor {
 		'rtf','sxw','txt','xls','xlsx'
 	);
 
+	/**
+	 * @var integer
+	 */
+	protected $priority = 98;
+
 
 	/**
 	 * Checks if the given file can be processed by this Extractor

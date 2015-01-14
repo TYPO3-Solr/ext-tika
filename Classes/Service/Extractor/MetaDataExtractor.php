@@ -43,6 +43,11 @@ class MetaDataExtractor extends AbstractExtractor {
 		'svg','sxw','tgz','tiff','txt','wav','xls','xlsx','xml','zip'
 	);
 
+	/**
+	 * @var integer
+	 */
+	protected $priority = 100;
+
 
 	/**
 	 * Checks if the given file can be processed by this Extractor

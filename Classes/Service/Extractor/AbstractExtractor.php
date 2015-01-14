@@ -41,6 +41,13 @@ abstract class AbstractExtractor implements ExtractorInterface {
 	 */
 	protected $configuration;
 
+	/**
+	 * Priority in handling extraction
+	 *
+	 * @var integer
+	 */
+	protected $priority = 0;
+
 
 	/**
 	 * Constructor
@@ -83,7 +90,7 @@ abstract class AbstractExtractor implements ExtractorInterface {
 	 * @return integer
 	 */
 	public function getPriority() {
-		return 100;
+		return $this->priority;
 	}
 
 	/**
@@ -92,7 +99,7 @@ abstract class AbstractExtractor implements ExtractorInterface {
 	 * @return integer
 	 */
 	public function getExecutionPriority() {
-		return 100;
+		return $this->priority;
 	}
 
 	/**
