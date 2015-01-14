@@ -250,14 +250,12 @@ class MetaData extends AbstractExtractor {
 		exec($tikaCommand, $shellOutput);
 		$metaData = $this->shellOutputToArray($shellOutput);
 
-		if ($this->configuration['logging']) {
-			GeneralUtility::devLog('Meta Data Extraction using local Tika', 'tika', 0, array(
-				'file'         => $file,
-				'tika command' => $tikaCommand,
-				'shell output' => $shellOutput,
-				'meta data'    => $metaData
-			));
-		}
+		$this->log('Meta Data Extraction using local Tika', array(
+			'file'         => $file,
+			'tika command' => $tikaCommand,
+			'shell output' => $shellOutput,
+			'meta data'    => $metaData
+		));
 
 		return $metaData;
 	}
@@ -288,15 +286,13 @@ class MetaData extends AbstractExtractor {
 
 		$metaData = $this->solrResponseToArray($response[1]);
 
-		if ($this->configuration['logging']) {
-			GeneralUtility::devLog('Meta Data Extraction using Solr', 'tika', 0, array(
-				'file'            => $file,
-				'solr connection' => (array) $solr,
-				'query'           => (array) $query,
-				'response'        => $response,
-				'meta data'       => $metaData
-			));
-		}
+		$this->log('Meta Data Extraction using Solr', array(
+			'file'            => $file,
+			'solr connection' => (array) $solr,
+			'query'           => (array) $query,
+			'response'        => $response,
+			'meta data'       => $metaData
+		));
 
 		return $metaData;
 	}

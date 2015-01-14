@@ -95,4 +95,19 @@ abstract class AbstractExtractor implements ExtractorInterface {
 		return 100;
 	}
 
+	/**
+	 * Logs a message and optionally data to devlog
+	 *
+	 * @param string $message Log message
+	 * @param array $data Optional data
+	 * @return void
+	 */
+	protected function log($message, array $data = array()) {
+		if (!$this->configuration['logging']) {
+			return;
+		}
+
+		GeneralUtility::devLog($message, 'tika', 0, $data);
+	}
+
 }
