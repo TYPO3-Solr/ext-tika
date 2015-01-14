@@ -35,7 +35,7 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * @author Ingo Renner <ingo@typo3.org>
  * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
-class MetaData extends AbstractExtractor {
+class MetaDataExtractor extends AbstractExtractor {
 
 	protected $supportedFileTypes = array(
 		'aiff','au','bmp','doc','docx','epub','flv','gif','htm','html','jpg',

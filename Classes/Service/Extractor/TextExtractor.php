@@ -35,7 +35,7 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * @author Ingo Renner <ingo@typo3.org>
  * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
-class Text extends AbstractExtractor {
+class TextExtractor extends AbstractExtractor {
 
 	protected $supportedFileTypes = array(
 		'doc','docx','epub','htm','html','msg','odf','odt','pdf','ppt','pptx',
