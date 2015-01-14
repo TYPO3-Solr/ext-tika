@@ -209,6 +209,9 @@ class MetaData extends AbstractExtractor {
 					break;
 				case 'xmp:CreatorTool':
 					$metaDataCleaned['creator_tool'] = $value;
+					break;
+				default:
+					// ignore
 			}
 		}
 
