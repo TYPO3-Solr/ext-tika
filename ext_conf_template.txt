@@ -1,8 +1,5 @@
 
 /*
-  ### SVN id ###
-  $Id$
-
   TODO add a custom field type to select the solr server instead of providing the host, port, and path again
 */
 
