@@ -77,6 +77,7 @@ class MetaDataExtractor extends AbstractExtractor {
 		if ($this->configuration['extractor'] == 'solr') {
 			$extractedMetaData = $this->extractUsingSolr($localFilePath);
 		} else {
+			// tika || jar
 			$extractedMetaData = $this->extractUsingTika($localFilePath);
 		}
 

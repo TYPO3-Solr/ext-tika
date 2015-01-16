@@ -82,6 +82,7 @@ class TextExtractor extends AbstractExtractor {
 		if ($this->configuration['extractor'] == 'solr') {
 			$extractedContent = $this->extractUsingSolr($localFilePath);
 		} else {
+			// tika || jar
 			$extractedContent = $this->extractUsingTika($localFilePath);
 		}
 

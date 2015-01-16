@@ -3,8 +3,8 @@
   TODO add a custom field type to select the solr server instead of providing the host, port, and path again
 */
 
-  # cat=basic//10; type=options[Tika (local java application)=tika,Solr (remote server)=solr]; label= Extract using: Extraction will be faster if run locally using Tika.
-extractor = tika
+  # cat=basic//10; type=options[Tika Server=server,Tika App=jar,Solr Server=solr]; label= Extract using: Extraction will be faster if run locally using Tika.
+extractor = server
 
   # cat=basic//20; type=string; label= Tika Path: The absolute path to your Apache Tika App jar file (Java is detected automatically)
 tikaPath =
