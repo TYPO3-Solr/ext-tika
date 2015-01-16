@@ -8,6 +8,21 @@ if (TYPO3_MODE == 'BE') {
 	$statusSection = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr') ? 'solr' : 'tika';
 
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'][$statusSection][] = 'ApacheSolrForTypo3\\Tika\\Report\\TikaStatus';
+
+	$iconPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY)
+		. 'Resources/Public/Images/Icons/';
+	\TYPO3\CMS\Backend\Sprite\SpriteManager::addSingleIcons(
+		array(
+			'ModuleTikaControlPanel' => $iconPath . 'Tika.png'
+		),
+		$_EXTKEY
+	);
+
+	\ApacheSolrForTypo3\Solr\Backend\SolrModule\AdministrationModuleManager::registerModule(
+		'ApacheSolrForTypo3.' . $_EXTKEY,
+		'TikaControlPanel',
+		array('index')
+	);
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'ApacheSolrForTypo3\\Tika\\StatusCheck->updateStatus';
