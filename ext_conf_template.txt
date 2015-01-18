@@ -8,7 +8,7 @@
 # customcategory=server=Tika Server
 # customcategory=solr=Solr
 
-# cat=general//10; type=options[Tika App=jar,Tika Server=server,Solr Server=solr]; label=Extract using: Extraction will be faster when using Tika Server.
+# cat=general//10; type=options[Tika App=jar,Tika Server=server,Solr Server=solr]; label=Tika Mode: Extraction will be faster when using Tika Server.
 extractor = server
 
 # cat=general//20; type=boolean; label=Log Tika calls
