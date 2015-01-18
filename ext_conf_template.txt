@@ -6,20 +6,22 @@
   # cat=basic//10; type=options[Tika Server=server,Tika App=jar,Solr Server=solr]; label= Extract using: Extraction will be faster if run locally using Tika.
 extractor = server
 
-  # cat=basic//20; type=string; label= Tika Path: The absolute path to your Apache Tika App jar file (Java is detected automatically)
+  # cat=basic//20; type=boolean; label= Log Tika calls
+logging = 0
+
+  # cat=Tika Jar//10; type=string; label= Tika Path: The absolute path to your Apache Tika App jar file (Java is detected automatically)
 tikaPath =
 
-  # cat=basic//30; type=options[http,https]; label= Solr Scheme
+  # cat=Solr//10; type=options[http,https]; label= Solr Scheme
 solrScheme = http
 
-  # cat=basic//40; type=string; label= Solr Host
+  # cat=Solr//20; type=string; label= Host
 solrHost = localhost
 
-  # cat=basic//50; type=string; label= Solr Port
+  # cat=Solr//30; type=string; label= Port
 solrPort = 8080
 
-  # cat=basic//60; type=string; label= Solr Path
+  # cat=Solr//40; type=string; label= Path
 solrPath = /solr/
 
-  # cat=basic//80; type=boolean; label= Log Tika calls
-logging = 0
+
