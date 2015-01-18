@@ -5,15 +5,29 @@
 
 # customcategory=general=General
 # customcategory=jar=Tika Jar
+# customcategory=server=Tika Server
 # customcategory=solr=Solr
 
-# cat=general//10; type=options[Tika Server=server,Tika App=jar,Solr Server=solr]; label=Extract using: Extraction will be faster if run locally using Tika.
+# cat=general//10; type=options[Tika App=jar,Tika Server=server,Solr Server=solr]; label=Extract using: Extraction will be faster when using Tika Server.
 extractor = server
 
 # cat=general//20; type=boolean; label=Log Tika calls
 logging = 0
-#  cat=jar//10; type=string; label= Tika Path: The absolute path to your Apache Tika App jar file (Java is detected automatically)
+
+#  cat=jar//10; type=string; label= Tika Path: The absolute path to your Apache Tika app jar file (tika-app-x.x.jar)
 tikaPath =
+
+#  cat=server//10; type=string; label= Tika Path: The absolute path to your Apache Tika server jar file (tika-server-x.x.jar). This setting is optional, when provided you can use the backend module to control the Tika server from there. Otherwise the host and port settings will be used.
+tikaServerPath =
+
+# cat=server//20; type=options[http,https]; label=Scheme
+tikaServerScheme = http
+
+# cat=server//30; type=string; label=Host
+tikaServerHost = localhost
+
+# cat=server//40; type=string; label=Port
+tikaServerPort = 9998
 
 # cat=solr//10; type=options[http,https]; label=Scheme
 solrScheme = http
