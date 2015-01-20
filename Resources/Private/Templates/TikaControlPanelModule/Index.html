@@ -34,7 +34,8 @@
 		<f:if condition="{server.isRunning}">
 			<f:then>
 				<p>
-				Tika is running
+				Tika is running<br />
+				Version: {server.version}<br />
 
 				<f:if condition="{server.isControllable}">
 					Tika can be controlled. PID: {server.pid}

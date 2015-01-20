@@ -85,7 +85,8 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 				'jarAvailable'   => $this->isTikaServerJarAvailable(),
 				'isRunning'      => $this->isTikaServerRunning(),
 				'isControllable' => $this->isTikaServerControllable(),
-				'pid'            => $this->getTikaServerPid()
+				'pid'            => $this->getTikaServerPid(),
+				'version'        => $this->getTikaServerVersion()
 			)
 		);
 	}
@@ -136,6 +137,23 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 		$registry->remove('tx_tika', 'server.pid');
 
 		$this->forwardToIndex();
+	}
+
+	/**
+	 * Gets the Tika server version
+	 *
+	 * @return string Tika server version string
+	 * @throws \Exception
+	 */
+	protected function getTikaServerVersion() {
+		$version = 'unknown';
+
+		if ($this->isTikaServerRunning()) {
+			$url     = $this->getTikaServerUrl();
+			$version = file_get_contents($url . '/version');
+		}
+
+		return $version;
 	}
 
 	/**
