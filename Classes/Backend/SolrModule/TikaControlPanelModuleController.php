@@ -118,7 +118,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 		$registry->set('tx_tika', 'server.pid', $pid);
 
 		// wait for Tika to start so that when we return to indexAction
-		// it show Tika running
+		// it shows Tika running
 		sleep(2);
 
 		$this->forwardToIndex();
