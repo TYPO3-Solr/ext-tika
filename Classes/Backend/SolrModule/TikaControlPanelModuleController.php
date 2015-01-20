@@ -236,6 +236,10 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 			return FALSE;
 		}
 
+		if (ini_get('safe_mode')) {
+			return FALSE;
+		}
+
 		$jarAvailable = $this->isTikaServerJarAvailable();
 		$running      = $this->isTikaServerRunning();
 		$pid          = $this->getTikaServerPid();
