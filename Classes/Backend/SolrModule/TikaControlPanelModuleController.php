@@ -73,6 +73,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	/**
 	 * Index action
 	 *
+	 * @return void
 	 * @throws \Exception
 	 */
 	public function indexAction() {
@@ -94,6 +95,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	/**
 	 * Starts the Tika server
 	 *
+	 * @return void
 	 */
 	public function startServerAction() {
 		$command = CommandUtility::getCommand('java')
@@ -125,6 +127,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	/**
 	 * Stops the Tika server
 	 *
+	 * @return void
 	 */
 	public function stopServerAction() {
 		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
