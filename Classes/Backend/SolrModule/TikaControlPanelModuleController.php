@@ -231,7 +231,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 * @throws \Exception
 	 */
 	protected function isTikaServerControllable() {
-		$disabledFunctions = explode(',', ini_get('disable_functions'));
+		$disabledFunctions = GeneralUtility::trimExplode(',', ini_get('disable_functions'));
 		if (in_array('exec', $disabledFunctions)) {
 			return FALSE;
 		}
