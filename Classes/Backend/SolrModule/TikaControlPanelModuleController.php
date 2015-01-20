@@ -223,12 +223,19 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	}
 
 	/**
-	 * Checks whether Tika server can be controlled (started/stopped)
+	 * Checks whether Tika server can be controlled (started/stopped).
+	 *
+	 * Checks whether exec() is allowed and whether configuration is available.
 	 *
 	 * @return bool TRUE if Tika server can be started/stopped
 	 * @throws \Exception
 	 */
 	protected function isTikaServerControllable() {
+		$disabledFunctions = explode(',', ini_get('disable_functions'));
+		if (in_array('exec', $disabledFunctions)) {
+			return FALSE;
+		}
+
 		$jarAvailable = $this->isTikaServerJarAvailable();
 		$running      = $this->isTikaServerRunning();
 		$pid          = $this->getTikaServerPid();
