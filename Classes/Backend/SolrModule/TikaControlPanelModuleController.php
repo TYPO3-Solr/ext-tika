@@ -104,6 +104,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 				)
 			)
 			. ' -p ' . escapeshellarg($this->tikaConfiguration['tikaServerPort']);
+		$command = escapeshellcmd($command);
 
 		$process = GeneralUtility::makeInstance(
 			'ApacheSolrForTypo3\\Tika\\Process',
