@@ -25,6 +25,8 @@ namespace ApacheSolrForTypo3\Tika\Backend\SolrModule;
 ***************************************************************/
 
 use ApacheSolrForTypo3\Solr\Backend\SolrModule\AbstractModuleController;
+use TYPO3\CMS\Core\Utility\CommandUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
@@ -49,9 +51,177 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 */
 	protected $moduleTitle = 'Tika';
 
+	/**
+	 * Tika configuration
+	 *
+	 * @var array
+	 */
+	protected $tikaConfiguration = array();
 
+
+	/**
+	 * Initializes resources commonly needed for several actions.
+	 *
+	 * @return void
+	 */
+	protected function initializeAction() {
+		parent::initializeAction();
+
+		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+	}
+
+	/**
+	 * Index action
+	 *
+	 * @throws \Exception
+	 */
 	public function indexAction() {
-		$this->view->assign('content', 'Tika Control Panel Module');
+		$this->view->assign('configuration', $this->tikaConfiguration);
+		$this->view->assign('extractor',     ucfirst($this->tikaConfiguration['extractor']));
+
+		$this->view->assign(
+			'server',
+			array(
+				'jarAvailable'   => $this->isTikaServerJarAvailable(),
+				'isRunning'      => $this->isTikaServerRunning(),
+				'isControllable' => $this->isTikaServerControllable(),
+				'pid'            => $this->getTikaServerPid()
+			)
+		);
+	}
+
+	/**
+	 * Starts the Tika server
+	 *
+	 */
+	public function startServerAction() {
+		$command = CommandUtility::getCommand('java')
+			. ' -jar ' . escapeshellarg(
+				GeneralUtility::getFileAbsFileName(
+					$this->tikaConfiguration['tikaServerPath'],
+					FALSE
+				)
+			)
+			. ' -p ' . escapeshellarg($this->tikaConfiguration['tikaServerPort']);
+
+		$process = GeneralUtility::makeInstance(
+			'ApacheSolrForTypo3\\Tika\\Process',
+			$command
+		);
+		$pid = $process->getPid();
+
+		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+		$registry->set('tx_tika', 'server.pid', $pid);
+
+		// wait for Tika to start so that when we return to indexAction
+		// it show Tika running
+		sleep(2);
+
+		$this->forwardToIndex();
+	}
+
+	/**
+	 * Stops the Tika server
+	 *
+	 */
+	public function stopServerAction() {
+		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+		$pid = $registry->get('tx_tika', 'server.pid');
+
+		$process = GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Process');
+		$process->setPid($pid);
+		$process->stop();
+
+		// unset pid in registry
+		$registry->remove('tx_tika', 'server.pid');
+
+		$this->forwardToIndex();
+	}
+
+	/**
+	 * Constructs the Tika server URL.
+	 *
+	 * @return string Tika server URL
+	 */
+	protected function getTikaServerUrl() {
+		$tikaUrl = $this->tikaConfiguration['tikaServerScheme']
+			. '://'
+			. $this->tikaConfiguration['tikaServerHost']
+			. ':' . $this->tikaConfiguration['tikaServerPort'];
+
+		return $tikaUrl;
+	}
+
+	/**
+	 * Tries to connect to Tika server
+	 *
+	 * @return bool TRUE if the Tika server responds, FALSE otherwise.
+	 * @throws \Exception
+	 */
+	protected function isTikaServerRunning() {
+		$tikaUrl = $this->getTikaServerUrl();
+		$tikaRunning = FALSE;
+
+		try {
+			$tikaPing    = file_get_contents($tikaUrl . '/tika');
+			$tikaRunning = GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server.');
+		} catch (\Exception $e) {
+			$message = $e->getMessage();
+			if (strpos($message, 'Connection refused') === FALSE &&
+				strpos($message, 'HTTP request failed') === FALSE) {
+				// If the server is simply not available ti would say Connection refused
+				// since that is not the case something else went wrong
+				throw $e;
+			}
+		}
+
+		return $tikaRunning;
+	}
+
+	/**
+	 * Returns the pid if the Tika server has been started through the backend
+	 * module.
+	 *
+	 * @return integer|null Tika Server pid or null if not found
+	 */
+	protected function getTikaServerPid() {
+		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+		$serverPid = $registry->get('tx_tika', 'server.pid');
+
+		return $serverPid;
+	}
+
+	/**
+	 * Checks whether the server jar has been configured properly.
+	 *
+	 * @return bool TRUE if a path for the jar has been configure and the path exists
+	 */
+	protected function isTikaServerJarAvailable() {
+		$serverJarSet    = !empty($this->tikaConfiguration['tikaServerPath']);
+		$serverJarExists = file_exists($this->tikaConfiguration['tikaServerPath']);
+
+		return ($serverJarSet && $serverJarExists);
+	}
+
+	/**
+	 * Checks whether Tika server can be controlled (started/stopped)
+	 *
+	 * @return bool TRUE if Tika server can be started/stopped
+	 * @throws \Exception
+	 */
+	protected function isTikaServerControllable() {
+		$jarAvailable = $this->isTikaServerJarAvailable();
+		$running      = $this->isTikaServerRunning();
+		$pid          = $this->getTikaServerPid();
+
+		$controllable = FALSE;
+		if ($running && $jarAvailable && !is_null($pid)) {
+			$controllable = TRUE;
+		} elseif (!$running && $jarAvailable) {
+			$controllable = TRUE;
+		}
+
+		return $controllable;
 	}
 
 }
