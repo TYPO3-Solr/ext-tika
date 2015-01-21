@@ -31,7 +31,6 @@ use TYPO3\CMS\Core\Resource\File;
  * A common interface for the different ways of accessing Tika, e.g. app,
  * server, and Solr Cell.
  *
- *
  * @package ApacheSolrForTypo3\Tika\Service
  */
 interface TikaServiceInterface {
