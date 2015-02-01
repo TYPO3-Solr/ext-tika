@@ -24,8 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileTextContentExtractorInterface;
+use TYPO3\CMS\Core\Type\File\FileInfo;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
@@ -67,23 +67,23 @@ class TextExtractor implements FileTextContentExtractorInterface {
 	/**
 	 * Checks if the given file can be processed by this Extractor
 	 *
-	 * @param File $file
+	 * @param FileInfo $file
 	 * @return bool
 	 */
-	public function canExtractText(File $file) {
-		return in_array($file->getProperty('extension'), $this->supportedFileTypes);
+	public function canExtractText(FileInfo $file) {
+		return in_array($file->getExtension(), $this->supportedFileTypes);
 	}
 
 	/**
 	 * Extracts text from a file using Apache Tika
 	 *
-	 * @param File $file
+	 * @param FileInfo $file
 	 * @return string Text extracted from the input file
 	 */
-	public function extractText(File $file) {
+	public function extractText(FileInfo $file) {
 		$extractedContent = '';
 
-		$localFilePath = $file->getForLocalProcessing(FALSE);
+		$localFilePath = $file->getPathname();
 		if ($this->configuration['extractor'] == 'solr') {
 			$extractedContent = $this->extractUsingSolr($localFilePath);
 		} else {
