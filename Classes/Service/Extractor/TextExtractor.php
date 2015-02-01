@@ -24,7 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use TYPO3\CMS\Core\Resource;
+use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\FileTextContentExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
@@ -35,47 +36,51 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * @author Ingo Renner <ingo@typo3.org>
  * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
-class TextExtractor extends AbstractExtractor {
+class TextExtractor implements FileTextContentExtractorInterface {
+
+	/**
+	 * @var array
+	 */
+	protected $configuration;
 
 	protected $supportedFileTypes = array(
 		'doc','docx','epub','htm','html','msg','odf','odt','pdf','ppt','pptx',
 		'rtf','sxw','txt','xls','xlsx'
 	);
 
-	/**
-	 * @var integer
-	 */
-	protected $priority = 99;
 
+	/**
+	 * Constructor
+	 *
+	 */
+	public function __construct() {
+		$this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+
+		if ($this->configuration['extractor'] == 'tika' && !is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))) {
+			throw new \RuntimeException(
+				'Invalid path or filename for Tika application jar.',
+				1266864929
+			);
+		}
+	}
 
 	/**
 	 * Checks if the given file can be processed by this Extractor
 	 *
-	 * @param Resource\File $file
-	 * @return boolean
+	 * @param File $file
+	 * @return bool
 	 */
-	public function canProcess(Resource\File $file) {
+	public function canExtractText(File $file) {
 		return in_array($file->getProperty('extension'), $this->supportedFileTypes);
-	}
-
-	/**
-	 * Dummy since a file's textual content is not meta-data
-	 *
-	 * @param Resource\File $file
-	 * @param array $previousExtractedData optional, contains the array of already extracted data
-	 * @return array
-	 */
-	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
-		return $previousExtractedData;
 	}
 
 	/**
 	 * Extracts text from a file using Apache Tika
 	 *
-	 * @param \TYPO3\CMS\Core\Resource\File $file
+	 * @param File $file
 	 * @return string Text extracted from the input file
 	 */
-	public function extractTextFromFile(Resource\File $file) {
+	public function extractText(File $file) {
 		$extractedContent = '';
 
 		$localFilePath = $file->getForLocalProcessing(FALSE);
@@ -104,11 +109,13 @@ class TextExtractor extends AbstractExtractor {
 
 		$shellOutput = shell_exec($tikaCommand);
 
-		$this->log('Text Extraction using local Tika', array(
-			'file'         => $file,
-			'tika command' => $tikaCommand,
-			'shell output' => $shellOutput
-		));
+		if($this->configuration['logging']){
+			GeneralUtility::devLog('Text Extraction using local Tika', 'tika', 0, array(
+				'file' => $file,
+				'tika command' => $tikaCommand,
+				'shell output' => $shellOutput
+			));
+		}
 
 		return $shellOutput;
 	}
@@ -137,12 +144,14 @@ class TextExtractor extends AbstractExtractor {
 		$query->setExtractOnly();
 		$response = $solr->extract($query);
 
-		$this->log('Text Extraction using Solr', array(
-			'file'            => $file,
-			'solr connection' => (array) $solr,
-			'query'           => (array) $query,
-			'response'        => $response
-		));
+		if ($this->configuration['logging']) {
+			GeneralUtility::devLog('Text Extraction using Solr', 'tika', 0, array(
+				'file' => $file,
+				'solr connection' => (array)$solr,
+				'query' => (array)$query,
+				'response' => $response
+			));
+		}
 
 		return $response[0];
 	}
