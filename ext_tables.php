@@ -18,11 +18,13 @@ if (TYPO3_MODE == 'BE') {
 		$_EXTKEY
 	);
 
-	\ApacheSolrForTypo3\Solr\Backend\SolrModule\AdministrationModuleManager::registerModule(
-		'ApacheSolrForTypo3.' . $_EXTKEY,
-		'TikaControlPanel',
-		array('index')
-	);
+	if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
+		\ApacheSolrForTypo3\Solr\Backend\SolrModule\AdministrationModuleManager::registerModule(
+			'ApacheSolrForTypo3.' . $_EXTKEY,
+			'TikaControlPanel',
+			array('index')
+		);
+	}
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'ApacheSolrForTypo3\\Tika\\StatusCheck->updateStatus';
