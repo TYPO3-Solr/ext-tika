@@ -3,8 +3,9 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-$extractorRegistry = \TYPO3\CMS\Core\Resource\Index\ExtractorRegistry::getInstance();
-$extractorRegistry->registerExtractionService('ApacheSolrForTypo3\\Tika\\Service\\Extractor\\MetaDataExtractor');
-$extractorRegistry->registerExtractionService('ApacheSolrForTypo3\\Tika\\Service\\Extractor\\LanguageDetector');
+$metaDataExtractorRegistry = \TYPO3\CMS\Core\Resource\Index\ExtractorRegistry::getInstance();
+$metaDataExtractorRegistry->registerExtractionService('ApacheSolrForTypo3\\Tika\\Service\\Extractor\\MetaDataExtractor');
+$metaDataExtractorRegistry->registerExtractionService('ApacheSolrForTypo3\\Tika\\Service\\Extractor\\LanguageDetector');
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['textExtractors']['tika'] = 'ApacheSolrForTypo3\\Tika\\Service\\Extractor\\TextExtractor';
+$textExtractorRegistry = \TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorRegistry::getInstance();
+$textExtractorRegistry->registerTextExtractor(\ApacheSolrForTypo3\Tika\Service\Extractor\TextExtractor::class);

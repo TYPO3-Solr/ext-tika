@@ -24,8 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use TYPO3\CMS\Core\Resource\FileTextContentExtractorInterface;
-use TYPO3\CMS\Core\Type\File\FileInfo;
+use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
@@ -36,13 +36,18 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * @author Ingo Renner <ingo@typo3.org>
  * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
-class TextExtractor implements FileTextContentExtractorInterface {
+class TextExtractor implements TextExtractorInterface {
 
 	/**
 	 * @var array
 	 */
 	protected $configuration;
 
+	/**
+	 * Supported file types (by extension)
+	 *
+	 * @var array
+	 */
 	protected $supportedFileTypes = array(
 		'doc','docx','epub','htm','html','msg','odf','odt','pdf','ppt','pptx',
 		'rtf','sxw','txt','xls','xlsx'
@@ -67,23 +72,23 @@ class TextExtractor implements FileTextContentExtractorInterface {
 	/**
 	 * Checks if the given file can be processed by this Extractor
 	 *
-	 * @param FileInfo $file
+	 * @param FileInterface $file
 	 * @return bool
 	 */
-	public function canExtractText(FileInfo $file) {
+	public function canExtractText(FileInterface $file) {
 		return in_array($file->getExtension(), $this->supportedFileTypes);
 	}
 
 	/**
 	 * Extracts text from a file using Apache Tika
 	 *
-	 * @param FileInfo $file
+	 * @param FileInterface $file
 	 * @return string Text extracted from the input file
 	 */
-	public function extractText(FileInfo $file) {
+	public function extractText(FileInterface $file) {
 		$extractedContent = '';
 
-		$localFilePath = $file->getPathname();
+		$localFilePath = $file->getForLocalProcessing();
 		if ($this->configuration['extractor'] == 'solr') {
 			$extractedContent = $this->extractUsingSolr($localFilePath);
 		} else {
