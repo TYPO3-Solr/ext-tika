@@ -71,7 +71,7 @@ class MetaDataExtractor extends AbstractExtractor {
 	 * @return array
 	 */
 	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
-		$metaData = array();
+		$metaData = NULL;
 
 		$localFilePath = $file->getForLocalProcessing(FALSE);
 		if ($this->configuration['extractor'] == 'solr') {
