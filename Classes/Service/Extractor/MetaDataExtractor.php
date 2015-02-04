@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Service\TikaServiceFactory;
 use TYPO3\CMS\Core\Resource;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
@@ -78,55 +79,11 @@ class MetaDataExtractor extends AbstractExtractor {
 			$extractedMetaData = $this->extractUsingSolr($localFilePath);
 		} else {
 			// tika || jar
-			$extractedMetaData = $this->extractUsingTika($localFilePath);
+			$tikaService = TikaServiceFactory::getTika($this->configuration['extractor']);
+			$extractedMetaData = $tikaService->extractMetaDate($file);
 		}
 
 		$metaData = $this->normalizeMetaData($extractedMetaData);
-
-		return $metaData;
-	}
-
-	/**
-	 * Takes shell output from exec() and turns it into an array of key => value
-	 * meta data pairs.
-	 *
-	 * @param array $shellOutputMetaData An array containing shell output from exec() with one line per entry
-	 * @return array Array of key => value pairs of meta data
-	 */
-	protected function shellOutputToArray(array $shellOutputMetaData) {
-		$metaData = array();
-
-		foreach ($shellOutputMetaData as $line) {
-			list($dataName, $dataValue) = explode(':', $line, 2);
-			$dataValue = trim($dataValue);
-
-			if (in_array($dataName, array('dc', 'dcterms', 'meta', 'tiff', 'xmp', 'xmpTPg'))) {
-				// Dublin Core metadata and co
-				$dataNamePrefix = $dataName;
-				list($dataName, $dataValue) = explode(':', $dataValue, 2);
-				$dataName = $dataNamePrefix . ':' . $dataName;
-				$dataValue = trim($dataValue);
-			}
-
-			if (array_key_exists($dataName, $metaData)) {
-				if ($metaData[$dataName] == $dataValue) {
-					// first duplicate key hit, but also duplicate value
-					continue;
-				}
-
-				// allow a meta data key to appear multiple times
-				if (!is_array($metaData[$dataName])) {
-					$metaData[$dataName] = array($metaData[$dataName]);
-				}
-
-				// but do not allow duplicate values
-				if (!in_array($dataValue, $metaData[$dataName])) {
-					$metaData[$dataName][] = $dataValue;
-				}
-			} else {
-				$metaData[$dataName] = $dataValue;
-			}
-		}
 
 		return $metaData;
 	}
@@ -245,33 +202,6 @@ class MetaDataExtractor extends AbstractExtractor {
 		}
 
 		return $date;
-	}
-
-	/**
-	 * Extracts meta data from a given file using a local Apache Tika jar.
-	 *
-	 * @param string $file Absolute path to the file to extract meta data from.
-	 * @return string Meta data extracted from the given file.
-	 */
-	protected function extractUsingTika($file) {
-		$tikaCommand = CommandUtility::getCommand('java')
-			. ' -Dfile.encoding=UTF8'
-			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
-			. ' -m'
-			. ' ' . escapeshellarg($file);
-
-		$shellOutput = array();
-		exec($tikaCommand, $shellOutput);
-		$metaData = $this->shellOutputToArray($shellOutput);
-
-		$this->log('Meta Data Extraction using local Tika', array(
-			'file'         => $file,
-			'tika command' => $tikaCommand,
-			'shell output' => $shellOutput,
-			'meta data'    => $metaData
-		));
-
-		return $metaData;
 	}
 
 	/**
