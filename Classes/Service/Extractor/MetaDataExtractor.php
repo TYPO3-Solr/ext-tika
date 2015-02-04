@@ -27,7 +27,6 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 use ApacheSolrForTypo3\Tika\Service\TikaServiceFactory;
 use TYPO3\CMS\Core\Resource;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 
 
 /**
