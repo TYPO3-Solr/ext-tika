@@ -47,13 +47,10 @@ class TikaServiceFactory {
 			case 'jar':
 			case 'tika': // backwards compatibility
 				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\JarService');
-				break;
 			case 'server':
 				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\ServerService');
-				break;
 			case 'solr':
 				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\SolrCellService');
-				break;
 			default:
 				throw new \InvalidArgumentException(
 					'Unknown Tika service type "' . $tikaService . '". Must be one of jar, server, or solr.',
