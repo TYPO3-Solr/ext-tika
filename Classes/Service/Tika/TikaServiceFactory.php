@@ -42,7 +42,7 @@ class TikaServiceFactory {
 	 *
 	 * @throws \InvalidArgumentException for unknown Tika service type
 	 */
-	public function getTika($tikaService) {
+	public static function getTika($tikaService) {
 		switch ($tikaService) {
 			case 'jar':
 			case 'tika': // backwards compatibility
