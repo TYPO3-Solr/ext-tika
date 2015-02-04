@@ -110,6 +110,7 @@ abstract class AbstractExtractor implements ExtractorInterface {
 	 * @return void
 	 */
 	protected function log($message, array $data = array()) {
+		// TODO have logger injected
 		if (!$this->configuration['logging']) {
 			return;
 		}
