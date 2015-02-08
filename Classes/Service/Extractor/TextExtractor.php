@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Service\TikaServiceFactory;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -93,36 +94,11 @@ class TextExtractor implements TextExtractorInterface {
 			$extractedContent = $this->extractUsingSolr($localFilePath);
 		} else {
 			// tika || jar
-			$extractedContent = $this->extractUsingTika($localFilePath);
+			$tika = TikaServiceFactory::getTika($this->configuration['extractor']);
+			$extractedContent = $tika->extractText($file);
 		}
 
 		return $extractedContent;
-	}
-
-	/**
-	 * Extracts content from a given file using a local Apache Tika jar.
-	 *
-	 * @param string $file Absolute path to the file to extract content from.
-	 * @return string Content extracted from the given file.
-	 */
-	protected function extractUsingTika($file) {
-		$tikaCommand = CommandUtility::getCommand('java')
-			. ' -Dfile.encoding=UTF8' // forces UTF8 output
-			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
-			. ' -t'
-			. ' ' . escapeshellarg($file);
-
-		$shellOutput = shell_exec($tikaCommand);
-
-		if($this->configuration['logging']){
-			GeneralUtility::devLog('Text Extraction using local Tika', 'tika', 0, array(
-				'file' => $file,
-				'tika command' => $tikaCommand,
-				'shell output' => $shellOutput
-			));
-		}
-
-		return $shellOutput;
 	}
 
 	/**
