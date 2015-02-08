@@ -61,13 +61,6 @@ class TextExtractor implements TextExtractorInterface {
 	 */
 	public function __construct() {
 		$this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-
-		if ($this->configuration['extractor'] == 'tika' && !is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))) {
-			throw new \RuntimeException(
-				'Invalid path or filename for Tika application jar.',
-				1266864929
-			);
-		}
 	}
 
 	/**
