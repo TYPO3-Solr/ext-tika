@@ -56,7 +56,7 @@ class MetaDataExtractor extends AbstractExtractor {
 	 * @return boolean
 	 */
 	public function canProcess(Resource\File $file) {
-		// TODO use mimetype instead of extension
+		// TODO use MIME type instead of extension
 		// tika.jar --list-supported-types -> cache supported types
 		// compare to file's MIME type
 
