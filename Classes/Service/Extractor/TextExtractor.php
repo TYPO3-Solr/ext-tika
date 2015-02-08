@@ -28,7 +28,6 @@ use ApacheSolrForTypo3\Tika\Service\TikaServiceFactory;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 
 
 /**
