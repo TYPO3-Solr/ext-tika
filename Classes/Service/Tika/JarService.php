@@ -58,7 +58,21 @@ class JarService extends AbstractTikaService {
 	 * @return string
 	 */
 	public function extractText(File $file) {
-		// TODO: Implement extractText() method.
+		$tikaCommand = CommandUtility::getCommand('java')
+			. ' -Dfile.encoding=UTF8' // forces UTF8 output
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -t'
+			. ' ' . escapeshellarg($file);
+
+		$extractedText = shell_exec($tikaCommand);
+
+		$this->log('Text Extraction using local Tika', array(
+			'file'         => $file,
+			'tika command' => $tikaCommand,
+			'shell output' => $extractedText
+		));
+
+		return $extractedText;
 	}
 
 	/**
