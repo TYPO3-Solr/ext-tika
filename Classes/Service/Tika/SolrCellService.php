@@ -31,9 +31,37 @@ use TYPO3\CMS\Core\Resource\File;
 /**
  * A Tika service implementation using a Solr server
  *
- * @package ApacheSolrForTypo3\Tika\Service
  */
 class SolrCellService extends AbstractTikaService {
+
+	/**
+	 * Solr connection
+	 *
+	 * @var \Tx_Solr_SolrService
+	 */
+	protected $solr = NULL;
+
+
+	/**
+	 * Constructor
+	 *
+	 */
+	public function __construct() {
+		parent::__construct();
+
+		// FIXME move connection building to EXT:solr
+		// currently explicitly using "new" to bypass
+		// \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or providing a Factory
+
+		// EM might define a different connection than already in use by
+		// Index Queue
+		$this->solr = new \Tx_Solr_SolrService(
+			$this->configuration['solrHost'],
+			$this->configuration['solrPort'],
+			$this->configuration['solrPath'],
+			$this->configuration['solrScheme']
+		);
+	}
 
 	/**
 	 * Takes a file reference and extracts the text from it.
@@ -42,32 +70,19 @@ class SolrCellService extends AbstractTikaService {
 	 * @return string
 	 */
 	public function extractText(File $file) {
-		// FIXME move connection building to EXT:solr
-		// currently explicitly using "new" to bypass
-		// \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or providing a Factory
-
-		// EM might define a different connection than already in use by
-		// Index Queue
-		$solr = new \Tx_Solr_SolrService(
-			$this->configuration['solrHost'],
-			$this->configuration['solrPort'],
-			$this->configuration['solrPath'],
-			$this->configuration['solrScheme']
-		);
-
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$query = GeneralUtility::makeInstance(
 			'ApacheSolrForTypo3\\Tika\\Service\\SolrCellQuery',
 			$localTempFilePath
 		);
 		$query->setExtractOnly();
-		$response = $solr->extract($query);
+		$response = $this->solr->extract($query);
 
 		$this->cleanupTempFile($localTempFilePath, $file);
 
 		$this->log('Text Extraction using Solr', array(
 			'file'            => $file,
-			'solr connection' => (array) $solr,
+			'solr connection' => (array) $this->solr,
 			'query'           => (array) $query,
 			'response'        => $response
 		));
@@ -82,34 +97,20 @@ class SolrCellService extends AbstractTikaService {
 	 * @return array
 	 */
 	public function extractMetaDate(File $file) {
-		// FIXME move connection building to EXT:solr
-		// explicitly using "new" to bypass \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or
-		// providing a Factory
-
-		// EM might define a different connection than already in use by
-		// Index Queue
-		$solr = new \tx_solr_SolrService(
-			$this->configuration['solrHost'],
-			$this->configuration['solrPort'],
-			$this->configuration['solrPath'],
-			$this->configuration['solrScheme']
-		);
-
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$query = GeneralUtility::makeInstance(
 			'ApacheSolrForTypo3\\Tika\\Service\\SolrCellQuery',
 			$localTempFilePath
 		);
 		$query->setExtractOnly();
-		$response = $solr->extract($query);
-
+		$response = $this->solr->extract($query);
 		$metaData = $this->solrResponseToArray($response[1]);
 
 		$this->cleanupTempFile($localTempFilePath, $file);
 
 		$this->log('Meta Data Extraction using Solr', array(
 			'file'            => $file,
-			'solr connection' => (array) $solr,
+			'solr connection' => (array) $this->solr,
 			'query'           => (array) $query,
 			'response'        => $response,
 			'meta data'       => $metaData
