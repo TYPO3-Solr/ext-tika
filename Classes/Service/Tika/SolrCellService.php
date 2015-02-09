@@ -66,7 +66,6 @@ class SolrCellService extends AbstractTikaService {
 		);
 
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
-
 		$query = GeneralUtility::makeInstance(
 			'ApacheSolrForTypo3\\Tika\\Service\\SolrCellQuery',
 			$localTempFilePath
