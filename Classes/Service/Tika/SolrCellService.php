@@ -126,6 +126,7 @@ class SolrCellService extends AbstractTikaService {
 	 * @return string Language ISO code
 	 */
 	public function detectLanguageFromFile(File $file) {
+		// TODO check whether Solr supports text extraction now
 		throw new UnsupportedOperationException(
 			'The Tika Solr service does not support language detection',
 			1423457153
@@ -139,6 +140,7 @@ class SolrCellService extends AbstractTikaService {
 	 * @return string Language ISO code
 	 */
 	public function detectLanguageFromString($input) {
+		// TODO check whether Solr supports text extraction now
 		throw new UnsupportedOperationException(
 			'The Tika Solr service does not support language detection',
 			1423457153
