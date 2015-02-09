@@ -27,6 +27,7 @@ namespace ApacheSolrForTypo3\Tika\Service;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 
 
 /**
@@ -113,7 +114,17 @@ class JarService extends AbstractTikaService {
 	 * @return string Language ISO code
 	 */
 	public function detectLanguageFromFile(File $file) {
-		// TODO: Implement detectLanguageFromFile() method.
+		$localTempFilePath = $file->getForLocalProcessing(FALSE);
+
+		// detect language
+		$language = $this->detectLanguageFromLocalFile($localTempFilePath);
+
+		// cleanup/remove temp file
+		if (PathUtility::basename($localTempFilePath) !== $file->getName()) {
+			unlink($localTempFilePath);
+		}
+
+		return $language;
 	}
 
 	/**
@@ -123,7 +134,40 @@ class JarService extends AbstractTikaService {
 	 * @return string Language ISO code
 	 */
 	public function detectLanguageFromString($input) {
-		// TODO: Implement detectLanguageFromString() method.
+		$tempFilePath = GeneralUtility::tempnam('Tx_Tika_JarService_DetectLanguage');
+		file_put_contents($tempFilePath, $input);
+
+		// detect language
+		$language = $this->detectLanguageFromLocalFile($tempFilePath);
+
+		// cleanup
+		unlink($tempFilePath);
+
+		return $language;
+	}
+
+	/**
+	 * The actual language detection
+	 *
+	 * @param string $localFilePath Path to a local file
+	 * @return string The file content's language
+	 */
+	protected function detectLanguageFromLocalFile($localFilePath) {
+		$tikaCommand = CommandUtility::getCommand('java')
+			. ' -Dfile.encoding=UTF8'
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -l'
+			. ' ' . escapeshellarg($localFilePath);
+
+		$language = trim(shell_exec($tikaCommand));
+
+		$this->log('Language Detection using local Tika', array(
+			'file' => $localFilePath,
+			'tika command' => $tikaCommand,
+			'shell output' => $language
+		));
+
+		return $language;
 	}
 
 
