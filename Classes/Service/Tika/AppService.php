@@ -61,13 +61,15 @@ class AppService extends AbstractTikaService {
 	 * @return string
 	 */
 	public function extractText(File $file) {
+		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$tikaCommand = CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8' // forces UTF8 output
 			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -t'
-			. ' ' . escapeshellarg($file);
+			. ' ' . escapeshellarg($localTempFilePath);
 
 		$extractedText = shell_exec($tikaCommand);
+		$this->cleanupTempFile($localTempFilePath, $file);
 
 		$this->log('Text Extraction using local Tika', array(
 			'file'         => $file,
@@ -85,15 +87,17 @@ class AppService extends AbstractTikaService {
 	 * @return array
 	 */
 	public function extractMetaDate(File $file) {
+		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$tikaCommand = CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
 			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -m'
-			. ' ' . escapeshellarg($file);
+			. ' ' . escapeshellarg($localTempFilePath);
 
 		$shellOutput = array();
 		exec($tikaCommand, $shellOutput);
 		$metaData = $this->shellOutputToArray($shellOutput);
+		$this->cleanupTempFile($localTempFilePath, $file);
 
 		$this->log('Meta Data Extraction using local Tika', array(
 			'file' => $file,
