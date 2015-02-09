@@ -78,7 +78,7 @@ class TextExtractor implements TextExtractorInterface {
 	 * @return string Text extracted from the input file
 	 */
 	public function extractText(FileInterface $file) {
-		$extractedContent = '';
+		$extractedContent = NULL;
 
 		$tika = TikaServiceFactory::getTika($this->configuration['extractor']);
 		$extractedContent = $tika->extractText($file);
