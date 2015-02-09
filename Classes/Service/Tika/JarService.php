@@ -33,7 +33,6 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 /**
  * A Tika service implementation using the tika-app.jar
  *
- * @package ApacheSolrForTypo3\Tika\Service
  */
 class JarService extends AbstractTikaService {
 
@@ -101,7 +100,7 @@ class JarService extends AbstractTikaService {
 			'file' => $file,
 			'tika command' => $tikaCommand,
 			'shell output' => $shellOutput,
-			'meta data' => $metaData
+			'meta data'    => $metaData
 		));
 
 		return $metaData;
@@ -162,14 +161,13 @@ class JarService extends AbstractTikaService {
 		$language = trim(shell_exec($tikaCommand));
 
 		$this->log('Language Detection using local Tika', array(
-			'file' => $localFilePath,
+			'file'         => $localFilePath,
 			'tika command' => $tikaCommand,
 			'shell output' => $language
 		));
 
 		return $language;
 	}
-
 
 	/**
 	 * Takes shell output from exec() and turns it into an array of key => value
