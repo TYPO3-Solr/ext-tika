@@ -27,7 +27,6 @@ namespace ApacheSolrForTypo3\Tika\Service;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 
 
 /**
@@ -114,14 +113,9 @@ class AppService extends AbstractTikaService {
 	 */
 	public function detectLanguageFromFile(File $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
-
-		// detect language
 		$language = $this->detectLanguageFromLocalFile($localTempFilePath);
 
-		// cleanup/remove temp file
-		if (PathUtility::basename($localTempFilePath) !== $file->getName()) {
-			unlink($localTempFilePath);
-		}
+		$this->cleanupTempFile($localTempFilePath, $file);
 
 		return $language;
 	}

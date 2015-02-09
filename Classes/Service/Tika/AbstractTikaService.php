@@ -25,6 +25,8 @@ namespace ApacheSolrForTypo3\Tika\Service;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Utility\PathUtility;
 
 
 /**
@@ -47,6 +49,22 @@ abstract class AbstractTikaService implements TikaServiceInterface {
 	public function __construct() {
 		// TODO refactor into separate configuration class
 		$this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+	}
+
+	/**
+	 * Removes a temporary file.
+	 *
+	 * When working with a file, the actual file might be on a remote storage.
+	 * To work with it it gets copied to local storage, those temporary local
+	 * copies need to be removed when they're not needed anymore.
+	 *
+	 * @param string $localTempFilePath Path to the local file copy
+	 * @param \TYPO3\CMS\Core\Resource\File $sourceFile Original file
+	 */
+	protected function cleanupTempFile($localTempFilePath, File $sourceFile) {
+		if (PathUtility::basename($localTempFilePath) !== $sourceFile->getName()) {
+			unlink($localTempFilePath);
+		}
 	}
 
 	/**
