@@ -46,7 +46,7 @@ class TikaServiceFactory {
 		switch ($tikaService) {
 			case 'jar':
 			case 'tika': // backwards compatibility
-				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\JarService');
+				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\AppService');
 			case 'server':
 				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\ServerService');
 			case 'solr':

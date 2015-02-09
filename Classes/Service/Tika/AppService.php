@@ -34,7 +34,7 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  * A Tika service implementation using the tika-app.jar
  *
  */
-class JarService extends AbstractTikaService {
+class AppService extends AbstractTikaService {
 
 	/**
 	 * Constructor
@@ -133,7 +133,7 @@ class JarService extends AbstractTikaService {
 	 * @return string Language ISO code
 	 */
 	public function detectLanguageFromString($input) {
-		$tempFilePath = GeneralUtility::tempnam('Tx_Tika_JarService_DetectLanguage');
+		$tempFilePath = GeneralUtility::tempnam('Tx_Tika_AppService_DetectLanguage');
 		file_put_contents($tempFilePath, $input);
 
 		// detect language
