@@ -45,7 +45,7 @@ class JarService extends AbstractTikaService {
 
 		if (!is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))) {
 			throw new \RuntimeException(
-				'Invalid path or filename for Tika application jar.',
+				'Invalid path or filename for Tika application jar: ' . $this->configuration['tikaPath'],
 				1266864929
 			);
 		}
