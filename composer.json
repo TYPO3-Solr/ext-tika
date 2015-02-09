@@ -32,6 +32,9 @@
 			"url": "http://composer.typo3.org/"
 		}
 	],
+	"replace": {
+		"typo3/cms": "*"
+	},
 	"require": {
 		"php": ">5.3.0,~5.5.0",
 		"typo3/cms": "~6.2.0"
