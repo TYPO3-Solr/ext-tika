@@ -26,7 +26,6 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 use ApacheSolrForTypo3\Tika\Service\TikaServiceFactory;
 use TYPO3\CMS\Core\Resource;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
@@ -73,14 +72,8 @@ class MetaDataExtractor extends AbstractExtractor {
 	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
 		$metaData = NULL;
 
-		$localFilePath = $file->getForLocalProcessing(FALSE);
-		if ($this->configuration['extractor'] == 'solr') {
-			$extractedMetaData = $this->extractUsingSolr($localFilePath);
-		} else {
-			// tika || jar
-			$tikaService = TikaServiceFactory::getTika($this->configuration['extractor']);
-			$extractedMetaData = $tikaService->extractMetaDate($file);
-		}
+		$tikaService = TikaServiceFactory::getTika($this->configuration['extractor']);
+		$extractedMetaData = $tikaService->extractMetaDate($file);
 
 		$metaData = $this->normalizeMetaData($extractedMetaData);
 
@@ -203,57 +196,4 @@ class MetaDataExtractor extends AbstractExtractor {
 		return $date;
 	}
 
-	/**
-	 * Extracts meta data from a given file using a Solr server.
-	 *
-	 * @param  string $file Absolute path to the file to extract meta data from.
-	 * @return string Meta data extracted from the given file.
-	 */
-	protected function extractUsingSolr($file) {
-		// FIXME move connection building to EXT:solr
-		// explicitly using "new" to bypass \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or
-		// providing a Factory
-
-		// EM might define a different connection than already in use by
-		// Index Queue
-		$solr = new \tx_solr_SolrService(
-			$this->configuration['solrHost'],
-			$this->configuration['solrPort'],
-			$this->configuration['solrPath'],
-			$this->configuration['solrScheme']
-		);
-
-		$query = GeneralUtility::makeInstance('tx_solr_ExtractingQuery', $file);
-		$query->setExtractOnly();
-		$response = $solr->extract($query);
-
-		$metaData = $this->solrResponseToArray($response[1]);
-
-		$this->log('Meta Data Extraction using Solr', array(
-			'file'            => $file,
-			'solr connection' => (array) $solr,
-			'query'           => (array) $query,
-			'response'        => $response,
-			'meta data'       => $metaData
-		));
-
-		return $metaData;
-	}
-
-	/**
-	 * Turns the nested Solr response into the same format as produced by a
-	 * local Tika jar call
-	 *
-	 * @param array $metaDataResponse The part of the Solr response containing the meta data
-	 * @return array The cleaned meta data, matching the Tika jar call format
-	 */
-	protected function solrResponseToArray(array $metaDataResponse) {
-		$cleanedData = array();
-
-		foreach ($metaDataResponse as $dataName => $dataArray) {
-			$cleanedData[$dataName] = $dataArray[0];
-		}
-
-		return $cleanedData;
-	}
 }
