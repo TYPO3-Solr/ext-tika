@@ -24,9 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Service\TikaServiceFactory;
 use TYPO3\CMS\Core\Resource;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 
 
 /**
@@ -68,39 +67,10 @@ class LanguageDetector extends AbstractExtractor {
 	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
 		$metaData = array();
 
-		$localFilePath = $file->getForLocalProcessing(FALSE);
-		$metaData['language'] = $this->extractUsingTika($localFilePath);
+		$tika = TikaServiceFactory::getTika($this->configuration['extractor']);
+		$metaData['language'] = $tika->detectLanguageFromFile($file);
 
 		return $metaData;
-	}
-
-	/**
-	 * Extracts the language from a given file using a local Apache Tika jar.
-	 *
-	 * @param string $file Absolute path to the file to extract meta data from.
-	 * @return string Meta data extracted from the given file.
-	 * @throws \RuntimeException if Java can't be found
-	 */
-	protected function extractUsingTika($file) {
-		if (!CommandUtility::checkCommand('java')) {
-			throw new \RuntimeException('Could not find Java', 1421208775);
-		}
-
-		$tikaCommand   = CommandUtility::getCommand('java')
-			. ' -Dfile.encoding=UTF8'
-			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
-			. ' -l'
-			. ' ' . escapeshellarg($file);
-
-		$shellOutput = trim(shell_exec($tikaCommand));
-
-		$this->log('Language Detection using local Tika', array(
-			'file'         => $file,
-			'tika command' => $tikaCommand,
-			'shell output' => $shellOutput
-		));
-
-		return $shellOutput;
 	}
 
 }
