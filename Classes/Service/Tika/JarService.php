@@ -49,6 +49,10 @@ class JarService extends AbstractTikaService {
 				1266864929
 			);
 		}
+
+		if (!CommandUtility::checkCommand('java')) {
+			throw new \RuntimeException('Could not find Java', 1421208775);
+		}
 	}
 
 	/**
