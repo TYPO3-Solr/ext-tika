@@ -20,9 +20,6 @@ tikaPath =
 #  cat=server//10; type=string; label= Tika Path: The absolute path to your Apache Tika server jar file (tika-server-x.x.jar). This setting is optional, when provided you can use the backend module to control the Tika server from there. Otherwise the host and port settings will be used.
 tikaServerPath =
 
-# cat=server//20; type=options[http,https]; label=Scheme
-tikaServerScheme = http
-
 # cat=server//30; type=string; label=Host
 tikaServerHost = localhost
 

@@ -166,10 +166,9 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 * @return string Tika server URL
 	 */
 	protected function getTikaServerUrl() {
-		$tikaUrl = $this->tikaConfiguration['tikaServerScheme']
-			. '://'
-			. $this->tikaConfiguration['tikaServerHost']
-			. ':' . $this->tikaConfiguration['tikaServerPort'];
+		$tikaUrl = 'http://'
+			. $this->tikaConfiguration['tikaServerHost'] . ':'
+			. $this->tikaConfiguration['tikaServerPort'];
 
 		return $tikaUrl;
 	}
