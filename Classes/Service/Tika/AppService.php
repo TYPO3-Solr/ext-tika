@@ -86,7 +86,7 @@ class AppService extends AbstractTikaService {
 	 * @param \TYPO3\CMS\Core\Resource\File $file
 	 * @return array
 	 */
-	public function extractMetaDate(File $file) {
+	public function extractMetaData(File $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$tikaCommand = CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'

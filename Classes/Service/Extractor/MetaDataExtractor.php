@@ -73,7 +73,7 @@ class MetaDataExtractor extends AbstractExtractor {
 		$metaData = NULL;
 
 		$tikaService = TikaServiceFactory::getTika($this->configuration['extractor']);
-		$extractedMetaData = $tikaService->extractMetaDate($file);
+		$extractedMetaData = $tikaService->extractMetaData($file);
 
 		$metaData = $this->normalizeMetaData($extractedMetaData);
 
