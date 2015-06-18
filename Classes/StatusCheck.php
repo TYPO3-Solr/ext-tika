@@ -142,7 +142,8 @@ class StatusCheck {
 				$solr = GeneralUtility::makeInstance('tx_solr_ConnectionManager')->getConnection(
 					$this->tikaConfiguration['solrHost'],
 					$this->tikaConfiguration['solrPort'],
-					$this->tikaConfiguration['solrPath']
+					$this->tikaConfiguration['solrPath'],
+					$this->tikaConfiguration['solrScheme']
 				);
 
 				$solr->ping();
