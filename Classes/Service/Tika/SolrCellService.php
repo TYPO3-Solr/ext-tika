@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Solr\SolrService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Resource\File;
 
@@ -37,7 +38,7 @@ class SolrCellService extends AbstractTikaService {
 	/**
 	 * Solr connection
 	 *
-	 * @var \Tx_Solr_SolrService
+	 * @var SolrService
 	 */
 	protected $solr = NULL;
 
@@ -55,7 +56,7 @@ class SolrCellService extends AbstractTikaService {
 
 		// EM might define a different connection than already in use by
 		// Index Queue
-		$this->solr = new \Tx_Solr_SolrService(
+		$this->solr = new SolrService(
 			$this->configuration['solrHost'],
 			$this->configuration['solrPort'],
 			$this->configuration['solrPath'],

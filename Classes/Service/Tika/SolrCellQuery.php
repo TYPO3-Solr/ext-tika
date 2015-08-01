@@ -24,6 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Service;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use ApacheSolrForTypo3\Solr\Query;
+
 
 /**
  * Specialized query for content extraction using Solr Cell
@@ -31,13 +33,13 @@ namespace ApacheSolrForTypo3\Tika\Service;
  * @author Ingo Renner <ingo@typo3.org>
  * @package ApacheSolrForTypo3\Tika\Service
  */
-class SolrCellQuery extends \Tx_Solr_Query {
+class SolrCellQuery extends Query {
 
 	protected $file;
 	protected $multiPartPostDataBoundary;
 
 	/**
-	 * constructor for class tx_solr_ExtractingQuery
+	 * Constructor
 	 *
 	 * @param string $file Absolute path to the file to extract content and meta data from.
 	 */
@@ -91,7 +93,7 @@ class SolrCellQuery extends \Tx_Solr_Query {
 	 *
 	 * @param string $boundary Optional boundary to use
 	 * @return string The file to extract as raw POST data.
-	 * @throws Apache_Solr_InvalidArgumentException
+	 * @throws \Apache_Solr_InvalidArgumentException
 	 */
 	public function getRawPostFileData($boundary = '') {
 		if (empty($boundary)) {
@@ -100,7 +102,7 @@ class SolrCellQuery extends \Tx_Solr_Query {
 
 		$fileData = file_get_contents($this->file);
 		if ($fileData === FALSE) {
-			throw new Apache_Solr_InvalidArgumentException(
+			throw new \Apache_Solr_InvalidArgumentException(
 				'Could not retrieve content from file ' . $this->file
 			);
 		}
@@ -128,10 +130,15 @@ class SolrCellQuery extends \Tx_Solr_Query {
 		}
 	}
 
+	/**
+	 * Builds an array of query parameters to use for the search query.
+	 *
+	 * @return array An array ready to use with query parameters
+	 */
 	public function getQueryParameters() {
 		$filename = basename($this->file);
 
-			// TODO create an Apache Solr patch to support the -m (and -l) options of Tika
+		// TODO create an Apache Solr patch to support the -m (and -l) options of Tika
 		$suggestParameters = array(
 			'resource.name' => $filename,
 			'extractFormat' => 'text', // Matches the -t command for the tika CLI app.

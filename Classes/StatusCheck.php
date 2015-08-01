@@ -138,8 +138,8 @@ class StatusCheck {
 		if ($this->tikaConfiguration['extractor'] == 'solr') {
 
 			try {
-				/* @var $solr \Tx_Solr_SolrService */
-				$solr = GeneralUtility::makeInstance('tx_solr_ConnectionManager')->getConnection(
+				/* @var $solr \ApacheSolrForTypo3\Solr\SolrService */
+				$solr = GeneralUtility::makeInstance('ApacheSolrForTypo3\\Solr\\ConnectionManager')->getConnection(
 					$this->tikaConfiguration['solrHost'],
 					$this->tikaConfiguration['solrPort'],
 					$this->tikaConfiguration['solrPath'],
