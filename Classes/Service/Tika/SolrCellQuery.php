@@ -108,7 +108,7 @@ class SolrCellQuery extends Query {
 		}
 
 		$data = "--{$boundary}\r\n";
-			// The 'filename' used here becomes the property name in the response.
+		// The 'filename' used here becomes the property name in the response.
 		$data .= 'Content-Disposition: form-data; name="file"; filename="extracted"';
 		$data .= "\r\nContent-Type: application/octet-stream\r\n\r\n";
 		$data .= $fileData;
