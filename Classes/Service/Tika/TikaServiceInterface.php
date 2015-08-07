@@ -36,6 +36,13 @@ use TYPO3\CMS\Core\Resource\File;
 interface TikaServiceInterface {
 
 	/**
+	 * Gets the Tika version
+	 *
+	 * @return string
+	 */
+	public function getTikaVersion();
+
+	/**
 	 * Takes a file reference and extracts the text from it.
 	 *
 	 * @param \TYPO3\CMS\Core\Resource\File $file
