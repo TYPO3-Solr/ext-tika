@@ -156,9 +156,7 @@ class ServerService extends AbstractTikaService {
 	 * @throws \Exception
 	 */
 	public function ping() {
-		$tikaReachable = FALSE;
-
-		$tikaPing = $this->queryTika('/tika');
+		$tikaPing      = $this->queryTika('/tika');
 		$tikaReachable = GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server.');
 
 		return $tikaReachable;
