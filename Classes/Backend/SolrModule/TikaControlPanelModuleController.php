@@ -26,6 +26,7 @@ namespace ApacheSolrForTypo3\Tika\Backend\SolrModule;
 
 use ApacheSolrForTypo3\Solr\Backend\SolrModule\AbstractModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
@@ -83,6 +84,8 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 * @throws \Exception
 	 */
 	public function indexAction() {
+		$this->checkTikaServerConnection();
+
 		$this->view->assign('configuration', $this->tikaConfiguration);
 		$this->view->assign('extractor',     ucfirst($this->tikaConfiguration['extractor']));
 
@@ -109,6 +112,13 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 		// give it some time to start
 		sleep(2);
 
+		if ($this->tikaService->isServerRunning()) {
+			$this->addFlashMessage(
+				'Tika server started.',
+				FlashMessage::OK
+			);
+		}
+
 		$this->forwardToIndex();
 	}
 
@@ -123,6 +133,12 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 		// give it some time to stop
 		sleep(2);
 
+		if (!$this->tikaService->isServerRunning()) {
+			$this->addFlashMessage(
+				'Tika server stopped.',
+				FlashMessage::OK
+			);
+		}
 
 		$this->forwardToIndex();
 	}
@@ -201,6 +217,28 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 		}
 
 		return $controllable;
+	}
+
+	/**
+	 * Checks whether the configured Tika server can be reached and provides a
+	 * flash message according to the result of the check.
+	 *
+	 * @return void
+	 */
+	protected function checkTikaServerConnection() {
+		if ($this->tikaService->ping()) {
+			$this->addFlashMessage(
+				'Tika host contacted at: ' . $this->tikaService->getTikaServerUrl(),
+				'Your Apache Tika server has been contacted.',
+				FlashMessage::OK
+			);
+		} else {
+			$this->addFlashMessage(
+				'Could not connect ot Tika at: ' . $this->tikaService->getTikaServerUrl(),
+				'Unable to contact your Apache Tika server.',
+				FlashMessage::ERROR
+			);
+		}
 	}
 
 }
