@@ -62,7 +62,6 @@ class Process {
 	 * @param string $executable
 	 * @param string $arguments
 	 */
-			$this->runCommand();
 	public function __construct($executable, $arguments = '') {
 		$this->executable = $executable;
 		$this->arguments  = $arguments;
