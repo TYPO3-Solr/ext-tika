@@ -114,7 +114,7 @@ class AppService extends AbstractTikaService {
 		$this->cleanupTempFile($localTempFilePath, $file);
 
 		$this->log('Meta Data Extraction using local Tika', array(
-			'file' => $file,
+			'file'         => $file,
 			'tika command' => $tikaCommand,
 			'shell output' => $shellOutput,
 			'meta data'    => $metaData
