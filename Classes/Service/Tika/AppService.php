@@ -55,6 +55,20 @@ class AppService extends AbstractTikaService {
 	}
 
 	/**
+	 * Gets the Tika server version
+	 *
+	 * @return string Tika app version string
+	 */
+	public function getTikaVersion() {
+		$tikaCommand = CommandUtility::getCommand('java')
+			. ' -Dfile.encoding=UTF8' // forces UTF8 output
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -V';
+
+		return shell_exec($tikaCommand);
+	}
+
+	/**
 	 * Takes a file reference and extracts the text from it.
 	 *
 	 * @param \TYPO3\CMS\Core\Resource\File $file
