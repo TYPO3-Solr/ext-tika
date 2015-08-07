@@ -116,6 +116,31 @@ class Process {
 	}
 
 	/**
+	 * Tries to find the process' pid using ps
+	 *
+	 * @return int|null Null if the pid can't be found, otherwise the pid
+	 */
+	public function findPid() {
+		if (empty($this->arguments)) {
+			throw new \RuntimeException('No command given');
+		}
+
+		$processCommand = $this->executable . ' ' . $this->arguments;
+		$ps = 'ps h --format pid,args -C ' . basename($this->executable);
+		exec($ps, $output);
+
+		foreach ($output as $line) {
+			list($pid, $command) = explode(' ', trim($line), 2);
+			$command = $this->escapePsOutputCommand($command);
+			if ($command == $processCommand) {
+				return (int)$pid;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Checks whether the process is running
 	 *
 	 * @return bool TRUE if the process is running, FALSE otherwise
@@ -167,5 +192,22 @@ class Process {
 		}
 
 		return $stopped;
+	}
+
+	protected function escapePsOutputCommand($command) {
+		$command = explode(' ', $command);
+
+		foreach ($command as $k => $v) {
+			if ($k == 0) {
+				// skip the executable
+				continue;
+			}
+
+			if ($v[0] != '-') {
+				$command[$k] = "'$v'";
+			}
+		}
+
+		return implode(' ', $command);
 	}
 }
