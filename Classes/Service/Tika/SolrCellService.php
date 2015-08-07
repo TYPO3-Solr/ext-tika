@@ -77,10 +77,6 @@ class SolrCellService extends AbstractTikaService {
 			$localTempFilePath
 		);
 		$query->setExtractOnly();
-
-		// TODO extract() currently expects an \ApacheSolrForTypo3\Solrfile\ExtractingQuery
-		// we're providing a \ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery
-		// they are the same though
 		$response = $this->solr->extract($query);
 
 		$this->cleanupTempFile($localTempFilePath, $file);
