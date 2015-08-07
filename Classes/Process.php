@@ -30,8 +30,6 @@ namespace ApacheSolrForTypo3\Tika;
  * Run, check, and stop external processes.
  * Linux only. (Windows does not work).
  *
- * @author dell_petter@hotmail.com
- * @see http://php.net/manual/en/function.exec.php#88704
  * @package ApacheSolrForTypo3\Tika
  */
 class Process {
@@ -44,23 +42,48 @@ class Process {
 	protected $pid = NULL;
 
 	/**
-	 * Command to execute
+	 * Executable running the command
 	 *
 	 * @var string
 	 */
-	protected $command;
+	protected $executable;
+
+	/**
+	 * Executable arguments
+	 *
+	 * @var string
+	 */
+	protected $arguments;
 
 
 	/**
 	 * Constructor
 	 *
-	 * @param string $command
+	 * @param string $executable
+	 * @param string $arguments
 	 */
-	public function __construct($command = '') {
-		if (!empty($command)) {
-			$this->command = $command;
 			$this->runCommand();
-		}
+	public function __construct($executable, $arguments = '') {
+		$this->executable = $executable;
+		$this->arguments  = $arguments;
+	}
+
+	/**
+	 * Arguments setter
+	 *
+	 * @param $arguments
+	 */
+	public function setArguments($arguments) {
+		$this->arguments = $arguments;
+	}
+
+	/**
+	 * Arguments getter
+	 *
+	 * @return string
+	 */
+	public function getArguments() {
+		return$this->arguments;
 	}
 
 	/**
@@ -69,7 +92,7 @@ class Process {
 	 * @return void
 	 */
 	protected function runCommand() {
-		$command = 'nohup ' . $this->command . ' > /dev/null 2>&1 & echo $!';
+		$command = 'nohup ' . $this->executable . ' ' . $this->arguments . ' > /dev/null 2>&1 & echo $!';
 		exec($command, $output);
 		$this->pid = (int) $output[0];
 	}
@@ -119,7 +142,7 @@ class Process {
 	public function start() {
 		$status = FALSE;
 
-		if ($this->command != '') {
+		if ($this->arguments != '') {
 			$this->runCommand();
 			$status = $this->isRunning();
 		}
