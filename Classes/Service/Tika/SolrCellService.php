@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Service;
+namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /***************************************************************
  *  Copyright notice
@@ -73,7 +73,7 @@ class SolrCellService extends AbstractTikaService {
 	public function extractText(File $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$query = GeneralUtility::makeInstance(
-			'ApacheSolrForTypo3\\Tika\\Service\\SolrCellQuery',
+			'ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery',
 			$localTempFilePath
 		);
 		$query->setExtractOnly();
@@ -100,7 +100,7 @@ class SolrCellService extends AbstractTikaService {
 	public function extractMetaData(File $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$query = GeneralUtility::makeInstance(
-			'ApacheSolrForTypo3\\Tika\\Service\\SolrCellQuery',
+			'ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery',
 			$localTempFilePath
 		);
 		$query->setExtractOnly();
