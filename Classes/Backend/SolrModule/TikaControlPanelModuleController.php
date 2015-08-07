@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Backend\SolrModule;
 ***************************************************************/
 
 use ApacheSolrForTypo3\Solr\Backend\SolrModule\AbstractModuleController;
-use TYPO3\CMS\Core\Utility\CommandUtility;
+use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
@@ -58,6 +58,11 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 */
 	protected $tikaConfiguration = array();
 
+	/**
+	 * @var \ApacheSolrForTypo3\Tika\Service\Tika\AppService|\ApacheSolrForTypo3\Tika\Service\Tika\ServerService|\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService
+	 */
+	protected $tikaService = null;
+
 
 	/**
 	 * Initializes resources commonly needed for several actions.
@@ -68,6 +73,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 		parent::initializeAction();
 
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+		$this->tikaService = TikaServiceFactory::getTika($this->tikaConfiguration['extractor']);
 	}
 
 	/**
@@ -98,27 +104,9 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 * @return void
 	 */
 	public function startServerAction() {
-		$command = CommandUtility::getCommand('java')
-			. ' -jar ' . escapeshellarg(
-				GeneralUtility::getFileAbsFileName(
-					$this->tikaConfiguration['tikaServerPath'],
-					FALSE
-				)
-			)
-			. ' -p ' . escapeshellarg($this->tikaConfiguration['tikaServerPort']);
-		$command = escapeshellcmd($command);
+		$this->tikaService->startServer();
 
-		$process = GeneralUtility::makeInstance(
-			'ApacheSolrForTypo3\\Tika\\Process',
-			$command
-		);
-		$pid = $process->getPid();
-
-		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
-		$registry->set('tx_tika', 'server.pid', $pid);
-
-		// wait for Tika to start so that when we return to indexAction
-		// it shows Tika running
+		// give it some time to start
 		sleep(2);
 
 		$this->forwardToIndex();
@@ -130,15 +118,11 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 * @return void
 	 */
 	public function stopServerAction() {
-		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
-		$pid      = $registry->get('tx_tika', 'server.pid');
+		$this->tikaService->stopServer();
 
-		$process = GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Process');
-		$process->setPid($pid);
-		$process->stop();
+		// give it some time to stop
+		sleep(2);
 
-		// unset pid in registry
-		$registry->remove('tx_tika', 'server.pid');
 
 		$this->forwardToIndex();
 	}
@@ -150,27 +134,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 * @throws \Exception
 	 */
 	protected function getTikaServerVersion() {
-		$version = 'unknown';
-
-		if ($this->isTikaServerRunning()) {
-			$url     = $this->getTikaServerUrl();
-			$version = file_get_contents($url . '/version');
-		}
-
-		return $version;
-	}
-
-	/**
-	 * Constructs the Tika server URL.
-	 *
-	 * @return string Tika server URL
-	 */
-	protected function getTikaServerUrl() {
-		$tikaUrl = 'http://'
-			. $this->tikaConfiguration['tikaServerHost'] . ':'
-			. $this->tikaConfiguration['tikaServerPort'];
-
-		return $tikaUrl;
+		return $this->tikaService->getTikaVersion();
 	}
 
 	/**
@@ -180,23 +144,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 * @throws \Exception
 	 */
 	protected function isTikaServerRunning() {
-		$tikaUrl     = $this->getTikaServerUrl();
-		$tikaRunning = FALSE;
-
-		try {
-			$tikaPing    = file_get_contents($tikaUrl . '/tika');
-			$tikaRunning = GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server.');
-		} catch (\Exception $e) {
-			$message = $e->getMessage();
-			if (strpos($message, 'Connection refused') === FALSE &&
-				strpos($message, 'HTTP request failed') === FALSE) {
-				// If the server is simply not available ti would say Connection refused
-				// since that is not the case something else went wrong
-				throw $e;
-			}
-		}
-
-		return $tikaRunning;
+		return $this->tikaService->isServerRunning();
 	}
 
 	/**
@@ -206,10 +154,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 	 * @return integer|null Tika Server pid or null if not found
 	 */
 	protected function getTikaServerPid() {
-		$registry  = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
-		$serverPid = $registry->get('tx_tika', 'server.pid');
-
-		return $serverPid;
+		return $this->tikaService->getServerPid();
 	}
 
 	/**

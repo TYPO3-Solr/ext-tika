@@ -23,7 +23,10 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Utility\CommandUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
@@ -50,6 +53,168 @@ class ServerService extends AbstractTikaService {
 		$this->tikaUrl = 'http://'
 			. $this->configuration['tikaServerHost'] . ':'
 			. $this->configuration['tikaServerPort'];
+	}
+
+	/**
+	 * Initializes a process.
+	 *
+	 * @param string $arguments
+	 * @return \ApacheSolrForTypo3\Tika\Process
+	 */
+	public function getProcess($arguments = '') {
+		$process = GeneralUtility::makeInstance(
+			'ApacheSolrForTypo3\\Tika\\Process',
+			CommandUtility::getCommand('java'),
+			$arguments
+		);
+
+		return $process;
+	}
+
+	/**
+	 * Creates the command to start the Tika server.
+	 *
+	 * @return string
+	 */
+	protected function getStartCommand() {
+		$tikaJar = GeneralUtility::getFileAbsFileName(
+			$this->configuration['tikaServerPath'],
+			FALSE
+		);
+		$command = '-jar ' . escapeshellarg($tikaJar);
+		$command .= ' -p ' . escapeshellarg($this->configuration['tikaServerPort']);
+		$command = escapeshellcmd($command);
+
+		return $command;
+	}
+
+	/**
+	 * Starts the Tika server
+	 *
+	 * @return void
+	 */
+	public function startServer() {
+		$process = $this->getProcess($this->getStartCommand());
+		$process->start();
+		$pid = $process->getPid();
+
+		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+		$registry->set('tx_tika', 'server.pid', $pid);
+	}
+
+	/**
+	 * Stops the Tika server
+	 *
+	 * @return void
+	 */
+	public function stopServer() {
+		$pid = $this->getServerPid();
+
+		$process = $this->getProcess();
+		$process->setPid($pid);
+		$process->stop();
+
+		// unset pid in registry
+		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+		$registry->remove('tx_tika', 'server.pid');
+	}
+
+	/**
+	 * Gets the Tika server pid.
+	 *
+	 * Tries to retrieve the pid from the TYPO3 registry first, then using ps.
+	 *
+	 * @return int|null Null if the pid can't be found, otherwise the pid
+	 */
+	public function getServerPid() {
+		$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+		$pid = $registry->get('tx_tika', 'server.pid');
+
+		if (empty($pid)) {
+			$process = $this->getProcess($this->getStartCommand());
+			$pid = $process->findPid();
+		}
+
+		return $pid;
+	}
+
+	/**
+	 * Check if the Tika server is running
+	 *
+	 * @return bool
+	 */
+	public function isServerRunning() {
+		$pid = $this->getServerPid();
+
+		return !empty($pid);
+	}
+
+	/**
+	 * Ping the Tika server
+	 *
+	 * @return bool true if the Tika server can be reached, false if not
+	 * @throws \Exception
+	 */
+	public function ping() {
+		$tikaReachable = FALSE;
+
+		$tikaPing = $this->queryTika('/tika');
+		$tikaReachable = GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server.');
+
+		return $tikaReachable;
+	}
+
+	/**
+	 * Constructs the Tika server URL.
+	 *
+	 * @return string Tika server URL
+	 */
+	public function getTikaServerUrl() {
+		return $this->tikaUrl;
+	}
+
+	/**
+	 * Gets the Tika server version
+	 *
+	 * @return string Tika server version string
+	 * @throws \Exception
+	 */
+	public function getTikaVersion() {
+		$version = 'unknown';
+
+		if ($this->isServerRunning()) {
+			$version = $this->queryTika('/version');
+		}
+
+		return $version;
+	}
+
+	/**
+	 * Query a Tika server endpoint
+	 *
+	 * @param string $endpoint
+	 * @return string Tika output
+	 * @throws \Exception
+	 */
+	protected function queryTika($endpoint) {
+		$url = $this->getTikaServerUrl();
+		$url .= $endpoint;
+
+		$tikaOutput = '';
+		try {
+			$tikaOutput = file_get_contents($url);
+		} catch (\Exception $e) {
+			$message = $e->getMessage();
+			if (strpos($message, 'Connection refused') === FALSE &&
+				strpos($message, 'HTTP request failed') === FALSE
+			) {
+				// If the server is simply not available it would say Connection refused
+				// since that is not the case something else went wrong
+				throw $e;
+			}
+		}
+
+		return $tikaOutput;
 	}
 
 	/**
