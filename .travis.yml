@@ -20,5 +20,5 @@ matrix:
     - php: 5.4
       env: TYPO3_BRANCH=master
 
-install: Tests/Build/bootsrap.sh
+install: Tests/Build/bootstrap.sh
 script: Tests/Build/cibuild.sh
