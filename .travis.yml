@@ -10,8 +10,8 @@ env:
   global:
     - TIKA_VERSION="1.9"
   matrix:
-    - TYPO3_BRANCH=master
     - TYPO3_BRANCH=TYPO3_6-2
+    - TYPO3_BRANCH=master
 
 matrix:
   exclude:
