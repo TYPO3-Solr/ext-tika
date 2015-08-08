@@ -32,8 +32,6 @@ use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
  *
  */
 class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
-#class TikaServiceFactoryTest extends \PHPUnit_Framework_TestCase {
-#class TikaServiceFactoryTest extends \Tx_Phpunit_TestCase {
 
 	/**
 	 * @test
