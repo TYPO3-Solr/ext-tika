@@ -19,6 +19,6 @@ mkdir -p uploads typo3temp typo3conf/ext/tika
 git clone --single-branch --branch master --depth 1 https://github.com/TYPO3-Solr/ext-solr.git solr
 
 mv solr typo3conf/ext/
-mv ext-tika/* typo3conf/ext/tika/
+cp ext-tika/* typo3conf/ext/tika/
 
 cd -
