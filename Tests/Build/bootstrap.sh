@@ -18,3 +18,5 @@ git clone --single-branch --branch master --depth 1 https://github.com/TYPO3-Sol
 
 mv solr typo3conf/ext/
 mv ext-tika/* typo3conf/ext/tika/
+
+cd -
