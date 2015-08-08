@@ -20,6 +20,10 @@ matrix:
     - php: 5.4
       env: TYPO3_BRANCH=master
 
-sudo: required
+addons:
+  apt:
+    packages:
+    - parallel
+
 install: Tests/Build/bootstrap.sh
 script: Tests/Build/cibuild.sh

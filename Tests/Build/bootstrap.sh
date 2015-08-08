@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-sudo apt-get install parallel
-
 # download Tika
 mkdir -p /opt/tika/
 parallel --gnu 'wget "http://apache.osuosl.org/tika/tika-{}-$TIKA_VERSION.jar" -O "/opt/tika/tika-{}-$TIKA_VERSION.jar"' ::: app server
