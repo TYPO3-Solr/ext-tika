@@ -20,16 +20,5 @@ matrix:
     - php: 5.4
       env: TYPO3_BRANCH=master
 
-before_script:
-  - cd ..
-  - git clone --single-branch --branch $TYPO3_BRANCH --depth 1 https://github.com/TYPO3/TYPO3.CMS.git typo3_core
-  - mv typo3_core/* .
-  - composer self-update
-  - composer install
-  - mkdir -p uploads typo3temp typo3conf/ext/tika
-  - git clone --single-branch --branch master --depth 1 https://github.com/TYPO3-Solr/ext-solr.git solr
-  - mv solr typo3conf/ext/
-  - mv ext-tika/* typo3conf/ext/tika/
-
-script:
-  ./bin/phpunit --colors -c typo3conf/ext/tika/Tests/Build/UnitTests.xml
+install: Tests/Build/bootsrap.sh
+script: Tests/Build/cibuild.sh
