@@ -23,8 +23,8 @@ before_script:
   - mv typo3_core/* .
   - composer self-update
   - composer install
-  - mkdir -p uploads typo3temp typo3conf/ext
-  - mv tika typo3conf/ext/
+  - mkdir -p uploads typo3temp typo3conf/ext/tika
+  - mv TYPO3-Solr/ext-tika/* typo3conf/ext/tika/
 
 script:
   ./bin/phpunit --colors -c typo3conf/ext/tika/Tests/Build/UnitTests.xml
