@@ -33,6 +33,27 @@ use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
  */
 class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
+	public function setUp() {
+		$tikaVersion = '1.9';
+		$configuration = array(
+			'extractor' => '',
+			'logging' => 0,
+
+			'tikaPath' => "/home/travis/tika/tika-app-$tikaVersion.jar",
+
+			'tikaServerPath' => "/home/travis/tika/tika-server-$tikaVersion.jar",
+			'tikaServerHost' => 'localhost',
+			'tikaServerPort' => '9998',
+
+			'solrScheme' => 'http',
+			'solrHost' => 'localhost',
+			'solrPort' => '8080',
+			'solrPath' => '/solr/',
+		);
+		$configuration = serialize($configuration);
+		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $configuration;
+	}
+
 	/**
 	 * @test
 	 */
