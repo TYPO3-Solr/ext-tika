@@ -9,7 +9,7 @@ php:
 env:
   global:
     - TIKA_VERSION="1.9"
-    - TIKA_PATH="$HOME/tika"
+    - TIKA_PATH=$HOME/tika
   matrix:
     - TYPO3_BRANCH=TYPO3_6-2
     - TYPO3_BRANCH=master

@@ -35,7 +35,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	public function setUp() {
 		$tikaVersion = '1.9';
-		$tikaPath    = $_ENV['TIKA_PATH'] ? $_ENV['TIKA_PATH'] : '$HOME/bin';
+		$tikaPath    = $_ENV['TIKA_PATH'] ? $_ENV['TIKA_PATH'] : $_ENV['HOME'] . '/bin';
 
 		$configuration = array(
 			'extractor' => '',
