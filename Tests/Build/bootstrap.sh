@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -x
-
 # download Tika
 mkdir -p "$HOME/tika"
 parallel --gnu 'wget "http://apache.osuosl.org/tika/tika-{}-$TIKA_VERSION.jar" -O "$HOME/tika/tika-{}-$TIKA_VERSION.jar"' ::: app server
