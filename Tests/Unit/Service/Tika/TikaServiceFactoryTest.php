@@ -35,13 +35,15 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	public function setUp() {
 		$tikaVersion = '1.9';
+		$tikaPath    = $_ENV['TIKA_PATH'] ? $_ENV['TIKA_PATH'] : '$HOME/bin';
+
 		$configuration = array(
 			'extractor' => '',
 			'logging' => 0,
 
-			'tikaPath' => "/home/travis/tika/tika-app-$tikaVersion.jar",
+			'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
 
-			'tikaServerPath' => "/home/travis/tika/tika-server-$tikaVersion.jar",
+			'tikaServerPath' => "$tikaPath/tika-server-$tikaVersion.jar",
 			'tikaServerHost' => 'localhost',
 			'tikaServerPort' => '9998',
 
