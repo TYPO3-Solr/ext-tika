@@ -24,7 +24,9 @@ before_script:
   - composer self-update
   - composer install
   - mkdir -p uploads typo3temp typo3conf/ext/tika
-  - mv ext-tika/* typo3conf/ext/tika/
+  - git clone --single-branch --branch master --depth 1 git@github.com:TYPO3-Solr/ext-solr.git solr
+  - mv solr typo3conf/ext/
+  - mv ext-tika typo3conf/ext/tika
 
 script:
   ./bin/phpunit --colors -c typo3conf/ext/tika/Tests/Build/UnitTests.xml
