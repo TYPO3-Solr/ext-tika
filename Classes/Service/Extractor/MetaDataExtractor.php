@@ -24,7 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use ApacheSolrForTypo3\Tika\Service\TikaServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
 use TYPO3\CMS\Core\Resource;
 
 
