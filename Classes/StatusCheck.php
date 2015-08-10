@@ -96,7 +96,7 @@ class StatusCheck {
 	protected function hasCompleteLocalTikaConfiguration() {
 		$localConfigurationComplete = FALSE;
 
-		if ($this->tikaConfiguration['extractor'] == 'tika'
+		if ($this->tikaConfiguration['extractor'] == 'jar'
 			&& is_file(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'], FALSE))
 			&& CommandUtility::checkCommand('java')) {
 
