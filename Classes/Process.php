@@ -194,6 +194,13 @@ class Process {
 		return $stopped;
 	}
 
+	/**
+	 * Escapes 'ps' command output to match what we expect to get as arguments
+	 * when executing a command.
+	 *
+	 * @param $command
+	 * @return string
+	 */
 	protected function escapePsOutputCommand($command) {
 		$command = explode(' ', $command);
 
@@ -204,7 +211,7 @@ class Process {
 			}
 
 			if ($v[0] != '-') {
-				$command[$k] = "'$v'";
+				$command[$k] = escapeshellarg($v);
 			}
 		}
 
