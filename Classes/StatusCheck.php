@@ -64,7 +64,7 @@ class StatusCheck {
 	public function updateStatus(array $parameters, DataHandler $dataHandler) {
 		$clearCacheCommand = $parameters['cacheCmd'];
 
-		if ($clearCacheCommand == 'all' || $clearCacheCommand == 'temp_CACHED') {
+		if ($clearCacheCommand == 'all' || $clearCacheCommand == 'temp_cached') {
 			$status = $this->getStatus();
 
 			$registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
