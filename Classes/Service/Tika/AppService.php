@@ -195,7 +195,7 @@ class AppService extends AbstractTikaService {
 			list($key, $value) = explode(':', $line, 2);
 			$value = trim($value);
 
-			if (in_array($key, array('dc', 'dcterms', 'meta', 'tiff', 'xmp', 'xmpTPg'))) {
+			if (in_array($key, array('dc', 'dcterms', 'meta', 'tiff', 'xmp', 'xmpTPg', 'xmpDM'))) {
 				// Dublin Core metadata and co
 				$keyPrefix = $key;
 				list($key, $value) = explode(':', $value, 2);
