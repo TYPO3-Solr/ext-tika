@@ -38,7 +38,7 @@ Can either use a stand alone Tika executable or Tika integrated in a Solr server
 		'conflicts' => array(
 		),
 		'suggests' => array(
-			'solr' => '3.1.0-',
+			'solr' => '3.0.2-',
 			'devlog' => '',
 		),
 	),
