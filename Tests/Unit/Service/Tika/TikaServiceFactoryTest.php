@@ -34,7 +34,7 @@ use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
 class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	public function setUp() {
-		$tikaVersion = '1.9';
+		$tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.10';
 		$tikaPath    = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : getenv('HOME') . '/bin';
 
 		$configuration = array(
