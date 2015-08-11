@@ -34,6 +34,7 @@ Can either use a stand alone Tika executable or Tika integrated in a Solr server
 	'constraints' => array(
 		'depends' => array(
 			'typo3' => '6.2.0-6.99.99',
+			'filemetadata' => '',
 		),
 		'conflicts' => array(
 		),
