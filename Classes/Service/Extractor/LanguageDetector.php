@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
-use TYPO3\CMS\Core\Resource;
+use TYPO3\CMS\Core\Resource\File;
 
 
 /**
@@ -50,21 +50,21 @@ class LanguageDetector extends AbstractExtractor {
 	/**
 	 * Checks if the given file can be processed by this Extractor
 	 *
-	 * @param Resource\File $file
+	 * @param File $file
 	 * @return boolean
 	 */
-	public function canProcess(Resource\File $file) {
+	public function canProcess(File $file) {
 		return in_array($file->getProperty('extension'), $this->supportedFileTypes);
 	}
 
 	/**
 	 * Extracts meta data from a file using Apache Tika
 	 *
-	 * @param Resource\File $file
+	 * @param File $file
 	 * @param array $previousExtractedData Already extracted/existing data
 	 * @return array
 	 */
-	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
+	public function extractMetaData(File $file, array $previousExtractedData = array()) {
 		$metaData = array();
 
 		$tika = TikaServiceFactory::getTika($this->configuration['extractor']);
