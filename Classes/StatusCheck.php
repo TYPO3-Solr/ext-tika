@@ -154,6 +154,15 @@ class StatusCheck {
 				}
 			} catch (\Exception $e) {
 				$remoteConfigurationComplete = FALSE;
+				GeneralUtility::devLog(
+					'Exception while retrieving Solr plugin list',
+					'tika',
+					3,
+					array(
+						'configuration' => $this->tikaConfiguration,
+						'exception'     => $e,
+					)
+				);
 			}
 		}
 
