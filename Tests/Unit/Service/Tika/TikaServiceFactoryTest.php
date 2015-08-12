@@ -115,7 +115,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @expectedException \InvalidArgumentException
 	 */
 	public function getTikaThrowsExceptionForInvalidExtractor() {
-		$extractor = TikaServiceFactory::getTika('foo');
+		$extractor = TikaServiceFactory::getTika('foo', $this->getConfiguration());
 	}
 
 	/**
