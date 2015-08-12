@@ -36,12 +36,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class AppService extends AbstractTikaService {
 
 	/**
-	 * Constructor
+	 * Service initialization
 	 *
+	 * @return void
 	 */
-	public function __construct(array $configuration) {
-		parent::__construct($configuration);
-
+	protected function initializeService() {
 		if (!is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))) {
 			throw new \RuntimeException(
 				'Invalid path or filename for Tika application jar: ' . $this->configuration['tikaPath'],

@@ -44,12 +44,11 @@ class ServerService extends AbstractTikaService {
 
 
 	/**
-	 * Constructor
+	 * Service initialization
 	 *
+	 * @return void
 	 */
-	public function __construct(array $configuration) {
-		parent::__construct($configuration);
-
+	protected function initializeService() {
 		$this->tikaUrl = 'http://'
 			. $this->configuration['tikaServerHost'] . ':'
 			. $this->configuration['tikaServerPort'];

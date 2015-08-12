@@ -44,12 +44,11 @@ class SolrCellService extends AbstractTikaService {
 
 
 	/**
-	 * Constructor
+	 * Service initialization
 	 *
+	 * @return void
 	 */
-	public function __construct(array $configuration) {
-		parent::__construct($configuration);
-
+	protected function initializeService() {
 		// FIXME move connection building to EXT:solr
 		// currently explicitly using "new" to bypass
 		// \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or providing a Factory

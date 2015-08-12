@@ -49,7 +49,15 @@ abstract class AbstractTikaService implements TikaServiceInterface {
 	 */
 	public function __construct(array $configuration) {
 		$this->configuration = $configuration;
+		$this->initializeService();
 	}
+
+	/**
+	 * Service initialization
+	 *
+	 * @return void
+	 */
+	protected function initializeService() {}
 
 	/**
 	 * Removes a temporary file.
