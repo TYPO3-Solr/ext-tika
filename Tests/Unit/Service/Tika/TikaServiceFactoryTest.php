@@ -34,6 +34,25 @@ use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
 class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	/**
+	 * @var array
+	 */
+	private $globalsBackup;
+
+	public function setUp() {
+		$this->globalsBackup = array(
+			'TYPO3_CONF_VARS' => $GLOBALS['TYPO3_CONF_VARS'],
+		);
+		unset($GLOBALS['TYPO3_CONF_VARS']);
+	}
+
+	public function tearDown() {
+		foreach ($this->globalsBackup as $key => $data) {
+			$GLOBALS[$key] = $data;
+		}
+		unset($this->globalsBackup);
+	}
+
+	/**
 	 * Creates configuration to be used fo tests
 	 *
 	 * @return array
