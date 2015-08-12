@@ -33,13 +33,18 @@ use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
  */
 class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
-	public function setUp() {
+	/**
+	 * Creates configuration to be used fo tests
+	 *
+	 * @return array
+	 */
+	protected function getConfiguration() {
 		$tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.10';
-		$tikaPath    = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : getenv('HOME') . '/bin';
+		$tikaPath    = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : '/opt/tika';
 
-		$configuration = array(
+		return array(
 			'extractor' => '',
-			'logging' => 0,
+			'logging'   => 0,
 
 			'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
 
@@ -48,19 +53,17 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			'tikaServerPort' => '9998',
 
 			'solrScheme' => 'http',
-			'solrHost' => 'localhost',
-			'solrPort' => '8080',
-			'solrPath' => '/solr/',
+			'solrHost'   => 'localhost',
+			'solrPort'   => '8080',
+			'solrPath'   => '/solr/',
 		);
-		$configuration = serialize($configuration);
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $configuration;
 	}
 
 	/**
 	 * @test
 	 */
 	public function getTikaReturnsAppServiceForJarExtractor() {
-		$extractor = TikaServiceFactory::getTika('jar');
+		$extractor = TikaServiceFactory::getTika('jar', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\AppService', $extractor);
 	}
 
@@ -68,7 +71,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaReturnsAppServiceForTikaExtractor() {
-		$extractor = TikaServiceFactory::getTika('tika');
+		$extractor = TikaServiceFactory::getTika('tika', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\AppService', $extractor);
 	}
 
@@ -76,7 +79,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaReturnsServerServiceForServerExtractor() {
-		$extractor = TikaServiceFactory::getTika('server');
+		$extractor = TikaServiceFactory::getTika('server', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\ServerService', $extractor);
 	}
 
@@ -84,7 +87,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaReturnsSolrCellServiceForSolrExtractor() {
-		$extractor = TikaServiceFactory::getTika('solr');
+		$extractor = TikaServiceFactory::getTika('solr', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService', $extractor);
 	}
 
@@ -94,6 +97,24 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	public function getTikaThrowsExceptionForInvalidExtractor() {
 		$extractor = TikaServiceFactory::getTika('foo');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getTikaThrowsExceptionForInvalidConfiguration() {
+		$backup = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'];
+		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = 'invalid configuration';
+
+		try {
+			$extractor = TikaServiceFactory::getTika('foo');
+		} catch (\RuntimeException $e) {
+			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $backup;
+			return;
+		}
+
+		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $backup;
+		$this->fail('Did not throw RuntimeException');
 	}
 
 }

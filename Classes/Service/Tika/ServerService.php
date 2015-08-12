@@ -47,8 +47,8 @@ class ServerService extends AbstractTikaService {
 	 * Constructor
 	 *
 	 */
-	public function __construct() {
-		parent::__construct();
+	public function __construct(array $configuration) {
+		parent::__construct($configuration);
 
 		$this->tikaUrl = 'http://'
 			. $this->configuration['tikaServerHost'] . ':'

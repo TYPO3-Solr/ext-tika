@@ -47,8 +47,8 @@ class SolrCellService extends AbstractTikaService {
 	 * Constructor
 	 *
 	 */
-	public function __construct() {
-		parent::__construct();
+	public function __construct(array $configuration) {
+		parent::__construct($configuration);
 
 		// FIXME move connection building to EXT:solr
 		// currently explicitly using "new" to bypass

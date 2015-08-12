@@ -45,10 +45,10 @@ abstract class AbstractTikaService implements TikaServiceInterface {
 	/**
 	 * Constructor
 	 *
+	 * @param array $configuration
 	 */
-	public function __construct() {
-		// TODO refactor into separate configuration class
-		$this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+	public function __construct(array $configuration) {
+		$this->configuration = $configuration;
 	}
 
 	/**

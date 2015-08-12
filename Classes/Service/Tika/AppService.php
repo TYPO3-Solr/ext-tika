@@ -39,8 +39,8 @@ class AppService extends AbstractTikaService {
 	 * Constructor
 	 *
 	 */
-	public function __construct() {
-		parent::__construct();
+	public function __construct(array $configuration) {
+		parent::__construct($configuration);
 
 		if (!is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))) {
 			throw new \RuntimeException(

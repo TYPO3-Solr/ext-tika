@@ -38,19 +38,32 @@ class TikaServiceFactory {
 	 * Creates an instance of a Tika service
 	 *
 	 * @param string $tikaServiceType Tika Service type, one of jar, server, or solr (or tika for BC, same as jar)
+	 * @param array $configuration EXT:tika EM configuration (initialized by this factory, parameter exists for tests)
 	 * @return AppService|ServerService|SolrCellService
 	 *
 	 * @throws \InvalidArgumentException for unknown Tika service type
+	 * @throws \RuntimeException if configuration cannot be initialized
 	 */
-	public static function getTika($tikaServiceType) {
+	public static function getTika($tikaServiceType, array $configuration = null) {
+		if (empty($configuration)) {
+			$configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+		}
+
+		if (!is_array($configuration)) {
+			throw new \RuntimeException(
+				'Invalid configuration',
+				1439352237
+			);
+		}
+
 		switch ($tikaServiceType) {
 			case 'jar':
 			case 'tika': // backwards compatibility only
-				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\AppService');
+				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\AppService', $configuration);
 			case 'server':
-				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\ServerService');
+				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\ServerService', $configuration);
 			case 'solr':
-				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService');
+				return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService', $configuration);
 			default:
 				throw new \InvalidArgumentException(
 					'Unknown Tika service type "' . $tikaServiceType . '". Must be one of jar, server, or solr.',
