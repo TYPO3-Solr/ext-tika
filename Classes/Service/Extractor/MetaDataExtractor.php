@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
-use TYPO3\CMS\Core\Resource;
+use TYPO3\CMS\Core\Resource\File;
 
 
 /**
@@ -51,10 +51,10 @@ class MetaDataExtractor extends AbstractExtractor {
 	/**
 	 * Checks if the given file can be processed by this Extractor
 	 *
-	 * @param Resource\File $file
+	 * @param File $file
 	 * @return boolean
 	 */
-	public function canProcess(Resource\File $file) {
+	public function canProcess(File $file) {
 		// TODO use MIME type instead of extension
 		// tika.jar --list-supported-types -> cache supported types
 		// compare to file's MIME type
@@ -65,11 +65,11 @@ class MetaDataExtractor extends AbstractExtractor {
 	/**
 	 * Extracts meta data from a file using Apache Tika
 	 *
-	 * @param Resource\File $file
+	 * @param File $file
 	 * @param array $previousExtractedData Already extracted/existing data
 	 * @return array
 	 */
-	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
+	public function extractMetaData(File $file, array $previousExtractedData = array()) {
 		$metaData = NULL;
 
 		$tikaService = ServiceFactory::getTika($this->configuration['extractor']);
