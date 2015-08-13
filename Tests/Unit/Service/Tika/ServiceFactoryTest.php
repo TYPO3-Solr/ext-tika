@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service;
+namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /***************************************************************
  *  Copyright notice
