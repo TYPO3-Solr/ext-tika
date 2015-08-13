@@ -32,7 +32,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author Ingo Renner <ingo@typo3.org>
  */
-class TikaServiceFactory {
+class ServiceFactory {
 
 	/**
 	 * Creates an instance of a Tika service

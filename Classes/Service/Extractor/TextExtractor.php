@@ -24,7 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorInterface;
 
@@ -80,7 +80,7 @@ class TextExtractor implements TextExtractorInterface {
 	public function extractText(FileInterface $file) {
 		$extractedContent = NULL;
 
-		$tika = TikaServiceFactory::getTika($this->configuration['extractor']);
+		$tika = ServiceFactory::getTika($this->configuration['extractor']);
 		$extractedContent = $tika->extractText($file);
 
 		return $extractedContent;

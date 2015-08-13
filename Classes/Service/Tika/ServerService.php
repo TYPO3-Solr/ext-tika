@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * A Tika service implementation using the tika-server.jar
  *
  */
-class ServerService extends AbstractTikaService {
+class ServerService extends AbstractService {
 
 	/**
 	 * Tika server URL

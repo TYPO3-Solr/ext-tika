@@ -24,14 +24,13 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
 
 
 /**
  * Class AppServiceTest
  *
  */
-class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class ServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	/**
 	 * @var array
@@ -82,7 +81,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaReturnsAppServiceForJarExtractor() {
-		$extractor = TikaServiceFactory::getTika('jar', $this->getConfiguration());
+		$extractor = ServiceFactory::getTika('jar', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\AppService', $extractor);
 	}
 
@@ -90,7 +89,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaReturnsAppServiceForTikaExtractor() {
-		$extractor = TikaServiceFactory::getTika('tika', $this->getConfiguration());
+		$extractor = ServiceFactory::getTika('tika', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\AppService', $extractor);
 	}
 
@@ -98,7 +97,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaReturnsServerServiceForServerExtractor() {
-		$extractor = TikaServiceFactory::getTika('server', $this->getConfiguration());
+		$extractor = ServiceFactory::getTika('server', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\ServerService', $extractor);
 	}
 
@@ -106,7 +105,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaReturnsSolrCellServiceForSolrExtractor() {
-		$extractor = TikaServiceFactory::getTika('solr', $this->getConfiguration());
+		$extractor = ServiceFactory::getTika('solr', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService', $extractor);
 	}
 
@@ -115,7 +114,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @expectedException \InvalidArgumentException
 	 */
 	public function getTikaThrowsExceptionForInvalidExtractor() {
-		$extractor = TikaServiceFactory::getTika('foo', $this->getConfiguration());
+		$extractor = ServiceFactory::getTika('foo', $this->getConfiguration());
 	}
 
 	/**
@@ -126,7 +125,7 @@ class TikaServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = 'invalid configuration';
 
 		try {
-			$extractor = TikaServiceFactory::getTika('foo');
+			$extractor = ServiceFactory::getTika('foo');
 		} catch (\RuntimeException $e) {
 			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $backup;
 			return;

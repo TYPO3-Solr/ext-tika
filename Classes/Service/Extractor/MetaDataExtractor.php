@@ -24,7 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use TYPO3\CMS\Core\Resource;
 
 
@@ -72,7 +72,7 @@ class MetaDataExtractor extends AbstractExtractor {
 	public function extractMetaData(Resource\File $file, array $previousExtractedData = array()) {
 		$metaData = NULL;
 
-		$tikaService = TikaServiceFactory::getTika($this->configuration['extractor']);
+		$tikaService = ServiceFactory::getTika($this->configuration['extractor']);
 		$extractedMetaData = $tikaService->extractMetaData($file);
 
 		$metaData = $this->normalizeMetaData($extractedMetaData);

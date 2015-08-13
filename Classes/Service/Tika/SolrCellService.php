@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Resource\File;
  * A Tika service implementation using a Solr server
  *
  */
-class SolrCellService extends AbstractTikaService {
+class SolrCellService extends AbstractService {
 
 	/**
 	 * Solr connection

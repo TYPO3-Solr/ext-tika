@@ -24,7 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use TYPO3\CMS\Core\Resource\File;
 
 
@@ -67,7 +67,7 @@ class LanguageDetector extends AbstractExtractor {
 	public function extractMetaData(File $file, array $previousExtractedData = array()) {
 		$metaData = array();
 
-		$tika = TikaServiceFactory::getTika($this->configuration['extractor']);
+		$tika = ServiceFactory::getTika($this->configuration['extractor']);
 		$metaData['language'] = $tika->detectLanguageFromFile($file);
 
 		return $metaData;

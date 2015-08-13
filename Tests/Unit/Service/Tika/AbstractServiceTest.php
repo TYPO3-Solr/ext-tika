@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service;
  ***************************************************************/
 
 
-class AbstractTikaServiceTest extends \PHPUnit_Framework_TestCase {
+class AbstractServiceTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @test

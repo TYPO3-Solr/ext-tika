@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Backend\SolrModule;
 ***************************************************************/
 
 use ApacheSolrForTypo3\Solr\Backend\SolrModule\AbstractModuleController;
-use ApacheSolrForTypo3\Tika\Service\Tika\TikaServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -74,7 +74,7 @@ class TikaControlPanelModuleController extends AbstractModuleController {
 		parent::initializeAction();
 
 		$this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-		$this->tikaService = TikaServiceFactory::getTika($this->tikaConfiguration['extractor']);
+		$this->tikaService = ServiceFactory::getTika($this->tikaConfiguration['extractor']);
 	}
 
 	/**

@@ -34,7 +34,7 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  *
  * @package ApacheSolrForTypo3\Tika\Service
  */
-abstract class AbstractTikaService implements TikaServiceInterface {
+abstract class AbstractService implements ServiceInterface {
 
 	/**
 	 * @var array

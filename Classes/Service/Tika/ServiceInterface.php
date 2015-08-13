@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Resource\File;
  *
  * @package ApacheSolrForTypo3\Tika\Service
  */
-interface TikaServiceInterface {
+interface ServiceInterface {
 
 	/**
 	 * Gets the Tika version
