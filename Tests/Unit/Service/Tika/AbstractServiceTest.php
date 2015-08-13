@@ -31,7 +31,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase {
 	 * @test
 	 */
 	public function constructorCallsInitializeService() {
-		$service = $this->getMockBuilder('\ApacheSolrForTypo3\Tika\Service\Tika\AbstractTikaService')
+		$service = $this->getMockBuilder('\ApacheSolrForTypo3\Tika\Service\Tika\AbstractService')
 			->setMethods(array('initializeService'))
 			->disableOriginalConstructor()
 			->getMockForAbstractClass();
