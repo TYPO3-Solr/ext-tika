@@ -6,7 +6,7 @@ A TYPO3 CMS extension that provides Apache Tika functionality including
 
 * text extraction
 * meta data extraction
-* language detection (from string or file)
+* language detection (from strings or files)
 
 Tika can be used as standalone Tika app/jar, Tika server, and via SolrCell integrated in Apache Solr.
 
