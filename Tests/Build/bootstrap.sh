@@ -27,7 +27,7 @@ cd ..
 git clone --single-branch --branch $TYPO3_BRANCH --depth 1 https://github.com/TYPO3/TYPO3.CMS.git typo3_core
 mv typo3_core/* .
 composer self-update
-composer install
+composer install --prefer-dist
 mkdir -p uploads typo3temp typo3conf/ext/tika
 
 # clone EXT:solr
