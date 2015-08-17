@@ -15,6 +15,7 @@
 	<testsuites>
 		<testsuite name="EXT:tika tests">
 			<directory>../Unit/</directory>
+			<directory>../Integration/</directory>
 		</testsuite>
 
 	</testsuites>
