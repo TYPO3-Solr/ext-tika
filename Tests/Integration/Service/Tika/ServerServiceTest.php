@@ -61,6 +61,14 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	public function setUp() {
 		$this->singletonInstances = GeneralUtility::getSingletonInstances();
 
+		// Disable xml2array cache used by ResourceFactory
+		GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(array(
+			'cache_hash' => array(
+				'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
+				'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
+			)
+		));
+
 		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
 			. 'Tests/TestDocuments/';
 
