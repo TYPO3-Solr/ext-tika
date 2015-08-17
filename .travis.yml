@@ -29,4 +29,4 @@ cache:
   directories:
     - $TIKA_PATH
     - $HOME/.composer/cache
-    - $HOME/vendor
+    - $HOME/build/TYPO3-Solr/vendor
