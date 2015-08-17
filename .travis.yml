@@ -28,3 +28,4 @@ cache:
   directories:
     - $TIKA_PATH
     - $HOME/.composer/cache
+    - vendor
