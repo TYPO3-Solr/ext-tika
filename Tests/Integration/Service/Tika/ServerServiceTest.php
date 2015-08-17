@@ -27,6 +27,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -35,7 +36,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class ServerServiceTest
  *
  */
-class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class ServerServiceTest extends UnitTestCase {
 
 	/**
 	 * @var array A backup of registered singleton instances
