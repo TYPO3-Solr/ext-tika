@@ -7,7 +7,7 @@ mkdir -p "$HOME/tika"
 parallel --gnu 'wget "http://apache.osuosl.org/tika/tika-{}-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-{}-$TIKA_VERSION.jar"' ::: app server
 
 # start tika server
-java -jar "$HOME/tika/tika-server-$TIKA_VERSION.jar"
+java -jar "$HOME/tika/tika-server-$TIKA_VERSION.jar" &
 
 cd ..
 
