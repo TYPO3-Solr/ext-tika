@@ -21,14 +21,9 @@ matrix:
     - php: 5.4
       env: TYPO3_BRANCH=master
 
-addons:
-  apt:
-    packages:
-    - parallel
-
 install: Tests/Build/bootstrap.sh
 script: Tests/Build/cibuild.sh
 
 cache:
   directories:
-    - $HOME/tika
+    - $TIKA_PATH

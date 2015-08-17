@@ -3,13 +3,18 @@
 test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin/"
 
 # download Tika if not present
-if [ ! -d "$HOME/tika" ]; then
-	mkdir -p "$HOME/tika"
-	parallel --gnu 'wget "http://apache.osuosl.org/tika/tika-{}-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-{}-$TIKA_VERSION.jar"' ::: app server
+if [ ! -d "$TIKA_PATH" ]; then
+	mkdir -p "$TIKA_PATH"
+fi
+if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
+	wget "http://apache.osuosl.org/tika/tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
+fi
+if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
+	wget "http://apache.osuosl.org/tika/tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
 fi
 
 # start tika server
-java -jar "$HOME/tika/tika-server-$TIKA_VERSION.jar" &
+java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" &
 
 cd ..
 
