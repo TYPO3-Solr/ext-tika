@@ -29,5 +29,5 @@ cache:
   directories:
     - $TIKA_PATH
     - $HOME/.composer/cache
-    - $HOME/build/TYPO3-Solr/vendor
-    - $HOME/build/TYPO3-Solr/bin
+#    - $HOME/build/TYPO3-Solr/vendor
+#    - $HOME/build/TYPO3-Solr/bin
