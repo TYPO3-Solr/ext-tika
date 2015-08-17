@@ -231,7 +231,26 @@ class ServerService extends AbstractService {
 	 * @return array
 	 */
 	public function extractMetaData(File $file) {
-		// TODO: Implement extractMetaData() method.
+		$headers = array(
+			TYPO3_user_agent,
+			'Accept: application/json',
+			'Content-Type: application/octet-stream',
+			'Connection: close'
+		);
+
+		$context = stream_context_create(array(
+			'http' => array(
+				'protocol_version' => 1.1,
+				'method'  => 'PUT',
+				'header'  => implode(CRLF, $headers),
+				'content' => $file->getContents()
+			)
+		));
+
+		$rawResponse = file_get_contents($this->tikaUrl . '/meta', FALSE, $context);
+		$response = (array)json_decode($rawResponse);
+
+		return $response;
 	}
 
 	/**
