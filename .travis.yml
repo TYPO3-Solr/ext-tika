@@ -28,3 +28,7 @@ addons:
 
 install: Tests/Build/bootstrap.sh
 script: Tests/Build/cibuild.sh
+
+cache:
+  directories:
+    - $HOME/tika

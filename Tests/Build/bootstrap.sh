@@ -2,9 +2,11 @@
 
 test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin/"
 
-# download Tika
-mkdir -p "$HOME/tika"
-parallel --gnu 'wget "http://apache.osuosl.org/tika/tika-{}-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-{}-$TIKA_VERSION.jar"' ::: app server
+# download Tika if not present
+if [ ! -d "$HOME/tika" ]; then
+	mkdir -p "$HOME/tika"
+	parallel --gnu 'wget "http://apache.osuosl.org/tika/tika-{}-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-{}-$TIKA_VERSION.jar"' ::: app server
+fi
 
 # start tika server
 java -jar "$HOME/tika/tika-server-$TIKA_VERSION.jar" &
