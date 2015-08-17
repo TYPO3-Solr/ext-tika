@@ -19,7 +19,7 @@ fi
 
 # start tika server
 echo "Starting Apache Tika"
-java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" &
+nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 &
 
 cd ..
 
