@@ -27,3 +27,4 @@ script: Tests/Build/cibuild.sh
 cache:
   directories:
     - $TIKA_PATH
+    - $HOME/.composer/cache
