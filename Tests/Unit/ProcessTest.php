@@ -1,6 +1,4 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Tests\Unit;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -24,14 +22,51 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+namespace ApacheSolrForTypo3\Tika;
+
+use ApacheSolrForTypo3\Tika\Tests\Unit\ProcessTest;
+
+
+/**
+ * exec() mock to capture invocation parameters for the actual \exec() function
+ *
+ * @param $command
+ * @param array $output
+ */
+function exec($command, array &$output) {
+	ProcessTest::$execCommand = $command;
+	$output = ProcessTest::$execOutput;
+}
+
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+
+namespace ApacheSolrForTypo3\Tika\Tests\Unit;
+
 use ApacheSolrForTypo3\Tika\Process;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
+
 
 /**
  * Test case for class \ApacheSolrForTypo3\Tika\Process
  *
  */
 class ProcessTest extends UnitTestCase {
+
+	/**
+	 * Allows to capture exec() parameters
+	 *
+	 * @var string
+	 */
+	public static $execCommand = '';
+
+	/**
+	 * Output to return to exec() calls
+	 *
+	 * @var array
+	 */
+	public static $execOutput = array();
 
 	/**
 	 * @test
@@ -41,6 +76,14 @@ class ProcessTest extends UnitTestCase {
 
 		$this->assertEquals('foo', $process->getExecutable());
 		$this->assertEquals('-bar', $process->getArguments());
+	}
+
+	/**
+	 * Resets the exec() mock
+	 */
+	protected function resetExecMock() {
+		self::$execCommand = '';
+		self::$execOutput = array();
 	}
 
 }
