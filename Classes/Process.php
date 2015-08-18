@@ -136,6 +136,7 @@ class Process {
 
 		$processCommand = $this->executable . ' ' . $this->arguments;
 		$ps = 'ps h --format pid,args -C ' . basename($this->executable);
+		$output = array();
 		exec($ps, $output);
 
 		foreach ($output as $line) {
