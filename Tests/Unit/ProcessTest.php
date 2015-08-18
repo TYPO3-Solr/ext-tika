@@ -69,6 +69,15 @@ class ProcessTest extends UnitTestCase {
 	public static $execOutput = array();
 
 	/**
+	 * Resets the exec() mock
+	 */
+	protected function resetExecMock() {
+		self::$execCommand = '';
+		self::$execOutput = array();
+	}
+
+
+	/**
 	 * @test
 	 */
 	public function constructorSetsExecutableAndArguments() {
@@ -76,14 +85,6 @@ class ProcessTest extends UnitTestCase {
 
 		$this->assertEquals('foo', $process->getExecutable());
 		$this->assertEquals('-bar', $process->getArguments());
-	}
-
-	/**
-	 * Resets the exec() mock
-	 */
-	protected function resetExecMock() {
-		self::$execCommand = '';
-		self::$execOutput = array();
 	}
 
 }
