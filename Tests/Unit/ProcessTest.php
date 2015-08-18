@@ -34,6 +34,7 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ProcessTest;
  * @param array $output
  */
 function exec($command, array &$output) {
+	ProcessTest::$execCalled = TRUE;
 	ProcessTest::$execCommand = $command;
 	$output = ProcessTest::$execOutput;
 }
@@ -69,11 +70,19 @@ class ProcessTest extends UnitTestCase {
 	public static $execOutput = array();
 
 	/**
+	 * Indicator whether the exec() mock was called.
+	 *
+	 * @var bool
+	 */
+	public static $execCalled = FALSE;
+
+	/**
 	 * Resets the exec() mock
 	 */
 	protected function resetExecMock() {
+		self::$execCalled  = FALSE;
 		self::$execCommand = '';
-		self::$execOutput = array();
+		self::$execOutput  = array();
 	}
 
 
