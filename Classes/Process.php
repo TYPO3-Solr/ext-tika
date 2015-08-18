@@ -86,6 +86,15 @@ class Process {
 	}
 
 	/**
+	 * Gets the process executable
+	 *
+	 * @return string
+	 */
+	public function getExecutable() {
+		return $this->executable;
+	}
+
+	/**
 	 * Executes the command
 	 *
 	 * @return void
