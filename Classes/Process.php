@@ -147,6 +147,7 @@ class Process {
 	 */
 	public function isRunning() {
 		$running = FALSE;
+		$output  = array();
 
 		$command = 'ps -p ' . $this->pid;
 		exec($command, $output);
