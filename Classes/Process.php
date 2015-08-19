@@ -101,7 +101,10 @@ class Process {
 	 */
 	protected function runCommand() {
 		$command = 'nohup ' . $this->executable . ' ' . $this->arguments . ' > /dev/null 2>&1 & echo $!';
+		$output = array();
+
 		exec($command, $output);
+
 		$this->pid = (int) $output[0];
 	}
 
