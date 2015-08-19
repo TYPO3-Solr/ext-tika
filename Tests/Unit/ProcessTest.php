@@ -33,7 +33,7 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ProcessTest;
  * @param $command
  * @param array $output
  */
-function exec($command, array &$output) {
+function exec($command, array &$output = array()) {
 	$output = ProcessTest::$execOutput[ProcessTest::$execCalled];
 	ProcessTest::$execCalled++;
 	ProcessTest::$execCommand = $command;
