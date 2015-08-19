@@ -176,4 +176,22 @@ class ProcessTest extends UnitTestCase {
 		$this->assertTrue($running);
 	}
 
+	/**
+	 * @test
+	 */
+	public function stopStopsProcess() {
+		$process = new Process('/usr/bin/foo', '-bar');
+		$process->setPid(1337);
+		$this->returnExecOutput(array('1337 /usr/bin/foo -bar'));
+
+		$running = $process->isRunning();
+		$this->assertTrue($running);
+
+		$stopped = $process->stop();
+		$this->assertTrue($stopped);
+
+		$running = $process->isRunning();
+		$this->assertFalse($running);
+	}
+
 }
