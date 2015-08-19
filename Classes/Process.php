@@ -159,7 +159,7 @@ class Process {
 		$running = FALSE;
 		$output  = array();
 
-		$command = 'ps -p ' . $this->pid;
+		$command = 'ps h -p ' . $this->pid;
 		exec($command, $output);
 
 		if (isset($output[1])) {
