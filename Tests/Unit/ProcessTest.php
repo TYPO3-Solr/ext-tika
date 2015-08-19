@@ -140,6 +140,7 @@ class ProcessTest extends UnitTestCase {
 	 */
 	public function isRunningReturnsTrueForRunningProcess() {
 		$process = new Process('/usr/bin/foo', '-bar');
+		$process->setPid(1337);
 		$this->returnExecOutput(array('1337 /usr/bin/foo -bar'));
 
 		$running = $process->isRunning();
