@@ -105,7 +105,7 @@ class ProcessTest extends UnitTestCase {
 	public function findPidUsesExecutableBasename() {
 		$process = new Process('/usr/bin/foo', '-bar');
 
-		$_ = $process->findPid();
+		$process->findPid();
 
 		$this->assertTrue(self::$execCalled);
 		$this->assertContains('foo', self::$execCommand);
