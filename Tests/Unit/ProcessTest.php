@@ -112,4 +112,40 @@ class ProcessTest extends UnitTestCase {
 		$this->assertNotContains('/usr/bin', self::$execCommand);
 	}
 
+	/**
+	 * @test
+	 */
+	public function isRunningUsesPid() {
+		$process = new Process('/usr/bin/foo', '-bar');
+		$process->setPid(1337);
+
+		$process->isRunning();
+
+		$this->assertTrue(self::$execCalled);
+		$this->assertContains('1337', self::$execCommand);
+	}
+
+	/**
+	 * @test
+	 */
+	public function isRunningReturnsTrueForRunningProcess() {
+		$process = new Process('/usr/bin/foo', '-bar');
+		self::$execOutput = '1337 /usr/bin/foo -bar';
+
+		$running = $process->isRunning();
+
+		$this->assertTrue($running);
+	}
+
+	/**
+	 * @test
+	 */
+	public function isRunningReturnsFalseForStoppedProcess() {
+		$process = new Process('/usr/bin/foo', '-bar');
+
+		$running = $process->isRunning();
+
+		$this->assertFalse($running);
+	}
+
 }
