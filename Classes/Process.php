@@ -162,7 +162,7 @@ class Process {
 		$command = 'ps h -p ' . $this->pid;
 		exec($command, $output);
 
-		if (isset($output[1])) {
+		if (!empty($output)) {
 			$running = TRUE;
 		}
 
