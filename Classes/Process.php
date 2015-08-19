@@ -25,10 +25,8 @@ namespace ApacheSolrForTypo3\Tika;
 ***************************************************************/
 
 
-
 /**
- * Run, check, and stop external processes.
- * Linux only. (Windows does not work).
+ * Run, check, and stop external processes. Linux only.
  *
  * @package ApacheSolrForTypo3\Tika
  */
@@ -138,7 +136,6 @@ class Process {
 	 */
 	public function findPid() {
 		$processCommand = $this->executable;
-
 		if (!empty($this->arguments)) {
 			$processCommand .= ' ' . $this->arguments;
 		}
