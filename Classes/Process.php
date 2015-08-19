@@ -37,7 +37,7 @@ class Process {
 	/**
 	 * Process ID
 	 *
-	 * @var integer
+	 * @var integer|NULL
 	 */
 	protected $pid = NULL;
 
@@ -159,6 +159,10 @@ class Process {
 	 * @return bool TRUE if the process is running, FALSE otherwise
 	 */
 	public function isRunning() {
+		if (is_null($this->pid)) {
+			return FALSE;
+		}
+
 		$running = FALSE;
 		$output  = array();
 

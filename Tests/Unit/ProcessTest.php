@@ -159,4 +159,21 @@ class ProcessTest extends UnitTestCase {
 		$this->assertFalse($running);
 	}
 
+	/**
+	 * @test
+	 */
+	public function startStartsProcess() {
+		$process = new Process('/usr/bin/foo', '-bar');
+
+		$this->returnExecOutput(array('foo'));
+		$running = $process->isRunning();
+		$this->assertFalse($running);
+
+		$this->returnExecOutput(array('1337')); // runCommand() return pid of started process = 1337
+		$this->returnExecOutput(array('1337 /usr/bin/foo -bar')); // isRunning()
+		$running = $process->start();
+
+		$this->assertTrue($running);
+	}
+
 }
