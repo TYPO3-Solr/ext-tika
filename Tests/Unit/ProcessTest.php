@@ -34,9 +34,9 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ProcessTest;
  * @param array $output
  */
 function exec($command, array &$output) {
+	$output = ProcessTest::$execOutput[ProcessTest::$execCalled];
 	ProcessTest::$execCalled++;
 	ProcessTest::$execCommand = $command;
-	$output = ProcessTest::$execOutput;
 }
 
 
@@ -85,6 +85,15 @@ class ProcessTest extends UnitTestCase {
 		self::$execOutput  = array();
 	}
 
+	/**
+	 * Adds output for an exec() call.
+	 *
+	 * @param array $lines One line of returned output per element in $lines
+	 */
+	protected function returnExecOutput(array $lines) {
+		self::$execOutput[] = $lines;
+	}
+
 	protected function setUp() {
 		$this->resetExecMock();
 	}
@@ -104,6 +113,7 @@ class ProcessTest extends UnitTestCase {
 	 */
 	public function findPidUsesExecutableBasename() {
 		$process = new Process('/usr/bin/foo', '-bar');
+		$this->returnExecOutput(array('foo'));
 
 		$process->findPid();
 
@@ -130,7 +140,7 @@ class ProcessTest extends UnitTestCase {
 	 */
 	public function isRunningReturnsTrueForRunningProcess() {
 		$process = new Process('/usr/bin/foo', '-bar');
-		self::$execOutput = array('1337 /usr/bin/foo -bar');
+		$this->returnExecOutput(array('1337 /usr/bin/foo -bar'));
 
 		$running = $process->isRunning();
 
