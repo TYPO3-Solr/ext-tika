@@ -130,7 +130,7 @@ class ProcessTest extends UnitTestCase {
 	 */
 	public function isRunningReturnsTrueForRunningProcess() {
 		$process = new Process('/usr/bin/foo', '-bar');
-		self::$execOutput = '1337 /usr/bin/foo -bar';
+		self::$execOutput = array('1337 /usr/bin/foo -bar');
 
 		$running = $process->isRunning();
 
