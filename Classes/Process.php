@@ -100,9 +100,13 @@ class Process {
 	 * @return void
 	 */
 	protected function runCommand() {
-		$command = 'nohup ' . $this->executable . ' ' . $this->arguments . ' > /dev/null 2>&1 & echo $!';
-		$output = array();
+		$command = 'nohup ' . $this->executable;
+		if (!empty($this->arguments)) {
+			$command .= ' ' . $this->arguments;
+		}
+		$command .= ' > /dev/null 2>&1 & echo $!';
 
+		$output = array();
 		exec($command, $output);
 
 		$this->pid = (int) $output[0];
@@ -133,11 +137,12 @@ class Process {
 	 * @return int|null Null if the pid can't be found, otherwise the pid
 	 */
 	public function findPid() {
-		if (empty($this->arguments)) {
-			throw new \RuntimeException('No command given');
+		$processCommand = $this->executable;
+
+		if (!empty($this->arguments)) {
+			$processCommand .= ' ' . $this->arguments;
 		}
 
-		$processCommand = $this->executable . ' ' . $this->arguments;
 		$ps = 'ps h --format pid,args -C ' . basename($this->executable);
 		$output = array();
 		exec($ps, $output);
@@ -182,12 +187,8 @@ class Process {
 	 * @return bool TRUE if the process could be started, FALSE otherwise
 	 */
 	public function start() {
-		$status = FALSE;
-
-		if ($this->arguments != '') {
-			$this->runCommand();
-			$status = $this->isRunning();
-		}
+		$this->runCommand();
+		$status = $this->isRunning();
 
 		return $status;
 	}
