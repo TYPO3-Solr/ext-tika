@@ -34,7 +34,7 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ProcessTest;
  * @param array $output
  */
 function exec($command, array &$output) {
-	ProcessTest::$execCalled = TRUE;
+	ProcessTest::$execCalled++;
 	ProcessTest::$execCommand = $command;
 	$output = ProcessTest::$execOutput;
 }
@@ -70,17 +70,17 @@ class ProcessTest extends UnitTestCase {
 	public static $execOutput = array();
 
 	/**
-	 * Indicator whether the exec() mock was called.
+	 * Indicator whether/how many times the exec() mock was called.
 	 *
-	 * @var bool
+	 * @var int
 	 */
-	public static $execCalled = FALSE;
+	public static $execCalled = 0;
 
 	/**
 	 * Resets the exec() mock
 	 */
 	protected function resetExecMock() {
-		self::$execCalled  = FALSE;
+		self::$execCalled  = 0;
 		self::$execCommand = '';
 		self::$execOutput  = array();
 	}
@@ -107,7 +107,7 @@ class ProcessTest extends UnitTestCase {
 
 		$process->findPid();
 
-		$this->assertTrue(self::$execCalled);
+		$this->assertTrue((bool)self::$execCalled);
 		$this->assertContains('foo', self::$execCommand);
 		$this->assertNotContains('/usr/bin', self::$execCommand);
 	}
@@ -121,7 +121,7 @@ class ProcessTest extends UnitTestCase {
 
 		$process->isRunning();
 
-		$this->assertTrue(self::$execCalled);
+		$this->assertTrue((bool)self::$execCalled);
 		$this->assertContains('1337', self::$execCommand);
 	}
 
