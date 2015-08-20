@@ -60,7 +60,7 @@ class ServerService extends AbstractService {
 	 * @param string $arguments
 	 * @return \ApacheSolrForTypo3\Tika\Process
 	 */
-	public function getProcess($arguments = '') {
+	protected function getProcess($arguments = '') {
 		$process = GeneralUtility::makeInstance(
 			'ApacheSolrForTypo3\\Tika\\Process',
 			CommandUtility::getCommand('java'),
