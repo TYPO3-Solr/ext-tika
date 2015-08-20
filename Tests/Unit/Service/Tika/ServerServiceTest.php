@@ -47,7 +47,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	protected function tearDown() {
 		$this->prophet->checkPredictions();
-		GeneralUtility::purgeInstances();
+#		GeneralUtility::purgeInstances();
 	}
 
 	/**
@@ -67,9 +67,6 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function startServerStoresPidInRegistry() {
-		$this->markTestIncomplete();
-		return;
-
 		// prepare
 		$registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
 		GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry', $registryMock->reveal());
