@@ -67,6 +67,9 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function startServerStoresPidInRegistry() {
+		$this->markTestIncomplete();
+		return;
+
 		// prepare
 		$registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
 		GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry', $registryMock->reveal());
@@ -91,6 +94,8 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	public function stopServerRemovesPidFromRegistry() {
 		$this->markTestIncomplete();
+		return;
+
 		$service = new ServerService($this->getTikaServerConfiguration());
 
 	}
