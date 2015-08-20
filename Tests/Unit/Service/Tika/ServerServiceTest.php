@@ -41,13 +41,20 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	protected $prophet;
 
+	/**
+	 * Backup of current singleton instances
+	 */
+	protected $singletonInstances;
+
 	protected function setup() {
+		$this->singletonInstances = GeneralUtility::getSingletonInstances();
 		$this->prophet = new Prophet;
 	}
 
 	protected function tearDown() {
 		$this->prophet->checkPredictions();
-#		GeneralUtility::purgeInstances();
+		GeneralUtility::resetSingletonInstances($this->singletonInstances);
+		parent::tearDown();
 	}
 
 	/**
