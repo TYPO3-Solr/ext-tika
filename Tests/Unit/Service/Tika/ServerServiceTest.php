@@ -97,11 +97,20 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function stopServerRemovesPidFromRegistry() {
-		$this->markTestIncomplete();
-		return;
+		// prepare
+		$registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
+		$registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
+		$registryMock->remove('tx_tika', 'server.pid')->shouldBeCalled();
+		GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry', $registryMock->reveal());
 
+		$processMock = $this->prophet->prophesize('ApacheSolrForTypo3\Tika\Process');
+		$processMock->setPid(1000)->shouldBeCalled();
+		$processMock->stop()->shouldBeCalled();
+		GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process', $processMock->reveal());
+
+		// execute
 		$service = new ServerService($this->getTikaServerConfiguration());
-
+		$service->stopServer();
 	}
 
 }
