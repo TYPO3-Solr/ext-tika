@@ -189,4 +189,12 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$this->assertFalse($service->isServerRunning());
 	}
 
+	/**
+	 * @test
+	 */
+	public function getTikaUrlBuildsUrlFromConfiguration() {
+		$service = new ServerService($this->getTikaServerConfiguration());
+		$this->assertEquals('http://localhost:9998', $service->getTikaServerUrl());
+	}
+
 }
