@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Utility\ShellUtility;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -61,7 +62,7 @@ class AppService extends AbstractService {
 	public function getTikaVersion() {
 		$tikaCommand = CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8' // forces UTF8 output
-			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -V';
 
 		return shell_exec($tikaCommand);
@@ -75,11 +76,12 @@ class AppService extends AbstractService {
 	 */
 	public function extractText(File $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
-		$tikaCommand = CommandUtility::getCommand('java')
+		$tikaCommand = ShellUtility::getLanguagePrefix($localTempFilePath)
+			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8' // forces UTF8 output
-			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -t'
-			. ' ' . escapeshellarg($localTempFilePath);
+			. ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
 
 		$extractedText = shell_exec($tikaCommand);
 		$this->cleanupTempFile($localTempFilePath, $file);
@@ -101,11 +103,12 @@ class AppService extends AbstractService {
 	 */
 	public function extractMetaData(File $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
-		$tikaCommand = CommandUtility::getCommand('java')
+		$tikaCommand = ShellUtility::getLanguagePrefix($localTempFilePath)
+			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
-			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -m'
-			. ' ' . escapeshellarg($localTempFilePath);
+			. ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
 
 		$shellOutput = array();
 		exec($tikaCommand, $shellOutput);
@@ -163,11 +166,12 @@ class AppService extends AbstractService {
 	 * @return string The file content's language
 	 */
 	protected function detectLanguageFromLocalFile($localFilePath) {
-		$tikaCommand = CommandUtility::getCommand('java')
+		$tikaCommand = ShellUtility::getLanguagePrefix($localFilePath)
+			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
-			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -l'
-			. ' ' . escapeshellarg($localFilePath);
+			. ' ' . ShellUtility::escapeShellArgument($localFilePath);
 
 		$language = trim(shell_exec($tikaCommand));
 
