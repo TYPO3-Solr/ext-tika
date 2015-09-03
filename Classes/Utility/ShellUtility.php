@@ -19,32 +19,32 @@ namespace ApacheSolrForTypo3\Tika\Utility;
  */
 class ShellUtility {
 	/**
-	 * @param string $file
 	 * @return string
 	 */
-	public static function getLanguagePrefix($file) {
-		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']) {
-			if (mb_detect_encoding($file, 'ASCII,UTF-8', true) == 'UTF-8') {
-				return 'LANG="'. $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'] .'" ';
-			}
+	public static function getLanguagePrefix() {
+		if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem'])) {
+			return 'LC_CTYPE="'. $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'] .'" ';
 		}
 		return '';
 	}
 
 	/**
+	 * Backwards compatibility to 6.x, is available in CommandUtility in 7.x
+	 *
 	 * @param string $argument
 	 * @return string
 	 */
 	public static function escapeShellArgument($argument) {
 		$currentLocale = NULL;
-		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']) {
+		$isUTF8Filesystem = !empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']);
+		if ($isUTF8Filesystem) {
 			$currentLocale = setlocale(LC_CTYPE, 0);
 			setlocale(LC_CTYPE, $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale']);
 		}
 
 		$argument = escapeshellarg($argument);
 
-		if (isset($currentLocale)) {
+		if ($isUTF8Filesystem) {
 			setlocale(LC_CTYPE, $currentLocale);
 		}
 

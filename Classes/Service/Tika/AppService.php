@@ -76,7 +76,7 @@ class AppService extends AbstractService {
 	 */
 	public function extractText(File $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
-		$tikaCommand = ShellUtility::getLanguagePrefix($localTempFilePath)
+		$tikaCommand = ShellUtility::getLanguagePrefix()
 			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8' // forces UTF8 output
 			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
@@ -103,7 +103,7 @@ class AppService extends AbstractService {
 	 */
 	public function extractMetaData(File $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
-		$tikaCommand = ShellUtility::getLanguagePrefix($localTempFilePath)
+		$tikaCommand = ShellUtility::getLanguagePrefix()
 			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
 			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
@@ -166,7 +166,7 @@ class AppService extends AbstractService {
 	 * @return string The file content's language
 	 */
 	protected function detectLanguageFromLocalFile($localFilePath) {
-		$tikaCommand = ShellUtility::getLanguagePrefix($localFilePath)
+		$tikaCommand = ShellUtility::getLanguagePrefix()
 			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
 			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
