@@ -55,7 +55,7 @@ class ServerService extends AbstractService {
 	}
 
 	/**
-	 * Initializes a process.
+	 * Initializes a Tika server process.
 	 *
 	 * @param string $arguments
 	 * @return \ApacheSolrForTypo3\Tika\Process
