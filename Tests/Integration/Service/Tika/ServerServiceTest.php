@@ -49,14 +49,29 @@ class ServerServiceTest extends UnitTestCase {
 	protected $testDocumentsPath;
 
 	/**
+	 * @var string
+	 */
+	protected $testLanguagesPath;
+
+	/**
 	 * @var ResourceStorage
 	 */
-	protected $storageMock;
+	protected $documentsStorageMock;
+
+	/**
+	 * @var ResourceStorage
+	 */
+	protected $languagesStorageMock;
 
 	/**
 	 * @var int
 	 */
-	protected $storageUid = 9998;
+	protected $documentsStorageUid = 9000;
+
+	/**
+	 * @var int
+	 */
+	protected $languagesStorageUid = 9001;
 
 
 	public function setUp() {
@@ -70,15 +85,25 @@ class ServerServiceTest extends UnitTestCase {
 			)
 		));
 
+		$this->setUpDocumentsStorageMock();
+		$this->setUpLanguagesStorageMock();
+
+		$mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
+		$mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
+		GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository', $mockedMetaDataRepository);
+	}
+
+	protected function setUpDocumentsStorageMock() {
 		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
 			. 'Tests/TestDocuments/';
 
-		$driver = $this->createDriverFixture(array(
+		$documentsDriver = $this->createDriverFixture(array(
 			'basePath' => $this->testDocumentsPath,
 			'caseSensitive' => TRUE
 		));
-		$storageRecord = array(
-			'uid' => $this->storageUid,
+
+		$documentsStorageRecord = array(
+			'uid' => $this->documentsStorageUid,
 			'is_public' => TRUE,
 			'is_writable' => FALSE,
 			'is_browsable' => TRUE,
@@ -90,12 +115,34 @@ class ServerServiceTest extends UnitTestCase {
 			))
 		);
 
-		$this->storageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage', NULL, array($driver, $storageRecord));
-		$this->storageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->storageUid));
+		$this->documentsStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage', NULL, array($documentsDriver, $documentsStorageRecord));
+		$this->documentsStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->documentsStorageUid));
+	}
 
-		$mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
-		$mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
-		\TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository', $mockedMetaDataRepository);
+	protected function setUpLanguagesStorageMock() {
+		$this->testLanguagesPath = ExtensionManagementUtility::extPath('tika')
+			. 'Tests/TestLanguages/';
+
+		$languagesDriver = $this->createDriverFixture(array(
+			'basePath' => $this->testDocumentsPath,
+			'caseSensitive' => TRUE
+		));
+
+		$languagesStorageRecord = array(
+			'uid' => $this->languagesStorageUid,
+			'is_public' => TRUE,
+			'is_writable' => FALSE,
+			'is_browsable' => TRUE,
+			'is_online' => TRUE,
+			'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
+				'basePath' => $this->testLanguagesPath,
+				'pathType' => 'absolute',
+				'caseSensitive' => '1'
+			))
+		);
+
+		$this->languagesStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage', NULL, array($languagesDriver, $languagesStorageRecord));
+		$this->languagesStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->languagesStorageUid));
 	}
 
 	public function tearDown() {
@@ -120,7 +167,7 @@ class ServerServiceTest extends UnitTestCase {
 				$this->returnValue(TRUE)
 			);
 
-		$driver->setStorageUid($this->storageUid);
+		$driver->setStorageUid($this->documentsStorageUid);
 		$driver->processConfiguration();
 		$driver->initialize();
 		return $driver;
@@ -167,7 +214,7 @@ class ServerServiceTest extends UnitTestCase {
 				'identifier' => 'testWORD.doc',
 				'name'       => 'testWORD.doc'
 			),
-			$this->storageMock
+			$this->documentsStorageMock
 		);
 
 		$metaData = $service->extractMetaData($file);
