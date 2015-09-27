@@ -260,7 +260,24 @@ class ServerService extends AbstractService {
 	 * @return string Language ISO code
 	 */
 	public function detectLanguageFromFile(File $file) {
-		// TODO: Implement detectLanguageFromFile() method.
+		$headers = array(
+			TYPO3_user_agent,
+			'Content-Type: application/octet-stream',
+			'Connection: close'
+		);
+
+		$context = stream_context_create(array(
+			'http' => array(
+				'protocol_version' => 1.1,
+				'method'           => 'PUT',
+				'header'           => implode(CRLF, $headers),
+				'content'          => $file->getContents()
+			)
+		));
+
+		$response = file_get_contents($this->tikaUrl . '/language/stream', FALSE, $context);
+
+		return $response;
 	}
 
 	/**
