@@ -124,7 +124,7 @@ class ServerServiceTest extends UnitTestCase {
 			. 'Tests/TestLanguages/';
 
 		$languagesDriver = $this->createDriverFixture(array(
-			'basePath' => $this->testDocumentsPath,
+			'basePath' => $this->testLanguagesPath,
 			'caseSensitive' => TRUE
 		));
 
