@@ -1,5 +1,5 @@
 {
-	"name": "apachesolrfortypo3/tika",
+	"name": "apache-solr-for-typo3/tika",
 	"type": "typo3-cms-extension",
 	"description": "Apache Tika for TYPO3",
 	"version": "2.0.0-dev",
