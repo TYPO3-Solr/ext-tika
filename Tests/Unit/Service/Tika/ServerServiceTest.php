@@ -70,6 +70,14 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$this->singletonInstances = GeneralUtility::getSingletonInstances();
 		$this->prophet = new Prophet;
 
+		// Disable xml2array cache used by ResourceFactory
+		GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(array(
+			'cache_hash' => array(
+				'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
+				'backend'  => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
+			)
+		));
+
 		$this->setUpDocumentsStorageMock();
 
 		$mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
