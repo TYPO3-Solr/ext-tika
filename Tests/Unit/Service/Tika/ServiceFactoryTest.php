@@ -115,7 +115,7 @@ class ServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @expectedException \InvalidArgumentException
 	 */
 	public function getTikaThrowsExceptionForInvalidExtractor() {
-		$extractor = ServiceFactory::getTika('foo', $this->getConfiguration());
+		ServiceFactory::getTika('foo', $this->getConfiguration());
 	}
 
 	/**
@@ -126,7 +126,7 @@ class ServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = 'invalid configuration';
 
 		try {
-			$extractor = ServiceFactory::getTika('foo');
+			ServiceFactory::getTika('foo');
 		} catch (\RuntimeException $e) {
 			$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $backup;
 			return;
