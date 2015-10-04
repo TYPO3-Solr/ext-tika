@@ -305,4 +305,22 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 		$this->assertEquals('/tika', $service->getRecordedEndpoint());
 	}
+
+	/**
+	 * @test
+	 */
+	public function extractMetaDataQueriesMetaEndpoint() {
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name'       => 'testWORD.doc'
+			),
+			$this->storageMock
+		);
+
+		$service = new ServerServiceFixture($this->getTikaServerConfiguration());
+		$service->extractMetaData($file);
+
+		$this->assertEquals('/meta', $service->getRecordedEndpoint());
+	}
 }
