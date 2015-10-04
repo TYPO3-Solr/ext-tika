@@ -27,7 +27,8 @@
 		}
 	],
 	"replace": {
-		"tika": "*"
+		"tika": "self.version",
+		"typo3-ter/tika": "self.version"
 	},
 	"require": {
 		"php": ">5.3.7,~5.5.0"
