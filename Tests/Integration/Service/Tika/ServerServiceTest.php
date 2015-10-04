@@ -248,22 +248,48 @@ class ServerServiceTest extends UnitTestCase {
 	}
 
 	/**
-	 * @test
+	 * Data provider fro detectsLanguageFromFile
+	 *
+	 * @return array
 	 */
-	public function detectsLanguageFromFile() {
+	public function languageFileDataProvider() {
+		return array(
+			array('da'),
+			array('de'),
+			array('el'),
+			array('en'),
+			array('es'),
+			array('et'),
+			array('fi'),
+			array('fr'),
+			array('it'),
+			array('lt'),
+			array('nl'),
+			array('pt'),
+			array('sv')
+		);
+	}
+
+	/**
+	 * @test
+	 * @dataProvider languageFileDataProvider
+	 */
+	public function detectsLanguageFromFile($language) {
 		$service = new ServerService($this->getTikaServerConfiguration());
 
 		$file = new File(
 			array(
-				'identifier' => 'de.test',
-				'name'       => 'de.test'
+				'identifier' => $language . '.test',
+				'name'       => $language . '.test'
 			),
 			$this->languagesStorageMock
 		);
 
-		$language = $service->detectLanguageFromFile($file);
+		$detectedLanguage = $service->detectLanguageFromFile($file);
 
-		$this->assertSame('de', $language);
+		$this->assertSame($language, $detectedLanguage);
+	}
+
 	}
 
 }
