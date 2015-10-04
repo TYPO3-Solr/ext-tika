@@ -323,4 +323,22 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 		$this->assertEquals('/meta', $service->getRecordedEndpoint());
 	}
+
+	/**
+	 * @test
+	 */
+	public function detectLanguageFromFileQueriesLanguageStreamEndpoint() {
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name'       => 'testWORD.doc'
+			),
+			$this->storageMock
+		);
+
+		$service = new ServerServiceFixture($this->getTikaServerConfiguration());
+		$service->detectLanguageFromFile($file);
+
+		$this->assertEquals('/language/stream', $service->getRecordedEndpoint());
+	}
 }
