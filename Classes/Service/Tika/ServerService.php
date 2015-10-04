@@ -190,16 +190,17 @@ class ServerService extends AbstractService {
 	 * Query a Tika server endpoint
 	 *
 	 * @param string $endpoint
+	 * @param resource $context optional stream context
 	 * @return string Tika output
 	 * @throws \Exception
 	 */
-	protected function queryTika($endpoint) {
+	protected function queryTika($endpoint, $context = NULL) {
 		$url = $this->getTikaServerUrl();
 		$url .= $endpoint;
 
 		$tikaOutput = '';
 		try {
-			$tikaOutput = file_get_contents($url);
+			$tikaOutput = file_get_contents($url, FALSE, $context);
 		} catch (\Exception $e) {
 			$message = $e->getMessage();
 			if (strpos($message, 'Connection refused') === FALSE &&
@@ -237,7 +238,7 @@ class ServerService extends AbstractService {
 			)
 		));
 
-		$response = file_get_contents($this->tikaUrl . '/tika', FALSE, $context);
+		$response = $this->queryTika('/tika', $context);
 
 		return $response;
 	}
@@ -265,8 +266,8 @@ class ServerService extends AbstractService {
 			)
 		));
 
-		$rawResponse = file_get_contents($this->tikaUrl . '/meta', FALSE, $context);
-		$response = (array)json_decode($rawResponse);
+		$rawResponse = $this->queryTika('/meta', $context);
+		$response    = (array)json_decode($rawResponse);
 
 		return $response;
 	}
@@ -293,7 +294,7 @@ class ServerService extends AbstractService {
 			)
 		));
 
-		$response = file_get_contents($this->tikaUrl . '/language/stream', FALSE, $context);
+		$response = $this->queryTika('/language/stream', $context);
 
 		return $response;
 	}
