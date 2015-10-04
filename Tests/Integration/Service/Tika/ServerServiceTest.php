@@ -254,19 +254,19 @@ class ServerServiceTest extends UnitTestCase {
 	 */
 	public function languageFileDataProvider() {
 		return array(
-			array('da'),
-			array('de'),
-			array('el'),
-			array('en'),
-			array('es'),
-			array('et'),
-			array('fi'),
-			array('fr'),
-			array('it'),
-			array('lt'),
-			array('nl'),
-			array('pt'),
-			array('sv')
+			'danish'     => array('da'),
+			'german'     => array('de'),
+			'greek'      => array('el'),
+			'english'    => array('en'),
+			'spanish'    => array('es'),
+			'estonian'   => array('et'),
+			'finish'     => array('fi'),
+			'french'     => array('fr'),
+			'italian'    => array('it'),
+			'lithuanian' => array('lt'),
+			'dutch'      => array('nl'),
+			'portuguese' => array('pt'),
+			'swedish'    => array('sv')
 		);
 	}
 
