@@ -25,8 +25,12 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika\Fixtures\ServerServiceFixture;
 use Prophecy\Argument;
 use Prophecy\Prophet;
+use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\ResourceStorage;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
@@ -46,9 +50,96 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	protected $singletonInstances;
 
+	/**
+	 * @var string
+	 */
+	protected $testDocumentsPath;
+
+	/**
+	 * @var ResourceStorage
+	 */
+	protected $storageMock;
+
+	/**
+	 * @var int
+	 */
+	protected $storageUid = 9000;
+
+
 	protected function setup() {
 		$this->singletonInstances = GeneralUtility::getSingletonInstances();
 		$this->prophet = new Prophet;
+
+		$this->setUpDocumentsStorageMock();
+
+		$mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
+		$mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
+		GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository', $mockedMetaDataRepository);
+	}
+
+	protected function setUpDocumentsStorageMock() {
+		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
+				. 'Tests/TestDocuments/';
+
+		$documentsDriver = $this->createDriverFixture(array(
+				'basePath'      => $this->testDocumentsPath,
+				'caseSensitive' => TRUE
+		));
+
+		$documentsStorageRecord = array(
+				'uid'           => $this->storageUid,
+				'is_public'     => TRUE,
+				'is_writable'   => FALSE,
+				'is_browsable'  => TRUE,
+				'is_online'     => TRUE,
+				'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
+						'basePath'      => $this->testDocumentsPath,
+						'pathType'      => 'absolute',
+						'caseSensitive' => '1'
+				))
+		);
+
+		$this->storageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage', NULL, array($documentsDriver, $documentsStorageRecord));
+		$this->storageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->storageUid));
+	}
+
+	/**
+	 * Creates a driver fixture object.
+	 *
+	 * @param array $driverConfiguration
+	 * @param array $mockedDriverMethods
+	 * @return \TYPO3\CMS\Core\Resource\Driver\LocalDriver
+	 */
+	protected function createDriverFixture(array $driverConfiguration = array(), $mockedDriverMethods = array()) {
+		/** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
+		$mockedDriverMethods[] = 'isPathValid';
+		$driver = $this->getAccessibleMock('TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver', $mockedDriverMethods, array($driverConfiguration));
+		$driver->expects($this->any())
+				->method('isPathValid')
+				->will(
+						$this->returnValue(TRUE)
+				);
+
+		$driver->setStorageUid($this->storageUid);
+		$driver->processConfiguration();
+		$driver->initialize();
+		return $driver;
+	}
+
+	/**
+	 * Converts a simple configuration array into a FlexForm data structure serialized as XML
+	 *
+	 * @param array $configuration
+	 * @return string
+	 * @see \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml()
+	 */
+	protected function convertConfigurationArrayToFlexformXml(array $configuration) {
+		$flexformArray = array('data' => array('sDEF' => array('lDEF' => array())));
+		foreach ($configuration as $key => $value) {
+			$flexformArray['data']['sDEF']['lDEF'][$key] = array('vDEF' => $value);
+		}
+		$configuration = GeneralUtility::array2xml($flexformArray);
+		return $configuration;
 	}
 
 	protected function tearDown() {
@@ -197,4 +288,21 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$this->assertEquals('http://localhost:9998', $service->getTikaServerUrl());
 	}
 
+	/**
+	 * @test
+	 */
+	public function extractTextQueriesTikaEndpoint() {
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name'       => 'testWORD.doc'
+			),
+			$this->storageMock
+		);
+
+		$service = new ServerServiceFixture($this->getTikaServerConfiguration());
+		$service->extractText($file);
+
+		$this->assertEquals('/tika', $service->getRecordedEndpoint());
+	}
 }
