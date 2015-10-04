@@ -296,6 +296,19 @@ class ServerServiceTest extends UnitTestCase {
 		$this->assertSame($language, $detectedLanguage);
 	}
 
+	/**
+	 * @test
+	 * @dataProvider languageFileDataProvider
+	 */
+	public function detectsLanguageFromString($language) {
+		$service = new ServerService($this->getTikaServerConfiguration());
+
+		$file = $this->testLanguagesPath . $language . '.test';
+		$languageString = file_get_contents($file);
+
+		$detectedLanguage = $service->detectLanguageFromString($languageString);
+
+		$this->assertSame($language, $detectedLanguage);
 	}
 
 }
