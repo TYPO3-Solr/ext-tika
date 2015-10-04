@@ -78,14 +78,14 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			)
 		));
 
-		$this->setUpDocumentsStorageMock();
+		$this->setUpStorageMock();
 
 		$mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
 		$mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
 		GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository', $mockedMetaDataRepository);
 	}
 
-	protected function setUpDocumentsStorageMock() {
+	protected function setUpStorageMock() {
 		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
 				. 'Tests/TestDocuments/';
 
