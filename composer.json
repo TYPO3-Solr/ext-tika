@@ -1,50 +1,50 @@
 {
-	"name": "apache-solr-for-typo3/tika",
-	"type": "typo3-cms-extension",
-	"description": "Apache Tika for TYPO3",
-	"version": "2.0.0-dev",
-	"keywords": ["typo3", "cms", "tika", "meta data", "language", "text", "extraction"],
-	"homepage": "http://www.typo3-solr.com",
-	"license": "GPL-2.0+",
-	"authors": [
-		{
-			"name": "Ingo Renner",
-			"email": "ingo@typo3.org",
-			"role": "Lead Developer"
-		}
-	],
-	"support": {
-		"email": "typo3-project-solr@lists.typo3.org",
-		"issues": "https://github.com/TYPO3-Solr/ext-tika/issues",
-		"forum": "http://forum.typo3.org/index.php/f/53/",
-		"wiki": "https://forge.typo3.org/projects/extension-tika/wiki",
-		"source": "https://github.com/TYPO3-Solr/ext-tika"
-	},
-	"repositories": [
-		{
-			"type": "composer",
-			"url": "http://composer.typo3.org/"
-		}
-	],
-	"replace": {
-		"tika": "self.version",
-		"typo3-ter/tika": "self.version"
-	},
-	"require": {
-		"php": ">5.3.7,~5.5.0"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "~4.8.0",
-		"phpspec/prophecy": "~1.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"ApacheSolrForTypo3\\Tika\\": "Classes/"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"ApacheSolrForTypo3\\Tika\\Tests\\": "Tests/"
-		}
-	}
+  "name": "apache-solr-for-typo3/tika",
+  "type": "typo3-cms-extension",
+  "description": "Apache Tika for TYPO3",
+  "version": "2.0.0-dev",
+  "keywords": ["typo3", "cms", "tika", "meta data", "language", "text", "extraction"],
+  "homepage": "http://www.typo3-solr.com",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Ingo Renner",
+      "email": "ingo@typo3.org",
+      "role": "Lead Developer"
+    }
+  ],
+  "support": {
+    "email": "typo3-project-solr@lists.typo3.org",
+    "issues": "https://github.com/TYPO3-Solr/ext-tika/issues",
+    "forum": "http://forum.typo3.org/index.php/f/53/",
+    "wiki": "https://forge.typo3.org/projects/extension-tika/wiki",
+    "source": "https://github.com/TYPO3-Solr/ext-tika"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "http://composer.typo3.org/"
+    }
+  ],
+  "replace": {
+    "tika": "self.version",
+    "typo3-ter/tika": "self.version"
+  },
+  "require": {
+    "php": ">5.3.7,~5.5.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.8.0",
+    "phpspec/prophecy": "~1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ApacheSolrForTypo3\\Tika\\": "Classes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ApacheSolrForTypo3\\Tika\\Tests\\": "Tests/"
+    }
+  }
 }
