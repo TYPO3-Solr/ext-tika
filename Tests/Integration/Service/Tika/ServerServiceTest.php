@@ -237,12 +237,18 @@ class ServerServiceTest extends UnitTestCase {
 	 * @test
 	 */
 	public function extractsTextFromDocFile() {
-		$this->markTestIncomplete();
-
 		$service = new ServerService($this->getTikaServerConfiguration());
 
-		$expectedText = 'Sample Word Document';
-		$extractedText = $service->extractText();
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name'       => 'testWORD.doc'
+			),
+			$this->documentsStorageMock
+		);
+
+		$expectedText  = 'Sample Word Document';
+		$extractedText = $service->extractText($file);
 
 		$this->assertContains($expectedText, $extractedText);
 	}
