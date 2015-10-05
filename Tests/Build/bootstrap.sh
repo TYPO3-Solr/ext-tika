@@ -21,9 +21,9 @@ fi
 echo "Starting Apache Tika"
 nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 &
 
-cd ..
-echo "cd to $(pwd)"
-
+#cd ..
+#echo "cd to $(pwd)"
+echo "in $(pwd)"
 
 composer require typo3/cms="$TYPO3_VERSION"
 # Restore composer.json
@@ -47,4 +47,4 @@ mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp $TYPO3_PATH_WEB/typo3
 #mv solr typo3conf/ext/
 #cp -R ext-tika/* typo3conf/ext/tika/
 
-cd -
+#cd -
