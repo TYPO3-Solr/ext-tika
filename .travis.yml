@@ -22,6 +22,10 @@ matrix:
     - php: 5.4
       env: TYPO3_BRANCH=master
 
+before_install:
+  - composer self-update
+  - composer --version
+
 install: Tests/Build/bootstrap.sh
 script: Tests/Build/cibuild.sh
 
