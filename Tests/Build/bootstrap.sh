@@ -22,9 +22,7 @@ echo "Starting Apache Tika"
 TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
 echo "Tika pid: $TIKA_PID"
 
-#cd ..
-#echo "cd to $(pwd)"
-echo "in $(pwd)"
+echo "PWD: $(pwd)"
 
 composer require typo3/cms="$TYPO3_VERSION"
 # Restore composer.json

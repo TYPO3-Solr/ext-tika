@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-#cd ..
-#echo "cd to $(pwd)"
-echo "in $(pwd)"
+echo "PWD: $(pwd)"
 
 ./vendor/bin/phpunit --colors -c Tests/Build/UnitTests.xml
