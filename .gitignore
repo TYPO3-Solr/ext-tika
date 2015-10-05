@@ -2,7 +2,10 @@
 /.project
 /.settings/
 /.idea/
-/vendor/
 index.php
 typo3
 typo3_src
+typo3conf
+typo3temp
+uploads
+vendor
