@@ -2,4 +2,4 @@
 
 echo "PWD: $(pwd)"
 
-./Build/bin/phpunit --colors -c Tests/Build/UnitTests.xml
+.Build/bin/phpunit --colors -c Tests/Build/UnitTests.xml
