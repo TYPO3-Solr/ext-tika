@@ -4,4 +4,4 @@
 #echo "cd to $(pwd)"
 echo "in $(pwd)"
 
-./bin/phpunit --colors -c typo3conf/ext/tika/Tests/Build/UnitTests.xml
+./vendor/bin/phpunit --colors -c Tests/Build/UnitTests.xml
