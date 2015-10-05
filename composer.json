@@ -49,6 +49,12 @@
       "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
     }
   },
+  "scripts": {
+    "post-autoload-dump": [
+      "mkdir -p .Build/Web/typo3conf/ext/",
+      "[ -L .Build/Web/typo3conf/ext/tika ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/tika"
+    ]
+  },
   "extra": {
     "branch-alias": {
       "dev-master": "2.0.x-dev"
