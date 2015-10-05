@@ -45,7 +45,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "ApacheSolrForTypo3\\Tika\\Tests\\": "Tests/"
+      "ApacheSolrForTypo3\\Tika\\Tests\\": "Tests/",
+      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
     }
   },
   "extra": {
