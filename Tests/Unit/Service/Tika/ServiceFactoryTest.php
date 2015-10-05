@@ -25,6 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 
 /**
@@ -106,6 +107,10 @@ class ServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaReturnsSolrCellServiceForSolrExtractor() {
+		if (!ExtensionManagementUtility::isLoaded('solr')) {
+			$this->markTestSkipped('EXT:solr is required for this test, but is not loaded.');
+		}
+
 		$extractor = ServiceFactory::getTika('solr', $this->getConfiguration());
 		$this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService', $extractor);
 	}
