@@ -1,4 +1,6 @@
 <?php
+namespace ApacheSolrForTypo3\Tika\Tests\Unit;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -21,28 +23,6 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-namespace ApacheSolrForTypo3\Tika;
-
-use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
-
-/**
- * exec() mock to capture invocation parameters for the actual \exec() function
- *
- * @param $command
- * @param array $output
- */
-function exec($command, array &$output = array()) {
-	$output = ExecRecorder::$execOutput[ExecRecorder::$execCalled];
-	ExecRecorder::$execCalled++;
-	ExecRecorder::$execCommand = $command;
-}
-
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
-
-namespace ApacheSolrForTypo3\Tika\Tests\Unit;
 
 use ApacheSolrForTypo3\Tika\Process;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
