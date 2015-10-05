@@ -28,6 +28,7 @@ before_install:
 
 install: Tests/Build/bootstrap.sh
 script: Tests/Build/cibuild.sh
+after_script: Tests/Build/cleanup.sh
 
 cache:
   directories:

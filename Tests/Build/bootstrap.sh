@@ -20,6 +20,7 @@ fi
 # start tika server
 echo "Starting Apache Tika"
 TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
+echo $TIKA_PID > tika_pid
 echo "Tika pid: $TIKA_PID"
 
 echo "PWD: $(pwd)"
