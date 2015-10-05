@@ -24,8 +24,7 @@
 
 namespace ApacheSolrForTypo3\Tika;
 
-use ApacheSolrForTypo3\Tika\Tests\Unit\ProcessTest;
-
+use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
 
 /**
  * exec() mock to capture invocation parameters for the actual \exec() function
@@ -34,9 +33,9 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ProcessTest;
  * @param array $output
  */
 function exec($command, array &$output = array()) {
-	$output = ProcessTest::$execOutput[ProcessTest::$execCalled];
-	ProcessTest::$execCalled++;
-	ProcessTest::$execCommand = $command;
+	$output = ExecRecorder::$execOutput[ExecRecorder::$execCalled];
+	ExecRecorder::$execCalled++;
+	ExecRecorder::$execCommand = $command;
 }
 
 
@@ -55,47 +54,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  */
 class ProcessTest extends UnitTestCase {
 
-	/**
-	 * Allows to capture exec() parameters
-	 *
-	 * @var string
-	 */
-	public static $execCommand = '';
-
-	/**
-	 * Output to return to exec() calls
-	 *
-	 * @var array
-	 */
-	public static $execOutput = array();
-
-	/**
-	 * Indicator whether/how many times the exec() mock was called.
-	 *
-	 * @var int
-	 */
-	public static $execCalled = 0;
-
-	/**
-	 * Resets the exec() mock
-	 */
-	protected function resetExecMock() {
-		self::$execCalled  = 0;
-		self::$execCommand = '';
-		self::$execOutput  = array();
-	}
-
-	/**
-	 * Adds output for an exec() call.
-	 *
-	 * @param array $lines One line of returned output per element in $lines
-	 */
-	protected function returnExecOutput(array $lines) {
-		self::$execOutput[] = $lines;
-	}
-
 	protected function setUp() {
-		$this->resetExecMock();
+		ExecRecorder::reset();
 	}
 
 	/**
@@ -113,13 +73,13 @@ class ProcessTest extends UnitTestCase {
 	 */
 	public function findPidUsesExecutableBasename() {
 		$process = new Process('/usr/bin/foo', '-bar');
-		$this->returnExecOutput(array('foo'));
+		ExecRecorder::setReturnExecOutput(array('foo'));
 
 		$process->findPid();
 
-		$this->assertTrue((bool)self::$execCalled);
-		$this->assertContains('foo', self::$execCommand);
-		$this->assertNotContains('/usr/bin', self::$execCommand);
+		$this->assertTrue((bool)ExecRecorder::$execCalled);
+		$this->assertContains('foo', ExecRecorder::$execCommand);
+		$this->assertNotContains('/usr/bin', ExecRecorder::$execCommand);
 	}
 
 	/**
@@ -131,8 +91,8 @@ class ProcessTest extends UnitTestCase {
 
 		$process->isRunning();
 
-		$this->assertTrue((bool)self::$execCalled);
-		$this->assertContains('1337', self::$execCommand);
+		$this->assertTrue((bool)ExecRecorder::$execCalled);
+		$this->assertContains('1337', ExecRecorder::$execCommand);
 	}
 
 	/**
@@ -141,7 +101,7 @@ class ProcessTest extends UnitTestCase {
 	public function isRunningReturnsTrueForRunningProcess() {
 		$process = new Process('/usr/bin/foo', '-bar');
 		$process->setPid(1337);
-		$this->returnExecOutput(array('1337 /usr/bin/foo -bar'));
+		ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar'));
 
 		$running = $process->isRunning();
 
@@ -165,12 +125,12 @@ class ProcessTest extends UnitTestCase {
 	public function startStartsProcess() {
 		$process = new Process('/usr/bin/foo', '-bar');
 
-		$this->returnExecOutput(array('foo'));
+		ExecRecorder::setReturnExecOutput(array('foo'));
 		$running = $process->isRunning();
 		$this->assertFalse($running);
 
-		$this->returnExecOutput(array('1337')); // runCommand() return pid of started process = 1337
-		$this->returnExecOutput(array('1337 /usr/bin/foo -bar')); // isRunning()
+		ExecRecorder::setReturnExecOutput(array('1337')); // runCommand() return pid of started process = 1337
+		ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar')); // isRunning()
 		$running = $process->start();
 
 		$this->assertTrue($running);
@@ -182,7 +142,7 @@ class ProcessTest extends UnitTestCase {
 	public function stopStopsProcess() {
 		$process = new Process('/usr/bin/foo', '-bar');
 		$process->setPid(1337);
-		$this->returnExecOutput(array('1337 /usr/bin/foo -bar'));
+		ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar'));
 
 		$running = $process->isRunning();
 		$this->assertTrue($running);
