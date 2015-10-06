@@ -171,4 +171,21 @@ class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$this->assertContains('-V', ExecRecorder::$execCommand);
 	}
 
+	/**
+	 * @test
+	 */
+	public function extractTextUsesTParameter() {
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name' => 'testWORD.doc'
+			),
+			$this->storageMock
+		);
+
+		$service = new AppService($this->getTikaAppConfiguration());
+		$service->extractText($file);
+
+		$this->assertContains('-t', ExecRecorder::$execCommand);
+	}
 }
