@@ -17,6 +17,7 @@ else
 	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
 fi
 
+# stop Tika server if one is still running
 if [ -f ./tika_pid ]; then
 	TIKA_PID=cat ./tika_pid
 	echo "Stopping Tika ($TIKA_PID)"
@@ -36,9 +37,9 @@ if [[ $TYPO3_VERSION == ~6.2.* ]]; then
 else
 	composer require typo3/cms="$TYPO3_VERSION"
 fi
+
 # Restore composer.json
 git checkout composer.json
 export TYPO3_PATH_WEB=$PWD/.Build/Web
-
 
 mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp
