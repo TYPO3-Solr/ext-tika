@@ -17,6 +17,12 @@ else
 	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
 fi
 
+if [ -f ./tika_pid ]; then
+	TIKA_PID=cat ./tika_pid
+	echo "Stopping Tika ($TIKA_PID)"
+	kill $TIKA_PID
+fi
+
 # start tika server
 echo "Starting Apache Tika"
 TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
