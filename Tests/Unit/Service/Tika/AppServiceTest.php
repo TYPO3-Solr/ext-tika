@@ -225,4 +225,14 @@ class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 		$this->assertContains('-l', ExecRecorder::$execCommand);
 	}
+
+	/**
+	 * @test
+	 */
+	public function detectLanguageFromStringUsesLParameter() {
+		$service = new AppService($this->getTikaAppConfiguration());
+		$service->detectLanguageFromString('foo');
+
+		$this->assertContains('-l', ExecRecorder::$execCommand);
+	}
 }
