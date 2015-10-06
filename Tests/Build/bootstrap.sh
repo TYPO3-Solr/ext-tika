@@ -31,7 +31,11 @@ echo "Tika pid: $TIKA_PID"
 
 echo "PWD: $(pwd)"
 
-composer require typo3/cms="$TYPO3_VERSION"
+if [[ $TYPO3_VERSION == ~6.2.* ]]; then
+	composer require typo3/cms="$TYPO3_VERSION" typo3/cms-composer-installers="1.2.2 as 1.1.4"
+else
+	composer require typo3/cms="$TYPO3_VERSION"
+fi
 # Restore composer.json
 git checkout composer.json
 export TYPO3_PATH_WEB=$PWD/.Build/Web
