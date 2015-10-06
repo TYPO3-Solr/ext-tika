@@ -22,8 +22,13 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+// a namespace declaration needs to be the first statement in a file
+// we just need any namespace declaration to work around that requirement
 namespace ApacheSolrForTypo3\Tika\Foo;
 
+// load the mocked functions into the namespaces which need them during tests
+// include() or require() cannot load into namespaces
+// so we use this little trick to achieve the effect
 eval('namespace ApacheSolrForTypo3\Tika { ?>' . file_get_contents(__DIR__ . '/ExecMockFunctions.php') . ' }');
 eval('namespace ApacheSolrForTypo3\Tika\Service\Tika { ?>' . file_get_contents(__DIR__ . '/ExecMockFunctions.php') . ' }');
 
@@ -65,9 +70,9 @@ class ExecRecorder {
 	 * Resets the exec() mock
 	 */
 	public static function reset() {
-		self::$execCalled = 0;
+		self::$execCalled  = 0;
 		self::$execCommand = '';
-		self::$execOutput = array();
+		self::$execOutput  = array();
 	}
 
 	/**
