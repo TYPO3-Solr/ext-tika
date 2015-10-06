@@ -14,11 +14,12 @@
 	verbose="false">
 
 	<testsuites>
-		<testsuite name="EXT:tika tests">
+		<testsuite name="tika-unit-tests">
 			<directory>../Unit/</directory>
+		</testsuite>
+		<testsuite name="tika-integration-tests">
 			<directory>../Integration/</directory>
 		</testsuite>
-
 	</testsuites>
 
 </phpunit>
