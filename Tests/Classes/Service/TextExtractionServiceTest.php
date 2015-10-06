@@ -35,7 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package TYPO3
  * @subpackage tika
  */
-class TextExtractionServiceTest extends \Tx_Phpunit_TestCase {
+class TextExtractionServiceTest {
 
 	private $testDocumentsPath;
 	private $originalServices;
@@ -63,6 +63,10 @@ class TextExtractionServiceTest extends \Tx_Phpunit_TestCase {
 			// restore services
 		$GLOBALS['T3_SERVICES'] = $this->originalServices;
 	}
+
+
+	// TODO use data provider instead
+
 
 
 	// MS Office

@@ -35,7 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package TYPO3
  * @subpackage tika
  */
-class MetaDataExtractionServiceTest extends \Tx_Phpunit_TestCase {
+class MetaDataExtractionServiceTest {
 
 	private $testDocumentsPath;
 	private $originalServices;

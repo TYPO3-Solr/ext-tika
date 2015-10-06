@@ -35,7 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package TYPO3
  * @subpackage tika
  */
-class LanguageDetectionServiceTest extends \Tx_Phpunit_TestCase {
+class LanguageDetectionServiceTest {
 
 	private $testDocumentsPath;
 	private $originalServices;
