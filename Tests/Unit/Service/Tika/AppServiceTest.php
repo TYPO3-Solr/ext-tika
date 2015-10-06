@@ -188,4 +188,23 @@ class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 		$this->assertContains('-t', ExecRecorder::$execCommand);
 	}
+
+	/**
+	 * @test
+	 */
+	public function extractMetaDataUsesMParameter() {
+		ExecRecorder::setReturnExecOutput(array('foo'));
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name' => 'testWORD.doc'
+			),
+			$this->storageMock
+		);
+
+		$service = new AppService($this->getTikaAppConfiguration());
+		$service->extractMetaData($file);
+
+		$this->assertContains('-m', ExecRecorder::$execCommand);
+	}
 }
