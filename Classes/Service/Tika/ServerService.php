@@ -82,6 +82,7 @@ class ServerService extends AbstractService {
 		);
 		$command = '-jar ' . escapeshellarg($tikaJar);
 		$command .= ' -p ' . escapeshellarg($this->configuration['tikaServerPort']);
+
 		$command = escapeshellcmd($command);
 
 		return $command;
