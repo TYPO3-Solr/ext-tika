@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ..
-echo "cd to $(pwd)"
+echo "PWD: $(pwd)"
 
-./bin/phpunit --colors -c typo3conf/ext/tika/Tests/Build/UnitTests.xml
+export TYPO3_PATH_WEB=$(pwd)/.Build/Web
+.Build/bin/phpunit --colors -c Tests/Build/UnitTests.xml

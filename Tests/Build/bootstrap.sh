@@ -17,25 +17,29 @@ else
 	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
 fi
 
+# stop Tika server if one is still running
+if [ -f ./tika_pid ]; then
+	TIKA_PID=cat ./tika_pid
+	echo "Stopping Tika ($TIKA_PID)"
+	kill $TIKA_PID
+fi
+
 # start tika server
 echo "Starting Apache Tika"
-nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 &
+TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
+echo $TIKA_PID > tika_pid
+echo "Tika pid: $TIKA_PID"
 
-cd ..
-echo "cd to $(pwd)"
+echo "PWD: $(pwd)"
 
-# clone TYPO3
-git clone --single-branch --branch $TYPO3_BRANCH --depth 1 https://github.com/TYPO3/TYPO3.CMS.git typo3_core
-mv typo3_core/* .
-composer self-update
-composer install --prefer-dist
-mkdir -p uploads typo3temp typo3conf/ext/tika
+if [[ $TYPO3_VERSION == ~6.2.* ]]; then
+	composer require typo3/cms="$TYPO3_VERSION" typo3/cms-composer-installers="1.2.2 as 1.1.4"
+else
+	composer require typo3/cms="$TYPO3_VERSION"
+fi
 
+# Restore composer.json
+git checkout composer.json
+export TYPO3_PATH_WEB=$PWD/.Build/Web
 
-# clone EXT:solr
-git clone --single-branch --branch master --depth 1 https://github.com/TYPO3-Solr/ext-solr.git solr
-
-mv solr typo3conf/ext/
-cp -R ext-tika/* typo3conf/ext/tika/
-
-cd -
+mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp

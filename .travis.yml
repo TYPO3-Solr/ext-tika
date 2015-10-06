@@ -11,23 +11,26 @@ env:
     - TIKA_VERSION="1.10"
     - TIKA_PATH=$HOME/tika
   matrix:
-    - TYPO3_BRANCH=TYPO3_6-2
-    - TYPO3_BRANCH=master
+    - TYPO3_VERSION="~6.2.15"
+    - TYPO3_VERSION="dev-master"
 
 matrix:
   fast_finish: true
   exclude:
     - php: 5.3
-      env: TYPO3_BRANCH=master
+      env: TYPO3_VERSION="dev-master"
     - php: 5.4
-      env: TYPO3_BRANCH=master
+      env: TYPO3_VERSION="dev-master"
+
+before_install:
+  - composer self-update
+  - composer --version
 
 install: Tests/Build/bootstrap.sh
 script: Tests/Build/cibuild.sh
+after_script: Tests/Build/cleanup.sh
 
 cache:
   directories:
     - $TIKA_PATH
     - $HOME/.composer/cache
-#    - $HOME/build/TYPO3-Solr/vendor
-#    - $HOME/build/TYPO3-Solr/bin
