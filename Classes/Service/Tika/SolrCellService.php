@@ -53,6 +53,8 @@ class SolrCellService extends AbstractService {
 		// currently explicitly using "new" to bypass
 		// \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or providing a Factory
 
+		// TODO just get *any* connection from EXT:solr
+
 		// EM might define a different connection than already in use by
 		// Index Queue
 		$this->solr = new SolrService(
