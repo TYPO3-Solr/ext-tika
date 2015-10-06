@@ -10,3 +10,4 @@ typo3temp
 uploads
 vendor
 composer.lock
+.Build
