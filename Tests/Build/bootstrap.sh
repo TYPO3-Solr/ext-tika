@@ -44,7 +44,7 @@ export TYPO3_PATH_WEB=$PWD/.Build/Web
 #mv typo3_core/* .
 #composer self-update
 #composer install --prefer-dist
-mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp $TYPO3_PATH_WEB/typo3conf/ext/tika
+mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp
 
 
 # clone EXT:solr
