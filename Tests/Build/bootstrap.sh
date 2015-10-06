@@ -40,6 +40,7 @@ fi
 
 # Restore composer.json
 git checkout composer.json
+
 export TYPO3_PATH_WEB=$PWD/.Build/Web
 
 mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp
