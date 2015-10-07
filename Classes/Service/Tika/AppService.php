@@ -62,7 +62,7 @@ class AppService extends AbstractService {
 	public function getTikaVersion() {
 		$tikaCommand = CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8' // forces UTF8 output
-			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -V';
 
 		return shell_exec($tikaCommand);
@@ -79,7 +79,7 @@ class AppService extends AbstractService {
 		$tikaCommand = ShellUtility::getLanguagePrefix()
 			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8' // forces UTF8 output
-			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -t'
 			. ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
 
@@ -106,7 +106,7 @@ class AppService extends AbstractService {
 		$tikaCommand = ShellUtility::getLanguagePrefix()
 			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
-			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -m'
 			. ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
 
@@ -169,7 +169,7 @@ class AppService extends AbstractService {
 		$tikaCommand = ShellUtility::getLanguagePrefix()
 			. CommandUtility::getCommand('java')
 			. ' -Dfile.encoding=UTF8'
-			. ' -jar ' . ShellUtility::escapeShellArgument(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
+			. ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], FALSE))
 			. ' -l'
 			. ' ' . ShellUtility::escapeShellArgument($localFilePath);
 
