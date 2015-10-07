@@ -22,7 +22,7 @@ class ShellUtility {
 	 * @return string
 	 */
 	public static function getLanguagePrefix() {
-		if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem'])) {
+		if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']) && TYPO3_OS !== 'WIN') {
 			return 'LC_CTYPE="'. $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'] .'" ';
 		}
 		return '';
