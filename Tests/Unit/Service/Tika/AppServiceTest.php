@@ -28,145 +28,24 @@ use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
  * Test case for class AppService
  *
  */
-class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class AppServiceTest extends ServiceUnitTestCase {
 
-	/**
-	 * Backup of current singleton instances
-	 */
-	protected $singletonInstances;
-
-	/**
-	 * @var string
-	 */
-	protected $testDocumentsPath;
-
-	/**
-	 * @var ResourceStorage
-	 */
-	protected $storageMock;
-
-	/**
-	 * @var int
-	 */
-	protected $storageUid = 9000;
-
-
-	protected function setUp() {
-		$this->singletonInstances = GeneralUtility::getSingletonInstances();
+	public function setUp() {
+		parent::setUp();
 		ExecRecorder::reset();
-
-		// Disable xml2array cache used by ResourceFactory
-		GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(array(
-			'cache_hash' => array(
-				'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
-				'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
-			)
-		));
-
-		$this->setUpStorageMock();
-
-		$mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
-		$mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
-		GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository', $mockedMetaDataRepository);
-	}
-
-	protected function setUpStorageMock() {
-		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
-			. 'Tests/TestDocuments/';
-
-		$documentsDriver = $this->createDriverFixture(array(
-			'basePath' => $this->testDocumentsPath,
-			'caseSensitive' => TRUE
-		));
-
-		$documentsStorageRecord = array(
-			'uid' => $this->storageUid,
-			'is_public' => TRUE,
-			'is_writable' => FALSE,
-			'is_browsable' => TRUE,
-			'is_online' => TRUE,
-			'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
-				'basePath' => $this->testDocumentsPath,
-				'pathType' => 'absolute',
-				'caseSensitive' => '1'
-			))
-		);
-
-		$this->storageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage', NULL, array($documentsDriver, $documentsStorageRecord));
-		$this->storageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->storageUid));
-	}
-
-	/**
-	 * Creates a driver fixture object.
-	 *
-	 * @param array $driverConfiguration
-	 * @param array $mockedDriverMethods
-	 * @return \TYPO3\CMS\Core\Resource\Driver\LocalDriver
-	 */
-	protected function createDriverFixture(array $driverConfiguration = array(), $mockedDriverMethods = array()) {
-		/** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
-		$mockedDriverMethods[] = 'isPathValid';
-		$driver = $this->getAccessibleMock('TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver', $mockedDriverMethods, array($driverConfiguration));
-		$driver->expects($this->any())
-				->method('isPathValid')
-				->will(
-					$this->returnValue(TRUE)
-				);
-
-		$driver->setStorageUid($this->storageUid);
-		$driver->processConfiguration();
-		$driver->initialize();
-		return $driver;
-	}
-
-	/**
-	 * Converts a simple configuration array into a FlexForm data structure serialized as XML
-	 *
-	 * @param array $configuration
-	 * @return string
-	 * @see \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml()
-	 */
-	protected function convertConfigurationArrayToFlexformXml(array $configuration) {
-		$flexformArray = array('data' => array('sDEF' => array('lDEF' => array())));
-		foreach ($configuration as $key => $value) {
-			$flexformArray['data']['sDEF']['lDEF'][$key] = array('vDEF' => $value);
-		}
-		$configuration = GeneralUtility::array2xml($flexformArray);
-		return $configuration;
-	}
-
-	protected function tearDown() {
-		GeneralUtility::resetSingletonInstances($this->singletonInstances);
-		parent::tearDown();
-	}
-
-	/**
-	 * Creates Tika App configuration
-	 *
-	 * @return array
-	 */
-	protected function getTikaAppConfiguration() {
-		$tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.10';
-		$tikaPath    = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : '/opt/tika';
-
-		return array(
-			'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
-		);
 	}
 
 	/**
 	 * @test
 	 */
 	public function getTikaVersionUsesVParameter() {
-		$service = new AppService($this->getTikaAppConfiguration());
+		$service = new AppService($this->getConfiguration());
 		$service->getTikaVersion();
 
 		$this->assertContains('-V', ExecRecorder::$execCommand);
@@ -181,10 +60,10 @@ class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 				'identifier' => 'testWORD.doc',
 				'name' => 'testWORD.doc'
 			),
-			$this->storageMock
+			$this->documentsStorageMock
 		);
 
-		$service = new AppService($this->getTikaAppConfiguration());
+		$service = new AppService($this->getConfiguration());
 		$service->extractText($file);
 
 		$this->assertContains('-t', ExecRecorder::$execCommand);
@@ -200,10 +79,10 @@ class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 				'identifier' => 'testWORD.doc',
 				'name' => 'testWORD.doc'
 			),
-			$this->storageMock
+			$this->documentsStorageMock
 		);
 
-		$service = new AppService($this->getTikaAppConfiguration());
+		$service = new AppService($this->getConfiguration());
 		$service->extractMetaData($file);
 
 		$this->assertContains('-m', ExecRecorder::$execCommand);
@@ -218,10 +97,10 @@ class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 				'identifier' => 'testWORD.doc',
 				'name' => 'testWORD.doc'
 			),
-			$this->storageMock
+			$this->documentsStorageMock
 		);
 
-		$service = new AppService($this->getTikaAppConfiguration());
+		$service = new AppService($this->getConfiguration());
 		$service->detectLanguageFromFile($file);
 
 		$this->assertContains('-l', ExecRecorder::$execCommand);
@@ -231,7 +110,7 @@ class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function detectLanguageFromStringUsesLParameter() {
-		$service = new AppService($this->getTikaAppConfiguration());
+		$service = new AppService($this->getConfiguration());
 		$service->detectLanguageFromString('foo');
 
 		$this->assertContains('-l', ExecRecorder::$execCommand);
