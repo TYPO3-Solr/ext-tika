@@ -27,7 +27,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
 use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Resource\ResourceStorage;
 
 
 /**

@@ -29,8 +29,6 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika\Fixtures\ServerServiceFixtur
 use Prophecy\Argument;
 use Prophecy\Prophet;
 use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Resource\ResourceStorage;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
