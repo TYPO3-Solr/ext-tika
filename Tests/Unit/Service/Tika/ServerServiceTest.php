@@ -38,135 +38,22 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class ServerServiceTest
  *
  */
-class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class ServerServiceTest extends ServiceUnitTestCase {
 
 	/**
 	 * @var Prophet
 	 */
 	protected $prophet;
 
-	/**
-	 * Backup of current singleton instances
-	 */
-	protected $singletonInstances;
 
-	/**
-	 * @var string
-	 */
-	protected $testDocumentsPath;
-
-	/**
-	 * @var ResourceStorage
-	 */
-	protected $storageMock;
-
-	/**
-	 * @var int
-	 */
-	protected $storageUid = 9000;
-
-
-	protected function setup() {
-		$this->singletonInstances = GeneralUtility::getSingletonInstances();
+	public function setup() {
+		parent::setUp();
 		$this->prophet = new Prophet;
-
-		// Disable xml2array cache used by ResourceFactory
-		GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(array(
-			'cache_hash' => array(
-				'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
-				'backend'  => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
-			)
-		));
-
-		$this->setUpStorageMock();
-
-		$mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
-		$mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
-		GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository', $mockedMetaDataRepository);
 	}
 
-	protected function setUpStorageMock() {
-		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
-				. 'Tests/TestDocuments/';
-
-		$documentsDriver = $this->createDriverFixture(array(
-				'basePath'      => $this->testDocumentsPath,
-				'caseSensitive' => TRUE
-		));
-
-		$documentsStorageRecord = array(
-				'uid'           => $this->storageUid,
-				'is_public'     => TRUE,
-				'is_writable'   => FALSE,
-				'is_browsable'  => TRUE,
-				'is_online'     => TRUE,
-				'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
-						'basePath'      => $this->testDocumentsPath,
-						'pathType'      => 'absolute',
-						'caseSensitive' => '1'
-				))
-		);
-
-		$this->storageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage', NULL, array($documentsDriver, $documentsStorageRecord));
-		$this->storageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->storageUid));
-	}
-
-	/**
-	 * Creates a driver fixture object.
-	 *
-	 * @param array $driverConfiguration
-	 * @param array $mockedDriverMethods
-	 * @return \TYPO3\CMS\Core\Resource\Driver\LocalDriver
-	 */
-	protected function createDriverFixture(array $driverConfiguration = array(), $mockedDriverMethods = array()) {
-		/** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
-		$mockedDriverMethods[] = 'isPathValid';
-		$driver = $this->getAccessibleMock('TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver', $mockedDriverMethods, array($driverConfiguration));
-		$driver->expects($this->any())
-				->method('isPathValid')
-				->will(
-						$this->returnValue(TRUE)
-				);
-
-		$driver->setStorageUid($this->storageUid);
-		$driver->processConfiguration();
-		$driver->initialize();
-		return $driver;
-	}
-
-	/**
-	 * Converts a simple configuration array into a FlexForm data structure serialized as XML
-	 *
-	 * @param array $configuration
-	 * @return string
-	 * @see \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml()
-	 */
-	protected function convertConfigurationArrayToFlexformXml(array $configuration) {
-		$flexformArray = array('data' => array('sDEF' => array('lDEF' => array())));
-		foreach ($configuration as $key => $value) {
-			$flexformArray['data']['sDEF']['lDEF'][$key] = array('vDEF' => $value);
-		}
-		$configuration = GeneralUtility::array2xml($flexformArray);
-		return $configuration;
-	}
-
-	protected function tearDown() {
+	public function tearDown() {
 		$this->prophet->checkPredictions();
-		GeneralUtility::resetSingletonInstances($this->singletonInstances);
 		parent::tearDown();
-	}
-
-	/**
-	 * Creates Tika Server connection configuration pointing to
-	 * http://localhost:9998
-	 *
-	 * @return array
-	 */
-	protected function getTikaServerConfiguration() {
-		return array(
-			'tikaServerHost' => 'localhost',
-			'tikaServerPort' => '9998'
-		);
 	}
 
 	/**
@@ -183,7 +70,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process', $processMock->reveal());
 
 		// execute
-		$service = new ServerService($this->getTikaServerConfiguration());
+		$service = new ServerService($this->getConfiguration());
 		$service->startServer();
 
 		// test
@@ -208,7 +95,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process', $processMock->reveal());
 
 		// execute
-		$service = new ServerService($this->getTikaServerConfiguration());
+		$service = new ServerService($this->getConfiguration());
 		$service->stopServer();
 	}
 
@@ -220,7 +107,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
 		GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry', $registryMock->reveal());
 
-		$service = new ServerService($this->getTikaServerConfiguration());
+		$service = new ServerService($this->getConfiguration());
 		$pid = $service->getServerPid();
 
 		$this->assertEquals(1000, $pid);
@@ -238,7 +125,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$processMock->findPid()->willReturn(1000);
 		GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process', $processMock->reveal());
 
-		$service = new ServerService($this->getTikaServerConfiguration());
+		$service = new ServerService($this->getConfiguration());
 		$pid = $service->getServerPid();
 
 		$this->assertEquals(1000, $pid);
@@ -252,7 +139,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
 		GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry', $registryMock->reveal());
 
-		$service = new ServerService($this->getTikaServerConfiguration());
+		$service = new ServerService($this->getConfiguration());
 		$this->assertTrue($service->isServerRunning());
 	}
 
@@ -268,7 +155,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$processMock->findPid()->willReturn(1000);
 		GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process', $processMock->reveal());
 
-		$service = new ServerService($this->getTikaServerConfiguration());
+		$service = new ServerService($this->getConfiguration());
 		$this->assertTrue($service->isServerRunning());
 	}
 
@@ -284,7 +171,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$processMock->findPid()->willReturn('');
 		GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process', $processMock->reveal());
 
-		$service = new ServerService($this->getTikaServerConfiguration());
+		$service = new ServerService($this->getConfiguration());
 		$this->assertFalse($service->isServerRunning());
 	}
 
@@ -292,7 +179,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getTikaUrlBuildsUrlFromConfiguration() {
-		$service = new ServerService($this->getTikaServerConfiguration());
+		$service = new ServerService($this->getConfiguration());
 		$this->assertEquals('http://localhost:9998', $service->getTikaServerUrl());
 	}
 
@@ -305,10 +192,10 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 				'identifier' => 'testWORD.doc',
 				'name'       => 'testWORD.doc'
 			),
-			$this->storageMock
+			$this->documentsStorageMock
 		);
 
-		$service = new ServerServiceFixture($this->getTikaServerConfiguration());
+		$service = new ServerServiceFixture($this->getConfiguration());
 		$service->extractText($file);
 
 		$this->assertEquals('/tika', $service->getRecordedEndpoint());
@@ -323,10 +210,10 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 				'identifier' => 'testWORD.doc',
 				'name'       => 'testWORD.doc'
 			),
-			$this->storageMock
+			$this->documentsStorageMock
 		);
 
-		$service = new ServerServiceFixture($this->getTikaServerConfiguration());
+		$service = new ServerServiceFixture($this->getConfiguration());
 		$service->extractMetaData($file);
 
 		$this->assertEquals('/meta', $service->getRecordedEndpoint());
@@ -341,10 +228,10 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 				'identifier' => 'testWORD.doc',
 				'name'       => 'testWORD.doc'
 			),
-			$this->storageMock
+			$this->documentsStorageMock
 		);
 
-		$service = new ServerServiceFixture($this->getTikaServerConfiguration());
+		$service = new ServerServiceFixture($this->getConfiguration());
 		$service->detectLanguageFromFile($file);
 
 		$this->assertEquals('/language/stream', $service->getRecordedEndpoint());
@@ -354,7 +241,7 @@ class ServerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function detectLanguageFromStringQueriesLanguageStringEndpoint() {
-		$service = new ServerServiceFixture($this->getTikaServerConfiguration());
+		$service = new ServerServiceFixture($this->getConfiguration());
 		$service->detectLanguageFromString('foo');
 
 		$this->assertEquals('/language/string', $service->getRecordedEndpoint());
