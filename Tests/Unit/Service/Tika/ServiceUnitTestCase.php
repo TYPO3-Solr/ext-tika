@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Base class for EXT:tika tests
  *
  */
-class ServiceUnitTestCase extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+abstract class ServiceUnitTestCase extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	/**
 	 * @var array A backup of registered singleton instances
