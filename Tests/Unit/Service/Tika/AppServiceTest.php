@@ -58,6 +58,7 @@ class AppServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	protected $storageUid = 9000;
 
+
 	protected function setUp() {
 		$this->singletonInstances = GeneralUtility::getSingletonInstances();
 		ExecRecorder::reset();

@@ -39,6 +39,7 @@ class ServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	private $globalsBackup;
 
+
 	public function setUp() {
 		$this->globalsBackup = array(
 			'TYPO3_CONF_VARS' => $GLOBALS['TYPO3_CONF_VARS'],
