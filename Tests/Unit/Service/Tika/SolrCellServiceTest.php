@@ -32,22 +32,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  * Class AppServiceTest
  *
  */
-class SolrCellServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
-
-	/**
-	 * Creates Solr Server connection configuration pointing to
-	 * http://localhost:8080/solr/
-	 *
-	 * @return array
-	 */
-	protected function getSolrConfiguration() {
-		return array(
-			'solrScheme' => 'http',
-			'solrHost' => 'localhost',
-			'solrPort' => '8080',
-			'solrPath' => '/solr/',
-		);
-	}
+class SolrCellServiceTest extends ServiceUnitTestCase {
 
 	/**
 	 * @test
@@ -57,7 +42,7 @@ class SolrCellServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			$this->markTestSkipped('EXT:solr is required for this test, but is not loaded.');
 		}
 
-		$service = new SolrCellService($this->getSolrConfiguration());
+		$service = new SolrCellService($this->getConfiguration());
 		$this->assertAttributeInstanceOf('ApacheSolrForTypo3\\Solr\\SolrService', 'solr', $service);
 	}
 
