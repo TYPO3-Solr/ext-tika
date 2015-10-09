@@ -35,7 +35,7 @@ use TYPO3\CMS\Core\Resource\File;
  */
 class AppServiceTest extends ServiceUnitTestCase {
 
-	public function setUp() {
+	protected function setUp() {
 		parent::setUp();
 		ExecRecorder::reset();
 	}

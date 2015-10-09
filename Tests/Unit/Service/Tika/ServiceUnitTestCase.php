@@ -71,7 +71,7 @@ abstract class ServiceUnitTestCase extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	protected $languagesStorageUid = 9001;
 
 
-	public function setUp() {
+	protected function setUp() {
 		$this->singletonInstances = GeneralUtility::getSingletonInstances();
 
 		// Disable xml2array cache used by ResourceFactory
@@ -142,7 +142,7 @@ abstract class ServiceUnitTestCase extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$this->languagesStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->languagesStorageUid));
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		GeneralUtility::resetSingletonInstances($this->singletonInstances);
 		parent::tearDown();
 	}

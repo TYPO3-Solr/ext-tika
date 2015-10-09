@@ -43,12 +43,12 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 	protected $prophet;
 
 
-	public function setup() {
+	protected function setup() {
 		parent::setUp();
 		$this->prophet = new Prophet();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->prophet->checkPredictions();
 		parent::tearDown();
 	}
