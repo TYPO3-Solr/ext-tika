@@ -46,7 +46,7 @@ class ServerServiceTest extends ServiceUnitTestCase {
 
 	public function setup() {
 		parent::setUp();
-		$this->prophet = new Prophet;
+		$this->prophet = new Prophet();
 	}
 
 	public function tearDown() {
