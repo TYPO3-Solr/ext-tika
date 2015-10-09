@@ -94,6 +94,28 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 	/**
 	 * @test
 	 */
+	public function extractTextUsesSolrCellQuery() {
+		$solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
+		$solrMock->extract(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
+			->shouldBeCalled();
+
+		$service = new SolrCellService($this->getConfiguration());
+		$service->setSolr($solrMock->reveal());
+
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name'       => 'testWORD.doc'
+			),
+			$this->documentsStorageMock
+		);
+
+		$service->extractText($file);
+	}
+
+	/**
+	 * @test
+	 */
 	public function extractTextCleansUpTempFile() {
 		$serviceMock = $this->getMockBuilder('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService')
 			->setConstructorArgs(array($this->getConfiguration()))
