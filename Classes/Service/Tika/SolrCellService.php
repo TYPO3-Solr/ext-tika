@@ -173,7 +173,7 @@ class SolrCellService extends AbstractService {
 	 */
 	public function getTikaVersion() {
 		// TODO add patch for endpoint on Apache Solr to return Tika version
-		// for now returns the Solr version string f.e. "Apache Solr 5.2.0" (for now)
+		// for now returns the Solr version string f.e. "Apache Solr 5.2.0"
 		return $this->solr->getSolrServerVersion();
 	}
 }
