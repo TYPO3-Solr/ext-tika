@@ -20,12 +20,6 @@
     "wiki": "https://forge.typo3.org/projects/extension-tika/wiki",
     "source": "https://github.com/TYPO3-Solr/ext-tika"
   },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "http://composer.typo3.org/"
-    }
-  ],
   "replace": {
     "tika": "self.version",
     "typo3-ter/tika": "self.version"
