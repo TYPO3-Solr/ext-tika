@@ -91,4 +91,25 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 		$this->assertEquals($expectedValue, $actualValue);
 	}
 
+	/**
+	 * @test
+	 */
+	public function extractTextCleansUpTempFile() {
+		$serviceMock = $this->getMockBuilder('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService')
+			->setConstructorArgs(array($this->getConfiguration()))
+			->setMethods(array('cleanupTempFile'))
+			->getMock();
+		$serviceMock->expects($this->once())->method('cleanupTempFile');
+
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name'       => 'testWORD.doc'
+			),
+			$this->documentsStorageMock
+		);
+
+		$serviceMock->extractText($file);
+	}
+
 }
