@@ -43,6 +43,12 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 	protected $prophet;
 
 
+	protected function assertPreConditions() {
+		if (!ExtensionManagementUtility::isLoaded('solr')) {
+			$this->markTestSkipped('EXT:solr is required for this test, but is not loaded.');
+		}
+	}
+
 	protected function setup() {
 		parent::setUp();
 		$this->prophet = new Prophet();
@@ -57,10 +63,6 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 	 * @test
 	 */
 	public function newInstancesAreInitializedWithASolrConnection() {
-		if (!ExtensionManagementUtility::isLoaded('solr')) {
-			$this->markTestSkipped('EXT:solr is required for this test, but is not loaded.');
-		}
-
 		$service = new SolrCellService($this->getConfiguration());
 		$this->assertAttributeInstanceOf('ApacheSolrForTypo3\\Solr\\SolrService', 'solr', $service);
 	}
