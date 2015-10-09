@@ -82,7 +82,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 		$file = new File(
 			array(
 				'identifier' => 'testWORD.doc',
-				'name' => 'testWORD.doc'
+				'name'       => 'testWORD.doc'
 			),
 			$this->documentsStorageMock
 		);
