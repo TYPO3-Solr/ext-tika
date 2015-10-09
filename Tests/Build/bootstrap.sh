@@ -38,8 +38,7 @@ else
 	composer require typo3/cms="$TYPO3_VERSION"
 fi
 
-#TODO install EXT:solr and Apache Solr to execute SolrCell specific tests
-#composer require apache-solr-for-typo3/solr=dev-master
+composer require apache-solr-for-typo3/solr=dev-master
 
 # Restore composer.json
 git checkout composer.json
