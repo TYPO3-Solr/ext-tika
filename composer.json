@@ -38,6 +38,9 @@
     "phpunit/phpunit": "~4.8.0",
     "phpspec/prophecy": "~1.0"
   },
+  "suggest": {
+    "apache-solr-for-typo3/solr": "~3.1"
+  },
   "autoload": {
     "psr-4": {
       "ApacheSolrForTypo3\\Tika\\": "Classes/"
