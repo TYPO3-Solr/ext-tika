@@ -24,14 +24,13 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use ApacheSolrForTypo3\Solrfile\ExtractingQuery;
+use ApacheSolrForTypo3\Solr\ExtractingQuery;
 
 
 /**
  * Specialized query for content extraction using Solr Cell
  *
  * @author Ingo Renner <ingo@typo3.org>
- * @package ApacheSolrForTypo3\Tika\Service
  */
 class SolrCellQuery extends ExtractingQuery {
 
