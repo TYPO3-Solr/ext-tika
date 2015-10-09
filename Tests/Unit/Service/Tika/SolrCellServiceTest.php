@@ -72,8 +72,8 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 		$expectedValue = 'extracted text element';
 		$solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
 		$solrMock->extract(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))->willReturn(array(
-			$expectedValue,
-			'meta data element'
+			$expectedValue,     // extracted text is index 0
+			'meta data element' // meta data is index 1
 		));
 
 		$service = new SolrCellService($this->getConfiguration());
