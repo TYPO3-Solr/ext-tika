@@ -77,7 +77,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 		));
 
 		$service = new SolrCellService($this->getConfiguration());
-		$service->setSolr($solrMock->reveal());
+		$this->inject($service, 'solr', $solrMock->reveal());
 
 		$file = new File(
 			array(
@@ -100,7 +100,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 			->shouldBeCalled();
 
 		$service = new SolrCellService($this->getConfiguration());
-		$service->setSolr($solrMock->reveal());
+		$this->inject($service, 'solr', $solrMock->reveal());
 
 		$file = new File(
 			array(
