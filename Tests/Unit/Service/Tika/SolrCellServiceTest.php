@@ -25,6 +25,9 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
+use Prophecy\Argument;
+use Prophecy\Prophet;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 
@@ -33,6 +36,22 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  *
  */
 class SolrCellServiceTest extends ServiceUnitTestCase {
+
+	/**
+	 * @var Prophet
+	 */
+	protected $prophet;
+
+
+	public function setup() {
+		parent::setUp();
+		$this->prophet = new Prophet;
+	}
+
+	public function tearDown() {
+		$this->prophet->checkPredictions();
+		parent::tearDown();
+	}
 
 	/**
 	 * @test
@@ -44,6 +63,32 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 
 		$service = new SolrCellService($this->getConfiguration());
 		$this->assertAttributeInstanceOf('ApacheSolrForTypo3\\Solr\\SolrService', 'solr', $service);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractTextReturnsTextElementFromResponse() {
+		$expectedValue = 'extracted text element';
+		$solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
+		$solrMock->extract(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))->willReturn(array(
+			$expectedValue,
+			'meta data element'
+		));
+
+		$service = new SolrCellService($this->getConfiguration());
+		$service->setSolr($solrMock->reveal());
+
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name' => 'testWORD.doc'
+			),
+			$this->documentsStorageMock
+		);
+
+		$actualValue = $service->extractText($file);
+		$this->assertEquals($expectedValue, $actualValue);
 	}
 
 }

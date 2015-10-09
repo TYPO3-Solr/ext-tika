@@ -66,6 +66,17 @@ class SolrCellService extends AbstractService {
 	}
 
 	/**
+	 * Setter for the Solr connection.
+	 * This method is not part of the public API, it is a unit/integration
+	 * test helper, only.
+	 *
+	 * @param \ApacheSolrForTypo3\Solr\SolrService $solr
+	 */
+	public function setSolr(SolrService $solr) {
+		$this->solr = $solr;
+	}
+
+	/**
 	 * Takes a file reference and extracts the text from it.
 	 *
 	 * @param \TYPO3\CMS\Core\Resource\File $file
