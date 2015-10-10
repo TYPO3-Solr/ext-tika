@@ -136,4 +136,30 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 		$serviceMock->extractText($file);
 	}
 
+	/**
+	 * @test
+	 */
+	public function extractMetaDataUsesSolrCellQuery() {
+		$solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
+		$solrMock->extract(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
+			->shouldBeCalled()
+			->willReturn(array(
+				'foo',       // extracted text is index 0
+				array('bar') // meta data is index 1
+			));
+
+		$service = new SolrCellService($this->getConfiguration());
+		$this->inject($service, 'solr', $solrMock->reveal());
+
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name'       => 'testWORD.doc'
+			),
+			$this->documentsStorageMock
+		);
+
+		$service->extractMetaData($file);
+	}
+
 }
