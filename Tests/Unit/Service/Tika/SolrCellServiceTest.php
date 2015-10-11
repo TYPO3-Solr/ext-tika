@@ -162,4 +162,25 @@ class SolrCellServiceTest extends ServiceUnitTestCase {
 		$service->extractMetaData($file);
 	}
 
+	/**
+	 * @test
+	 */
+	public function extractMetaDataCleansUpTempFile() {
+		$serviceMock = $this->getMockBuilder('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService')
+			->setConstructorArgs(array($this->getConfiguration()))
+			->setMethods(array('cleanupTempFile'))
+			->getMock();
+		$serviceMock->expects($this->once())->method('cleanupTempFile');
+
+		$file = new File(
+			array(
+				'identifier' => 'testWORD.doc',
+				'name'       => 'testWORD.doc'
+			),
+			$this->documentsStorageMock
+		);
+
+		$serviceMock->extractMetaData($file);
+	}
+
 }
