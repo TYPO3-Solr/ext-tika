@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+#
+# tika-server
+#
+# chkconfig: 2345 95 05
+# description: 	Start up the Tika Server
+
+### BEGIN INIT INFO
+# Provides:     tika-server
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Tika Server
+# Description: Tika Server basic start/shutdown script
+# processname: tika-server
+### END INIT INFO
+
+set -e
+
+test -n "$TIKA_PATH" || TIKA_PATH="/opt/tika"
+test -n "$TIKA_VERSION" || TIKA_VERSION="1.10"
+
+start() {
+	if [ -f ${TIKA_PATH}/tika_pid ]
+	then
+		echo "Found tika_pid file, Tika might be running already."
+		exit 1
+	else
+		echo "Starting Apache Tika Server"
+		java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 &
+		TIKA_PID=$!
+		echo ${TIKA_PID} > ${TIKA_PATH}/tika_pid
+		echo "Done, Tika pid: $TIKA_PID"
+	fi
+}
+
+stop() {
+	if [ -f ${TIKA_PATH}/tika_pid ]
+	then
+		TIKA_PID=`cat ${TIKA_PATH}/tika_pid`
+		echo "Stopping Tika ($TIKA_PID)"
+		kill ${TIKA_PID}
+		rm ${TIKA_PATH}/tika_pid
+	else
+		echo "Could not find Tika pid."
+		exit 1
+	fi
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		stop
+		sleep 5
+		start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
+
