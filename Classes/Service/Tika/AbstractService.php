@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
 
@@ -67,9 +67,9 @@ abstract class AbstractService implements ServiceInterface {
 	 * copies need to be removed when they're not needed anymore.
 	 *
 	 * @param string $localTempFilePath Path to the local file copy
-	 * @param \TYPO3\CMS\Core\Resource\File $sourceFile Original file
+	 * @param \TYPO3\CMS\Core\Resource\FileInterface $sourceFile Original file
 	 */
-	protected function cleanupTempFile($localTempFilePath, File $sourceFile) {
+	protected function cleanupTempFile($localTempFilePath, FileInterface $sourceFile) {
 		if (PathUtility::basename($localTempFilePath) !== $sourceFile->getName()) {
 			unlink($localTempFilePath);
 		}

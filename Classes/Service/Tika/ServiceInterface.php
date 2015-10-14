@@ -24,7 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\FileInterface;
 
 
 /**
@@ -45,26 +45,26 @@ interface ServiceInterface {
 	/**
 	 * Takes a file reference and extracts the text from it.
 	 *
-	 * @param \TYPO3\CMS\Core\Resource\File $file
+	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
 	 * @return string
 	 */
-	public function extractText(File $file);
+	public function extractText(FileInterface $file);
 
 	/**
 	 * Takes a file reference and extracts its meta data.
 	 *
-	 * @param \TYPO3\CMS\Core\Resource\File $file
+	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
 	 * @return array
 	 */
-	public function extractMetaData(File $file);
+	public function extractMetaData(FileInterface $file);
 
 	/**
 	 * Takes a file reference and detects its content's language.
 	 *
-	 * @param \TYPO3\CMS\Core\Resource\File $file
+	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
 	 * @return string Language ISO code
 	 */
-	public function detectLanguageFromFile(File $file);
+	public function detectLanguageFromFile(FileInterface $file);
 
 	/**
 	 * Takes a string as input and detects its language.

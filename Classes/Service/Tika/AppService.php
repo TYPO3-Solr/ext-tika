@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Utility\ShellUtility;
-use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -71,10 +71,10 @@ class AppService extends AbstractService {
 	/**
 	 * Takes a file reference and extracts the text from it.
 	 *
-	 * @param \TYPO3\CMS\Core\Resource\File $file
+	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
 	 * @return string
 	 */
-	public function extractText(File $file) {
+	public function extractText(FileInterface $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$tikaCommand = ShellUtility::getLanguagePrefix()
 			. CommandUtility::getCommand('java')
@@ -98,10 +98,10 @@ class AppService extends AbstractService {
 	/**
 	 * Takes a file reference and extracts its meta data.
 	 *
-	 * @param \TYPO3\CMS\Core\Resource\File $file
+	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
 	 * @return array
 	 */
-	public function extractMetaData(File $file) {
+	public function extractMetaData(FileInterface $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$tikaCommand = ShellUtility::getLanguagePrefix()
 			. CommandUtility::getCommand('java')
@@ -128,10 +128,10 @@ class AppService extends AbstractService {
 	/**
 	 * Takes a file reference and detects its content's language.
 	 *
-	 * @param \TYPO3\CMS\Core\Resource\File $file
+	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
 	 * @return string Language ISO code
 	 */
-	public function detectLanguageFromFile(File $file) {
+	public function detectLanguageFromFile(FileInterface $file) {
 		$localTempFilePath = $file->getForLocalProcessing(FALSE);
 		$language = $this->detectLanguageFromLocalFile($localTempFilePath);
 
