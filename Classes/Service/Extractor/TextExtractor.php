@@ -24,6 +24,10 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+if (version_compare(TYPO3_branch, '7.2', '<')) {
+	include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tika') . 'Resources/Php/TextExtractorInterface.php');
+}
+
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorInterface;
