@@ -18,6 +18,7 @@
 		* SolrCellService
 * Change AppService to use Process class like ServerService
 * Add configuration check in EXT:reports/EXT:solr backend module
+* current status report check fails when using an already running Tika Server 
 
 
 ## Apache Tika

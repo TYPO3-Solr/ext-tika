@@ -44,6 +44,7 @@ class TextExtractor implements TextExtractorInterface {
 
 	/**
 	 * Supported file types (by extension)
+	 * @TODO query Tika for supported extensions
 	 *
 	 * @var array
 	 */
