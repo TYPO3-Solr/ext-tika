@@ -25,21 +25,23 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 
-class AbstractServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class AbstractServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+{
 
-	/**
-	 * @test
-	 */
-	public function constructorCallsInitializeService() {
-		$service = $this->getMockBuilder('\ApacheSolrForTypo3\Tika\Service\Tika\AbstractService')
-			->setMethods(array('initializeService'))
-			->disableOriginalConstructor()
-			->getMockForAbstractClass();
+    /**
+     * @test
+     */
+    public function constructorCallsInitializeService()
+    {
+        $service = $this->getMockBuilder('\ApacheSolrForTypo3\Tika\Service\Tika\AbstractService')
+            ->setMethods(array('initializeService'))
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
 
-		$service->expects($this->once())
-			->method('initializeService');
+        $service->expects($this->once())
+            ->method('initializeService');
 
-		$service->__construct(array());
-	}
+        $service->__construct(array());
+    }
 
 }

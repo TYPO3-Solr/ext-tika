@@ -8,10 +8,11 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
  * @param $command
  * @param array $output
  */
-function exec($command, array &$output = array()) {
-	$output = ExecRecorder::$execOutput[ExecRecorder::$execCalled];
-	ExecRecorder::$execCalled++;
-	ExecRecorder::$execCommand = $command;
+function exec($command, array &$output = array())
+{
+    $output = ExecRecorder::$execOutput[ExecRecorder::$execCalled];
+    ExecRecorder::$execCalled++;
+    ExecRecorder::$execCommand = $command;
 }
 
 /**
@@ -20,10 +21,11 @@ function exec($command, array &$output = array()) {
  * @param $command
  * @return string
  */
-function shell_exec($command) {
-	$output = ExecRecorder::$execOutput[ExecRecorder::$execCalled];
-	ExecRecorder::$execCalled++;
-	ExecRecorder::$execCommand = $command;
+function shell_exec($command)
+{
+    $output = ExecRecorder::$execOutput[ExecRecorder::$execCalled];
+    ExecRecorder::$execCalled++;
+    ExecRecorder::$execCommand = $command;
 
-	return $output;
+    return $output;
 }

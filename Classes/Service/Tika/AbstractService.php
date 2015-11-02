@@ -24,8 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
 
@@ -34,61 +34,69 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  *
  * @package ApacheSolrForTypo3\Tika\Service
  */
-abstract class AbstractService implements ServiceInterface {
+abstract class AbstractService implements ServiceInterface
+{
 
-	/**
-	 * @var array
-	 */
-	protected $configuration;
+    /**
+     * @var array
+     */
+    protected $configuration;
 
 
-	/**
-	 * Constructor
-	 *
-	 * @param array $configuration
-	 */
-	public function __construct(array $configuration) {
-		$this->configuration = $configuration;
-		$this->initializeService();
-	}
+    /**
+     * Constructor
+     *
+     * @param array $configuration
+     */
+    public function __construct(array $configuration)
+    {
+        $this->configuration = $configuration;
+        $this->initializeService();
+    }
 
-	/**
-	 * Service initialization
-	 *
-	 * @return void
-	 */
-	protected function initializeService() {}
+    /**
+     * Service initialization
+     *
+     * @return void
+     */
+    protected function initializeService()
+    {
+    }
 
-	/**
-	 * Removes a temporary file.
-	 *
-	 * When working with a file, the actual file might be on a remote storage.
-	 * To work with it it gets copied to local storage, those temporary local
-	 * copies need to be removed when they're not needed anymore.
-	 *
-	 * @param string $localTempFilePath Path to the local file copy
-	 * @param \TYPO3\CMS\Core\Resource\FileInterface $sourceFile Original file
-	 */
-	protected function cleanupTempFile($localTempFilePath, FileInterface $sourceFile) {
-		if (PathUtility::basename($localTempFilePath) !== $sourceFile->getName()) {
-			unlink($localTempFilePath);
-		}
-	}
+    /**
+     * Removes a temporary file.
+     *
+     * When working with a file, the actual file might be on a remote storage.
+     * To work with it it gets copied to local storage, those temporary local
+     * copies need to be removed when they're not needed anymore.
+     *
+     * @param string $localTempFilePath Path to the local file copy
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $sourceFile Original file
+     */
+    protected function cleanupTempFile(
+        $localTempFilePath,
+        FileInterface $sourceFile
+    ) {
+        if (PathUtility::basename($localTempFilePath) !== $sourceFile->getName()) {
+            unlink($localTempFilePath);
+        }
+    }
 
-	/**
-	 * Logs a message and optionally data to devlog
-	 *
-	 * @param string $message Log message
-	 * @param array $data Optional data
-	 * @return void
-	 */
-	protected function log($message, array $data = array()) {
-		// TODO refactor to have logger injected
-		if (!$this->configuration['logging']) {
-			return;
-		}
+    /**
+     * Logs a message and optionally data to devlog
+     *
+     * @param string $message Log message
+     * @param array $data Optional data
+     * @return void
+     */
+    protected function log($message, array $data = array())
+    {
+        // TODO refactor to have logger injected
+        if (!$this->configuration['logging']) {
+            return;
+        }
 
-		GeneralUtility::devLog($message, 'tika', 0, $data);
-	}
+        GeneralUtility::devLog($message, 'tika', 0, $data);
+    }
 
 }

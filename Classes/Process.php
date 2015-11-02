@@ -1,28 +1,28 @@
 <?php
 namespace ApacheSolrForTypo3\Tika;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2015 Ingo Renner <ingo@typo3.org>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+    /***************************************************************
+     *  Copyright notice
+     *
+     *  (c) 2015 Ingo Renner <ingo@typo3.org>
+     *  All rights reserved
+     *
+     *  This script is part of the TYPO3 project. The TYPO3 project is
+     *  free software; you can redistribute it and/or modify
+     *  it under the terms of the GNU General Public License as published by
+     *  the Free Software Foundation; either version 2 of the License, or
+     *  (at your option) any later version.
+     *
+     *  The GNU General Public License can be found at
+     *  http://www.gnu.org/copyleft/gpl.html.
+     *
+     *  This script is distributed in the hope that it will be useful,
+     *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+     *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     *  GNU General Public License for more details.
+     *
+     *  This copyright notice MUST APPEAR in all copies of the script!
+     ***************************************************************/
 
 
 /**
@@ -30,207 +30,220 @@ namespace ApacheSolrForTypo3\Tika;
  *
  * @package ApacheSolrForTypo3\Tika
  */
-class Process {
+class Process
+{
 
-	/**
-	 * Process ID
-	 *
-	 * @var integer|NULL
-	 */
-	protected $pid = NULL;
+    /**
+     * Process ID
+     *
+     * @var integer|NULL
+     */
+    protected $pid = null;
 
-	/**
-	 * Executable running the command
-	 *
-	 * @var string
-	 */
-	protected $executable;
+    /**
+     * Executable running the command
+     *
+     * @var string
+     */
+    protected $executable;
 
-	/**
-	 * Executable arguments
-	 *
-	 * @var string
-	 */
-	protected $arguments;
+    /**
+     * Executable arguments
+     *
+     * @var string
+     */
+    protected $arguments;
 
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $executable
-	 * @param string $arguments
-	 */
-	public function __construct($executable, $arguments = '') {
-		$this->executable = $executable;
-		$this->arguments  = $arguments;
-	}
+    /**
+     * Constructor
+     *
+     * @param string $executable
+     * @param string $arguments
+     */
+    public function __construct($executable, $arguments = '')
+    {
+        $this->executable = $executable;
+        $this->arguments = $arguments;
+    }
 
-	/**
-	 * Arguments setter
-	 *
-	 * @param $arguments
-	 */
-	public function setArguments($arguments) {
-		$this->arguments = $arguments;
-	}
+    /**
+     * Arguments getter
+     *
+     * @return string
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
 
-	/**
-	 * Arguments getter
-	 *
-	 * @return string
-	 */
-	public function getArguments() {
-		return$this->arguments;
-	}
+    /**
+     * Arguments setter
+     *
+     * @param $arguments
+     */
+    public function setArguments($arguments)
+    {
+        $this->arguments = $arguments;
+    }
 
-	/**
-	 * Gets the process executable
-	 *
-	 * @return string
-	 */
-	public function getExecutable() {
-		return $this->executable;
-	}
+    /**
+     * Gets the process executable
+     *
+     * @return string
+     */
+    public function getExecutable()
+    {
+        return $this->executable;
+    }
 
-	/**
-	 * Executes the command
-	 *
-	 * @return void
-	 */
-	protected function runCommand() {
-		$command = 'nohup ' . $this->executable;
-		if (!empty($this->arguments)) {
-			$command .= ' ' . $this->arguments;
-		}
-		$command .= ' > /dev/null 2>&1 & echo $!';
+    /**
+     * Gets the process ID
+     *
+     * @return int process ID
+     */
+    public function getPid()
+    {
+        return $this->pid;
+    }
 
-		$output = array();
-		exec($command, $output);
+    /**
+     * Sets the process ID
+     *
+     * @param integer $pid
+     * @return void
+     */
+    public function setPid($pid)
+    {
+        $this->pid = (int)$pid;
+    }
 
-		$this->pid = (int) $output[0];
-	}
+    /**
+     * Tries to find the process' pid using ps
+     *
+     * @return int|null Null if the pid can't be found, otherwise the pid
+     */
+    public function findPid()
+    {
+        $processCommand = $this->executable;
+        if (!empty($this->arguments)) {
+            $processCommand .= ' ' . $this->arguments;
+        }
 
-	/**
-	 * Sets the process ID
-	 *
-	 * @param integer $pid
-	 * @return void
-	 */
-	public function setPid($pid) {
-		$this->pid = (int) $pid;
-	}
+        $ps = 'ps h --format pid,args -C ' . basename($this->executable);
+        $output = array();
+        exec($ps, $output);
 
-	/**
-	 * Gets the process ID
-	 *
-	 * @return int process ID
-	 */
-	public function getPid() {
-		return $this->pid;
-	}
+        foreach ($output as $line) {
+            list($pid, $command) = explode(' ', trim($line), 2);
+            $command = $this->escapePsOutputCommand($command);
+            if ($command == $processCommand) {
+                return (int)$pid;
+            }
+        }
 
-	/**
-	 * Tries to find the process' pid using ps
-	 *
-	 * @return int|null Null if the pid can't be found, otherwise the pid
-	 */
-	public function findPid() {
-		$processCommand = $this->executable;
-		if (!empty($this->arguments)) {
-			$processCommand .= ' ' . $this->arguments;
-		}
+        return null;
+    }
 
-		$ps = 'ps h --format pid,args -C ' . basename($this->executable);
-		$output = array();
-		exec($ps, $output);
+    /**
+     * Escapes 'ps' command output to match what we expect to get as arguments
+     * when executing a command.
+     *
+     * @param $command
+     * @return string
+     */
+    protected function escapePsOutputCommand($command)
+    {
+        $command = explode(' ', $command);
 
-		foreach ($output as $line) {
-			list($pid, $command) = explode(' ', trim($line), 2);
-			$command = $this->escapePsOutputCommand($command);
-			if ($command == $processCommand) {
-				return (int)$pid;
-			}
-		}
+        foreach ($command as $k => $v) {
+            if ($k == 0) {
+                // skip the executable
+                continue;
+            }
 
-		return null;
-	}
+            if ($v[0] != '-') {
+                $command[$k] = escapeshellarg($v);
+            }
+        }
 
-	/**
-	 * Checks whether the process is running
-	 *
-	 * @return bool TRUE if the process is running, FALSE otherwise
-	 */
-	public function isRunning() {
-		if (is_null($this->pid)) {
-			return FALSE;
-		}
+        return implode(' ', $command);
+    }
 
-		$running = FALSE;
-		$output  = array();
+    /**
+     * Starts the process.
+     *
+     * @return bool TRUE if the process could be started, FALSE otherwise
+     */
+    public function start()
+    {
+        $this->runCommand();
+        $status = $this->isRunning();
 
-		$command = 'ps h -p ' . $this->pid;
-		exec($command, $output);
+        return $status;
+    }
 
-		if (!empty($output)) {
-			$running = TRUE;
-		}
+    /**
+     * Executes the command
+     *
+     * @return void
+     */
+    protected function runCommand()
+    {
+        $command = 'nohup ' . $this->executable;
+        if (!empty($this->arguments)) {
+            $command .= ' ' . $this->arguments;
+        }
+        $command .= ' > /dev/null 2>&1 & echo $!';
 
-		return $running;
-	}
+        $output = array();
+        exec($command, $output);
 
-	/**
-	 * Starts the process.
-	 *
-	 * @return bool TRUE if the process could be started, FALSE otherwise
-	 */
-	public function start() {
-		$this->runCommand();
-		$status = $this->isRunning();
+        $this->pid = (int)$output[0];
+    }
 
-		return $status;
-	}
+    /**
+     * Checks whether the process is running
+     *
+     * @return bool TRUE if the process is running, FALSE otherwise
+     */
+    public function isRunning()
+    {
+        if (is_null($this->pid)) {
+            return false;
+        }
 
-	/**
-	 * Stops the process
-	 *
-	 * @return bool
-	 */
-	public function stop() {
-		$stopped = NULL;
+        $running = false;
+        $output = array();
 
-		$command = 'kill ' . $this->pid;
-		exec($command);
+        $command = 'ps h -p ' . $this->pid;
+        exec($command, $output);
 
-		if ($this->isRunning() == FALSE) {
-			$stopped = TRUE;
-		} else {
-			$stopped = FALSE;
-		}
+        if (!empty($output)) {
+            $running = true;
+        }
 
-		return $stopped;
-	}
+        return $running;
+    }
 
-	/**
-	 * Escapes 'ps' command output to match what we expect to get as arguments
-	 * when executing a command.
-	 *
-	 * @param $command
-	 * @return string
-	 */
-	protected function escapePsOutputCommand($command) {
-		$command = explode(' ', $command);
+    /**
+     * Stops the process
+     *
+     * @return bool
+     */
+    public function stop()
+    {
+        $stopped = null;
 
-		foreach ($command as $k => $v) {
-			if ($k == 0) {
-				// skip the executable
-				continue;
-			}
+        $command = 'kill ' . $this->pid;
+        exec($command);
 
-			if ($v[0] != '-') {
-				$command[$k] = escapeshellarg($v);
-			}
-		}
+        if ($this->isRunning() == false) {
+            $stopped = true;
+        } else {
+            $stopped = false;
+        }
 
-		return implode(' ', $command);
-	}
+        return $stopped;
+    }
 }

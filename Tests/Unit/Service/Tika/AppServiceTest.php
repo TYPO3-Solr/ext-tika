@@ -33,85 +33,92 @@ use TYPO3\CMS\Core\Resource\File;
  * Test case for class AppService
  *
  */
-class AppServiceTest extends ServiceUnitTestCase {
+class AppServiceTest extends ServiceUnitTestCase
+{
 
-	protected function setUp() {
-		parent::setUp();
-		ExecRecorder::reset();
-	}
+    protected function setUp()
+    {
+        parent::setUp();
+        ExecRecorder::reset();
+    }
 
-	/**
-	 * @test
-	 */
-	public function getTikaVersionUsesVParameter() {
-		$service = new AppService($this->getConfiguration());
-		$service->getTikaVersion();
+    /**
+     * @test
+     */
+    public function getTikaVersionUsesVParameter()
+    {
+        $service = new AppService($this->getConfiguration());
+        $service->getTikaVersion();
 
-		$this->assertContains('-V', ExecRecorder::$execCommand);
-	}
+        $this->assertContains('-V', ExecRecorder::$execCommand);
+    }
 
-	/**
-	 * @test
-	 */
-	public function extractTextUsesTParameter() {
-		$file = new File(
-			array(
-				'identifier' => 'testWORD.doc',
-				'name' => 'testWORD.doc'
-			),
-			$this->documentsStorageMock
-		);
+    /**
+     * @test
+     */
+    public function extractTextUsesTParameter()
+    {
+        $file = new File(
+            array(
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ),
+            $this->documentsStorageMock
+        );
 
-		$service = new AppService($this->getConfiguration());
-		$service->extractText($file);
+        $service = new AppService($this->getConfiguration());
+        $service->extractText($file);
 
-		$this->assertContains('-t', ExecRecorder::$execCommand);
-	}
+        $this->assertContains('-t', ExecRecorder::$execCommand);
+    }
 
-	/**
-	 * @test
-	 */
-	public function extractMetaDataUsesMParameter() {
-		ExecRecorder::setReturnExecOutput(array('foo'));
-		$file = new File(
-			array(
-				'identifier' => 'testWORD.doc',
-				'name' => 'testWORD.doc'
-			),
-			$this->documentsStorageMock
-		);
+    /**
+     * @test
+     */
+    public function extractMetaDataUsesMParameter()
+    {
+        ExecRecorder::setReturnExecOutput(array('foo'));
+        $file = new File(
+            array(
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ),
+            $this->documentsStorageMock
+        );
 
-		$service = new AppService($this->getConfiguration());
-		$service->extractMetaData($file);
+        $service = new AppService($this->getConfiguration());
+        $service->extractMetaData($file);
 
-		$this->assertContains('-m', ExecRecorder::$execCommand);
-	}
+        $this->assertContains('-m', ExecRecorder::$execCommand);
+    }
 
-	/**
-	 * @test
-	 */
-	public function detectLanguageFromFileUsesLParameter() {
-		$file = new File(
-			array(
-				'identifier' => 'testWORD.doc',
-				'name' => 'testWORD.doc'
-			),
-			$this->documentsStorageMock
-		);
+    /**
+     * @test
+     */
+    public function detectLanguageFromFileUsesLParameter()
+    {
+        $file = new File(
+            array(
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ),
+            $this->documentsStorageMock
+        );
 
-		$service = new AppService($this->getConfiguration());
-		$service->detectLanguageFromFile($file);
+        $service = new AppService($this->getConfiguration());
+        $service->detectLanguageFromFile($file);
 
-		$this->assertContains('-l', ExecRecorder::$execCommand);
-	}
+        $this->assertContains('-l', ExecRecorder::$execCommand);
+    }
 
-	/**
-	 * @test
-	 */
-	public function detectLanguageFromStringUsesLParameter() {
-		$service = new AppService($this->getConfiguration());
-		$service->detectLanguageFromString('foo');
+    /**
+     * @test
+     */
+    public function detectLanguageFromStringUsesLParameter()
+    {
+        $service = new AppService($this->getConfiguration());
+        $service->detectLanguageFromString('foo');
 
-		$this->assertContains('-l', ExecRecorder::$execCommand);
-	}
+        $this->assertContains('-l', ExecRecorder::$execCommand);
+    }
 }

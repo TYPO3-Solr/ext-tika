@@ -33,45 +33,46 @@ use TYPO3\CMS\Core\Resource\FileInterface;
  *
  * @package ApacheSolrForTypo3\Tika\Service
  */
-interface ServiceInterface {
+interface ServiceInterface
+{
 
-	/**
-	 * Gets the Tika version
-	 *
-	 * @return string
-	 */
-	public function getTikaVersion();
+    /**
+     * Gets the Tika version
+     *
+     * @return string
+     */
+    public function getTikaVersion();
 
-	/**
-	 * Takes a file reference and extracts the text from it.
-	 *
-	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
-	 * @return string
-	 */
-	public function extractText(FileInterface $file);
+    /**
+     * Takes a file reference and extracts the text from it.
+     *
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @return string
+     */
+    public function extractText(FileInterface $file);
 
-	/**
-	 * Takes a file reference and extracts its meta data.
-	 *
-	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
-	 * @return array
-	 */
-	public function extractMetaData(FileInterface $file);
+    /**
+     * Takes a file reference and extracts its meta data.
+     *
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @return array
+     */
+    public function extractMetaData(FileInterface $file);
 
-	/**
-	 * Takes a file reference and detects its content's language.
-	 *
-	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
-	 * @return string Language ISO code
-	 */
-	public function detectLanguageFromFile(FileInterface $file);
+    /**
+     * Takes a file reference and detects its content's language.
+     *
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @return string Language ISO code
+     */
+    public function detectLanguageFromFile(FileInterface $file);
 
-	/**
-	 * Takes a string as input and detects its language.
-	 *
-	 * @param string $input
-	 * @return string Language ISO code
-	 */
-	public function detectLanguageFromString($input);
+    /**
+     * Takes a string as input and detects its language.
+     *
+     * @param string $input
+     * @return string Language ISO code
+     */
+    public function detectLanguageFromString($input);
 
 }

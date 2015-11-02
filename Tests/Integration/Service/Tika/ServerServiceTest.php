@@ -36,279 +36,302 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class ServerServiceTest
  *
  */
-class ServerServiceTest extends UnitTestCase {
+class ServerServiceTest extends UnitTestCase
+{
 
-	/**
-	 * @var array A backup of registered singleton instances
-	 */
-	protected $singletonInstances = array();
+    /**
+     * @var array A backup of registered singleton instances
+     */
+    protected $singletonInstances = array();
 
-	/**
-	 * @var string
-	 */
-	protected $testDocumentsPath;
+    /**
+     * @var string
+     */
+    protected $testDocumentsPath;
 
-	/**
-	 * @var string
-	 */
-	protected $testLanguagesPath;
+    /**
+     * @var string
+     */
+    protected $testLanguagesPath;
 
-	/**
-	 * @var ResourceStorage
-	 */
-	protected $documentsStorageMock;
+    /**
+     * @var ResourceStorage
+     */
+    protected $documentsStorageMock;
 
-	/**
-	 * @var ResourceStorage
-	 */
-	protected $languagesStorageMock;
+    /**
+     * @var ResourceStorage
+     */
+    protected $languagesStorageMock;
 
-	/**
-	 * @var int
-	 */
-	protected $documentsStorageUid = 9000;
+    /**
+     * @var int
+     */
+    protected $documentsStorageUid = 9000;
 
-	/**
-	 * @var int
-	 */
-	protected $languagesStorageUid = 9001;
-
-
-	public function setUp() {
-		$this->singletonInstances = GeneralUtility::getSingletonInstances();
-
-		// Disable xml2array cache used by ResourceFactory
-		GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(array(
-			'cache_hash' => array(
-				'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
-				'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
-			)
-		));
-
-		$this->setUpDocumentsStorageMock();
-		$this->setUpLanguagesStorageMock();
-
-		$mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
-		$mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
-		GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository', $mockedMetaDataRepository);
-	}
-
-	protected function setUpDocumentsStorageMock() {
-		$this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
-			. 'Tests/TestDocuments/';
-
-		$documentsDriver = $this->createDriverFixture(array(
-			'basePath' => $this->testDocumentsPath,
-			'caseSensitive' => TRUE
-		));
-
-		$documentsStorageRecord = array(
-			'uid' => $this->documentsStorageUid,
-			'is_public' => TRUE,
-			'is_writable' => FALSE,
-			'is_browsable' => TRUE,
-			'is_online' => TRUE,
-			'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
-				'basePath' => $this->testDocumentsPath,
-				'pathType' => 'absolute',
-				'caseSensitive' => '1'
-			))
-		);
-
-		$this->documentsStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage', NULL, array($documentsDriver, $documentsStorageRecord));
-		$this->documentsStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->documentsStorageUid));
-	}
-
-	protected function setUpLanguagesStorageMock() {
-		$this->testLanguagesPath = ExtensionManagementUtility::extPath('tika')
-			. 'Tests/TestLanguages/';
-
-		$languagesDriver = $this->createDriverFixture(array(
-			'basePath' => $this->testLanguagesPath,
-			'caseSensitive' => TRUE
-		));
-
-		$languagesStorageRecord = array(
-			'uid' => $this->languagesStorageUid,
-			'is_public' => TRUE,
-			'is_writable' => FALSE,
-			'is_browsable' => TRUE,
-			'is_online' => TRUE,
-			'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
-				'basePath' => $this->testLanguagesPath,
-				'pathType' => 'absolute',
-				'caseSensitive' => '1'
-			))
-		);
-
-		$this->languagesStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage', NULL, array($languagesDriver, $languagesStorageRecord));
-		$this->languagesStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->languagesStorageUid));
-	}
-
-	public function tearDown() {
-		GeneralUtility::resetSingletonInstances($this->singletonInstances);
-		parent::tearDown();
-	}
-
-	/**
-	 * Creates a driver fixture object.
-	 *
-	 * @param array $driverConfiguration
-	 * @param array $mockedDriverMethods
-	 * @return \TYPO3\CMS\Core\Resource\Driver\LocalDriver
-	 */
-	protected function createDriverFixture(array $driverConfiguration = array(), $mockedDriverMethods = array()) {
-		/** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
-		$mockedDriverMethods[] = 'isPathValid';
-		$driver = $this->getAccessibleMock('TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver', $mockedDriverMethods, array($driverConfiguration));
-		$driver->expects($this->any())
-			->method('isPathValid')
-			->will(
-				$this->returnValue(TRUE)
-			);
-
-		$driver->setStorageUid($this->documentsStorageUid);
-		$driver->processConfiguration();
-		$driver->initialize();
-		return $driver;
-	}
-
-	/**
-	 * Converts a simple configuration array into a FlexForm data structure serialized as XML
-	 *
-	 * @param array $configuration
-	 * @return string
-	 * @see \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml()
-	 */
-	protected function convertConfigurationArrayToFlexformXml(array $configuration) {
-		$flexformArray = array('data' => array('sDEF' => array('lDEF' => array())));
-		foreach ($configuration as $key => $value) {
-			$flexformArray['data']['sDEF']['lDEF'][$key] = array('vDEF' => $value);
-		}
-		$configuration = GeneralUtility::array2xml($flexformArray);
-		return $configuration;
-	}
-
-	/**
-	 * Creates Tika Server connection configuration pointing to
-	 * http://localhost:9998
-	 *
-	 * @return array
-	 */
-	protected function getTikaServerConfiguration() {
-		return array(
-			'tikaServerHost' => 'localhost',
-			'tikaServerPort' => '9998'
-		);
-	}
+    /**
+     * @var int
+     */
+    protected $languagesStorageUid = 9001;
 
 
-	/**
-	 * @test
-	 */
-	public function extractsMetaDataFromDocFile() {
-		$service = new ServerService($this->getTikaServerConfiguration());
+    public function setUp()
+    {
+        $this->singletonInstances = GeneralUtility::getSingletonInstances();
 
-		$file = new File(
-			array(
-				'identifier' => 'testWORD.doc',
-				'name'       => 'testWORD.doc'
-			),
-			$this->documentsStorageMock
-		);
+        // Disable xml2array cache used by ResourceFactory
+        GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(array(
+            'cache_hash' => array(
+                'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
+                'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
+            )
+        ));
 
-		$metaData = $service->extractMetaData($file);
+        $this->setUpDocumentsStorageMock();
+        $this->setUpLanguagesStorageMock();
 
-		$this->assertEquals('application/msword', $metaData['Content-Type']);
-		$this->assertEquals('Microsoft Word 10.1', $metaData['Application-Name']);
-		$this->assertEquals('Keith Bennett', $metaData['Author']);
-		$this->assertEquals('-', $metaData['Company']);
-		$this->assertEquals('2007-09-12T20:31:00Z', $metaData['Creation-Date']);
-		$this->assertArrayHasKey('Keywords', $metaData); // no keywords filled out in test file
-		$this->assertEquals('Keith Bennett', $metaData['Last-Author']);
-		$this->assertEquals('2007-09-12T20:38:00Z', $metaData['Last-Save-Date']);
-		$this->assertEquals('1', $metaData['Page-Count']);
-		$this->assertEquals('1', $metaData['Revision-Number']);
-		$this->assertEquals('Normal', $metaData['Template']);
-		$this->assertEquals('Sample Word Document', $metaData['title']);
-	}
+        $mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
+        $mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
+        GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository',
+            $mockedMetaDataRepository);
+    }
 
-	/**
-	 * @test
-	 */
-	public function extractsTextFromDocFile() {
-		$service = new ServerService($this->getTikaServerConfiguration());
+    protected function setUpDocumentsStorageMock()
+    {
+        $this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
+            . 'Tests/TestDocuments/';
 
-		$file = new File(
-			array(
-				'identifier' => 'testWORD.doc',
-				'name'       => 'testWORD.doc'
-			),
-			$this->documentsStorageMock
-		);
+        $documentsDriver = $this->createDriverFixture(array(
+            'basePath' => $this->testDocumentsPath,
+            'caseSensitive' => true
+        ));
 
-		$expectedText  = 'Sample Word Document';
-		$extractedText = $service->extractText($file);
+        $documentsStorageRecord = array(
+            'uid' => $this->documentsStorageUid,
+            'is_public' => true,
+            'is_writable' => false,
+            'is_browsable' => true,
+            'is_online' => true,
+            'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
+                'basePath' => $this->testDocumentsPath,
+                'pathType' => 'absolute',
+                'caseSensitive' => '1'
+            ))
+        );
 
-		$this->assertContains($expectedText, $extractedText);
-	}
+        $this->documentsStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage',
+            null, array($documentsDriver, $documentsStorageRecord));
+        $this->documentsStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->documentsStorageUid));
+    }
 
-	/**
-	 * Data provider fro detectsLanguageFromFile
-	 *
-	 * @return array
-	 */
-	public function languageFileDataProvider() {
-		return array(
-			'danish'     => array('da'),
-			'german'     => array('de'),
-			'greek'      => array('el'),
-			'english'    => array('en'),
-			'spanish'    => array('es'),
-			'estonian'   => array('et'),
-			'finish'     => array('fi'),
-			'french'     => array('fr'),
-			'italian'    => array('it'),
-			'lithuanian' => array('lt'),
-			'dutch'      => array('nl'),
-			'portuguese' => array('pt'),
-			'swedish'    => array('sv')
-		);
-	}
+    protected function setUpLanguagesStorageMock()
+    {
+        $this->testLanguagesPath = ExtensionManagementUtility::extPath('tika')
+            . 'Tests/TestLanguages/';
 
-	/**
-	 * @test
-	 * @dataProvider languageFileDataProvider
-	 */
-	public function detectsLanguageFromFile($language) {
-		$service = new ServerService($this->getTikaServerConfiguration());
+        $languagesDriver = $this->createDriverFixture(array(
+            'basePath' => $this->testLanguagesPath,
+            'caseSensitive' => true
+        ));
 
-		$file = new File(
-			array(
-				'identifier' => $language . '.test',
-				'name'       => $language . '.test'
-			),
-			$this->languagesStorageMock
-		);
+        $languagesStorageRecord = array(
+            'uid' => $this->languagesStorageUid,
+            'is_public' => true,
+            'is_writable' => false,
+            'is_browsable' => true,
+            'is_online' => true,
+            'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
+                'basePath' => $this->testLanguagesPath,
+                'pathType' => 'absolute',
+                'caseSensitive' => '1'
+            ))
+        );
 
-		$detectedLanguage = $service->detectLanguageFromFile($file);
+        $this->languagesStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage',
+            null, array($languagesDriver, $languagesStorageRecord));
+        $this->languagesStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->languagesStorageUid));
+    }
 
-		$this->assertSame($language, $detectedLanguage);
-	}
+    public function tearDown()
+    {
+        GeneralUtility::resetSingletonInstances($this->singletonInstances);
+        parent::tearDown();
+    }
 
-	/**
-	 * @test
-	 * @dataProvider languageFileDataProvider
-	 */
-	public function detectsLanguageFromString($language) {
-		$service = new ServerService($this->getTikaServerConfiguration());
+    /**
+     * Creates a driver fixture object.
+     *
+     * @param array $driverConfiguration
+     * @param array $mockedDriverMethods
+     * @return \TYPO3\CMS\Core\Resource\Driver\LocalDriver
+     */
+    protected function createDriverFixture(
+        array $driverConfiguration = array(),
+        $mockedDriverMethods = array()
+    ) {
+        /** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
+        $mockedDriverMethods[] = 'isPathValid';
+        $driver = $this->getAccessibleMock('TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver',
+            $mockedDriverMethods, array($driverConfiguration));
+        $driver->expects($this->any())
+            ->method('isPathValid')
+            ->will(
+                $this->returnValue(true)
+            );
 
-		$file = $this->testLanguagesPath . $language . '.test';
-		$languageString = file_get_contents($file);
+        $driver->setStorageUid($this->documentsStorageUid);
+        $driver->processConfiguration();
+        $driver->initialize();
+        return $driver;
+    }
 
-		$detectedLanguage = $service->detectLanguageFromString($languageString);
+    /**
+     * Converts a simple configuration array into a FlexForm data structure serialized as XML
+     *
+     * @param array $configuration
+     * @return string
+     * @see \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml()
+     */
+    protected function convertConfigurationArrayToFlexformXml(
+        array $configuration
+    ) {
+        $flexformArray = array('data' => array('sDEF' => array('lDEF' => array())));
+        foreach ($configuration as $key => $value) {
+            $flexformArray['data']['sDEF']['lDEF'][$key] = array('vDEF' => $value);
+        }
+        $configuration = GeneralUtility::array2xml($flexformArray);
+        return $configuration;
+    }
 
-		$this->assertSame($language, $detectedLanguage);
-	}
+    /**
+     * Creates Tika Server connection configuration pointing to
+     * http://localhost:9998
+     *
+     * @return array
+     */
+    protected function getTikaServerConfiguration()
+    {
+        return array(
+            'tikaServerHost' => 'localhost',
+            'tikaServerPort' => '9998'
+        );
+    }
+
+
+    /**
+     * @test
+     */
+    public function extractsMetaDataFromDocFile()
+    {
+        $service = new ServerService($this->getTikaServerConfiguration());
+
+        $file = new File(
+            array(
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ),
+            $this->documentsStorageMock
+        );
+
+        $metaData = $service->extractMetaData($file);
+
+        $this->assertEquals('application/msword', $metaData['Content-Type']);
+        $this->assertEquals('Microsoft Word 10.1',
+            $metaData['Application-Name']);
+        $this->assertEquals('Keith Bennett', $metaData['Author']);
+        $this->assertEquals('-', $metaData['Company']);
+        $this->assertEquals('2007-09-12T20:31:00Z', $metaData['Creation-Date']);
+        $this->assertArrayHasKey('Keywords',
+            $metaData); // no keywords filled out in test file
+        $this->assertEquals('Keith Bennett', $metaData['Last-Author']);
+        $this->assertEquals('2007-09-12T20:38:00Z',
+            $metaData['Last-Save-Date']);
+        $this->assertEquals('1', $metaData['Page-Count']);
+        $this->assertEquals('1', $metaData['Revision-Number']);
+        $this->assertEquals('Normal', $metaData['Template']);
+        $this->assertEquals('Sample Word Document', $metaData['title']);
+    }
+
+    /**
+     * @test
+     */
+    public function extractsTextFromDocFile()
+    {
+        $service = new ServerService($this->getTikaServerConfiguration());
+
+        $file = new File(
+            array(
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ),
+            $this->documentsStorageMock
+        );
+
+        $expectedText = 'Sample Word Document';
+        $extractedText = $service->extractText($file);
+
+        $this->assertContains($expectedText, $extractedText);
+    }
+
+    /**
+     * Data provider fro detectsLanguageFromFile
+     *
+     * @return array
+     */
+    public function languageFileDataProvider()
+    {
+        return array(
+            'danish' => array('da'),
+            'german' => array('de'),
+            'greek' => array('el'),
+            'english' => array('en'),
+            'spanish' => array('es'),
+            'estonian' => array('et'),
+            'finish' => array('fi'),
+            'french' => array('fr'),
+            'italian' => array('it'),
+            'lithuanian' => array('lt'),
+            'dutch' => array('nl'),
+            'portuguese' => array('pt'),
+            'swedish' => array('sv')
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider languageFileDataProvider
+     */
+    public function detectsLanguageFromFile($language)
+    {
+        $service = new ServerService($this->getTikaServerConfiguration());
+
+        $file = new File(
+            array(
+                'identifier' => $language . '.test',
+                'name' => $language . '.test'
+            ),
+            $this->languagesStorageMock
+        );
+
+        $detectedLanguage = $service->detectLanguageFromFile($file);
+
+        $this->assertSame($language, $detectedLanguage);
+    }
+
+    /**
+     * @test
+     * @dataProvider languageFileDataProvider
+     */
+    public function detectsLanguageFromString($language)
+    {
+        $service = new ServerService($this->getTikaServerConfiguration());
+
+        $file = $this->testLanguagesPath . $language . '.test';
+        $languageString = file_get_contents($file);
+
+        $detectedLanguage = $service->detectLanguageFromString($languageString);
+
+        $this->assertSame($language, $detectedLanguage);
+    }
 
 }

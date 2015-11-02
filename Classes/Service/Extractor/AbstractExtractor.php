@@ -34,81 +34,88 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
-abstract class AbstractExtractor implements ExtractorInterface {
+abstract class AbstractExtractor implements ExtractorInterface
+{
 
-	/**
-	 * @var array
-	 */
-	protected $configuration;
+    /**
+     * @var array
+     */
+    protected $configuration;
 
-	/**
-	 * Priority in handling extraction
-	 *
-	 * @var integer
-	 */
-	protected $priority = 0;
+    /**
+     * Priority in handling extraction
+     *
+     * @var integer
+     */
+    protected $priority = 0;
 
 
-	/**
-	 * Constructor
-	 *
-	 */
-	public function __construct() {
-		$this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-	}
+    /**
+     * Constructor
+     *
+     */
+    public function __construct()
+    {
+        $this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+    }
 
-	/**
-	 * Returns an array of supported file types
-	 *
-	 * @return array
-	 */
-	public function getFileTypeRestrictions() {
-		return array();
-	}
+    /**
+     * Returns an array of supported file types
+     *
+     * @return array
+     */
+    public function getFileTypeRestrictions()
+    {
+        return array();
+    }
 
-	/**
-	 * Get all supported DriverClasses
-	 *
-	 * @return string[] names of supported drivers/driver classes
-	 */
-	public function getDriverRestrictions() {
-		return array(
-			'Local',
-		);
-	}
+    /**
+     * Get all supported DriverClasses
+     *
+     * @return string[] names of supported drivers/driver classes
+     */
+    public function getDriverRestrictions()
+    {
+        return array(
+            'Local',
+        );
+    }
 
-	/**
-	 * Returns the data priority of the extraction Service.
-	 *
-	 * @return integer
-	 */
-	public function getPriority() {
-		return $this->priority;
-	}
+    /**
+     * Returns the data priority of the extraction Service.
+     *
+     * @return integer
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
 
-	/**
-	 * Returns the execution priority of the extraction Service
-	 *
-	 * @return integer
-	 */
-	public function getExecutionPriority() {
-		return $this->priority;
-	}
+    /**
+     * Returns the execution priority of the extraction Service
+     *
+     * @return integer
+     */
+    public function getExecutionPriority()
+    {
+        return $this->priority;
+    }
 
-	/**
-	 * Logs a message and optionally data to devlog
-	 *
-	 * @param string $message Log message
-	 * @param array $data Optional data
-	 * @return void
-	 */
-	protected function log($message, array $data = array()) {
-		// TODO have logger injected
-		if (!$this->configuration['logging']) {
-			return;
-		}
+    /**
+     * Logs a message and optionally data to devlog
+     *
+     * @param string $message Log message
+     * @param array $data Optional data
+     * @return void
+     */
+    protected function log($message, array $data = array())
+    {
+        // TODO have logger injected
+        if (!$this->configuration['logging']) {
+            return;
+        }
 
-		GeneralUtility::devLog($message, 'tika', 0, $data);
-	}
+        GeneralUtility::devLog($message, 'tika', 0, $data);
+    }
 
 }

@@ -42,45 +42,48 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit;
  * Class ExecRecorder, holds exec() results
  *
  */
-class ExecRecorder {
+class ExecRecorder
+{
 
-	/**
-	 * Allows to capture exec() parameters
-	 *
-	 * @var string
-	 */
-	public static $execCommand = '';
+    /**
+     * Allows to capture exec() parameters
+     *
+     * @var string
+     */
+    public static $execCommand = '';
 
-	/**
-	 * Output to return to exec() calls
-	 *
-	 * @var array
-	 */
-	public static $execOutput = array();
+    /**
+     * Output to return to exec() calls
+     *
+     * @var array
+     */
+    public static $execOutput = array();
 
-	/**
-	 * Indicator whether/how many times the exec() mock was called.
-	 *
-	 * @var int
-	 */
-	public static $execCalled = 0;
+    /**
+     * Indicator whether/how many times the exec() mock was called.
+     *
+     * @var int
+     */
+    public static $execCalled = 0;
 
 
-	/**
-	 * Resets the exec() mock
-	 */
-	public static function reset() {
-		self::$execCalled  = 0;
-		self::$execCommand = '';
-		self::$execOutput  = array();
-	}
+    /**
+     * Resets the exec() mock
+     */
+    public static function reset()
+    {
+        self::$execCalled = 0;
+        self::$execCommand = '';
+        self::$execOutput = array();
+    }
 
-	/**
-	 * Adds output for an exec() call.
-	 *
-	 * @param array $lines One line of returned output per element in $lines
-	 */
-	public static function setReturnExecOutput(array $lines) {
-		self::$execOutput[] = $lines;
-	}
+    /**
+     * Adds output for an exec() call.
+     *
+     * @param array $lines One line of returned output per element in $lines
+     */
+    public static function setReturnExecOutput(array $lines)
+    {
+        self::$execOutput[] = $lines;
+    }
 }

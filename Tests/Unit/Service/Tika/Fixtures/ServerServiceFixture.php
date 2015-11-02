@@ -31,27 +31,29 @@ use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
  * Class ServerServiceFixture
  *
  */
-class ServerServiceFixture extends ServerService {
+class ServerServiceFixture extends ServerService
+{
 
-	protected $recordedEndpoint = '';
+    protected $recordedEndpoint = '';
 
+    /**
+     * @return string
+     */
+    public function getRecordedEndpoint()
+    {
+        return $this->recordedEndpoint;
+    }
 
-	/**
-	 * Records the requested endpoint
-	 *
-	 * @param string $endpoint
-	 * @param resource $context optional stream context
-	 * @return string Tika output
-	 * @throws \Exception
-	 */
-	protected function queryTika($endpoint, $context = NULL) {
-		$this->recordedEndpoint = $endpoint;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getRecordedEndpoint() {
-		return $this->recordedEndpoint;
-	}
+    /**
+     * Records the requested endpoint
+     *
+     * @param string $endpoint
+     * @param resource $context optional stream context
+     * @return string Tika output
+     * @throws \Exception
+     */
+    protected function queryTika($endpoint, $context = null)
+    {
+        $this->recordedEndpoint = $endpoint;
+    }
 }

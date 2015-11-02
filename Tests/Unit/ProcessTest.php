@@ -32,106 +32,115 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  * Test case for class \ApacheSolrForTypo3\Tika\Process
  *
  */
-class ProcessTest extends UnitTestCase {
+class ProcessTest extends UnitTestCase
+{
 
-	protected function setUp() {
-		ExecRecorder::reset();
-	}
+    /**
+     * @test
+     */
+    public function constructorSetsExecutableAndArguments()
+    {
+        $process = new Process('foo', '-bar');
 
-	/**
-	 * @test
-	 */
-	public function constructorSetsExecutableAndArguments() {
-		$process = new Process('foo', '-bar');
+        $this->assertEquals('foo', $process->getExecutable());
+        $this->assertEquals('-bar', $process->getArguments());
+    }
 
-		$this->assertEquals('foo', $process->getExecutable());
-		$this->assertEquals('-bar', $process->getArguments());
-	}
+    /**
+     * @test
+     */
+    public function findPidUsesExecutableBasename()
+    {
+        $process = new Process('/usr/bin/foo', '-bar');
+        ExecRecorder::setReturnExecOutput(array('foo'));
 
-	/**
-	 * @test
-	 */
-	public function findPidUsesExecutableBasename() {
-		$process = new Process('/usr/bin/foo', '-bar');
-		ExecRecorder::setReturnExecOutput(array('foo'));
+        $process->findPid();
 
-		$process->findPid();
+        $this->assertTrue((bool)ExecRecorder::$execCalled);
+        $this->assertContains('foo', ExecRecorder::$execCommand);
+        $this->assertNotContains('/usr/bin', ExecRecorder::$execCommand);
+    }
 
-		$this->assertTrue((bool)ExecRecorder::$execCalled);
-		$this->assertContains('foo', ExecRecorder::$execCommand);
-		$this->assertNotContains('/usr/bin', ExecRecorder::$execCommand);
-	}
+    /**
+     * @test
+     */
+    public function isRunningUsesPid()
+    {
+        $process = new Process('/usr/bin/foo', '-bar');
+        $process->setPid(1337);
 
-	/**
-	 * @test
-	 */
-	public function isRunningUsesPid() {
-		$process = new Process('/usr/bin/foo', '-bar');
-		$process->setPid(1337);
+        $process->isRunning();
 
-		$process->isRunning();
+        $this->assertTrue((bool)ExecRecorder::$execCalled);
+        $this->assertContains('1337', ExecRecorder::$execCommand);
+    }
 
-		$this->assertTrue((bool)ExecRecorder::$execCalled);
-		$this->assertContains('1337', ExecRecorder::$execCommand);
-	}
+    /**
+     * @test
+     */
+    public function isRunningReturnsTrueForRunningProcess()
+    {
+        $process = new Process('/usr/bin/foo', '-bar');
+        $process->setPid(1337);
+        ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar'));
 
-	/**
-	 * @test
-	 */
-	public function isRunningReturnsTrueForRunningProcess() {
-		$process = new Process('/usr/bin/foo', '-bar');
-		$process->setPid(1337);
-		ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar'));
+        $running = $process->isRunning();
 
-		$running = $process->isRunning();
+        $this->assertTrue($running);
+    }
 
-		$this->assertTrue($running);
-	}
+    /**
+     * @test
+     */
+    public function isRunningReturnsFalseForStoppedProcess()
+    {
+        $process = new Process('/usr/bin/foo', '-bar');
 
-	/**
-	 * @test
-	 */
-	public function isRunningReturnsFalseForStoppedProcess() {
-		$process = new Process('/usr/bin/foo', '-bar');
+        $running = $process->isRunning();
 
-		$running = $process->isRunning();
+        $this->assertFalse($running);
+    }
 
-		$this->assertFalse($running);
-	}
+    /**
+     * @test
+     */
+    public function startStartsProcess()
+    {
+        $process = new Process('/usr/bin/foo', '-bar');
 
-	/**
-	 * @test
-	 */
-	public function startStartsProcess() {
-		$process = new Process('/usr/bin/foo', '-bar');
+        ExecRecorder::setReturnExecOutput(array('foo'));
+        $running = $process->isRunning();
+        $this->assertFalse($running);
 
-		ExecRecorder::setReturnExecOutput(array('foo'));
-		$running = $process->isRunning();
-		$this->assertFalse($running);
+        ExecRecorder::setReturnExecOutput(array('1337')); // runCommand() return pid of started process = 1337
+        ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar')); // isRunning()
+        $running = $process->start();
 
-		ExecRecorder::setReturnExecOutput(array('1337')); // runCommand() return pid of started process = 1337
-		ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar')); // isRunning()
-		$running = $process->start();
+        $this->assertTrue($running);
+    }
 
-		$this->assertTrue($running);
-	}
+    /**
+     * @test
+     */
+    public function stopStopsProcess()
+    {
+        $process = new Process('/usr/bin/foo', '-bar');
+        $process->setPid(1337);
+        ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar'));
 
-	/**
-	 * @test
-	 */
-	public function stopStopsProcess() {
-		$process = new Process('/usr/bin/foo', '-bar');
-		$process->setPid(1337);
-		ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar'));
+        $running = $process->isRunning();
+        $this->assertTrue($running);
 
-		$running = $process->isRunning();
-		$this->assertTrue($running);
+        $stopped = $process->stop();
+        $this->assertTrue($stopped);
 
-		$stopped = $process->stop();
-		$this->assertTrue($stopped);
+        $running = $process->isRunning();
+        $this->assertFalse($running);
+    }
 
-		$running = $process->isRunning();
-		$this->assertFalse($running);
-	}
+    protected function setUp()
+    {
+        ExecRecorder::reset();
+    }
 
 }

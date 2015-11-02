@@ -25,155 +25,163 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Solr\SolrService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
  * A Tika service implementation using a Solr server
  *
  */
-class SolrCellService extends AbstractService {
+class SolrCellService extends AbstractService
+{
 
-	/**
-	 * Solr connection
-	 *
-	 * @var SolrService
-	 */
-	protected $solr = NULL;
+    /**
+     * Solr connection
+     *
+     * @var SolrService
+     */
+    protected $solr = null;
 
 
-	/**
-	 * Service initialization
-	 *
-	 * @return void
-	 */
-	protected function initializeService() {
-		// FIXME move connection building to EXT:solr
-		// currently explicitly using "new" to bypass
-		// \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or providing a Factory
+    /**
+     * Service initialization
+     *
+     * @return void
+     */
+    protected function initializeService()
+    {
+        // FIXME move connection building to EXT:solr
+        // currently explicitly using "new" to bypass
+        // \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or providing a Factory
 
-		// TODO just get *any* connection from EXT:solr
+        // TODO just get *any* connection from EXT:solr
 
-		// EM might define a different connection than already in use by
-		// Index Queue
-		$this->solr = new SolrService(
-			$this->configuration['solrHost'],
-			$this->configuration['solrPort'],
-			$this->configuration['solrPath'],
-			$this->configuration['solrScheme']
-		);
-	}
+        // EM might define a different connection than already in use by
+        // Index Queue
+        $this->solr = new SolrService(
+            $this->configuration['solrHost'],
+            $this->configuration['solrPort'],
+            $this->configuration['solrPath'],
+            $this->configuration['solrScheme']
+        );
+    }
 
-	/**
-	 * Takes a file reference and extracts the text from it.
-	 *
-	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
-	 * @return string
-	 */
-	public function extractText(FileInterface $file) {
-		$localTempFilePath = $file->getForLocalProcessing(FALSE);
-		$query = GeneralUtility::makeInstance(
-			'ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery',
-			$localTempFilePath
-		);
-		$query->setExtractOnly();
-		$response = $this->solr->extract($query);
+    /**
+     * Takes a file reference and extracts the text from it.
+     *
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @return string
+     */
+    public function extractText(FileInterface $file)
+    {
+        $localTempFilePath = $file->getForLocalProcessing(false);
+        $query = GeneralUtility::makeInstance(
+            'ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery',
+            $localTempFilePath
+        );
+        $query->setExtractOnly();
+        $response = $this->solr->extract($query);
 
-		$this->cleanupTempFile($localTempFilePath, $file);
+        $this->cleanupTempFile($localTempFilePath, $file);
 
-		$this->log('Text Extraction using Solr', array(
-			'file'            => $file,
-			'solr connection' => (array) $this->solr,
-			'query'           => (array) $query,
-			'response'        => $response
-		));
+        $this->log('Text Extraction using Solr', array(
+            'file' => $file,
+            'solr connection' => (array)$this->solr,
+            'query' => (array)$query,
+            'response' => $response
+        ));
 
-		return $response[0];
-	}
+        return $response[0];
+    }
 
-	/**
-	 * Takes a file reference and extracts its meta data.
-	 *
-	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
-	 * @return array
-	 */
-	public function extractMetaData(FileInterface $file) {
-		$localTempFilePath = $file->getForLocalProcessing(FALSE);
-		$query = GeneralUtility::makeInstance(
-			'ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery',
-			$localTempFilePath
-		);
-		$query->setExtractOnly();
-		$response = $this->solr->extract($query);
-		$metaData = $this->solrResponseToArray($response[1]);
+    /**
+     * Takes a file reference and extracts its meta data.
+     *
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @return array
+     */
+    public function extractMetaData(FileInterface $file)
+    {
+        $localTempFilePath = $file->getForLocalProcessing(false);
+        $query = GeneralUtility::makeInstance(
+            'ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery',
+            $localTempFilePath
+        );
+        $query->setExtractOnly();
+        $response = $this->solr->extract($query);
+        $metaData = $this->solrResponseToArray($response[1]);
 
-		$this->cleanupTempFile($localTempFilePath, $file);
+        $this->cleanupTempFile($localTempFilePath, $file);
 
-		$this->log('Meta Data Extraction using Solr', array(
-			'file'            => $file,
-			'solr connection' => (array) $this->solr,
-			'query'           => (array) $query,
-			'response'        => $response,
-			'meta data'       => $metaData
-		));
+        $this->log('Meta Data Extraction using Solr', array(
+            'file' => $file,
+            'solr connection' => (array)$this->solr,
+            'query' => (array)$query,
+            'response' => $response,
+            'meta data' => $metaData
+        ));
 
-		return $metaData;
-	}
+        return $metaData;
+    }
 
-	/**
-	 * Takes a file reference and detects its content's language.
-	 *
-	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
-	 * @return string Language ISO code
-	 */
-	public function detectLanguageFromFile(FileInterface $file) {
-		// TODO check whether Solr supports text extraction now
-		throw new UnsupportedOperationException(
-			'The Tika Solr service does not support language detection',
-			1423457153
-		);
-	}
+    /**
+     * Takes a file reference and detects its content's language.
+     *
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @return string Language ISO code
+     */
+    public function detectLanguageFromFile(FileInterface $file)
+    {
+        // TODO check whether Solr supports text extraction now
+        throw new UnsupportedOperationException(
+            'The Tika Solr service does not support language detection',
+            1423457153
+        );
+    }
 
-	/**
-	 * Takes a string as input and detects its language.
-	 *
-	 * @param string $input
-	 * @return string Language ISO code
-	 */
-	public function detectLanguageFromString($input) {
-		// TODO check whether Solr supports text extraction now
-		throw new UnsupportedOperationException(
-			'The Tika Solr service does not support language detection',
-			1423457153
-		);
-	}
+    /**
+     * Takes a string as input and detects its language.
+     *
+     * @param string $input
+     * @return string Language ISO code
+     */
+    public function detectLanguageFromString($input)
+    {
+        // TODO check whether Solr supports text extraction now
+        throw new UnsupportedOperationException(
+            'The Tika Solr service does not support language detection',
+            1423457153
+        );
+    }
 
-	/**
-	 * Turns the nested Solr response into the same format as produced by a
-	 * local Tika jar call
-	 *
-	 * @param array $metaDataResponse The part of the Solr response containing the meta data
-	 * @return array The cleaned meta data, matching the Tika jar call format
-	 */
-	protected function solrResponseToArray(array $metaDataResponse) {
-		$cleanedData = array();
+    /**
+     * Turns the nested Solr response into the same format as produced by a
+     * local Tika jar call
+     *
+     * @param array $metaDataResponse The part of the Solr response containing the meta data
+     * @return array The cleaned meta data, matching the Tika jar call format
+     */
+    protected function solrResponseToArray(array $metaDataResponse)
+    {
+        $cleanedData = array();
 
-		foreach ($metaDataResponse as $dataName => $dataArray) {
-			$cleanedData[$dataName] = $dataArray[0];
-		}
+        foreach ($metaDataResponse as $dataName => $dataArray) {
+            $cleanedData[$dataName] = $dataArray[0];
+        }
 
-		return $cleanedData;
-	}
+        return $cleanedData;
+    }
 
-	/**
-	 * Gets the Tika version
-	 *
-	 * @return string Apache Solr server version string
-	 */
-	public function getTikaVersion() {
-		// TODO add patch for endpoint on Apache Solr to return Tika version
-		// for now returns the Solr version string f.e. "Apache Solr 5.2.0"
-		return $this->solr->getSolrServerVersion();
-	}
+    /**
+     * Gets the Tika version
+     *
+     * @return string Apache Solr server version string
+     */
+    public function getTikaVersion()
+    {
+        // TODO add patch for endpoint on Apache Solr to return Tika version
+        // for now returns the Solr version string f.e. "Apache Solr 5.2.0"
+        return $this->solr->getSolrServerVersion();
+    }
 }
