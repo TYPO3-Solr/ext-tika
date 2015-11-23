@@ -75,4 +75,16 @@ interface ServiceInterface
      */
     public function detectLanguageFromString($input);
 
+    /**
+     * Public method to check the availability of this service.
+     *
+     * @return boolean
+     */
+    public function getIsAvailable();
+
+    /**
+     * @return mixed
+     */
+    public function getEndpointIdentifier();
+
 }

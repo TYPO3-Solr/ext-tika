@@ -26,8 +26,10 @@ namespace ApacheSolrForTypo3\Tika\Backend\SolrModule;
 
 use ApacheSolrForTypo3\Solr\Backend\SolrModule\AbstractModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServiceInterface;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
 
 /**
@@ -61,10 +63,18 @@ class TikaControlPanelModuleController extends AbstractModuleController
     protected $tikaConfiguration = array();
 
     /**
-     * @var \ApacheSolrForTypo3\Tika\Service\Tika\AppService|\ApacheSolrForTypo3\Tika\Service\Tika\ServerService|\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService
+     * @var \ApacheSolrForTypo3\Tika\Service\Tika\AbstractService
      */
     protected $tikaService = null;
 
+    /**
+     * Can be used in the test context to force a view.
+     *
+     * @param ViewInterface
+     */
+    public function overwriteView(ViewInterface $view) {
+        $this->view = $view;
+    }
 
     /**
      * Initializes resources commonly needed for several actions.
@@ -75,8 +85,23 @@ class TikaControlPanelModuleController extends AbstractModuleController
     {
         parent::initializeAction();
 
-        $this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-        $this->tikaService = ServiceFactory::getTika($this->tikaConfiguration['extractor']);
+        $tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $this->setTikaConfiguration($tikaConfiguration);
+        $this->setTikaService(ServiceFactory::getTika($this->tikaConfiguration['extractor']));
+    }
+
+    /**
+     * @param ServiceInterface $tikaService
+     */
+    public function setTikaService(ServiceInterface $tikaService) {
+       $this->tikaService = $tikaService;
+    }
+
+    /**
+     * @param array $tikaConfiguration
+     */
+    public function setTikaConfiguration(array $tikaConfiguration) {
+        $this->tikaConfiguration = $tikaConfiguration;
     }
 
     /**
@@ -87,22 +112,12 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     public function indexAction()
     {
-        $this->checkTikaServerConnection();
-
+        $this->checkTikaAvailability();
         $this->view->assign('configuration', $this->tikaConfiguration);
         $this->view->assign('extractor',
             ucfirst($this->tikaConfiguration['extractor']));
 
-        $this->view->assign(
-            'server',
-            array(
-                'jarAvailable' => $this->isTikaServerJarAvailable(),
-                'isRunning' => $this->isTikaServerRunning(),
-                'isControllable' => $this->isTikaServerControllable(),
-                'pid' => $this->getTikaServerPid(),
-                'version' => $this->getTikaServerVersion()
-            )
-        );
+        $this->view->assign('server', $this->tikaService);
     }
 
     /**
@@ -117,7 +132,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         // give it some time to start
         sleep(2);
 
-        if ($this->tikaService->isServerRunning()) {
+        if ($this->tikaService->getIsServerRunning()) {
             $this->addFlashMessage(
                 'Tika server started.',
                 FlashMessage::OK
@@ -139,7 +154,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         // give it some time to stop
         sleep(2);
 
-        if (!$this->tikaService->isServerRunning()) {
+        if (!$this->tikaService->getIsServerRunning()) {
             $this->addFlashMessage(
                 'Tika server stopped.',
                 FlashMessage::OK
@@ -150,105 +165,23 @@ class TikaControlPanelModuleController extends AbstractModuleController
     }
 
     /**
-     * Gets the Tika server version
-     *
-     * @return string Tika server version string
-     * @throws \Exception
-     */
-    protected function getTikaServerVersion()
-    {
-        return $this->tikaService->getTikaVersion();
-    }
-
-    /**
-     * Tries to connect to Tika server
-     *
-     * @return bool TRUE if the Tika server responds, FALSE otherwise.
-     * @throws \Exception
-     */
-    protected function isTikaServerRunning()
-    {
-        return $this->tikaService->isServerRunning();
-    }
-
-    /**
-     * Returns the pid if the Tika server has been started through the backend
-     * module.
-     *
-     * @return integer|null Tika Server pid or null if not found
-     */
-    protected function getTikaServerPid()
-    {
-        return $this->tikaService->getServerPid();
-    }
-
-    /**
-     * Checks whether the server jar has been configured properly.
-     *
-     * @return bool TRUE if a path for the jar has been configure and the path exists
-     */
-    protected function isTikaServerJarAvailable()
-    {
-        $serverJarSet = !empty($this->tikaConfiguration['tikaServerPath']);
-        $serverJarExists = file_exists($this->tikaConfiguration['tikaServerPath']);
-
-        return ($serverJarSet && $serverJarExists);
-    }
-
-    /**
-     * Checks whether Tika server can be controlled (started/stopped).
-     *
-     * Checks whether exec() is allowed and whether configuration is available.
-     *
-     * @return bool TRUE if Tika server can be started/stopped
-     * @throws \Exception
-     */
-    protected function isTikaServerControllable()
-    {
-        $disabledFunctions = ini_get('disable_functions')
-            . ',' . ini_get('suhosin.executor.func.blacklist');
-        $disabledFunctions = GeneralUtility::trimExplode(',',
-            $disabledFunctions);
-        if (in_array('exec', $disabledFunctions)) {
-            return false;
-        }
-
-        if (ini_get('safe_mode')) {
-            return false;
-        }
-
-        $jarAvailable = $this->isTikaServerJarAvailable();
-        $running = $this->isTikaServerRunning();
-        $pid = $this->getTikaServerPid();
-
-        $controllable = false;
-        if ($running && $jarAvailable && !is_null($pid)) {
-            $controllable = true;
-        } elseif (!$running && $jarAvailable) {
-            $controllable = true;
-        }
-
-        return $controllable;
-    }
-
-    /**
      * Checks whether the configured Tika server can be reached and provides a
      * flash message according to the result of the check.
      *
      * @return void
      */
-    protected function checkTikaServerConnection()
+    protected function checkTikaAvailability()
     {
-        if ($this->tikaService->ping()) {
+        if ($this->tikaService->getIsAvailable()) {
             $this->addFlashMessage(
-                'Tika host contacted at: ' . $this->tikaService->getTikaServerUrl(),
-                'Your Apache Tika server has been contacted.',
+                'Tika is up and running with endpoint: ' . $this->tikaService->getEndpointIdentifier(),
+                'Contacted configured tika service endpoint.',
                 FlashMessage::OK
             );
         } else {
             $this->addFlashMessage(
-                'Could not connect ot Tika at: ' . $this->tikaService->getTikaServerUrl(),
-                'Unable to contact your Apache Tika server.',
+                'Could not connect tika endpoint at: ' . $this->tikaService->getEndpointIdentifier(),
+                'Unable to contact your tika service endpoint.',
                 FlashMessage::ERROR
             );
         }

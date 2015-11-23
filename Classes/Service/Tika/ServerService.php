@@ -148,13 +148,57 @@ class ServerService extends AbstractService
     /**
      * Check if the Tika server is running
      *
+     * @deprecated since 2.0.0 use now getIsServerRunning
      * @return bool
      */
     public function isServerRunning()
     {
+        return $this->getIsServerRunning();
+    }
+
+    /**
+     * Check if the Tika server is running
+     *
+     * @return bool
+     */
+    public function getIsServerRunning()
+    {
         $pid = $this->getServerPid();
 
         return !empty($pid);
+    }
+
+    /**
+     * Method to check if the tika server is controlable or not.
+     *
+     * @return bool
+     */
+    public function getIsControllable()
+    {
+        $disabledFunctions = ini_get('disable_functions')
+            . ',' . ini_get('suhosin.executor.func.blacklist');
+        $disabledFunctions = GeneralUtility::trimExplode(',',
+            $disabledFunctions);
+        if (in_array('exec', $disabledFunctions)) {
+            return false;
+        }
+
+        if (ini_get('safe_mode')) {
+            return false;
+        }
+
+        $jarAvailable = $this->getIsJarAvailable();
+        $running = $this->getIsServerRunning();
+        $pid = $this->getServerPid();
+
+        $controllable = false;
+        if ($running && $jarAvailable && !is_null($pid)) {
+            $controllable = true;
+        } elseif (!$running && $jarAvailable) {
+            $controllable = true;
+        }
+
+        return $controllable;
     }
 
     /**
@@ -170,6 +214,16 @@ class ServerService extends AbstractService
             'This is Tika Server.');
 
         return $tikaReachable;
+    }
+
+    /**
+     * The tika server is available when the server is pingable.
+     *
+     * @return bool
+     */
+    public function getIsAvailable()
+    {
+        return $this->ping();
     }
 
     /**
@@ -192,7 +246,7 @@ class ServerService extends AbstractService
     {
         $version = 'unknown';
 
-        if ($this->isServerRunning()) {
+        if ($this->getIsServerRunning()) {
             $version = $this->queryTika('/version');
         }
 
@@ -342,5 +396,28 @@ class ServerService extends AbstractService
         $response = $this->queryTika('/language/string', $context);
 
         return $response;
+    }
+
+    /**
+     * Method to check if the jar file is available or not.
+     *
+     * @return bool
+     */
+    public function getIsJarAvailable()
+    {
+        $serverJarSet = !empty($this->configuration['tikaServerPath']);
+        $serverJarExists = file_exists($this->configuration['tikaServerPath']);
+
+        return ($serverJarSet && $serverJarExists);
+    }
+
+    /**
+     * For the Server service we use the tika server url as endpoint.
+     *
+     * @return string
+     */
+    public function getEndpointIdentifier()
+    {
+        return $this->getTikaServerUrl();
     }
 }

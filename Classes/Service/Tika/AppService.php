@@ -252,4 +252,34 @@ class AppService extends AbstractService
 
         return $metaData;
     }
+
+    /**
+     * The app is available when the jar can be opened
+     *
+     * @return boolean
+     */
+    public function getIsAvailable()
+    {
+        $tikaFileExists = is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath']));
+        if (!$tikaFileExists) {
+            return false;
+        }
+
+        $canCallJava = CommandUtility::checkCommand('java');
+        if (!$canCallJava) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * For the app service the jar file is our endpoint.
+     *
+     * @return mixed
+     */
+    public function getEndpointIdentifier()
+    {
+        return $this->configuration['tikaPath'];
+    }
 }

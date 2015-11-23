@@ -43,7 +43,6 @@ class SolrCellService extends AbstractService
      */
     protected $solr = null;
 
-
     /**
      * Service initialization
      *
@@ -65,6 +64,17 @@ class SolrCellService extends AbstractService
             $this->configuration['solrPath'],
             $this->configuration['solrScheme']
         );
+    }
+
+    /**
+     * Retrieves a configuration value or a default value when not available.
+     *
+     * @param string $key
+     * @param mixed $defaultValue
+     */
+    protected function getConfigurationOrDefaultValue($key, $defaultValue)
+    {
+        return isset($this->configuration[$key]) ? $this->configuration[$key] : $defaultValue;
     }
 
     /**
@@ -183,5 +193,30 @@ class SolrCellService extends AbstractService
         // TODO add patch for endpoint on Apache Solr to return Tika version
         // for now returns the Solr version string f.e. "Apache Solr 5.2.0"
         return $this->solr->getSolrServerVersion();
+    }
+
+    /**
+     * The service is available when the solr server is pingable.
+     *
+     * @return bool
+     */
+    public function getIsAvailable()
+    {
+        return $this->solr->ping();
+    }
+
+    /**
+     * The endpoint of the solr server it scheme://host:port/path
+     *
+     * @return string
+     */
+    public function getEndpointIdentifier()
+    {
+        $endpoint = $this->getConfigurationOrDefaultValue('solrScheme','') . '://' .
+                    $this->getConfigurationOrDefaultValue('solrHost','') . ':' .
+                    $this->getConfigurationOrDefaultValue('solrPort',''). '/' .
+                    $this->getConfigurationOrDefaultValue('solrPath','');
+
+        return $endpoint;
     }
 }

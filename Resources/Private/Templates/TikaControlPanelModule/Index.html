@@ -27,11 +27,11 @@
 		Tika Server status (PID): {f:if(condition: '{server.pid} > 0', then: 'running (pid: {server.pid})', else: 'server pid not found')}
 		</p>
 		<p>
-		Tika Server status (ping): {f:if(condition: '{server.isRunning}', then: 'running', else: 'stopped')}
+		Tika Server status (ping): {f:if(condition: '{server.isServerRunning}', then: 'running', else: 'stopped')}
 		</p>
 
 
-		<f:if condition="{server.isRunning}">
+		<f:if condition="{server.isServerRunning}">
 			<f:then>
 				<p>
 				Tika is running.<br />

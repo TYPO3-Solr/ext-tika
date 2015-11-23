@@ -12,7 +12,22 @@ Tika can be used as standalone Tika app/jar, Tika server, and via SolrCell integ
 
 We're open for [contributions](#Contributions) !
 
-Please find further information regarding Apache Tika on the [project's homepage](http://tika.apache.org) 
+Please find further information regarding Apache Tika on the [project's homepage](http://tika.apache.org)
+
+
+## Continues Integration
+
+We use travis ci for continues integration. To run the whole test suite locally for one TYPO3 & Tika Version
+do the following:
+
+```bash
+export TIKA_VERSION="1.11"
+export TIKA_PATH="/tmp/tika"
+export TYPO3_VERSION="dev-master"
+chmod +x ./Tests/Build/*.sh
+./Tests/Build/bootstrap.sh
+./Tests/Build/cibuild.sh
+```
 
 ## <a name="Contributions"></a>Contributions
 
