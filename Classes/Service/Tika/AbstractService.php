@@ -55,6 +55,17 @@ abstract class AbstractService implements ServiceInterface
     }
 
     /**
+     * Retrieves a configuration value or a default value when not available.
+     *
+     * @param string $key
+     * @param mixed $defaultValue
+     */
+    protected function getConfigurationOrDefaultValue($key, $defaultValue)
+    {
+        return isset($this->configuration[$key]) ? $this->configuration[$key] : $defaultValue;
+    }
+
+    /**
      * Service initialization
      *
      * @return void

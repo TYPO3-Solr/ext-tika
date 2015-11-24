@@ -1,0 +1,34 @@
+<p>
+    Tika Server Jar: {configuration.tikaServerPath}
+</p>
+
+<p>
+    Tika Server status (PID): {f:if(condition: '{server.pid} > 0', then: 'running (pid: {server.pid})', else: 'server pid not found')}
+</p>
+<p>
+    Tika Server status (ping): {f:if(condition: '{server.isServerRunning}', then: 'running', else: 'stopped')}
+</p>
+
+<f:if condition="{server.isServerRunning}">
+    <f:then>
+        <p>
+            Tika is running.<br />
+            Version: {server.tikaVersion}<br />
+
+            <f:if condition="{server.isControllable}">
+                Tika can be controlled. PID: {server.serverPid}
+                <solr:backend.button.ActionButton action="stopServer" label="Stop Tika Server" />
+            </f:if>
+        </p>
+    </f:then>
+    <f:else>
+        <p>
+            Tika is stopped.
+
+            <f:if condition="{server.isControllable}">
+                Tika can be controlled.
+                <solr:backend.button.ActionButton action="startServer" label="Start Tika Server" />
+            </f:if>
+        </p>
+    </f:else>
+</f:if>
