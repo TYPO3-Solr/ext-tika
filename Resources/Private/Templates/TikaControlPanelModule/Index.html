@@ -2,13 +2,14 @@
 <div xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
 	xmlns:solr="http://typo3.org/ns/ApacheSolrForTypo3/Solr/ViewHelpers"
 	f:schemaLocation="https://fluidtypo3.org/schemas/fluid-master.xsd">
+	<f:flashMessages renderMode="div" />
 
 	<p>
 		Tika Mode:
 		<f:switch expression="{configuration.extractor}">
-			<f:case value="server">Server</f:case>
-			<f:case value="jar">Jar</f:case>
-			<f:case value="solr">Solr</f:case>
+			<f:case value="server">Tika Server</f:case>
+			<f:case value="jar">Tika App</f:case>
+			<f:case value="solr">Solr Server</f:case>
 		</f:switch>
 
 	</p>

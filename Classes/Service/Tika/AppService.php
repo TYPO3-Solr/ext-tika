@@ -260,7 +260,7 @@ class AppService extends AbstractService
      */
     public function getIsAvailable()
     {
-        $tikaFileExists = is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath']));
+        $tikaFileExists = is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], false));
         if (!$tikaFileExists) {
             return false;
         }
