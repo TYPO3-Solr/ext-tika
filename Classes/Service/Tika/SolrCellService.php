@@ -67,17 +67,6 @@ class SolrCellService extends AbstractService
     }
 
     /**
-     * Retrieves a configuration value or a default value when not available.
-     *
-     * @param string $key
-     * @param mixed $defaultValue
-     */
-    protected function getConfigurationOrDefaultValue($key, $defaultValue)
-    {
-        return isset($this->configuration[$key]) ? $this->configuration[$key] : $defaultValue;
-    }
-
-    /**
      * Takes a file reference and extracts the text from it.
      *
      * @param \TYPO3\CMS\Core\Resource\FileInterface $file
@@ -214,7 +203,7 @@ class SolrCellService extends AbstractService
     {
         $endpoint = $this->getConfigurationOrDefaultValue('solrScheme','') . '://' .
                     $this->getConfigurationOrDefaultValue('solrHost','') . ':' .
-                    $this->getConfigurationOrDefaultValue('solrPort',''). '/' .
+                    $this->getConfigurationOrDefaultValue('solrPort','') .
                     $this->getConfigurationOrDefaultValue('solrPath','');
 
         return $endpoint;

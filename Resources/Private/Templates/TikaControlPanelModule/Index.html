@@ -10,53 +10,21 @@
 			<f:case value="jar">Jar</f:case>
 			<f:case value="solr">Solr</f:case>
 		</f:switch>
+
+	</p>
+	<p>
+		Endpoint: {tikaService.endpointIdentifier}
 	</p>
 
-	<f:if condition="{configuration.extractor} != 'solr'">
-		<p>
-		Tika App Jar: {configuration.tikaPath}
-		</p>
-		<p>
-		Tika Server Jar: {configuration.tikaServerPath}
-		</p>
-	</f:if>
-
-	<f:if condition="{configuration.extractor} == 'server'">
-		<!-- // TODO use partial -->
-		<p>
-		Tika Server status (PID): {f:if(condition: '{server.pid} > 0', then: 'running (pid: {server.pid})', else: 'server pid not found')}
-		</p>
-		<p>
-		Tika Server status (ping): {f:if(condition: '{server.isServerRunning}', then: 'running', else: 'stopped')}
-		</p>
-
-
-		<f:if condition="{server.isServerRunning}">
-			<f:then>
-				<p>
-				Tika is running.<br />
-				Version: {server.version}<br />
-
-				<f:if condition="{server.isControllable}">
-					Tika can be controlled. PID: {server.pid}
-					<solr:backend.button.ActionButton action="stopServer" label="Stop Tika Server" />
-				</f:if>
-				</p>
-			</f:then>
-			<f:else>
-				<p>
-				Tika is stopped.
-
-				<f:if condition="{server.isControllable}">
-					Tika can be controlled.
-					<solr:backend.button.ActionButton action="startServer" label="Start Tika Server" />
-				</f:if>
-				</p>
-			</f:else>
-		</f:if>
-
-	</f:if>
-
-
-
+	<f:switch expression="{configuration.extractor}">
+		<f:case value="server">
+			<f:render partial="Service/Server" arguments="{server: tikaService, configuration: configuration}" />
+		</f:case>
+		<f:case value="jar">
+			<f:render partial="Service/Jar" arguments="{jar: tikaService, configuration: configuration}" />
+		</f:case>
+		<f:case value="solr">
+			<f:render partial="Service/Solr" arguments="{solr: tikaService, configuration: configuration}" />
+		</f:case>
+	</f:switch>
 </div>

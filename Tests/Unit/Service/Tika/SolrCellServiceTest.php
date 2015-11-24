@@ -196,4 +196,17 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $serviceMock->extractMetaData($file);
     }
 
+    /**
+     * @test
+     */
+    public function canGetEndpointIdentifier() {
+        $cellService = new \ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService(array(
+            'solrHost' => 'foo',
+            'solrPort' => 8080,
+            'solrPath' => '/solr/',
+            'solrScheme' => 'http'
+        ));
+
+        $this->assertSame('http://foo:8080/solr/', $cellService->getEndpointIdentifier());
+    }
 }
