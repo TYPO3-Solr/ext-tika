@@ -158,39 +158,6 @@ class ServerService extends AbstractService
     }
 
     /**
-     * Method to check if the tika server is controlable or not.
-     *
-     * @return bool
-     */
-    public function getIsControllable()
-    {
-        $disabledFunctions = ini_get('disable_functions')
-            . ',' . ini_get('suhosin.executor.func.blacklist');
-        $disabledFunctions = GeneralUtility::trimExplode(',',
-            $disabledFunctions);
-        if (in_array('exec', $disabledFunctions)) {
-            return false;
-        }
-
-        if (ini_get('safe_mode')) {
-            return false;
-        }
-
-        $jarAvailable = $this->getIsJarAvailable();
-        $running = $this->isServerRunning();
-        $pid = $this->getServerPid();
-
-        $controllable = false;
-        if ($running && $jarAvailable && !is_null($pid)) {
-            $controllable = true;
-        } elseif (!$running && $jarAvailable) {
-            $controllable = true;
-        }
-
-        return $controllable;
-    }
-
-    /**
      * Ping the Tika server
      *
      * @return bool true if the Tika server can be reached, false if not
