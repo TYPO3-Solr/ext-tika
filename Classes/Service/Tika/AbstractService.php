@@ -59,6 +59,7 @@ abstract class AbstractService implements ServiceInterface
      *
      * @param string $key
      * @param mixed $defaultValue
+     * @return mixed
      */
     protected function getConfigurationOrDefaultValue($key, $defaultValue)
     {
