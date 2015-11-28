@@ -71,6 +71,7 @@ class SolrCellService extends AbstractService
      *
      * @param string $key
      * @param mixed $defaultValue
+     * @return mixed
      */
     protected function getConfigurationOrDefaultValue($key, $defaultValue)
     {
