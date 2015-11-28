@@ -354,26 +354,4 @@ class ServerService extends AbstractService
         return $response;
     }
 
-    /**
-     * Method to check if the jar file is available or not.
-     *
-     * @return bool
-     */
-    public function getIsJarAvailable()
-    {
-        $serverJarSet = !empty($this->configuration['tikaServerPath']);
-        $serverJarExists = file_exists($this->configuration['tikaServerPath']);
-
-        return ($serverJarSet && $serverJarExists);
-    }
-
-    /**
-     * For the Server service we use the tika server url as endpoint.
-     *
-     * @return string
-     */
-    public function getEndpointIdentifier()
-    {
-        return $this->getTikaServerUrl();
-    }
 }

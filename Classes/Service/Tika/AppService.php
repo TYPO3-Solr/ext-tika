@@ -272,14 +272,4 @@ class AppService extends AbstractService
 
         return true;
     }
-
-    /**
-     * For the app service the jar file is our endpoint.
-     *
-     * @return mixed
-     */
-    public function getEndpointIdentifier()
-    {
-        return $this->configuration['tikaPath'];
-    }
 }

@@ -196,27 +196,12 @@ class SolrCellService extends AbstractService
     }
 
     /**
-     * The service is available when the solr server is pingable.
+     * The service is available when the solr server is reachable.
      *
      * @return bool
      */
     public function isAvailable()
     {
         return $this->solr->ping();
-    }
-
-    /**
-     * The endpoint of the solr server it scheme://host:port/path
-     *
-     * @return string
-     */
-    public function getEndpointIdentifier()
-    {
-        $endpoint = $this->getConfigurationOrDefaultValue('solrScheme','') . '://' .
-                    $this->getConfigurationOrDefaultValue('solrHost','') . ':' .
-                    $this->getConfigurationOrDefaultValue('solrPort',''). '/' .
-                    $this->getConfigurationOrDefaultValue('solrPath','');
-
-        return $endpoint;
     }
 }

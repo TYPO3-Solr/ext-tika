@@ -82,9 +82,4 @@ interface ServiceInterface
      */
     public function isAvailable();
 
-    /**
-     * @return mixed
-     */
-    public function getEndpointIdentifier();
-
 }
