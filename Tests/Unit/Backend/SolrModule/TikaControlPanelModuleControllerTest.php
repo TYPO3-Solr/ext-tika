@@ -60,7 +60,7 @@ class TikaControlPanelModuleControllerTest extends \TYPO3\CMS\Core\Tests\UnitTes
      */
     public function canShowInformationFromStandaloneTikaServer() {
         $tikaServerService = $this->getMock('ApacheSolrForTypo3\Tika\Service\Tika\ServerService', array(), array(), '', FALSE);
-        $tikaServerService->expects($this->once())->method('getIsAvailable')->will($this->returnValue(TRUE));
+        $tikaServerService->expects($this->once())->method('isAvailable')->will($this->returnValue(TRUE));
         $this->controller->setTikaService($tikaServerService);
         $this->controller->indexAction();
     }

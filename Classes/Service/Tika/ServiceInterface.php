@@ -80,7 +80,7 @@ interface ServiceInterface
      *
      * @return boolean
      */
-    public function getIsAvailable();
+    public function isAvailable();
 
     /**
      * @return mixed

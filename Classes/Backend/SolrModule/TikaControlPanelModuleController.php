@@ -131,7 +131,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         // give it some time to start
         sleep(2);
 
-        if ($this->tikaService->getIsServerRunning()) {
+        if ($this->tikaService->isServerRunning()) {
             $this->addFlashMessage(
                 'Tika server started.',
                 FlashMessage::OK
@@ -153,7 +153,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         // give it some time to stop
         sleep(2);
 
-        if (!$this->tikaService->getIsServerRunning()) {
+        if (!$this->tikaService->isServerRunning()) {
             $this->addFlashMessage(
                 'Tika server stopped.',
                 FlashMessage::OK
@@ -171,7 +171,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     protected function checkTikaAvailability()
     {
-        if ($this->tikaService->getIsAvailable()) {
+        if ($this->tikaService->isAvailable()) {
             $this->addFlashMessage(
                 'Tika is usable with the endpoint: ' . $this->tikaService->getEndpointIdentifier(),
                 'Contacted configured tika service endpoint.',

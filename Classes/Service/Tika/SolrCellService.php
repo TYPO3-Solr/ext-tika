@@ -189,7 +189,7 @@ class SolrCellService extends AbstractService
      *
      * @return bool
      */
-    public function getIsAvailable()
+    public function isAvailable()
     {
         return $this->solr->ping();
     }

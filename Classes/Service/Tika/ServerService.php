@@ -148,20 +148,9 @@ class ServerService extends AbstractService
     /**
      * Check if the Tika server is running
      *
-     * @deprecated since 2.0.0 use now getIsServerRunning
      * @return bool
      */
     public function isServerRunning()
-    {
-        return $this->getIsServerRunning();
-    }
-
-    /**
-     * Check if the Tika server is running
-     *
-     * @return bool
-     */
-    public function getIsServerRunning()
     {
         $pid = $this->getServerPid();
 
@@ -188,7 +177,7 @@ class ServerService extends AbstractService
         }
 
         $jarAvailable = $this->getIsJarAvailable();
-        $running = $this->getIsServerRunning();
+        $running = $this->isServerRunning();
         $pid = $this->getServerPid();
 
         $controllable = false;
@@ -221,7 +210,7 @@ class ServerService extends AbstractService
      *
      * @return bool
      */
-    public function getIsAvailable()
+    public function isAvailable()
     {
         return $this->ping();
     }
@@ -246,7 +235,7 @@ class ServerService extends AbstractService
     {
         $version = 'unknown';
 
-        if ($this->getIsServerRunning()) {
+        if ($this->isServerRunning()) {
             $version = $this->queryTika('/version');
         }
 
