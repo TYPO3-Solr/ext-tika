@@ -1,0 +1,35 @@
+
+* Add a tab to file records in file list allowing to extract a file's text
+	* user switches to tab
+	* tab shows button "Show text content"
+	* after clicking button, an AJAX request is fired to get the text
+	* field is implemented as user func field
+	* check if tab/field can be registered for text file types only
+	* get text from Tika as html (maybe)
+* Implement Tika Server service
+* Test the different service implementations
+* Change AppService to use Process class like ServerService
+* Add \Tx_Solr_ExtractingQuery to EXT:solr 3.0.2, then extend as namespaced shell ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery
+* Add solr:backend.button.ActionButton view helper to EXT:solr 3.0.2
+
+
+
+
+Tika 1.9
+
+Tika Server now allows for metadata extraction from remote
+URLs and in addition it outputs the detected language as a
+metadata field (TIKA-1625).
+
+Tika REST server now supports language identification
+(TIKA-1622)
+
+
+
+
+
+
+[Apache Tika]
+
+* Add an option to provide tika-app.jar with a string input for
+		 language detection instead of a file
