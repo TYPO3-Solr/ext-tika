@@ -116,7 +116,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         $this->view->assign('extractor',
             ucfirst($this->tikaConfiguration['extractor']));
 
-        $this->view->assign('tikaService', $this->tikaService);
+        $this->view->assign('server', $this->tikaService);
     }
 
     /**
