@@ -4,7 +4,7 @@
 */
 
 # customcategory=general=General
-# customcategory=jar=Tika Jar
+# customcategory=jar=Tika App
 # customcategory=server=Tika Server
 # customcategory=solr=Solr
 
