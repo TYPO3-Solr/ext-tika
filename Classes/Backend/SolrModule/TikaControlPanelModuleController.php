@@ -173,13 +173,13 @@ class TikaControlPanelModuleController extends AbstractModuleController
     {
         if ($this->tikaService->isAvailable()) {
             $this->addFlashMessage(
-                'Tika is usable with the endpoint: ' . $this->tikaService->getEndpointIdentifier(),
+                'Tika is up and running with endpoint: ' . $this->tikaService->getEndpointIdentifier(),
                 'Contacted configured tika service endpoint.',
                 FlashMessage::OK
             );
         } else {
             $this->addFlashMessage(
-                'Could not use tika endpoint at: ' . $this->tikaService->getEndpointIdentifier(),
+                'Could not connect tika endpoint at: ' . $this->tikaService->getEndpointIdentifier(),
                 'Unable to contact your tika service endpoint.',
                 FlashMessage::ERROR
             );
