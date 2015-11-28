@@ -62,14 +62,14 @@ class TikaControlPanelModuleController extends AbstractModuleController
     protected $tikaConfiguration = array();
 
     /**
-     * @var \ApacheSolrForTypo3\Tika\Service\Tika\AbstractService
+     * @var \ApacheSolrForTypo3\Tika\Service\Tika\AppService|\ApacheSolrForTypo3\Tika\Service\Tika\ServerService|\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService
      */
     protected $tikaService = null;
 
     /**
      * Can be used in the test context to force a view.
      *
-     * @param ViewInterface
+     * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view
      */
     public function overwriteView(ViewInterface $view) {
         $this->view = $view;
