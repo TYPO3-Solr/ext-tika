@@ -87,14 +87,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
 
         $tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
         $this->setTikaConfiguration($tikaConfiguration);
-        $this->setTikaService(ServiceFactory::getTika($this->tikaConfiguration['extractor']));
-    }
-
-    /**
-     * @param ServiceInterface $tikaService
-     */
-    private function setTikaService(ServiceInterface $tikaService) {
-       $this->tikaService = $tikaService;
+        $this->tikaService = ServiceFactory::getTika($this->tikaConfiguration['extractor']);
     }
 
     /**
