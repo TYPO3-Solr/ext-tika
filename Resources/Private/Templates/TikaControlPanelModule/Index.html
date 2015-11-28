@@ -4,6 +4,8 @@
 	f:schemaLocation="https://fluidtypo3.org/schemas/fluid-master.xsd">
 	<f:flashMessages renderMode="div" />
 
+	<h2 style="color:red">This module is still experimental and is supposed to only work with Tika Server for now.</h2>
+
 	<p>
 		Tika Mode:
 		<f:switch expression="{configuration.extractor}">
@@ -28,11 +30,11 @@
 		Tika Server status (PID): {f:if(condition: '{server.pid} > 0', then: 'running (pid: {server.pid})', else: 'server pid not found')}
 		</p>
 		<p>
-		Tika Server status (ping): {f:if(condition: '{server.isServerRunning}', then: 'running', else: 'stopped')}
+		Tika Server status (ping): {f:if(condition: '{server.isRunning}', then: 'running', else: 'stopped')}
 		</p>
 
 
-		<f:if condition="{server.isServerRunning}">
+		<f:if condition="{server.isRunning}">
 			<f:then>
 				<p>
 				Tika is running.<br />
