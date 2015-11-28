@@ -105,22 +105,24 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     public function indexAction()
     {
-        $this->checkTikaServerConnection();
-
         $this->view->assign('configuration', $this->tikaConfiguration);
         $this->view->assign('extractor',
             ucfirst($this->tikaConfiguration['extractor']));
 
-        $this->view->assign(
-            'server',
-            array(
-                'jarAvailable' => $this->isTikaServerJarAvailable(),
-                'isRunning' => $this->isTikaServerRunning(),
-                'isControllable' => $this->isTikaServerControllable(),
-                'pid' => $this->getTikaServerPid(),
-                'version' => $this->getTikaServerVersion()
-            )
-        );
+        if ($this->tikaConfiguration['extractor'] == 'server') {
+            $this->checkTikaServerConnection();
+
+            $this->view->assign(
+                'server',
+                array(
+                    'jarAvailable' => $this->isTikaServerJarAvailable(),
+                    'isRunning' => $this->isTikaServerRunning(),
+                    'isControllable' => $this->isTikaServerControllable(),
+                    'pid' => $this->getTikaServerPid(),
+                    'version' => $this->getTikaServerVersion()
+                )
+            );
+        }
     }
 
     /**
