@@ -28,7 +28,6 @@ use ApacheSolrForTypo3\Solr\Backend\SolrModule\AbstractModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceInterface;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
 
