@@ -2,6 +2,19 @@
 
 test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin/"
 
+if [ -z $TIKA_VERSION ]; then
+    echo "Must set env var TIKA_VERSION"
+    exit 1
+fi
+
+wget --version > /dev/null 2>&1
+if [ $? -ne "0" ]; then
+	echo "Couldn't find wget."
+	exit 1
+fi
+
+
+
 # download Tika if not present
 if [ ! -d "$TIKA_PATH" ]; then
 	mkdir -p "$TIKA_PATH"
