@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+#
+# Run this script once to set up a dev/test environment for this extension
+# Afterwards simply running cibuild.sh will execute the tests
+#
+
 test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin/"
 
 if [ -z $TIKA_VERSION ]; then
