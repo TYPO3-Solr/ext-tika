@@ -3,8 +3,8 @@
 test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin/"
 
 if [ -z $TIKA_VERSION ]; then
-    echo "Must set env var TIKA_VERSION"
-    exit 1
+	echo "Must set env var TIKA_VERSION"
+	exit 1
 fi
 
 wget --version > /dev/null 2>&1
