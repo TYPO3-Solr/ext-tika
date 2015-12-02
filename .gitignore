@@ -2,6 +2,7 @@
 /.project
 /.settings/
 /.idea/
+.DS_Store
 index.php
 typo3
 typo3_src
