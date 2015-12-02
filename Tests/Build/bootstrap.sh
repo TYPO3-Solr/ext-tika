@@ -5,7 +5,7 @@
 # Afterwards simply running cibuild.sh will execute the tests
 #
 
-test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin/"
+test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin"
 
 if [ -z $TIKA_VERSION ]; then
 	echo "Must set env var TIKA_VERSION"
