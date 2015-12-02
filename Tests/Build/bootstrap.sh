@@ -7,6 +7,11 @@ if [ -z $TIKA_VERSION ]; then
 	exit 1
 fi
 
+if [ -z $TYPO3_VERSION ]; then
+	echo "Must set env var TYPO3_VERSION"
+	exit 1
+fi
+
 wget --version > /dev/null 2>&1
 if [ $? -ne "0" ]; then
 	echo "Couldn't find wget."
