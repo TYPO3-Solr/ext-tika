@@ -21,9 +21,9 @@ if (TYPO3_MODE == 'BE') {
     if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
 
         $tikaExtensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-        $isSolrModuleEnabled = is_array($tikaExtensionConfiguration)
-            && isset($tikaExtensionConfiguration['registerSolrModule'])
-            && $tikaExtensionConfiguration['registerSolrModule'] == 1;
+        $isSolrModuleEnabled = (is_array($tikaExtensionConfiguration)
+            && isset($tikaExtensionConfiguration['showTikaSolrModule'])
+            && $tikaExtensionConfiguration['showTikaSolrModule'] == 1);
 
         if ($isSolrModuleEnabled) {
             \ApacheSolrForTypo3\Solr\Backend\SolrModule\AdministrationModuleManager::registerModule(
