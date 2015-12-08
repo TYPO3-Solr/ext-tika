@@ -25,6 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 
@@ -32,7 +33,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  * Class AppServiceTest
  *
  */
-class ServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class ServiceFactoryTest extends UnitTestCase
 {
 
     /**
@@ -48,33 +49,6 @@ class ServiceFactoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $extractor = ServiceFactory::getTika('jar', $this->getConfiguration());
         $this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\AppService',
             $extractor);
-    }
-
-    /**
-     * Creates configuration to be used fo tests
-     *
-     * @return array
-     */
-    protected function getConfiguration()
-    {
-        $tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.10';
-        $tikaPath = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : '/opt/tika';
-
-        return array(
-            'extractor' => '',
-            'logging' => 0,
-
-            'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
-
-            'tikaServerPath' => "$tikaPath/tika-server-$tikaVersion.jar",
-            'tikaServerHost' => 'localhost',
-            'tikaServerPort' => '9998',
-
-            'solrScheme' => 'http',
-            'solrHost' => 'localhost',
-            'solrPort' => '8080',
-            'solrPath' => '/solr/',
-        );
     }
 
     /**

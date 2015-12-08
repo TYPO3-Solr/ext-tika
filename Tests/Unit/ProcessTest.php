@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Process;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 
 
 /**

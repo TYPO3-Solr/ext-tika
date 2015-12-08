@@ -1,6 +1,8 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
 
+use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -25,7 +27,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 
-class AbstractServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class AbstractServiceTest extends UnitTestCase
 {
 
     /**
