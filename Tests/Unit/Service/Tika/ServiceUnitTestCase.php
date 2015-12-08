@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -33,7 +34,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Base class for EXT:tika tests
  *
  */
-abstract class ServiceUnitTestCase extends \TYPO3\CMS\Core\Tests\UnitTestCase
+abstract class ServiceUnitTestCase extends UnitTestCase
 {
 
     /**

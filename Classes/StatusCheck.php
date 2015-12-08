@@ -56,6 +56,7 @@ class StatusCheck
         $this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
     }
 
+
     /**
      * Updates the Tika availability status in the registry when clearing the
      * configuration cache.
@@ -86,6 +87,8 @@ class StatusCheck
             $this->hasCompleteLocalTikaConfiguration()
             ||
             $this->hasCompleteRemoteSolrExtractingRequestHandlerConfiguration()
+            ||
+            $this->hasCompleteTikaServerConfiguration()
         );
 
         return $isConfigured;
@@ -102,9 +105,8 @@ class StatusCheck
         $localConfigurationComplete = false;
 
         if ($this->tikaConfiguration['extractor'] == 'jar'
-            && is_file(GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'],
-                false))
-            && CommandUtility::checkCommand('java')
+            && $this->isFilePresent($this->tikaConfiguration['tikaPath'])
+            && $this->isJavaInstalled()
         ) {
 
             $localConfigurationComplete = true;
@@ -120,7 +122,7 @@ class StatusCheck
                 0,
                 array(
                     'configuration' => $this->tikaConfiguration,
-                    'javaFound' => CommandUtility::checkCommand('java'),
+                    'javaFound' => $this->isJavaInstalled(),
                     'tikaPath' => $this->tikaConfiguration['tikaPath'],
                     'absoluteTikaPath' => GeneralUtility::getFileAbsFileName($this->tikaConfiguration['tikaPath'],
                         false),
@@ -141,8 +143,7 @@ class StatusCheck
      *
      * @return boolean TRUE if the extension is configured to use a remote Solr server and if it's correctly configured, FALSE otherwise
      */
-    protected function hasCompleteRemoteSolrExtractingRequestHandlerConfiguration(
-    )
+    protected function hasCompleteRemoteSolrExtractingRequestHandlerConfiguration()
     {
         $remoteConfigurationComplete = false;
 
@@ -182,4 +183,43 @@ class StatusCheck
     }
 
 
+    /**
+     * Checks if we have a complete configuration to run tika locally.
+     *
+     * @return boolean TRUE if the extension is configured to use a remote Solr server and if it's correctly configured, FALSE otherwise
+     */
+    protected function hasCompleteTikaServerConfiguration()
+    {
+        $localConfigurationComplete = false;
+        if ($this->tikaConfiguration['extractor'] !== 'server') {
+            return $localConfigurationComplete;
+        }
+
+        if ($this->isFilePresent($this->tikaConfiguration['tikaServerPath']) && $this->isJavaInstalled()) {
+            $localConfigurationComplete = true;
+        }
+
+        return $localConfigurationComplete;
+    }
+
+    /**
+     * Checks if java is installed.
+     *
+     * @return bool
+     */
+    protected function isJavaInstalled()
+    {
+        return CommandUtility::checkCommand('java');
+    }
+
+    /**
+     * Checks if a certain file name is present.
+     *
+     * @param string $fileName
+     * @return bool
+     */
+    protected function isFilePresent($fileName)
+    {
+        return is_file(GeneralUtility::getFileAbsFileName($fileName, false));
+    }
 }
