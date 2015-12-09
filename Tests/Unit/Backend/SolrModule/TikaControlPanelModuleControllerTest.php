@@ -1,6 +1,7 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
 
+
 /***************************************************************
  *  Copyright notice
  *
@@ -25,8 +26,10 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 
-class TikaControlPanelModuleControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+
+class TikaControlPanelModuleControllerTest extends UnitTestCase
 {
     /**
      * @var \ApacheSolrForTypo3\Tika\Backend\SolrModule\TikaControlPanelModuleController
@@ -38,19 +41,11 @@ class TikaControlPanelModuleControllerTest extends \TYPO3\CMS\Core\Tests\UnitTes
      */
     protected $viewMock;
 
-    /**
-     * Returns a mocked object where all methods are mocked and it just "full fills" the object type.
-     *
-     * @param string $className
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function getDumbMock($className) {
-        return $this->getMock($className, array(), array(), '', FALSE);
-    }
-
-    public function setUp() {
+    public function setUp()
+    {
         $this->viewMock = $this->getDumbMock('\TYPO3\CMS\Extbase\Mvc\View\ViewInterface');
-        $this->controller = $this->getMock('\ApacheSolrForTypo3\Tika\Backend\SolrModule\TikaControlPanelModuleController', array('addFlashMessage'), array(), '', FALSE);
+        $this->controller = $this->getMock('\ApacheSolrForTypo3\Tika\Backend\SolrModule\TikaControlPanelModuleController',
+            array('addFlashMessage'), array(), '', false);
         $this->controller->overwriteView($this->viewMock);
     }
 
@@ -59,11 +54,27 @@ class TikaControlPanelModuleControllerTest extends \TYPO3\CMS\Core\Tests\UnitTes
      *
      * @test
      */
-    public function canShowInformationFromStandaloneTikaServer() {
-        $this->markTestIncomplete();
-        $tikaServerService = $this->getMock('ApacheSolrForTypo3\Tika\Service\Tika\ServerService', array(), array(), '', FALSE);
-        $tikaServerService->expects($this->once())->method('isAvailable')->will($this->returnValue(TRUE));
+    public function canShowInformationFromStandaloneTikaServer()
+    {
+        $tikaServerService = $this->getDumbMock('ApacheSolrForTypo3\Tika\Service\Tika\ServerService');
+        $tikaServerService->expects($this->atLeastOnce())->method('isServerRunning')->will($this->returnValue(true));
+        $tikaServerService->expects($this->atLeastOnce())->method('getServerPid')->will($this->returnValue(4711));
+        $tikaServerService->expects($this->atLeastOnce())->method('getTikaVersion')->will($this->returnValue("1.11"));
+
         $this->controller->setTikaService($tikaServerService);
+        $this->controller->setTikaConfiguration(
+            array('extractor' => 'server', 'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar'))
+        );
+
+        $this->viewMock->expects($this->at(2))->method('assign')->with('server',
+            array(
+                'jarAvailable' => true,
+                'isRunning' => true,
+                'isControllable' => true,
+                'pid' => 4711,
+                'version' => "1.11"
+            ));
+
         $this->controller->indexAction();
     }
 
@@ -72,9 +83,11 @@ class TikaControlPanelModuleControllerTest extends \TYPO3\CMS\Core\Tests\UnitTes
      *
      * @test
      */
-    public function canShowInformationFromSolrCellService() {
+    public function canShowInformationFromSolrCellService()
+    {
         $this->markTestIncomplete();
-        $tikaServerService = $this->getMock('ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService', array(), array(), '', FALSE);
+        $tikaServerService = $this->getMock('ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService', array(), array(),
+            '', false);
         $this->controller->setTikaService($tikaServerService);
         $this->controller->indexAction();
     }

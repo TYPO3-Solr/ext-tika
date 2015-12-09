@@ -77,6 +77,13 @@ class TikaControlPanelModuleController extends AbstractModuleController
     }
 
     /**
+     * @param \ApacheSolrForTypo3\Tika\Service\Tika\AbstractService $tikaService
+     */
+    public function setTikaService(\ApacheSolrForTypo3\Tika\Service\Tika\AbstractService $tikaService) {
+        $this->tikaService = $tikaService;
+    }
+
+    /**
      * Initializes resources commonly needed for several actions.
      *
      * @return void
