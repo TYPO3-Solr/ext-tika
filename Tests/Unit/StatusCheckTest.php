@@ -55,7 +55,7 @@ class StatusCheckTest extends UnitTestCase
     /**
      * @test
      */
-    public function canGenerateCorrectStatusInReportForJarAppModeMode()
+    public function canGenerateCorrectStatusInReportForJarAppMode()
     {
         $this->fakeTikaExtensionConfigurationForExtractor('jar');
 
@@ -70,7 +70,7 @@ class StatusCheckTest extends UnitTestCase
     /**
      * @test
      */
-    public function canGenerateCorrectStatusInReportForSolrModeMode()
+    public function canGenerateCorrectStatusInReportForSolrMode()
     {
         $this->fakeTikaExtensionConfigurationForExtractor('solr');
 
