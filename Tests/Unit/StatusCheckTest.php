@@ -55,7 +55,7 @@ class StatusCheckTest extends UnitTestCase
     /**
      * @test
      */
-    public function canGenerateCorrectStatusInReportForJarAppModeMode()
+    public function canGenerateCorrectStatusInReportForJarAppMode()
     {
         $this->fakeTikaExtensionConfigurationForExtractor('jar');
 
@@ -64,6 +64,57 @@ class StatusCheckTest extends UnitTestCase
         $isStatusOk = $statusCheck->getStatus();
 
         $this->assertTrue($isStatusOk);
+    }
+
+
+    /**
+     * @test
+     */
+    public function canGenerateCorrectStatusInReportForSolrMode()
+    {
+        $this->fakeTikaExtensionConfigurationForExtractor('solr');
+
+        //fake existing configured extract handler
+        $fakePluginStatus = new \stdClass();
+        $fakePluginStatus->plugins = new \stdClass();
+        $fakePluginStatus->plugins->QUERYHANDLER = array('/update/extract' => 'fake extract plugin data');
+
+        $solrServiceMock = $this->getDumbMock('\ApacheSolrForTypo3\Solr\SolrService');
+        $solrServiceMock->expects($this->once())->method('getPluginsInformation')->will($this->returnValue($fakePluginStatus));
+
+        /** @var  $statusCheck \ApacheSolrForTypo3\Tika\StatusCheck */
+        $statusCheck = $this->getMock('ApacheSolrForTypo3\\Tika\\StatusCheck',
+            array('getSolrServiceFromTikaConfiguration', 'writeDevLog'));
+        $statusCheck->expects($this->any())->method('getSolrServiceFromTikaConfiguration')->will($this->returnValue($solrServiceMock));
+        // we expect that no devLog will be written
+        $statusCheck->expects($this->never())->method('writeDevLog');
+
+        $isStatusOk = $statusCheck->getStatus();
+
+        $this->assertTrue($isStatusOk);
+    }
+
+    /**
+     * @test
+     */
+    public function canWriteLogWhenExceptionIsThrownDuringRetrievalOfSolrPluginInformation()
+    {
+        $this->fakeTikaExtensionConfigurationForExtractor('solr');
+
+        $solrServiceMock = $this->getDumbMock('\ApacheSolrForTypo3\Solr\SolrService');
+        $solrServiceMock->expects($this->once())->method('getPluginsInformation')->will($this->throwException(
+            new \Exception()
+        ));
+
+        /** @var  $statusCheck \ApacheSolrForTypo3\Tika\StatusCheck */
+        $statusCheck = $this->getMock('ApacheSolrForTypo3\\Tika\\StatusCheck',
+            array('getSolrServiceFromTikaConfiguration', 'writeDevLog'));
+        $statusCheck->expects($this->any())->method('getSolrServiceFromTikaConfiguration')->will($this->returnValue($solrServiceMock));
+        $statusCheck->expects($this->atLeastOnce())->method('writeDevLog');
+
+        $isStatusOk = $statusCheck->getStatus();
+
+        $this->assertFalse($isStatusOk);
     }
 
     /**
@@ -78,4 +129,41 @@ class StatusCheckTest extends UnitTestCase
         $configuration['extractor'] = $extractorName;
         $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = serialize($configuration);
     }
+
+    /**
+     * @test
+     */
+    public function updateStatusWillUpdateRegistryWithValidCacheCommand()
+    {
+        $registryMock = $this->getDumbMock('TYPO3\\CMS\\Core\\Registry');
+        $dataHandlerMock = $this->getDumbMock('TYPO3\CMS\Core\DataHandling\DataHandler');
+
+        /** @var  $statusCheck \ApacheSolrForTypo3\Tika\StatusCheck */
+        $statusCheck = $this->getMock('ApacheSolrForTypo3\\Tika\\StatusCheck', array('getRegistry', 'getStatus'));
+        $statusCheck->expects($this->any())->method('getStatus')->will($this->returnValue(true));
+        $statusCheck->expects($this->any())->method('getRegistry')->will($this->returnValue($registryMock));
+
+        $registryMock->expects($this->exactly(1))->method('set')->with('Tx_Tika', 'available', true);
+
+        $statusCheck->updateStatus(array('cacheCmd' => 'all'), $dataHandlerMock);
+    }
+
+    /**
+     * @test
+     */
+    public function updateStatusWillNotUpdateRegistryWithInValidCacheCommand()
+    {
+        $registryMock = $this->getDumbMock('TYPO3\\CMS\\Core\\Registry');
+        $dataHandlerMock = $this->getDumbMock('TYPO3\CMS\Core\DataHandling\DataHandler');
+
+        /** @var  $statusCheck \ApacheSolrForTypo3\Tika\StatusCheck */
+        $statusCheck = $this->getMock('ApacheSolrForTypo3\\Tika\\StatusCheck', array('getRegistry', 'getStatus'));
+        $statusCheck->expects($this->any())->method('getStatus')->will($this->returnValue(true));
+        $statusCheck->expects($this->any())->method('getRegistry')->will($this->returnValue($registryMock));
+
+        $registryMock->expects($this->never())->method('set');
+
+        $statusCheck->updateStatus(array('cacheCmd' => 'invalid'), $dataHandlerMock);
+    }
+
 }

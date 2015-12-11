@@ -105,14 +105,23 @@ class MetaDataExtractor extends AbstractExtractor
         File $file,
         array $previousExtractedData = array()
     ) {
-        $metaData = null;
-
-        $tikaService = ServiceFactory::getTika($this->configuration['extractor']);
-        $extractedMetaData = $tikaService->extractMetaData($file);
-
+        $extractedMetaData = $this->getExtractedMetaDataFromTikaService($file);
         $metaData = $this->normalizeMetaData($extractedMetaData);
 
         return $metaData;
+    }
+
+    /**
+     * Creates an instance of the service and returns the result from "extractMetaData".
+     *
+     * @param File $file
+     * @return array
+     */
+    protected function getExtractedMetaDataFromTikaService($file)
+    {
+        $tikaService = ServiceFactory::getTika($this->configuration['extractor']);
+
+        return $tikaService->extractMetaData($file);
     }
 
     /**

@@ -56,6 +56,13 @@ class StatusCheck
         $this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
     }
 
+    /**
+     * @return \TYPO3\CMS\Core\Registry
+     */
+    protected function getRegistry()
+    {
+        return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+    }
 
     /**
      * Updates the Tika availability status in the registry when clearing the
@@ -67,11 +74,10 @@ class StatusCheck
     public function updateStatus(array $parameters, DataHandler $dataHandler)
     {
         $clearCacheCommand = $parameters['cacheCmd'];
-
         if ($clearCacheCommand == 'all' || $clearCacheCommand == 'temp_cached') {
             $status = $this->getStatus();
 
-            $registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+            $registry = $this->getRegistry();
             $registry->set('Tx_Tika', 'available', $status);
         }
     }
@@ -113,10 +119,10 @@ class StatusCheck
         }
 
         if ($this->tikaConfiguration['logging']) {
-            $registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+            $registry = $this->getRegistry();
             $registryStatus = $registry->get('Tx_Tika', 'available');
 
-            GeneralUtility::devLog(
+            $this->writeDevLog(
                 'Has complete local Tika configuration: ' . ($localConfigurationComplete == true ? 'yes' : 'no'),
                 'tika',
                 0,
@@ -151,23 +157,18 @@ class StatusCheck
 
             try {
                 /* @var $solr \ApacheSolrForTypo3\Solr\SolrService */
-                $solr = GeneralUtility::makeInstance('ApacheSolrForTypo3\\Solr\\ConnectionManager')->getConnection(
-                    $this->tikaConfiguration['solrHost'],
-                    $this->tikaConfiguration['solrPort'],
-                    $this->tikaConfiguration['solrPath'],
-                    $this->tikaConfiguration['solrScheme']
-                );
+                $solr = $this->getSolrServiceFromTikaConfiguration();
 
                 $solr->ping();
                 $plugins = $solr->getPluginsInformation();
-
                 if (array_key_exists('/update/extract',
                     $plugins->plugins->QUERYHANDLER)) {
                     $remoteConfigurationComplete = true;
                 }
             } catch (\Exception $e) {
                 $remoteConfigurationComplete = false;
-                GeneralUtility::devLog(
+
+                $this->writeDevLog(
                     'Exception while retrieving Solr plugin list',
                     'tika',
                     3,
@@ -182,6 +183,31 @@ class StatusCheck
         return $remoteConfigurationComplete;
     }
 
+    /**
+     * Wrapper for GeneralUtility::devLog, use to test if log will be written.
+     *
+     * @param $msg
+     * @param $extKey
+     * @param int $severity
+     * @param bool $dataVar
+     */
+    protected function writeDevLog($msg, $extKey, $severity = 0, $dataVar = false)
+    {
+        GeneralUtility::devLog($msg, $extKey, $severity, $dataVar);
+    }
+
+    /**
+     * @return \ApacheSolrForTypo3\Solr\SolrService
+     */
+    protected function getSolrServiceFromTikaConfiguration()
+    {
+        return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Solr\\ConnectionManager')->getConnection(
+            $this->tikaConfiguration['solrHost'],
+            $this->tikaConfiguration['solrPort'],
+            $this->tikaConfiguration['solrPath'],
+            $this->tikaConfiguration['solrScheme']
+        );
+    }
 
     /**
      * Checks if we have a complete configuration to run tika locally.
