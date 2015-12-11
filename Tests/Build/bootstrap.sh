@@ -61,7 +61,7 @@ else
 	composer require typo3/cms="$TYPO3_VERSION"
 fi
 
-composer require apache-solr-for-typo3/solr=dev-master
+composer require apache-solr-for-typo3/solr=3.1.0
 
 # Restore composer.json
 git checkout composer.json
