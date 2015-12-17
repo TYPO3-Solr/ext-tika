@@ -4,19 +4,19 @@
 # customcategory=server=Tika Server
 # customcategory=solr=Solr Server
 
-# cat=general//10; type=options[Tika App=jar,Tika Server=server,Solr Server=solr]; label=Tika Mode: Extraction will be faster when using Tika Server.
+# cat=general//10; type=options[Tika App=jar,Tika Server=server,Solr Server=solr]; label=Extractor: Choose a service to use for extraction.
 extractor = server
 
-# cat=general//20; type=boolean; label=Log Tika calls
+# cat=general//20; type=boolean; label=Enable Logging
 logging = 0
 
 # cat=general//30; type=boolean; label=Show Tika Backend Module: Enables a Tika module within the Solr backend module (experimental, only works with Tika server)
 showTikaSolrModule = 0
 
-#  cat=jar//10; type=string; label= Tika Path: The absolute path to your Apache Tika app jar file (tika-app-x.x.jar)
+#  cat=jar//10; type=string; label=Tika App Jar Path: The absolute path to your Apache Tika app jar file (tika-app-x.x.jar)
 tikaPath =
 
-#  cat=server//10; type=string; label= Tika Path: The absolute path to your Apache Tika server jar file (tika-server-x.x.jar). This setting is optional, when provided you can use the backend module to control the Tika server from there. Otherwise the host and port settings will be used.
+#  cat=server//10; type=string; label=Tika Server Jar Path: [Optional] The absolute path to your Apache Tika server jar file (tika-server-x.x.jar). When set you can use the backend module to start and stop the Tika server from the TYPO3 backend. Otherwise the host and port settings will be used.
 tikaServerPath =
 
 # cat=server//30; type=string; label=Host
@@ -34,7 +34,7 @@ solrHost = localhost
 # cat=solr//30; type=string; label=Port
 solrPort = 8080
 
-# cat=solr//40; type=string; label=Path
+# cat=solr//40; type=string; label=Path: Path to a Solr core
 solrPath = /solr/
 
 
