@@ -1,8 +1,4 @@
 
-/*
-  TODO add a custom field type to select the solr server instead of providing the host, port, and path again
-*/
-
 # customcategory=general=General
 # customcategory=jar=Tika App
 # customcategory=server=Tika Server
