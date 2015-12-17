@@ -28,7 +28,6 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * A Tika service implementation using the tika-server.jar
  *
@@ -166,8 +165,10 @@ class ServerService extends AbstractService
     public function ping()
     {
         $tikaPing = $this->queryTika('/tika');
-        $tikaReachable = GeneralUtility::isFirstPartOfStr($tikaPing,
-            'This is Tika Server.');
+        $tikaReachable = GeneralUtility::isFirstPartOfStr(
+            $tikaPing,
+            'This is Tika Server.'
+        );
 
         return $tikaReachable;
     }
@@ -353,5 +354,4 @@ class ServerService extends AbstractService
 
         return $response;
     }
-
 }
