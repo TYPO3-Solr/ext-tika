@@ -14,7 +14,7 @@ extractor = server
 # cat=general//20; type=boolean; label=Log Tika calls
 logging = 0
 
-# cat=general//30; type=boolean; label=Show the Tika sub-module in the Solr backend module (experimental, only works with Tika server)
+# cat=general//30; type=boolean; label=Show Tika Backend Module: Enables a Tika module within the Solr backend module (experimental, only works with Tika server)
 showTikaSolrModule = 0
 
 #  cat=jar//10; type=string; label= Tika Path: The absolute path to your Apache Tika app jar file (tika-app-x.x.jar)
