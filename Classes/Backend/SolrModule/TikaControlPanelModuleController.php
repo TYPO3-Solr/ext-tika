@@ -31,7 +31,6 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
-
 /**
  * Tika Control Panel
  *
@@ -53,7 +52,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      *
      * @var string
      */
-    protected $moduleTitle = 'Tika';
+    protected $moduleTitle = 'Tika Server';
 
     /**
      * Tika configuration
@@ -72,14 +71,16 @@ class TikaControlPanelModuleController extends AbstractModuleController
      *
      * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view
      */
-    public function overwriteView(ViewInterface $view) {
+    public function overwriteView(ViewInterface $view)
+    {
         $this->view = $view;
     }
 
     /**
      * @param \ApacheSolrForTypo3\Tika\Service\Tika\AbstractService $tikaService
      */
-    public function setTikaService(\ApacheSolrForTypo3\Tika\Service\Tika\AbstractService $tikaService) {
+    public function setTikaService(\ApacheSolrForTypo3\Tika\Service\Tika\AbstractService $tikaService)
+    {
         $this->tikaService = $tikaService;
     }
 
@@ -100,7 +101,8 @@ class TikaControlPanelModuleController extends AbstractModuleController
     /**
      * @param array $tikaConfiguration
      */
-    public function setTikaConfiguration(array $tikaConfiguration) {
+    public function setTikaConfiguration(array $tikaConfiguration)
+    {
         $this->tikaConfiguration = $tikaConfiguration;
     }
 
@@ -280,5 +282,4 @@ class TikaControlPanelModuleController extends AbstractModuleController
             );
         }
     }
-
 }
