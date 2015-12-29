@@ -27,7 +27,6 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use TYPO3\CMS\Core\Resource\File;
 
-
 /**
  * A service to extract meta data from files using Apache Tika
  *
@@ -241,5 +240,4 @@ class MetaDataExtractor extends AbstractExtractor
 
         return $date;
     }
-
 }
