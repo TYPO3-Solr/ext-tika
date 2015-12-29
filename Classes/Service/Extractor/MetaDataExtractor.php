@@ -211,6 +211,7 @@ class MetaDataExtractor extends AbstractExtractor
                 case 'Page-Count':
                     $metaDataCleaned['pages'] = $value;
                     break;
+                case 'Application-Name':
                 case 'xmp:CreatorTool':
                     $metaDataCleaned['creator_tool'] = $value;
                     break;
