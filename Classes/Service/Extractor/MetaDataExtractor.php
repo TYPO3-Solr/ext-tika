@@ -179,6 +179,7 @@ class MetaDataExtractor extends AbstractExtractor
                 case 'Image Description':
                 case 'Jpeg Comment':
                 case 'subject':
+                case 'dc:description':
                     $metaDataCleaned['description'] = $value;
                     break;
                 case 'Headline':
