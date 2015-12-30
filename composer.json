@@ -32,7 +32,7 @@
     "phpspec/prophecy": "~1.0"
   },
   "suggest": {
-    "apache-solr-for-typo3/solr": "^3.1.0 || dev-master"
+    "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr."
   },
   "autoload": {
     "psr-4": {
