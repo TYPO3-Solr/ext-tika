@@ -55,13 +55,8 @@ echo "Tika pid: $TIKA_PID"
 
 echo "PWD: $(pwd)"
 
-if [[ $TYPO3_VERSION == ~6.2.* ]]; then
-	composer require typo3/cms="$TYPO3_VERSION" typo3/cms-composer-installers="1.2.2 as 1.1.4"
-else
-	composer require typo3/cms="$TYPO3_VERSION"
-fi
-
-composer require apache-solr-for-typo3/solr=3.1.0
+composer require typo3/cms="$TYPO3_VERSION"
+composer require apache-solr-for-typo3/solr:"^3.1.0 || dev-master"
 
 # Restore composer.json
 git checkout composer.json
