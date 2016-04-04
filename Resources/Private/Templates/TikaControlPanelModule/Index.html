@@ -42,7 +42,9 @@
 
 				<f:if condition="{server.isControllable}">
 					Tika can be controlled. PID: {server.pid}
-					<solr:backend.button.ActionButton action="stopServer" label="Stop Tika Server" />
+					<f:form controller="Administration" extensionName="solr" arguments="{module:'{module.name}', moduleAction:'stopServer'}" method="POST">
+						<f:form.submit class="btn btn-sm btn-default" value="Stop Tika Server"/>
+					</f:form>
 				</f:if>
 				</p>
 			</f:then>
@@ -52,7 +54,9 @@
 
 				<f:if condition="{server.isControllable}">
 					Tika can be controlled.
-					<solr:backend.button.ActionButton action="startServer" label="Start Tika Server" />
+					<f:form controller="Administration" extensionName="solr" arguments="{module:'{module.name}', moduleAction:'startServer'}" method="POST">
+						<f:form.submit class="btn btn-sm btn-default" value="Start Tika Server"/>
+					</f:form>
 				</f:if>
 				</p>
 			</f:else>

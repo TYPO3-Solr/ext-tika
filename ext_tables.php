@@ -8,15 +8,19 @@ if (TYPO3_MODE == 'BE') {
     $statusSection = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr') ? 'solr' : 'tika';
 
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'][$statusSection][] = 'ApacheSolrForTypo3\\Tika\\Report\\TikaStatus';
+    $extIconPath = 'EXT:tika/Resources/Public/Images/Icons/';
 
-    $iconPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY)
-        . 'Resources/Public/Images/Icons/';
-    \TYPO3\CMS\Backend\Sprite\SpriteManager::addSingleIcons(
-        array(
-            'ModuleTikaControlPanel' => $iconPath . 'Tika.png'
-        ),
-        $_EXTKEY
-    );
+
+    $modulePrefix = 'extensions-tika-module';
+    $bitmapProvider = 'TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider';
+
+    // register all module icons with extensions-solr-module-modulename
+    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconRegistry');
+
+    $iconRegistry->registerIcon($modulePrefix . '-tikacontrolpanel', $bitmapProvider,
+        array('source' => $extIconPath . 'Tika.png'));
+
+
 
     if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
         $tikaExtensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);

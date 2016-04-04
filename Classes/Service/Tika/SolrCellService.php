@@ -92,7 +92,7 @@ class SolrCellService extends AbstractService
             $localTempFilePath
         );
         $query->setExtractOnly();
-        $response = $this->solr->extract($query);
+        $response = $this->solr->extractByQuery($query);
 
         $this->cleanupTempFile($localTempFilePath, $file);
 
@@ -120,7 +120,7 @@ class SolrCellService extends AbstractService
             $localTempFilePath
         );
         $query->setExtractOnly();
-        $response = $this->solr->extract($query);
+        $response = $this->solr->extractByQuery($query);
         $metaData = $this->solrResponseToArray($response[1]);
 
         $this->cleanupTempFile($localTempFilePath, $file);
