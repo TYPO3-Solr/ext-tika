@@ -7,7 +7,7 @@ php:
 
 env:
   global:
-    - TIKA_VERSION="1.11"
+    - TIKA_VERSION="1.12"
     - TIKA_PATH=$HOME/tika
   matrix:
     - TYPO3_VERSION="~7.6.0"

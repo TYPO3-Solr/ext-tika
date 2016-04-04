@@ -56,7 +56,7 @@ echo "Tika pid: $TIKA_PID"
 echo "PWD: $(pwd)"
 
 composer require typo3/cms="$TYPO3_VERSION"
-composer require apache-solr-for-typo3/solr:"^3.1.0 || dev-master"
+composer require apache-solr-for-typo3/solr:"^4.0.0 || dev-master"
 
 # Restore composer.json
 git checkout composer.json

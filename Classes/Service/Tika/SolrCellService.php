@@ -92,7 +92,14 @@ class SolrCellService extends AbstractService
             $localTempFilePath
         );
         $query->setExtractOnly();
-        $response = $this->solr->extract($query);
+
+        // todo: this can be removed when we drop EXT:solr 3.1 compatibility
+        $solrVersion = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion('solr');
+        if(version_compare($solrVersion, '3.1', '>')) {
+            $response = $this->solr->extractByQuery($query);
+        } else {
+            $response = $this->solr->extract($query);
+        }
 
         $this->cleanupTempFile($localTempFilePath, $file);
 
@@ -120,9 +127,16 @@ class SolrCellService extends AbstractService
             $localTempFilePath
         );
         $query->setExtractOnly();
-        $response = $this->solr->extract($query);
-        $metaData = $this->solrResponseToArray($response[1]);
 
+        // todo: this can be removed when we drop EXT:solr 3.1 compatibility
+        $solrVersion = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion('solr');
+        if(version_compare($solrVersion, '3.1', '>')) {
+            $response = $this->solr->extractByQuery($query);
+        } else {
+            $response = $this->solr->extract($query);
+        }
+
+        $metaData = $this->solrResponseToArray($response[1]);
         $this->cleanupTempFile($localTempFilePath, $file);
 
         $this->log('Meta Data Extraction using Solr', array(
