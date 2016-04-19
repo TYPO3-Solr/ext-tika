@@ -76,11 +76,11 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     /**
      * @test
      */
-    public function extractTextReturnsTextElementFromResponse()
+    public function extractByQueryTextReturnsTextElementFromResponse()
     {
         $expectedValue = 'extracted text element';
         $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
-        $solrMock->extract(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))->willReturn(array(
+        $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))->willReturn(array(
             $expectedValue,     // extracted text is index 0
             'meta data element' // meta data is index 1
         ));
@@ -103,10 +103,10 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     /**
      * @test
      */
-    public function extractTextUsesSolrCellQuery()
+    public function extractByQueryTextUsesSolrCellQuery()
     {
         $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
-        $solrMock->extract(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
+        $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
             ->shouldBeCalled();
 
         $service = new SolrCellService($this->getConfiguration());
@@ -153,7 +153,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     public function extractMetaDataUsesSolrCellQuery()
     {
         $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
-        $solrMock->extract(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
+        $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
             ->shouldBeCalled()
             ->willReturn(array(
                 'foo',       // extracted text is index 0
