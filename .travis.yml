@@ -22,9 +22,13 @@ before_install:
   - composer self-update
   - composer --version
 
-install: Tests/Build/bootstrap.sh
-script: Tests/Build/cibuild.sh
-after_script: Tests/Build/cleanup.sh
+install:
+  - Build/Test/bootstrap.sh
+script:
+  - Build/Test/cibuild.sh
+after_script:
+  - Build/Release/ter_tag_uploader.sh
+  - Build/Test/cleanup.sh
 
 cache:
   directories:
