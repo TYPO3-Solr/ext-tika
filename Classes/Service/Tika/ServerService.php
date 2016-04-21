@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -79,10 +80,7 @@ class ServerService extends AbstractService
      */
     protected function getStartCommand()
     {
-        $tikaJar = GeneralUtility::getFileAbsFileName(
-            $this->configuration['tikaServerPath'],
-            false
-        );
+        $tikaJar = FileUtility::getAbsoluteFilePath($this->configuration['tikaServerPath']);
         $command = '-jar ' . escapeshellarg($tikaJar);
         $command .= ' -p ' . escapeshellarg($this->configuration['tikaServerPort']);
 
