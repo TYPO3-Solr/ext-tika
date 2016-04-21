@@ -24,9 +24,9 @@ do the following:
 export TIKA_VERSION="1.11"
 export TIKA_PATH="/tmp/tika"
 export TYPO3_VERSION="dev-master"
-chmod +x ./Tests/Build/*.sh
-./Tests/Build/bootstrap.sh
-./Tests/Build/cibuild.sh
+chmod +x ./Build/Test/*.sh
+./Build/Test/bootstrap.sh
+./Build/Test/cibuild.sh
 ```
 
 ## <a name="Contributions"></a>Contributions
