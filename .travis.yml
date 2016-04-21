@@ -10,13 +10,14 @@ env:
     - TIKA_VERSION="1.12"
     - TIKA_PATH=$HOME/tika
   matrix:
-    - TYPO3_VERSION="~7.6.0"
+    - TYPO3_VERSION="~7.6.5"
+    - TYPO3_VERSION="~8.0.1"
     - TYPO3_VERSION="dev-master"
 
 matrix:
   fast_finish: true
   allow_failures:
-    - php: 7.0
+    - env: TYPO3_VERSION="dev-master"
 
 before_install:
   - composer self-update
