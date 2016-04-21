@@ -15,10 +15,10 @@
 
 	<testsuites>
 		<testsuite name="tika-unit-tests">
-			<directory>../Unit/</directory>
+			<directory>../../Tests/Unit/</directory>
 		</testsuite>
 		<testsuite name="tika-integration-tests">
-			<directory>../Integration/</directory>
+			<directory>../../Tests/Integration/</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
