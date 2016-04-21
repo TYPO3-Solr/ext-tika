@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use ApacheSolrForTypo3\Tika\Utility\ShellUtility;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
@@ -44,8 +45,7 @@ class AppService extends AbstractService
      */
     protected function initializeService()
     {
-        if (!is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'],
-            false))
+        if (!is_file(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
         ) {
             throw new \RuntimeException(
                 'Invalid path or filename for Tika application jar: ' . $this->configuration['tikaPath'],
@@ -67,8 +67,7 @@ class AppService extends AbstractService
     {
         $tikaCommand = CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8' // forces UTF8 output
-            . ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'],
-                false))
+            . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -V';
 
         return shell_exec($tikaCommand);
@@ -86,8 +85,7 @@ class AppService extends AbstractService
         $tikaCommand = ShellUtility::getLanguagePrefix()
             . CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8' // forces UTF8 output
-            . ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'],
-                false))
+            . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -t'
             . ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
 
@@ -115,8 +113,7 @@ class AppService extends AbstractService
         $tikaCommand = ShellUtility::getLanguagePrefix()
             . CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
-            . ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'],
-                false))
+            . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -m'
             . ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
 
@@ -182,8 +179,7 @@ class AppService extends AbstractService
         $tikaCommand = ShellUtility::getLanguagePrefix()
             . CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
-            . ' -jar ' . escapeshellarg(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'],
-                false))
+            . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -l'
             . ' ' . ShellUtility::escapeShellArgument($localFilePath);
 
@@ -260,7 +256,7 @@ class AppService extends AbstractService
      */
     public function isAvailable()
     {
-        $tikaFileExists = is_file(GeneralUtility::getFileAbsFileName($this->configuration['tikaPath'], false));
+        $tikaFileExists = is_file(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']));
         if (!$tikaFileExists) {
             return false;
         }

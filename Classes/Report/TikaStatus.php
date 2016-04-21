@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Report;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Reports\Status;
@@ -250,7 +251,7 @@ class TikaStatus implements StatusProviderInterface
      */
     protected function isFilePresent($fileName)
     {
-        return is_file(GeneralUtility::getFileAbsFileName($fileName, false));
+        return is_file(FileUtility::getAbsoluteFilePath($fileName));
     }
 
     /**
