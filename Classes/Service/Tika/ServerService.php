@@ -43,6 +43,10 @@ class ServerService extends AbstractService
      */
     protected $tikaUrl;
 
+    /**
+     * @var array
+     */
+    protected static $supportedMimeTypes = [];
 
     /**
      * Service initialization
@@ -351,5 +355,68 @@ class ServerService extends AbstractService
         $response = $this->queryTika('/language/string', $context);
 
         return $response;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSupportedMimeTypes()
+    {
+        if(is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
+            return self::$supportedMimeTypes;
+        }
+
+        self::$supportedMimeTypes = $this->buildSupportedMimeTypes();
+
+        return self::$supportedMimeTypes;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMimeTypeJsonFromTikaServer()
+    {
+        $headers = array(
+            TYPO3_user_agent,
+            'Content-Type: application/octet-stream',
+            'Accept: application/json',
+            'Connection: close'
+        );
+
+        $context = stream_context_create(array(
+                'http' => array(
+                    'protocol_version' => 1.1,
+                    'method' => 'GET',
+                    'header' => implode(CRLF, $headers),
+                )
+            )
+        );
+
+        $response = $this->queryTika('/mime-types', $context);
+        return $response;
+    }
+
+    /**
+     * @return array
+     */
+    protected function buildSupportedMimeTypes()
+    {
+        $response = $this->getMimeTypeJsonFromTikaServer();
+
+        $result = (json_decode($response));
+        $definitions = get_object_vars($result);
+        $coreTypes = [];
+        $aliasTypes = [];
+        foreach ($definitions as $coreMimeType => $configuration) {
+            if (isset($configuration->alias) && is_array($configuration->alias)) {
+                $aliasTypes += $configuration->alias;
+            }
+            $coreTypes[] = $coreMimeType;
+        }
+
+        $supportedTypes = $coreTypes + $aliasTypes;
+        $supportedTypes = array_filter($supportedTypes);
+        asort($supportedTypes);
+        return $supportedTypes;
     }
 }

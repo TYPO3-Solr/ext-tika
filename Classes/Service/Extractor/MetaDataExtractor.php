@@ -35,42 +35,6 @@ use TYPO3\CMS\Core\Resource\File;
  */
 class MetaDataExtractor extends AbstractExtractor
 {
-
-    protected $supportedFileTypes = array(
-        'aiff',
-        'au',
-        'bmp',
-        'doc',
-        'docx',
-        'epub',
-        'flv',
-        'gif',
-        'htm',
-        'html',
-        'jpg',
-        'jpeg',
-        'mid',
-        'mp3',
-        'msg',
-        'odf',
-        'odt',
-        'pdf',
-        'png',
-        'ppt',
-        'pptx',
-        'rtf',
-        'svg',
-        'sxw',
-        'tgz',
-        'tiff',
-        'txt',
-        'wav',
-        'xls',
-        'xlsx',
-        'xml',
-        'zip'
-    );
-
     /**
      * @var integer
      */
@@ -85,12 +49,17 @@ class MetaDataExtractor extends AbstractExtractor
      */
     public function canProcess(File $file)
     {
-        // TODO use MIME type instead of extension
-        // tika.jar --list-supported-types -> cache supported types
-        // compare to file's MIME type
+        $tikaService = $this->getExtractor();
+        $mimeTypes =  $tikaService->getSupportedMimeTypes();
 
-        return in_array($file->getProperty('extension'),
-            $this->supportedFileTypes);
+        return in_array($file->getMimeType(), $mimeTypes);
+    }
+
+    /**
+     * @return \ApacheSolrForTypo3\Tika\Service\Tika\AppService|\ApacheSolrForTypo3\Tika\Service\Tika\ServerService|\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService
+     */
+    protected function getExtractor() {
+        return ServiceFactory::getTika($this->configuration['extractor']);
     }
 
     /**
@@ -118,9 +87,10 @@ class MetaDataExtractor extends AbstractExtractor
      */
     protected function getExtractedMetaDataFromTikaService($file)
     {
-        $tikaService = ServiceFactory::getTika($this->configuration['extractor']);
+        $tikaService = $this->getExtractor();
+        $result= $tikaService->extractMetaData($file);
 
-        return $tikaService->extractMetaData($file);
+        return $result;
     }
 
     /**

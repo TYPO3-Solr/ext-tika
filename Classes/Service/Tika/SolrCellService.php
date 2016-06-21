@@ -211,6 +211,53 @@ class SolrCellService extends AbstractService
     }
 
     /**
+     * Since solr cell does not allow to query the supported mimetypes, we return a list of known supported mimetypes here.
+     *
+     * @return array
+     */
+    public function getSupportedMimeTypes()
+    {
+        $mapping = [
+            'application/epub+zip' => ['epub'],
+            'application/gzip' => ['gz','tgz'],
+            'application/msword' => ['doc'],
+            'application/pdf' => ['pdf'],
+            'application/rtf' => ['rtf'],
+            'application/vnd.ms-excel' => ['xsl'],
+            'application/vnd.ms-outlook' => ['msg'],
+            'application/vnd.oasis.opendocument.formula' => ['odf'],
+            'application/vnd.oasis.opendocument.text' => ['odt'],
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation' => ['pptx'],
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => ['xlsx'],
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => ['docx'],
+            'application/vnd.sun.xml.writer' => ['sxw'],
+            'application/zip' => ['zip'],
+            'application/x-midi' => ['mid'],
+            'application/xml' => ['xml'],
+            'audio/aiff' => ['aif','aiff'],
+            'audio/basic' => ['au'],
+            'audio/midi' => ['mid'],
+            'audio/mpeg3' => ['mp3'],
+            'audio/wav' => ['wav'],
+            'audio/x-mpeg-3' => ['mp3'],
+            'audio/x-wav' => ['wav'],
+            'image/bmp' => ['bmp'],
+            'image/gif' => ['gif'],
+            'image/jpeg' => ['jpg','jpeg'],
+            'image/png' => ['png'],
+            'image/svg+xml' => ['svg'],
+            'image/tiff' => ['tif','tiff'],
+            'text/html' => ['html','htm'],
+            'text/plain' => ['txt'],
+            'text/xml' => ['xml'],
+            'video/mpeg' => ['mp3'],
+            'video/x-mpeg' => ['mp3']
+        ];
+
+        return array_keys($mapping);
+    }
+
+    /**
      * The service is available when the solr server is reachable.
      *
      * @return bool

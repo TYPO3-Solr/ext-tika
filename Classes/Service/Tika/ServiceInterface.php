@@ -76,6 +76,11 @@ interface ServiceInterface
     public function detectLanguageFromString($input);
 
     /**
+     * @return mixed
+     */
+    public function getSupportedMimeTypes();
+
+    /**
      * Public method to check the availability of this service.
      *
      * @return boolean

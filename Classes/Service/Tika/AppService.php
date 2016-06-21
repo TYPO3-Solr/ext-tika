@@ -37,6 +37,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class AppService extends AbstractService
 {
+    /**
+    * @var array
+    */
+    protected static $supportedMimeTypes = [];
 
     /**
      * Service initialization
@@ -195,6 +199,43 @@ class AppService extends AbstractService
     }
 
     /**
+     * @return array
+     */
+    public function getSupportedMimeTypes()
+    {
+        if(is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
+            return self::$supportedMimeTypes;
+        }
+
+        self::$supportedMimeTypes = $this->buildSupportedMimeTypes();
+
+        return self::$supportedMimeTypes;
+    }
+
+    /**
+     * @return array
+     */
+    public function buildSupportedMimeTypes()
+    {
+        $mimeTypeOutput = $this->getMimeTypeOutputFromTikaJar();
+        $coreTypes = [];
+        preg_match_all('/^[^\s]*/im', $mimeTypeOutput, $coreTypes);
+
+        $aliasTypes = [];
+        preg_match_all('/^[\s]*alias:[\s]*.*/im', $mimeTypeOutput, $aliasTypes);
+
+        $supportedTypes = $coreTypes[0];
+        foreach($aliasTypes[0] as $aliasType) {
+            $supportedTypes[] = trim(str_replace('alias:','', $aliasType));
+        }
+
+        $supportedTypes = array_filter($supportedTypes);
+        asort($supportedTypes);
+        return $supportedTypes;
+    }
+
+
+    /**
      * Takes shell output from exec() and turns it into an array of key => value
      * pairs.
      *
@@ -267,5 +308,14 @@ class AppService extends AbstractService
         }
 
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getMimeTypeOutputFromTikaJar()
+    {
+        $tikaCommand = ShellUtility::getLanguagePrefix() . CommandUtility::getCommand('java') . ' -Dfile.encoding=UTF8' . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath'])) . ' --list-supported-types';
+        return trim(shell_exec($tikaCommand));
     }
 }
