@@ -274,6 +274,31 @@ class ServerServiceTest extends UnitTestCase
     }
 
     /**
+     * @test
+     */
+    public function extractsTextFromZipFile()
+    {
+        $service = new ServerService($this->getTikaServerConfiguration());
+
+        $file = new File(
+            array(
+                'identifier' => 'test-documents.zip',
+                'name' => 'test-documents.zip'
+            ),
+            $this->documentsStorageMock
+        );
+
+        $expectedTextFromWord = 'Sample Word Document';
+        $extractedText = $service->extractText($file);
+        $expectedTextFromPDF= 'Tika - Content Analysis Toolkit';
+
+        $this->assertContains($expectedTextFromWord, $extractedText);
+        $this->assertContains($expectedTextFromPDF, $extractedText);
+
+    }
+
+
+    /**
      * Data provider fro detectsLanguageFromFile
      *
      * @return array

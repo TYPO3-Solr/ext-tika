@@ -69,7 +69,8 @@ class TextExtractor implements TextExtractorInterface
         'sxw',
         'txt',
         'xls',
-        'xlsx'
+        'xlsx',
+        'zip'
     );
 
 
