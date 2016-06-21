@@ -94,8 +94,7 @@ class SolrCellService extends AbstractService
         $query->setExtractOnly();
 
         // todo: this can be removed when we drop EXT:solr 3.1 compatibility
-        $solrVersion = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion('solr');
-        if(version_compare($solrVersion, '3.1', '>')) {
+        if (version_compare($this->getSolrVersion(), '3.1', '>')) {
             $response = $this->solr->extractByQuery($query);
         } else {
             $response = $this->solr->extract($query);
@@ -129,8 +128,7 @@ class SolrCellService extends AbstractService
         $query->setExtractOnly();
 
         // todo: this can be removed when we drop EXT:solr 3.1 compatibility
-        $solrVersion = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion('solr');
-        if(version_compare($solrVersion, '3.1', '>')) {
+        if (version_compare($this->getSolrVersion(), '3.1', '>')) {
             $response = $this->solr->extractByQuery($query);
         } else {
             $response = $this->solr->extract($query);
@@ -218,5 +216,19 @@ class SolrCellService extends AbstractService
     public function isAvailable()
     {
         return $this->solr->ping();
+    }
+
+    /**
+     * Gets the Solr Version reduced to major and minor digits
+     *
+     * @return float
+     */
+    protected function getSolrVersion()
+    {
+        $solrVersion = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion('solr');
+        $strippedSolrVersion = substr($solrVersion, 0, 3);
+
+        return $strippedSolrVersion;
+
     }
 }
