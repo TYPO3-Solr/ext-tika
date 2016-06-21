@@ -8,19 +8,19 @@ php:
 
 env:
   global:
-    - TIKA_VERSION="1.11"
+    - TIKA_VERSION="1.13"
     - TIKA_PATH=$HOME/tika
   matrix:
     - TYPO3_VERSION="~6.2.15"
-    - TYPO3_VERSION="dev-master"
+    - TYPO3_VERSION="~7.6.9"
 
 matrix:
   fast_finish: true
   exclude:
     - php: 5.3
-      env: TYPO3_VERSION="dev-master"
+      env: TYPO3_VERSION="~7.6.9"
     - php: 5.4
-      env: TYPO3_VERSION="dev-master"
+      env: TYPO3_VERSION="~7.6.9"
 
 before_install:
   - composer self-update
