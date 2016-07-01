@@ -99,4 +99,10 @@ abstract class AbstractService implements ServiceInterface
         GeneralUtility::devLog($message, 'tika', 0, $data);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSupportedMimeTypes() {
+        return [];
+    }
 }

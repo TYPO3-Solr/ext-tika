@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Extractor;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor;
-use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
@@ -103,10 +103,16 @@ class MetaDataExtractorTest extends UnitTestCase
      */
     public function canProcessReturnsFalseForExeFile()
     {
-        $exeFileMock = $this->getDumbMock('TYPO3\CMS\Core\Resource\File');
-        $exeFileMock->expects($this->any())->method('getProperty')->with('extension')->will($this->returnValue('exe'));
+        $tikaAppServiceMock = $this->getDumbMock(AppService::class);
+        $tikaAppServiceMock->expects($this->once())->method('getSupportedMimeTypes')->will($this->returnValue(
+            ['application/vnd.sun.xml.writer']
+        ));
 
-        $metaDataExtractor = new MetaDataExtractor();
+        $exeFileMock = $this->getDumbMock('TYPO3\CMS\Core\Resource\File');
+        $exeFileMock->expects($this->any())->method('getMimeType')->will($this->returnValue('exe'));
+
+        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)->setMethods(['getExtractor'])->getMock();
+        $metaDataExtractor->expects($this->once())->method('getExtractor')->will($this->returnValue($tikaAppServiceMock));
         $this->assertFalse($metaDataExtractor->canProcess($exeFileMock));
     }
 
@@ -115,10 +121,16 @@ class MetaDataExtractorTest extends UnitTestCase
      */
     public function canProcessReturnsTrueForSxwFile()
     {
-        $exeFileMock = $this->getDumbMock('TYPO3\CMS\Core\Resource\File');
-        $exeFileMock->expects($this->any())->method('getProperty')->with('extension')->will($this->returnValue('sxw'));
+        $tikaAppServiceMock = $this->getDumbMock(AppService::class);
+        $tikaAppServiceMock->expects($this->once())->method('getSupportedMimeTypes')->will($this->returnValue(
+            ['application/vnd.sun.xml.writer']
+        ));
 
-        $metaDataExtractor = new MetaDataExtractor();
+        $exeFileMock = $this->getDumbMock('TYPO3\CMS\Core\Resource\File');
+        $exeFileMock->expects($this->any())->method('getMimeType')->will($this->returnValue('application/vnd.sun.xml.writer'));
+
+        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)->setMethods(['getExtractor'])->getMock();
+        $metaDataExtractor->expects($this->once())->method('getExtractor')->will($this->returnValue($tikaAppServiceMock));
         $this->assertTrue($metaDataExtractor->canProcess($exeFileMock));
     }
 }

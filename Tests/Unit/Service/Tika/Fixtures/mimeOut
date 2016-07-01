@@ -1,0 +1,15 @@
+application/activemessage
+  supertype: application/octet-stream
+application/andrew-inset
+  supertype: application/octet-stream
+application/gzip
+  alias:     application/gzip-compressed
+  alias:     application/gzipped
+  alias:     application/x-gunzip
+  alias:     application/x-gzip
+  alias:     application/x-gzip-compressed
+  alias:     gzip/document
+  supertype: application/octet-stream
+  parser:    org.apache.tika.parser.pkg.CompressorParser
+application/h224
+  supertype: application/octet-stream

@@ -121,4 +121,35 @@ class AppServiceTest extends ServiceUnitTestCase
 
         $this->assertContains('-l', ExecRecorder::$execCommand);
     }
+
+
+    /**
+     * @test
+     */
+    public function callsTikaAppCorrectlyToGetMimeList()
+    {
+        $service = new AppService($this->getConfiguration());
+        $service->getSupportedMimeTypes();
+        $this->assertContains('--list-supported-types', ExecRecorder::$execCommand);
+    }
+
+
+    /**
+     * @test
+     */
+    public function canParseMimeList()
+    {
+        $fixtureContent = file_get_contents(dirname(__FILE__) . '/Fixtures/mimeOut');
+
+            /** @var $service AppService */
+        $service = $this->getMockBuilder(AppService::class)->disableOriginalConstructor()->setMethods(['getMimeTypeOutputFromTikaJar'])->getMock();
+        $service->expects($this->once())->method('getMimeTypeOutputFromTikaJar')->will($this->returnValue($fixtureContent));
+
+        $supportedMimeTypes = $service->getSupportedMimeTypes();
+
+        $this->assertContains('application/gzip', $supportedMimeTypes, 'Mimetype from listing was not found');
+        $this->assertContains('gzip/document', $supportedMimeTypes, 'Mimetype from alias was not found');
+    }
+
 }
+

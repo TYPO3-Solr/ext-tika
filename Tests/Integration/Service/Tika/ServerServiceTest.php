@@ -359,4 +359,14 @@ class ServerServiceTest extends UnitTestCase
         $this->assertSame($language, $detectedLanguage);
     }
 
+    /**
+     * @test
+     */
+    public function canGetMimeTypesFromServerAndParseThem()
+    {
+        $service = new ServerService($this->getTikaServerConfiguration());
+        $mimeTypes = $service->getSupportedMimeTypes();
+        $this->assertContains('application/pdf', $mimeTypes, 'Server did not indicate to support pdf documents');
+        $this->assertContains('application/vnd.openxmlformats-officedocument.wordprocessingml.document', $mimeTypes, 'Server did not indicate to support docx documents');
+    }
 }
