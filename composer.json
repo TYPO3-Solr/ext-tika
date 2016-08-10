@@ -30,7 +30,7 @@
   "require-dev": {
     "phpunit/phpunit": "~4.8.0",
     "phpspec/prophecy": "~1.0",
-    "namelesscoder/typo3-repository-client": "1.1.x-dev"
+    "namelesscoder/typo3-repository-client": "1.1.1"
   },
   "suggest": {
     "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr."
