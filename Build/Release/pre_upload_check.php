@@ -1,9 +1,9 @@
 
 <?php
-$_EXTKEY = 'solr';
+$_EXTKEY = 'tika';
 $rootPath = dirname(__FILE__) . "/../../";
 include($rootPath . 'ext_emconf.php');
-$version = $EM_CONF['solr']['version'];
+$version = $EM_CONF['tika']['version'];
 $validVersionPattern = '/^(\d+\.)?(\d+\.)?(\*|\d+)$/';
 $match = preg_match($validVersionPattern, $version);
 if($match > 0) {
