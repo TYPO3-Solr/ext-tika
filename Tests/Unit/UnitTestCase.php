@@ -52,6 +52,7 @@ class UnitTestCase extends TYPO3UnitTestCase
             'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
 
             'tikaServerPath' => "$tikaPath/tika-server-$tikaVersion.jar",
+            'tikaServerScheme' => 'http',
             'tikaServerHost' => 'localhost',
             'tikaServerPort' => '9998',
 

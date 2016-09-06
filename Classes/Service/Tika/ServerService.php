@@ -55,9 +55,13 @@ class ServerService extends AbstractService
      */
     protected function initializeService()
     {
-        $this->tikaUrl = 'http://'
-            . $this->configuration['tikaServerHost'] . ':'
-            . $this->configuration['tikaServerPort'];
+        $this->tikaUrl =  $this->configuration['tikaServerScheme'] . '://'
+            . $this->configuration['tikaServerHost'];
+
+        // Only append tikaServerPort if configured
+        if (!empty($this->configuration['tikaServerPort'])) {
+            $this->tikaUrl .= ':' . $this->configuration['tikaServerPort'];
+        }
     }
 
     /**

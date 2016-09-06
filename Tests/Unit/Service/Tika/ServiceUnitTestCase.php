@@ -218,6 +218,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
 
             'tikaServerPath' => "$tikaPath/tika-server-$tikaVersion.jar",
+            'tikaServerScheme' => 'http',
             'tikaServerHost' => 'localhost',
             'tikaServerPort' => '9998',
 
