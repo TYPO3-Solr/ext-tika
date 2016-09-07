@@ -55,8 +55,14 @@ class ServerService extends AbstractService
      */
     protected function initializeService()
     {
-        $this->tikaUrl =  $this->configuration['tikaServerScheme'] . '://'
-            . $this->configuration['tikaServerHost'];
+        // Fallback default configuration is with http protocol
+        $this->tikaUrl = 'http://' . $this->configuration['tikaServerHost'];
+
+        // Overwrite configuration of tikaServerScheme is configured
+        if (!empty($this->configuration['tikaServerScheme'])) {
+            $this->tikaUrl = $this->configuration['tikaServerScheme'] . '://'
+                . $this->configuration['tikaServerHost'];
+        }
 
         // Only append tikaServerPort if configured
         if (!empty($this->configuration['tikaServerPort'])) {
