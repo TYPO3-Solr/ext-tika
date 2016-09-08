@@ -212,6 +212,7 @@ class ServerServiceTest extends UnitTestCase
     protected function getTikaServerConfiguration()
     {
         return array(
+            'tikaServerScheme' => 'http',
             'tikaServerHost' => 'localhost',
             'tikaServerPort' => '9998'
         );
