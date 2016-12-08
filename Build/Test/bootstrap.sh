@@ -10,7 +10,7 @@ if [[ $* == *--local* ]]; then
     read typo3Version
     export TYPO3_VERSION=$typo3Version
 
-    echo -n "Choose a tika Version (e.g. 1.13): "
+    echo -n "Choose a tika Version (e.g. 1.14): "
     read tikaVersion
     export TIKA_VERSION=$tikaVersion
 

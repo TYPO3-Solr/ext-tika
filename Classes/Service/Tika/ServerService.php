@@ -179,7 +179,7 @@ class ServerService extends AbstractService
         $tikaPing = $this->queryTika('/tika');
         $tikaReachable = GeneralUtility::isFirstPartOfStr(
             $tikaPing,
-            'This is Tika Server.'
+            'This is Tika Server'
         );
 
         return $tikaReachable;

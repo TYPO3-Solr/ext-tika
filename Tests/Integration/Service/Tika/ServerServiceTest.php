@@ -370,4 +370,17 @@ class ServerServiceTest extends UnitTestCase
         $this->assertContains('application/pdf', $mimeTypes, 'Server did not indicate to support pdf documents');
         $this->assertContains('application/vnd.openxmlformats-officedocument.wordprocessingml.document', $mimeTypes, 'Server did not indicate to support docx documents');
     }
+
+
+    /**
+     * @test
+     */
+    public function canPing()
+    {
+        $service = new ServerService($this->getTikaServerConfiguration());
+        $pingResult = $service->ping();
+
+        $this->assertTrue($pingResult, 'Could not ping tika server');
+    }
+
 }
