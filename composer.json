@@ -25,7 +25,7 @@
     "typo3-ter/tika": "self.version"
   },
   "require": {
-    "typo3/cms-core": ">=7.6.0,<8.1"
+    "typo3/cms-core": ">=7.6.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.8.0",
