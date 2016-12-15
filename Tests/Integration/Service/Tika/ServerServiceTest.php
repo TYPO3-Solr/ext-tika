@@ -237,19 +237,17 @@ class ServerServiceTest extends UnitTestCase
         $metaData = $service->extractMetaData($file);
 
         $this->assertEquals('application/msword', $metaData['Content-Type']);
-        $this->assertEquals('Microsoft Word 10.1',
+        $this->assertEquals('Microsoft Office Word',
             $metaData['Application-Name']);
         $this->assertEquals('Keith Bennett', $metaData['Author']);
-        $this->assertEquals('-', $metaData['Company']);
-        $this->assertEquals('2007-09-12T20:31:00Z', $metaData['Creation-Date']);
-        $this->assertArrayHasKey('Keywords',
-            $metaData); // no keywords filled out in test file
-        $this->assertEquals('Keith Bennett', $metaData['Last-Author']);
-        $this->assertEquals('2007-09-12T20:38:00Z',
+        $this->assertEquals('', $metaData['Company']);
+        $this->assertEquals('2010-11-12T16:22:00Z', $metaData['Creation-Date']);
+        $this->assertEquals('Nick Burch', $metaData['Last-Author']);
+        $this->assertEquals('2010-11-12T16:22:00Z',
             $metaData['Last-Save-Date']);
-        $this->assertEquals('1', $metaData['Page-Count']);
-        $this->assertEquals('1', $metaData['Revision-Number']);
-        $this->assertEquals('Normal', $metaData['Template']);
+        $this->assertEquals('2', $metaData['Page-Count']);
+        $this->assertEquals('2', $metaData['Revision-Number']);
+        $this->assertEquals('Normal.dotm', $metaData['Template']);
         $this->assertEquals('Sample Word Document', $metaData['title']);
     }
 
