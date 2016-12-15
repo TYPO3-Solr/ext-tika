@@ -1,0 +1,124 @@
+# Apache Solr for TYPO3 - Tika Addon version 2.2.0 released
+
+We are happy to announce version 2.2.0 of EXT:tika. 
+
+## New in this Release
+
+The following features have been added in this release:
+
+### Get supported extract file type from Tika
+
+Instead of using a hardcoded list of supported file types, we now get the supported types from tika, and allow the extraction from these types.
+
+https://github.com/TYPO3-Solr/ext-tika/pull/31
+
+### Support Apache Tika 1.14
+
+Since there as a change in the tika response in version 1.14 we adapted the detection, to check if the tika server is running.
+
+https://github.com/TYPO3-Solr/ext-tika/pull/44
+
+## Bugfixes
+
+Beside the features the following bugfixes are included:
+
+### Disable Language Extraction when using Solr Cell
+
+Language extraction is not supported with solr cell. Therefore it is disabled when solr cell is used.
+
+https://github.com/TYPO3-Solr/ext-tika/pull/41
+
+## Thanks
+
+Thanks to all contributors
+
+(patches, comments, bug reports, reviews, ... in alphabetical order)
+
+* Ingo Renner
+* Pierrick Caillon
+* Thomas Hohn
+* Timo Hund
+
+Also a big thanks to our partners that have joined the EB2016 program:
+
+* Arrabiata Solutions GmbH & Co. KG
+* avonis
+* Bank CIC AG
+* Bitmotion GmbH
+* Citkomm services GmbH
+* cron IT
+* CS2 AG
+* Cosmoblonde GmbH
+* Daniz online markting
+* datenwerk innovationsagentur gmbh
+* Die Medialen GmbH
+* die_schnittsteller GmbH
+* E-magineurs
+* Fernando Hernáez Lopez
+* Future Connection AG
+* Gernot Leitgab
+* .hausformat
+* Hirsch & Wölfl GmbH
+* hs-digital GmbH
+* IHK Neubrandenburg
+* internezzo AG
+* jweiland.net
+* L.N. Schaffrath DigitalMedien GmbH
+* mehrwert intermediale kommunikation GmbH
+* netlogix GmbH & Co. KG
+* Pixel Ink
+* Pixelpark AG
+* pixolith GmbH & Co. KG
+* polargold GmbH
+* portrino GmbH
+* Q3i GmbH & Co. KG
+* raphael gmbh
+* RUAG Corporate Services AG
+* sitegeist media solutions GmbH
+* ST3 Elkartea
+* Star Finanz-Software Entwicklung und Vertriebs GmbH
+* Stefan Galinski Interndienstleistungen
+* Speedpartner GmbH
+* sunzinet AG
+* Systime A/S
+* SYZYGY Deutschland GmbH
+* tecsis GmbH
+* web-vision GmbH
+* websedit AG - Internetagentur
+* Webstobe GmbH
+* werkraum GmbH
+* WIND Internet
+* wow! solution
+* zdreicon AG
+
+Thanks also to our partners who already singed up for a 2017 partnership (EB2017):
+
+* Amedick & Sommer Neue Medien GmbH
+* cron IT GmbH
+* b:dreizehn GmbH
+* Die Medialen GmbH
+* Leibniz Universität IT Services, Hannover
+* LOUIS INTERNET
+* polargold GmbH
+* Mercedes-AMG GmbH
+* Triplesense Reply GmbH
+* zdreicom AG
+
+Thanks to everyone who helped in creating this release!
+
+## How to Get Involved
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+* Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+* Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+* Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+* Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us in 2017 by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/ 
+
+or call:
+
++49 (0)69 - 2475218 0
