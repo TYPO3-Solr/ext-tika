@@ -25,6 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Resource\File;
 
 /**
@@ -50,9 +51,28 @@ class MetaDataExtractor extends AbstractExtractor
     public function canProcess(File $file)
     {
         $tikaService = $this->getExtractor();
-        $mimeTypes =  $tikaService->getSupportedMimeTypes();
+        $mimeTypes = $tikaService->getSupportedMimeTypes();
+        $allowedMimeTypes = $this->mergeAllowedMimeTypes($mimeTypes);
 
-        return in_array($file->getMimeType(), $mimeTypes);
+        return in_array($file->getMimeType(), $allowedMimeTypes);
+    }
+
+    /**
+     * Method to return a filtered $mimeTypes list - excludes the ones defined in
+     * $this->configuration['excludeMimeTypes']
+     *
+     * @param array $mimeTypes
+     * @return array
+     */
+    protected function mergeAllowedMimeTypes($mimeTypes)
+    {
+        if (empty($this->configuration['excludeMimeTypes'])) {
+            return $mimeTypes;
+        }
+
+        $allowedMimeTypes = GeneralUtility::trimExplode(',', $this->configuration['excludeMimeTypes']);
+
+        return array_diff($mimeTypes, $allowedMimeTypes);
     }
 
     /**
