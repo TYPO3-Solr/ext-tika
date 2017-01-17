@@ -131,7 +131,7 @@ class Process
         }
 
         $ps = 'ps h --format pid,args -C ' . basename($this->executable);
-        $output = array();
+        $output = [];
         exec($ps, $output);
 
         foreach ($output as $line) {
@@ -196,7 +196,7 @@ class Process
         }
         $command .= ' > /dev/null 2>&1 & echo $!';
 
-        $output = array();
+        $output = [];
         exec($command, $output);
 
         $this->pid = (int)$output[0];
@@ -214,7 +214,7 @@ class Process
         }
 
         $running = false;
-        $output = array();
+        $output = [];
 
         $command = 'ps h -p ' . $this->pid;
         exec($command, $output);

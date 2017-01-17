@@ -59,7 +59,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      *
      * @var array
      */
-    protected $tikaConfiguration = array();
+    protected $tikaConfiguration = [];
 
     /**
      * @var \ApacheSolrForTypo3\Tika\Service\Tika\AppService|\ApacheSolrForTypo3\Tika\Service\Tika\ServerService|\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService

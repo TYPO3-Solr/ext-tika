@@ -83,9 +83,9 @@ class LanguageDetector extends AbstractExtractor
      */
     public function extractMetaData(
         File $file,
-        array $previousExtractedData = array()
+        array $previousExtractedData = []
     ) {
-        $metaData = array();
+        $metaData = [];
 
         $tika = ServiceFactory::getTika($this->configuration['extractor']);
         $metaData['language'] = $tika->detectLanguageFromFile($file);

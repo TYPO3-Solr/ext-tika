@@ -45,7 +45,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
     {
         $this->viewMock = $this->getDumbMock('\TYPO3\CMS\Extbase\Mvc\View\ViewInterface');
         $this->controller = $this->getMock('\ApacheSolrForTypo3\Tika\Backend\SolrModule\TikaControlPanelModuleController',
-            array('addFlashMessage'), array(), '', false);
+            array('addFlashMessage'), [], '', false);
         $this->controller->overwriteView($this->viewMock);
     }
 
@@ -86,7 +86,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
     public function canShowInformationFromSolrCellService()
     {
         $this->markTestIncomplete();
-        $tikaServerService = $this->getMock('ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService', array(), array(),
+        $tikaServerService = $this->getMock('ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService', [], [],
             '', false);
         $this->controller->setTikaService($tikaServerService);
         $this->controller->indexAction();
