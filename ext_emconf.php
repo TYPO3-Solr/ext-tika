@@ -13,16 +13,16 @@ $EM_CONF[$_EXTKEY] = array(
     'createDirs' => '',
     'modify_tables' => '',
     'clearCacheOnLoad' => 1,
-    'constraints' => array(
+    'constraints' => [
         'depends' => array(
             'typo3' => '7.6.0-8.0.99',
             'filemetadata' => '',
         ),
-        'conflicts' => array(),
-        'suggests' => array(
+        'conflicts' => [],
+        'suggests' => [
             'solr' => '3.1.0-',
             'devlog' => '',
-        ),
-    ),
+        ],
+    ],
     '_md5_values_when_last_written' => ''
 );
