@@ -8,7 +8,7 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
  * @param $command
  * @param array $output
  */
-function exec($command, array &$output = array())
+function exec($command, array &$output = [])
 {
     $output = ExecRecorder::$execOutput[ExecRecorder::$execCalled];
     ExecRecorder::$execCalled++;

@@ -71,7 +71,7 @@ class MetaDataExtractor extends AbstractExtractor
      */
     public function extractMetaData(
         File $file,
-        array $previousExtractedData = array()
+        array $previousExtractedData = []
     ) {
         $extractedMetaData = $this->getExtractedMetaDataFromTikaService($file);
         $metaData = $this->normalizeMetaData($extractedMetaData);
@@ -101,7 +101,7 @@ class MetaDataExtractor extends AbstractExtractor
      */
     protected function normalizeMetaData(array $metaData)
     {
-        $metaDataCleaned = array();
+        $metaDataCleaned = [];
 
         foreach ($metaData as $key => $value) {
             if (is_array($value)) {

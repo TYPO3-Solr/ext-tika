@@ -40,7 +40,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
     /**
      * @var array A backup of registered singleton instances
      */
-    protected $singletonInstances = array();
+    protected $singletonInstances = [];
 
     /**
      * @var string
@@ -164,8 +164,8 @@ abstract class ServiceUnitTestCase extends UnitTestCase
      * @return \TYPO3\CMS\Core\Resource\Driver\LocalDriver
      */
     protected function createDriverFixture(
-        array $driverConfiguration = array(),
-        $mockedDriverMethods = array()
+        array $driverConfiguration = [],
+        $mockedDriverMethods = []
     ) {
         /** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
@@ -193,7 +193,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
     protected function convertConfigurationArrayToFlexformXml(
         array $configuration
     ) {
-        $flexformArray = array('data' => array('sDEF' => array('lDEF' => array())));
+        $flexformArray = array('data' => array('sDEF' => array('lDEF' => [])));
         foreach ($configuration as $key => $value) {
             $flexformArray['data']['sDEF']['lDEF'][$key] = array('vDEF' => $value);
         }

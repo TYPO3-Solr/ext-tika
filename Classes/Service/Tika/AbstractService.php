@@ -89,7 +89,7 @@ abstract class AbstractService implements ServiceInterface
      * @param array $data Optional data
      * @return void
      */
-    protected function log($message, array $data = array())
+    protected function log($message, array $data = [])
     {
         // TODO refactor to have logger injected
         if (!$this->configuration['logging']) {

@@ -45,7 +45,7 @@ class TikaStatus implements StatusProviderInterface
      *
      * @var array
      */
-    protected $tikaConfiguration = array();
+    protected $tikaConfiguration = [];
 
 
     /**
@@ -64,7 +64,7 @@ class TikaStatus implements StatusProviderInterface
      */
     public function getStatus()
     {
-        $checks = array();
+        $checks = [];
         if ($this->tikaConfiguration['extractor'] != 'solr') {
             $checks[] = $this->getJavaInstalledStatus();
         }
@@ -262,7 +262,7 @@ class TikaStatus implements StatusProviderInterface
      * @param int $severity severity
      * @param array $data data
      */
-    protected function writeDevLog($message, $extKey, $severity = 0, $data = array())
+    protected function writeDevLog($message, $extKey, $severity = 0, $data = [])
     {
         GeneralUtility::devLog($message, $extKey, $severity, $data);
     }

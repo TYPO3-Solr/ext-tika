@@ -66,7 +66,7 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     public function getFileTypeRestrictions()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -108,7 +108,7 @@ abstract class AbstractExtractor implements ExtractorInterface
      * @param array $data Optional data
      * @return void
      */
-    protected function log($message, array $data = array())
+    protected function log($message, array $data = [])
     {
         // TODO have logger injected
         if (!$this->configuration['logging']) {

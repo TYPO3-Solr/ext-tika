@@ -57,7 +57,7 @@ class ExecRecorder
      *
      * @var array
      */
-    public static $execOutput = array();
+    public static $execOutput = [];
 
     /**
      * Indicator whether/how many times the exec() mock was called.
@@ -74,7 +74,7 @@ class ExecRecorder
     {
         self::$execCalled = 0;
         self::$execCommand = '';
-        self::$execOutput = array();
+        self::$execOutput = [];
     }
 
     /**

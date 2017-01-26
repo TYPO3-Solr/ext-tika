@@ -121,7 +121,7 @@ class AppService extends AbstractService
             . ' -m'
             . ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
 
-        $shellOutput = array();
+        $shellOutput = [];
         exec($tikaCommand, $shellOutput);
         $metaData = $this->shellOutputToArray($shellOutput);
         $this->cleanupTempFile($localTempFilePath, $file);
@@ -244,7 +244,7 @@ class AppService extends AbstractService
      */
     protected function shellOutputToArray(array $shellOutput)
     {
-        $metaData = array();
+        $metaData = [];
 
         foreach ($shellOutput as $line) {
             list($key, $value) = explode(':', $line, 2);

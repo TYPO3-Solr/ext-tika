@@ -202,7 +202,7 @@ class SolrCellService extends AbstractService
      */
     protected function solrResponseToArray(array $metaDataResponse)
     {
-        $cleanedData = array();
+        $cleanedData = [];
 
         foreach ($metaDataResponse as $dataName => $dataArray) {
             $cleanedData[$dataName] = $dataArray[0];

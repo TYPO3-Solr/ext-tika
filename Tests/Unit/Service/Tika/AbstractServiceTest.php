@@ -43,7 +43,7 @@ class AbstractServiceTest extends UnitTestCase
         $service->expects($this->once())
             ->method('initializeService');
 
-        $service->__construct(array());
+        $service->__construct([]);
     }
 
 }
