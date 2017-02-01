@@ -56,4 +56,15 @@ class ServerServiceFixture extends ServerService
     {
         $this->recordedEndpoint = $endpoint;
     }
+
+    /**
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param string $response
+     * @return array
+     */
+    protected function getLogData($file, $response)
+    {
+        //overwrite to skip logging in unit test
+        return [];
+    }
 }

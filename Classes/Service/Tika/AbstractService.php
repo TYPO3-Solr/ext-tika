@@ -87,16 +87,17 @@ abstract class AbstractService implements ServiceInterface
      *
      * @param string $message Log message
      * @param array $data Optional data
+     * @param integer $severity Severity: 0 is info, 1 is notice, 2 is warning, 3 is fatal error, -1 is "OK" message
      * @return void
      */
-    protected function log($message, array $data = [])
+    protected function log($message, array $data = [], $severity = 0)
     {
         // TODO refactor to have logger injected
         if (!$this->configuration['logging']) {
             return;
         }
 
-        GeneralUtility::devLog($message, 'tika', 0, $data);
+        GeneralUtility::devLog($message, 'tika', $severity, $data);
     }
 
     /**
