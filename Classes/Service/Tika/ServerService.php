@@ -278,6 +278,12 @@ class ServerService extends AbstractService
 
         $response = $this->queryTika('/tika', $context);
 
+		if($response === FALSE) {
+			$this->log('Text Extraction using Tika Server failed', $this->getLogData($file, $response), 2);
+		} else {
+			$this->log('Text Extraction using Tika Server', $this->getLogData($file, $response));
+		}
+
         return $response;
     }
 
@@ -308,7 +314,14 @@ class ServerService extends AbstractService
         $rawResponse = $this->queryTika('/meta', $context);
         $response = (array)json_decode($rawResponse);
 
-        return $response;
+		if($response === FALSE) {
+			$this->log('Meta Data Extraction using Tika Server failed', $this->getLogData($file, $response), 2);
+		} else {
+			$this->log('Meta Data Extraction using Tika Server', $this->getLogData($file, $response));
+		}
+
+
+		return $response;
     }
 
     /**
@@ -336,7 +349,13 @@ class ServerService extends AbstractService
 
         $response = $this->queryTika('/language/stream', $context);
 
-        return $response;
+		if($response === FALSE) {
+			$this->log('Language Detection using Tika Server failed', $this->getLogData($file, $response), 2);
+		}else{
+			$this->log('Language Detection using Tika Server', $this->getLogData($file, $response));
+		}
+
+		return $response;
     }
 
     /**
@@ -429,4 +448,20 @@ class ServerService extends AbstractService
         asort($supportedTypes);
         return $supportedTypes;
     }
+
+	/**
+	 * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+	 * @param string $response
+	 * @return array
+	 */
+	protected function getLogData($file, $response){
+
+		$logData = array(
+			'file' => $file->getName(),
+			'file_path' => $file->getPublicUrl(),
+			'tika_url' => $this->getTikaServerUrl(),
+			'response' => $response
+		);
+		return $logData;
+	}
 }
