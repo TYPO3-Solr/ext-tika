@@ -123,13 +123,13 @@ class TikaControlPanelModuleController extends AbstractModuleController
 
             $this->view->assign(
                 'server',
-                array(
+                [
                     'jarAvailable' => $this->isTikaServerJarAvailable(),
                     'isRunning' => $this->isTikaServerRunning(),
                     'isControllable' => $this->isTikaServerControllable(),
                     'pid' => $this->getTikaServerPid(),
                     'version' => $this->getTikaServerVersion()
-                )
+                ]
             );
         }
     }

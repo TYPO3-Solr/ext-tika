@@ -59,10 +59,10 @@ class AppServiceTest extends ServiceUnitTestCase
     public function extractTextUsesTParameter()
     {
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -77,12 +77,12 @@ class AppServiceTest extends ServiceUnitTestCase
      */
     public function extractMetaDataUsesMParameter()
     {
-        ExecRecorder::setReturnExecOutput(array('foo'));
+        ExecRecorder::setReturnExecOutput(['foo']);
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -98,10 +98,10 @@ class AppServiceTest extends ServiceUnitTestCase
     public function detectLanguageFromFileUsesLParameter()
     {
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 

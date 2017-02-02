@@ -76,9 +76,9 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     public function getDriverRestrictions()
     {
-        return array(
+        return [
             'Local',
-        );
+        ];
     }
 
     /**

@@ -45,7 +45,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
     {
         $this->viewMock = $this->getDumbMock('\TYPO3\CMS\Extbase\Mvc\View\ViewInterface');
         $this->controller = $this->getMock('\ApacheSolrForTypo3\Tika\Backend\SolrModule\TikaControlPanelModuleController',
-            array('addFlashMessage'), [], '', false);
+            ['addFlashMessage'], [], '', false);
         $this->controller->overwriteView($this->viewMock);
     }
 
@@ -63,17 +63,20 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
 
         $this->controller->setTikaService($tikaServerService);
         $this->controller->setTikaConfiguration(
-            array('extractor' => 'server', 'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar'))
+            [
+                'extractor' => 'server',
+                'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar')
+            ]
         );
 
         $this->viewMock->expects($this->at(2))->method('assign')->with('server',
-            array(
+            [
                 'jarAvailable' => true,
                 'isRunning' => true,
                 'isControllable' => true,
                 'pid' => 4711,
                 'version' => "1.11"
-            ));
+            ]);
 
         $this->controller->indexAction();
     }

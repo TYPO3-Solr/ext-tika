@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Resource\File;
 class LanguageDetector extends AbstractExtractor
 {
 
-    protected $supportedFileTypes = array(
+    protected $supportedFileTypes = [
         'doc',
         'docx',
         'epub',
@@ -54,7 +54,7 @@ class LanguageDetector extends AbstractExtractor
         'txt',
         'xls',
         'xlsx'
-    );
+    ];
 
     /**
      * @var integer

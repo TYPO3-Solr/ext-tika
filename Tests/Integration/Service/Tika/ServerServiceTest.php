@@ -80,18 +80,20 @@ class ServerServiceTest extends UnitTestCase
         $this->singletonInstances = GeneralUtility::getSingletonInstances();
 
         // Disable xml2array cache used by ResourceFactory
-        GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(array(
-            'cache_hash' => array(
-                'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
-                'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
-            )
-        ));
+        GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(
+            [
+                'cache_hash' => [
+                    'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
+                    'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
+                ]
+            ]
+        );
 
         $this->setUpDocumentsStorageMock();
         $this->setUpLanguagesStorageMock();
 
         $mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
-        $mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(array('file' => 1)));
+        $mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(['file' => 1]));
         GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository',
             $mockedMetaDataRepository);
     }
@@ -101,26 +103,30 @@ class ServerServiceTest extends UnitTestCase
         $this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
             . 'Tests/TestDocuments/';
 
-        $documentsDriver = $this->createDriverFixture(array(
-            'basePath' => $this->testDocumentsPath,
-            'caseSensitive' => true
-        ));
+        $documentsDriver = $this->createDriverFixture(
+            [
+                'basePath' => $this->testDocumentsPath,
+                'caseSensitive' => true
+            ]
+        );
 
-        $documentsStorageRecord = array(
+        $documentsStorageRecord = [
             'uid' => $this->documentsStorageUid,
             'is_public' => true,
             'is_writable' => false,
             'is_browsable' => true,
             'is_online' => true,
-            'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
-                'basePath' => $this->testDocumentsPath,
-                'pathType' => 'absolute',
-                'caseSensitive' => '1'
-            ))
-        );
+            'configuration' => $this->convertConfigurationArrayToFlexformXml(
+                [
+                    'basePath' => $this->testDocumentsPath,
+                    'pathType' => 'absolute',
+                    'caseSensitive' => '1'
+                ]
+            )
+        ];
 
         $this->documentsStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage',
-            null, array($documentsDriver, $documentsStorageRecord));
+            null, [$documentsDriver, $documentsStorageRecord]);
         $this->documentsStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->documentsStorageUid));
     }
 
@@ -129,26 +135,30 @@ class ServerServiceTest extends UnitTestCase
         $this->testLanguagesPath = ExtensionManagementUtility::extPath('tika')
             . 'Tests/TestLanguages/';
 
-        $languagesDriver = $this->createDriverFixture(array(
-            'basePath' => $this->testLanguagesPath,
-            'caseSensitive' => true
-        ));
+        $languagesDriver = $this->createDriverFixture(
+            [
+                'basePath' => $this->testLanguagesPath,
+                'caseSensitive' => true
+            ]
+        );
 
-        $languagesStorageRecord = array(
+        $languagesStorageRecord = [
             'uid' => $this->languagesStorageUid,
             'is_public' => true,
             'is_writable' => false,
             'is_browsable' => true,
             'is_online' => true,
-            'configuration' => $this->convertConfigurationArrayToFlexformXml(array(
-                'basePath' => $this->testLanguagesPath,
-                'pathType' => 'absolute',
-                'caseSensitive' => '1'
-            ))
-        );
+            'configuration' => $this->convertConfigurationArrayToFlexformXml(
+                [
+                    'basePath' => $this->testLanguagesPath,
+                    'pathType' => 'absolute',
+                    'caseSensitive' => '1'
+                ]
+            )
+        ];
 
         $this->languagesStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage',
-            null, array($languagesDriver, $languagesStorageRecord));
+            null, [$languagesDriver, $languagesStorageRecord]);
         $this->languagesStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->languagesStorageUid));
     }
 
@@ -172,7 +182,7 @@ class ServerServiceTest extends UnitTestCase
         /** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
         $driver = $this->getAccessibleMock('TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver',
-            $mockedDriverMethods, array($driverConfiguration));
+            $mockedDriverMethods, [$driverConfiguration]);
         $driver->expects($this->any())
             ->method('isPathValid')
             ->will(
@@ -195,9 +205,17 @@ class ServerServiceTest extends UnitTestCase
     protected function convertConfigurationArrayToFlexformXml(
         array $configuration
     ) {
-        $flexformArray = array('data' => array('sDEF' => array('lDEF' => [])));
+        $flexformArray = [
+            'data' =>
+                [
+                    'sDEF' =>
+                        [
+                            'lDEF' => []
+                        ]
+                ]
+        ];
         foreach ($configuration as $key => $value) {
-            $flexformArray['data']['sDEF']['lDEF'][$key] = array('vDEF' => $value);
+            $flexformArray['data']['sDEF']['lDEF'][$key] = ['vDEF' => $value];
         }
         $configuration = GeneralUtility::array2xml($flexformArray);
         return $configuration;
@@ -211,11 +229,11 @@ class ServerServiceTest extends UnitTestCase
      */
     protected function getTikaServerConfiguration()
     {
-        return array(
+        return [
             'tikaServerScheme' => 'http',
             'tikaServerHost' => 'localhost',
             'tikaServerPort' => '9998'
-        );
+        ];
     }
 
 
@@ -227,10 +245,10 @@ class ServerServiceTest extends UnitTestCase
         $service = new ServerService($this->getTikaServerConfiguration());
 
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -259,10 +277,10 @@ class ServerServiceTest extends UnitTestCase
         $service = new ServerService($this->getTikaServerConfiguration());
 
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -280,10 +298,10 @@ class ServerServiceTest extends UnitTestCase
         $service = new ServerService($this->getTikaServerConfiguration());
 
         $file = new File(
-            array(
+            [
                 'identifier' => 'test-documents.zip',
                 'name' => 'test-documents.zip'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -304,21 +322,21 @@ class ServerServiceTest extends UnitTestCase
      */
     public function languageFileDataProvider()
     {
-        return array(
-            'danish' => array('da'),
-            'german' => array('de'),
-            'greek' => array('el'),
-            'english' => array('en'),
-            'spanish' => array('es'),
-            'estonian' => array('et'),
-            'finish' => array('fi'),
-            'french' => array('fr'),
-            'italian' => array('it'),
-            'lithuanian' => array('lt'),
-            'dutch' => array('nl'),
-            'portuguese' => array('pt'),
-            'swedish' => array('sv')
-        );
+        return [
+            'danish' => ['da'],
+            'german' => ['de'],
+            'greek' => ['el'],
+            'english' => ['en'],
+            'spanish' => ['es'],
+            'estonian' => ['et'],
+            'finish' => ['fi'],
+            'french' => ['fr'],
+            'italian' => ['it'],
+            'lithuanian' => ['lt'],
+            'dutch' => ['nl'],
+            'portuguese' => ['pt'],
+            'swedish' => ['sv']
+        ];
     }
 
     /**
@@ -330,10 +348,10 @@ class ServerServiceTest extends UnitTestCase
         $service = new ServerService($this->getTikaServerConfiguration());
 
         $file = new File(
-            array(
+            [
                 'identifier' => $language . '.test',
                 'name' => $language . '.test'
-            ),
+            ],
             $this->languagesStorageMock
         );
 

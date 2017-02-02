@@ -103,12 +103,12 @@ class SolrCellService extends AbstractService
 
         $this->cleanupTempFile($localTempFilePath, $file);
 
-        $this->log('Text Extraction using Solr', array(
+        $this->log('Text Extraction using Solr', [
             'file' => $file,
             'solr connection' => (array)$this->solr,
             'query' => (array)$query,
             'response' => $response
-        ));
+        ]);
 
         return $response[0];
     }
@@ -139,13 +139,13 @@ class SolrCellService extends AbstractService
         $metaData = $this->solrResponseToArray($response[1]);
         $this->cleanupTempFile($localTempFilePath, $file);
 
-        $this->log('Meta Data Extraction using Solr', array(
+        $this->log('Meta Data Extraction using Solr', [
             'file' => $file,
             'solr connection' => (array)$this->solr,
             'query' => (array)$query,
             'response' => $response,
             'meta data' => $metaData
-        ));
+        ]);
 
         return $metaData;
     }

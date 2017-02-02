@@ -53,7 +53,7 @@ class TextExtractor implements TextExtractorInterface
      *
      * @var array
      */
-    protected $supportedFileTypes = array(
+    protected $supportedFileTypes = [
         'doc',
         'docx',
         'epub',
@@ -71,7 +71,7 @@ class TextExtractor implements TextExtractorInterface
         'xls',
         'xlsx',
         'zip'
-    );
+    ];
 
 
     /**

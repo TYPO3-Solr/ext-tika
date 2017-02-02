@@ -18,7 +18,7 @@ if (TYPO3_MODE == 'BE') {
     $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconRegistry');
 
     $iconRegistry->registerIcon($modulePrefix . '-tikacontrolpanel', $bitmapProvider,
-        array('source' => $extIconPath . 'Tika.png'));
+        ['source' => $extIconPath . 'Tika.png']);
 
 
 
@@ -32,7 +32,7 @@ if (TYPO3_MODE == 'BE') {
             \ApacheSolrForTypo3\Solr\Backend\SolrModule\AdministrationModuleManager::registerModule(
                 'ApacheSolrForTypo3.' . $_EXTKEY,
                 'TikaControlPanel',
-                array('index')
+                ['index']
             );
         }
     }

@@ -212,10 +212,10 @@ class ServerServiceTest extends ServiceUnitTestCase
     public function extractTextQueriesTikaEndpoint()
     {
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -231,10 +231,10 @@ class ServerServiceTest extends ServiceUnitTestCase
     public function extractMetaDataQueriesMetaEndpoint()
     {
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -250,10 +250,10 @@ class ServerServiceTest extends ServiceUnitTestCase
     public function detectLanguageFromFileQueriesLanguageStreamEndpoint()
     {
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
