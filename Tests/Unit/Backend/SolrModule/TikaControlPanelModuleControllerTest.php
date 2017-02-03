@@ -62,14 +62,14 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
         $tikaServerService->expects($this->atLeastOnce())->method('getTikaVersion')->will($this->returnValue("1.11"));
 
         $this->controller->setTikaService($tikaServerService);
-        $this->controller->setTikaConfiguration(
-            [
+        $this->controller->setTikaConfiguration([
                 'extractor' => 'server',
                 'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar')
             ]
         );
 
-        $this->viewMock->expects($this->at(2))->method('assign')->with('server',
+        $this->viewMock->expects($this->at(2))->method('assign')->with(
+            'server',
             [
                 'jarAvailable' => true,
                 'isRunning' => true,

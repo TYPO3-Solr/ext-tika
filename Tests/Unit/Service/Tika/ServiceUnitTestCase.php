@@ -78,8 +78,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         $this->singletonInstances = GeneralUtility::getSingletonInstances();
 
         // Disable xml2array cache used by ResourceFactory
-        GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations(
-            [
+        GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations([
                 'cache_hash' => [
                     'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
                     'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
@@ -101,8 +100,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         $this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
             . 'Tests/TestDocuments/';
 
-        $documentsDriver = $this->createDriverFixture(
-            [
+        $documentsDriver = $this->createDriverFixture([
                 'basePath' => $this->testDocumentsPath,
                 'caseSensitive' => true
             ]
@@ -114,8 +112,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             'is_writable' => false,
             'is_browsable' => true,
             'is_online' => true,
-            'configuration' => $this->convertConfigurationArrayToFlexformXml(
-                [
+            'configuration' => $this->convertConfigurationArrayToFlexformXml([
                     'basePath' => $this->testDocumentsPath,
                     'pathType' => 'absolute',
                     'caseSensitive' => '1'
@@ -133,8 +130,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         $this->testLanguagesPath = ExtensionManagementUtility::extPath('tika')
             . 'Tests/TestLanguages/';
 
-        $languagesDriver = $this->createDriverFixture(
-            [
+        $languagesDriver = $this->createDriverFixture([
                 'basePath' => $this->testLanguagesPath,
                 'caseSensitive' => true
             ]
@@ -146,8 +142,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             'is_writable' => false,
             'is_browsable' => true,
             'is_online' => true,
-            'configuration' => $this->convertConfigurationArrayToFlexformXml(
-                [
+            'configuration' => $this->convertConfigurationArrayToFlexformXml([
                     'basePath' => $this->testLanguagesPath,
                     'pathType' => 'absolute',
                     'caseSensitive' => '1'
@@ -204,13 +199,11 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         array $configuration
     ) {
         $flexformArray = [
-            'data' =>
-                [
-                    'sDEF' =>
-                        [
-                            'lDEF' => []
-                        ]
+            'data' => [
+                'sDEF' => [
+                    'lDEF' => []
                 ]
+            ]
         ];
         foreach ($configuration as $key => $value) {
             $flexformArray['data']['sDEF']['lDEF'][$key] = ['vDEF' => $value];

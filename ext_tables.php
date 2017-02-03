@@ -17,8 +17,11 @@ if (TYPO3_MODE == 'BE') {
     // register all module icons with extensions-solr-module-modulename
     $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconRegistry');
 
-    $iconRegistry->registerIcon($modulePrefix . '-tikacontrolpanel', $bitmapProvider,
-        ['source' => $extIconPath . 'Tika.png']);
+    $iconRegistry->registerIcon(
+        $modulePrefix . '-tikacontrolpanel',
+        $bitmapProvider,
+        ['source' => $extIconPath . 'Tika.png']
+    );
 
 
 

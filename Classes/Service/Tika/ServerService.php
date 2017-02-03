@@ -267,8 +267,7 @@ class ServerService extends AbstractService
             'Connection: close'
         ];
 
-        $context = stream_context_create(
-            [
+        $context = stream_context_create([
                 'http' => [
                     'protocol_version' => 1.1,
                     'method' => 'PUT',
@@ -298,8 +297,7 @@ class ServerService extends AbstractService
             'Connection: close'
         ];
 
-        $context = stream_context_create(
-            [
+        $context = stream_context_create([
                 'http' => [
                     'protocol_version' => 1.1,
                     'method' => 'PUT',
@@ -329,8 +327,7 @@ class ServerService extends AbstractService
             'Connection: close'
         ];
 
-        $context = stream_context_create(
-            [
+        $context = stream_context_create([
                 'http' => [
                     'protocol_version' => 1.1,
                     'method' => 'PUT',
@@ -359,8 +356,7 @@ class ServerService extends AbstractService
             'Connection: close'
         ];
 
-        $context = stream_context_create(
-            [
+        $context = stream_context_create([
                 'http' => [
                     'protocol_version' => 1.1,
                     'method' => 'PUT',
@@ -401,8 +397,7 @@ class ServerService extends AbstractService
             'Connection: close'
         ];
 
-        $context = stream_context_create(
-            [
+        $context = stream_context_create([
                 'http' => [
                     'protocol_version' => 1.1,
                     'method' => 'GET',
