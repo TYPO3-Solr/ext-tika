@@ -337,11 +337,10 @@ class ServerServiceTest extends UnitTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File(
-            [
-                'identifier' => $language . '.test',
-                'name' => $language . '.test'
-            ],
+        $file = new File([
+            'identifier' => $language . '.test',
+            'name' => $language . '.test'
+        ],
             $this->languagesStorageMock
         );
 
