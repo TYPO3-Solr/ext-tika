@@ -268,14 +268,13 @@ class ServerService extends AbstractService
         ];
 
         $context = stream_context_create([
-                'http' => [
-                    'protocol_version' => 1.1,
-                    'method' => 'PUT',
-                    'header' => implode(CRLF, $headers),
-                    'content' => $file->getContents()
-                ]
+            'http' => [
+                'protocol_version' => 1.1,
+                'method' => 'PUT',
+                'header' => implode(CRLF, $headers),
+                'content' => $file->getContents()
             ]
-        );
+        ]);
 
         $response = $this->queryTika('/tika', $context);
 
@@ -298,14 +297,13 @@ class ServerService extends AbstractService
         ];
 
         $context = stream_context_create([
-                'http' => [
-                    'protocol_version' => 1.1,
-                    'method' => 'PUT',
-                    'header' => implode(CRLF, $headers),
-                    'content' => $file->getContents()
-                ]
+            'http' => [
+                'protocol_version' => 1.1,
+                'method' => 'PUT',
+                'header' => implode(CRLF, $headers),
+                'content' => $file->getContents()
             ]
-        );
+        ]);
 
         $rawResponse = $this->queryTika('/meta', $context);
         $response = (array)json_decode($rawResponse);
@@ -328,14 +326,13 @@ class ServerService extends AbstractService
         ];
 
         $context = stream_context_create([
-                'http' => [
-                    'protocol_version' => 1.1,
-                    'method' => 'PUT',
-                    'header' => implode(CRLF, $headers),
-                    'content' => $file->getContents()
-                ]
+            'http' => [
+                'protocol_version' => 1.1,
+                'method' => 'PUT',
+                'header' => implode(CRLF, $headers),
+                'content' => $file->getContents()
             ]
-        );
+        ]);
 
         $response = $this->queryTika('/language/stream', $context);
 
@@ -357,14 +354,13 @@ class ServerService extends AbstractService
         ];
 
         $context = stream_context_create([
-                'http' => [
-                    'protocol_version' => 1.1,
-                    'method' => 'PUT',
-                    'header' => implode(CRLF, $headers),
-                    'content' => $input
-                ]
+            'http' => [
+                'protocol_version' => 1.1,
+                'method' => 'PUT',
+                'header' => implode(CRLF, $headers),
+                'content' => $input
             ]
-        );
+        ]);
 
         $response = $this->queryTika('/language/string', $context);
 
@@ -398,13 +394,12 @@ class ServerService extends AbstractService
         ];
 
         $context = stream_context_create([
-                'http' => [
-                    'protocol_version' => 1.1,
-                    'method' => 'GET',
-                    'header' => implode(CRLF, $headers),
-                ]
+            'http' => [
+                'protocol_version' => 1.1,
+                'method' => 'GET',
+                'header' => implode(CRLF, $headers),
             ]
-        );
+        ]);
 
         $response = $this->queryTika('/mime-types', $context);
         return $response;
