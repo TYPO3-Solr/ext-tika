@@ -79,12 +79,11 @@ abstract class ServiceUnitTestCase extends UnitTestCase
 
         // Disable xml2array cache used by ResourceFactory
         GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations([
-                'cache_hash' => [
-                    'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
-                    'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
-                ]
+            'cache_hash' => [
+                'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
+                'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
             ]
-        );
+        ]);
 
         $this->setUpDocumentsStorageMock();
         $this->setUpLanguagesStorageMock();
@@ -101,10 +100,9 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             . 'Tests/TestDocuments/';
 
         $documentsDriver = $this->createDriverFixture([
-                'basePath' => $this->testDocumentsPath,
-                'caseSensitive' => true
-            ]
-        );
+            'basePath' => $this->testDocumentsPath,
+            'caseSensitive' => true
+        ]);
 
         $documentsStorageRecord = [
             'uid' => $this->documentsStorageUid,
@@ -113,11 +111,10 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             'is_browsable' => true,
             'is_online' => true,
             'configuration' => $this->convertConfigurationArrayToFlexformXml([
-                    'basePath' => $this->testDocumentsPath,
-                    'pathType' => 'absolute',
-                    'caseSensitive' => '1'
-                ]
-            )
+                'basePath' => $this->testDocumentsPath,
+                'pathType' => 'absolute',
+                'caseSensitive' => '1'
+            ])
         ];
 
         $this->documentsStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage',
@@ -131,10 +128,9 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             . 'Tests/TestLanguages/';
 
         $languagesDriver = $this->createDriverFixture([
-                'basePath' => $this->testLanguagesPath,
-                'caseSensitive' => true
-            ]
-        );
+            'basePath' => $this->testLanguagesPath,
+            'caseSensitive' => true
+        ]);
 
         $languagesStorageRecord = [
             'uid' => $this->languagesStorageUid,
@@ -143,11 +139,10 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             'is_browsable' => true,
             'is_online' => true,
             'configuration' => $this->convertConfigurationArrayToFlexformXml([
-                    'basePath' => $this->testLanguagesPath,
-                    'pathType' => 'absolute',
-                    'caseSensitive' => '1'
-                ]
-            )
+                'basePath' => $this->testLanguagesPath,
+                'pathType' => 'absolute',
+                'caseSensitive' => '1'
+            ])
         ];
 
         $this->languagesStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage',
