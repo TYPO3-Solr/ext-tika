@@ -232,10 +232,11 @@ class ServerServiceTest extends UnitTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File([
-            'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc'
-        ],
+        $file = new File(
+            [
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ],
             $this->documentsStorageMock
         );
 
@@ -263,10 +264,11 @@ class ServerServiceTest extends UnitTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File([
-            'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc'
-        ],
+        $file = new File(
+            [
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ],
             $this->documentsStorageMock
         );
 
@@ -283,10 +285,11 @@ class ServerServiceTest extends UnitTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File([
-            'identifier' => 'test-documents.zip',
-            'name' => 'test-documents.zip'
-        ],
+        $file = new File(
+            [
+                'identifier' => 'test-documents.zip',
+                'name' => 'test-documents.zip'
+            ],
             $this->documentsStorageMock
         );
 
@@ -332,10 +335,11 @@ class ServerServiceTest extends UnitTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File([
-            'identifier' => $language . '.test',
-            'name' => $language . '.test'
-        ],
+        $file = new File(
+            [
+                'identifier' => $language . '.test',
+                'name' => $language . '.test'
+            ],
             $this->languagesStorageMock
         );
 
