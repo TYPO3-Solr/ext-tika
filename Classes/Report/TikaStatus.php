@@ -190,10 +190,10 @@ class TikaStatus implements StatusProviderInterface
                 'Exception while retrieving Solr plugin list',
                 'tika',
                 3,
-                array(
+                [
                     'configuration' => $this->tikaConfiguration,
                     'exception' => $e,
-                )
+                ]
             );
         }
 

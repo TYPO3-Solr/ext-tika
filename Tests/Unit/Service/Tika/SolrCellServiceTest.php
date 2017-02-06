@@ -80,19 +80,20 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     {
         $expectedValue = 'extracted text element';
         $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
-        $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))->willReturn(array(
-            $expectedValue,     // extracted text is index 0
-            'meta data element' // meta data is index 1
-        ));
+        $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
+            ->willReturn([
+                $expectedValue,     // extracted text is index 0
+                'meta data element' // meta data is index 1
+            ]);
 
         $service = new SolrCellService($this->getConfiguration());
         $this->inject($service, 'solr', $solrMock->reveal());
 
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -112,11 +113,10 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $service = new SolrCellService($this->getConfiguration());
         $this->inject($service, 'solr', $solrMock->reveal());
 
-        $file = new File(
-            array(
-                'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
-            ),
+        $file = new File([
+            'identifier' => 'testWORD.doc',
+            'name' => 'testWORD.doc'
+        ],
             $this->documentsStorageMock
         );
 
@@ -129,16 +129,16 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     public function extractTextCleansUpTempFile()
     {
         $serviceMock = $this->getMockBuilder('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService')
-            ->setConstructorArgs(array($this->getConfiguration()))
-            ->setMethods(array('cleanupTempFile'))
+            ->setConstructorArgs([$this->getConfiguration()])
+            ->setMethods(['cleanupTempFile'])
             ->getMock();
         $serviceMock->expects($this->once())->method('cleanupTempFile');
 
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -155,19 +155,20 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
         $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
             ->shouldBeCalled()
-            ->willReturn(array(
-                'foo',       // extracted text is index 0
-                array('bar') // meta data is index 1
-            ));
+            ->willReturn([
+                    'foo', // extracted text is index 0
+                    ['bar'] // meta data is index 1
+                ]
+            );
 
         $service = new SolrCellService($this->getConfiguration());
         $this->inject($service, 'solr', $solrMock->reveal());
 
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 
@@ -180,16 +181,16 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     public function extractMetaDataCleansUpTempFile()
     {
         $serviceMock = $this->getMockBuilder('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService')
-            ->setConstructorArgs(array($this->getConfiguration()))
-            ->setMethods(array('cleanupTempFile'))
+            ->setConstructorArgs([$this->getConfiguration()])
+            ->setMethods(['cleanupTempFile'])
             ->getMock();
         $serviceMock->expects($this->once())->method('cleanupTempFile');
 
         $file = new File(
-            array(
+            [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
-            ),
+            ],
             $this->documentsStorageMock
         );
 

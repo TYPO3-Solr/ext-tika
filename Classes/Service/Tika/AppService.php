@@ -96,11 +96,11 @@ class AppService extends AbstractService
         $extractedText = shell_exec($tikaCommand);
         $this->cleanupTempFile($localTempFilePath, $file);
 
-        $this->log('Text Extraction using local Tika', array(
+        $this->log('Text Extraction using local Tika', [
             'file' => $file,
             'tika command' => $tikaCommand,
             'shell output' => $extractedText
-        ));
+        ]);
 
         return $extractedText;
     }
@@ -126,12 +126,12 @@ class AppService extends AbstractService
         $metaData = $this->shellOutputToArray($shellOutput);
         $this->cleanupTempFile($localTempFilePath, $file);
 
-        $this->log('Meta Data Extraction using local Tika', array(
+        $this->log('Meta Data Extraction using local Tika', [
             'file' => $file,
             'tika command' => $tikaCommand,
             'shell output' => $shellOutput,
             'meta data' => $metaData
-        ));
+        ]);
 
         return $metaData;
     }
@@ -189,11 +189,11 @@ class AppService extends AbstractService
 
         $language = trim(shell_exec($tikaCommand));
 
-        $this->log('Language Detection using local Tika', array(
+        $this->log('Language Detection using local Tika', [
             'file' => $localFilePath,
             'tika command' => $tikaCommand,
             'shell output' => $language
-        ));
+        ]);
 
         return $language;
     }
@@ -250,7 +250,7 @@ class AppService extends AbstractService
             list($key, $value) = explode(':', $line, 2);
             $value = trim($value);
 
-            if (in_array($key, array(
+            if (in_array($key, [
                 'dc',
                 'dcterms',
                 'meta',
@@ -258,7 +258,7 @@ class AppService extends AbstractService
                 'xmp',
                 'xmpTPg',
                 'xmpDM'
-            ))) {
+            ])) {
                 // Dublin Core metadata and co
                 $keyPrefix = $key;
                 list($key, $value) = explode(':', $value, 2);
@@ -275,7 +275,7 @@ class AppService extends AbstractService
 
                 // allow a meta data key to appear multiple times
                 if (!is_array($metaData[$key])) {
-                    $metaData[$key] = array($metaData[$key]);
+                    $metaData[$key] = [$metaData[$key]];
                 }
 
                 // but do not allow duplicate values

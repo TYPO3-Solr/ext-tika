@@ -116,9 +116,9 @@ class ServiceFactoryTest extends UnitTestCase
 
     protected function setUp()
     {
-        $this->globalsBackup = array(
+        $this->globalsBackup = [
             'TYPO3_CONF_VARS' => $GLOBALS['TYPO3_CONF_VARS'],
-        );
+        ];
         unset($GLOBALS['TYPO3_CONF_VARS']);
     }
 

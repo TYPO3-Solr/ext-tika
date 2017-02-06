@@ -47,7 +47,7 @@ class MetaDataExtractorTest extends UnitTestCase
      */
     protected function getFakedExtratorResponseForJGEPImage()
     {
-        return array(
+        return [
             'Comments' => "Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.",
             'Component 1' => "Y component: Quantization table 0, Sampling factors 1 horiz/1 vert",
             'Component 2' => "Cb component: Quantization table 1, Sampling factors 1 horiz/1 vert",
@@ -65,7 +65,7 @@ class MetaDataExtractorTest extends UnitTestCase
             'Number of Components' => "3",
             'Resolution Units' => "inch",
             'X Resolution' => "72 dots",
-            'X-Parsed-By' => array("org.apache.tika.parser.DefaultParser", "org.apache.tika.parser.jpeg.JpegParser"),
+            'X-Parsed-By' => ["org.apache.tika.parser.DefaultParser", "org.apache.tika.parser.jpeg.JpegParser"],
             'Y Resolution' => "72 dots",
             'comment' => "Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.",
             'resourceName' => "testJPEG.jpg",
@@ -73,7 +73,7 @@ class MetaDataExtractorTest extends UnitTestCase
             'tiff:ImageLength' => "75",
             'tiff:ImageWidth' => "100",
             'w' => "comments: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership."
-        );
+        ];
     }
 
     /**
@@ -85,7 +85,7 @@ class MetaDataExtractorTest extends UnitTestCase
 
         /** @var $metaDataExtractor \ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor */
         $metaDataExtractor = $this->getMock('ApacheSolrForTypo3\\Tika\\Service\\Extractor\\MetaDataExtractor',
-            array('getExtractedMetaDataFromTikaService'));
+            ['getExtractedMetaDataFromTikaService']);
         $metaDataExtractor->expects($this->once())->method('getExtractedMetaDataFromTikaService')->will($this->returnValue(
             $fakedTikaExtractResponse
         ));

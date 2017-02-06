@@ -45,7 +45,7 @@ class UnitTestCase extends TYPO3UnitTestCase
         $tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.10';
         $tikaPath = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : '/opt/tika';
 
-        return array(
+        return [
             'extractor' => '',
             'logging' => 0,
 
@@ -60,7 +60,7 @@ class UnitTestCase extends TYPO3UnitTestCase
             'solrHost' => 'localhost',
             'solrPort' => '8080',
             'solrPath' => '/solr/',
-        );
+        ];
     }
 
     /**

@@ -52,7 +52,7 @@ class ProcessTest extends UnitTestCase
     public function findPidUsesExecutableBasename()
     {
         $process = new Process('/usr/bin/foo', '-bar');
-        ExecRecorder::setReturnExecOutput(array('foo'));
+        ExecRecorder::setReturnExecOutput(['foo']);
 
         $process->findPid();
 
@@ -82,7 +82,7 @@ class ProcessTest extends UnitTestCase
     {
         $process = new Process('/usr/bin/foo', '-bar');
         $process->setPid(1337);
-        ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar'));
+        ExecRecorder::setReturnExecOutput(['1337 /usr/bin/foo -bar']);
 
         $running = $process->isRunning();
 
@@ -108,12 +108,12 @@ class ProcessTest extends UnitTestCase
     {
         $process = new Process('/usr/bin/foo', '-bar');
 
-        ExecRecorder::setReturnExecOutput(array('foo'));
+        ExecRecorder::setReturnExecOutput(['foo']);
         $running = $process->isRunning();
         $this->assertFalse($running);
 
-        ExecRecorder::setReturnExecOutput(array('1337')); // runCommand() return pid of started process = 1337
-        ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar')); // isRunning()
+        ExecRecorder::setReturnExecOutput(['1337']); // runCommand() return pid of started process = 1337
+        ExecRecorder::setReturnExecOutput(['1337 /usr/bin/foo -bar']); // isRunning()
         $running = $process->start();
 
         $this->assertTrue($running);
@@ -126,7 +126,7 @@ class ProcessTest extends UnitTestCase
     {
         $process = new Process('/usr/bin/foo', '-bar');
         $process->setPid(1337);
-        ExecRecorder::setReturnExecOutput(array('1337 /usr/bin/foo -bar'));
+        ExecRecorder::setReturnExecOutput(['1337 /usr/bin/foo -bar']);
 
         $running = $process->isRunning();
         $this->assertTrue($running);

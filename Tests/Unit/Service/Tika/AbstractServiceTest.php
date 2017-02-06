@@ -36,7 +36,7 @@ class AbstractServiceTest extends UnitTestCase
     public function constructorCallsInitializeService()
     {
         $service = $this->getMockBuilder('\ApacheSolrForTypo3\Tika\Service\Tika\AbstractService')
-            ->setMethods(array('initializeService'))
+            ->setMethods(['initializeService'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
