@@ -82,18 +82,18 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
         $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
             ->willReturn([
-                    $expectedValue,     // extracted text is index 0
-                    'meta data element' // meta data is index 1
-                ]
-            );
+                $expectedValue,     // extracted text is index 0
+                'meta data element' // meta data is index 1
+            ]);
 
         $service = new SolrCellService($this->getConfiguration());
         $this->inject($service, 'solr', $solrMock->reveal());
 
-        $file = new File([
-            'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc'
-        ],
+        $file = new File(
+            [
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ],
             $this->documentsStorageMock
         );
 
@@ -134,10 +134,11 @@ class SolrCellServiceTest extends ServiceUnitTestCase
             ->getMock();
         $serviceMock->expects($this->once())->method('cleanupTempFile');
 
-        $file = new File([
-            'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc'
-        ],
+        $file = new File(
+            [
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ],
             $this->documentsStorageMock
         );
 
@@ -163,10 +164,11 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $service = new SolrCellService($this->getConfiguration());
         $this->inject($service, 'solr', $solrMock->reveal());
 
-        $file = new File([
-            'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc'
-        ],
+        $file = new File(
+            [
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ],
             $this->documentsStorageMock
         );
 
@@ -184,10 +186,11 @@ class SolrCellServiceTest extends ServiceUnitTestCase
             ->getMock();
         $serviceMock->expects($this->once())->method('cleanupTempFile');
 
-        $file = new File([
-            'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc'
-        ],
+        $file = new File(
+            [
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ],
             $this->documentsStorageMock
         );
 
