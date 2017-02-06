@@ -63,10 +63,9 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
 
         $this->controller->setTikaService($tikaServerService);
         $this->controller->setTikaConfiguration([
-                'extractor' => 'server',
-                'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar')
-            ]
-        );
+            'extractor' => 'server',
+            'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar')
+        ]);
 
         $this->viewMock->expects($this->at(2))->method('assign')->with(
             'server',
@@ -76,7 +75,8 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
                 'isControllable' => true,
                 'pid' => 4711,
                 'version' => "1.11"
-            ]);
+            ]
+        );
 
         $this->controller->indexAction();
     }
