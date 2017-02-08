@@ -24,6 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Solr\SolrService;
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Prophecy\Argument;
 use Prophecy\Prophet;
@@ -69,8 +71,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     public function newInstancesAreInitializedWithASolrConnection()
     {
         $service = new SolrCellService($this->getConfiguration());
-        $this->assertAttributeInstanceOf('ApacheSolrForTypo3\\Solr\\SolrService',
-            'solr', $service);
+        $this->assertAttributeInstanceOf(SolrService::class, 'solr', $service);
     }
 
     /**
@@ -79,8 +80,8 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     public function extractByQueryTextReturnsTextElementFromResponse()
     {
         $expectedValue = 'extracted text element';
-        $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
-        $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
+        $solrMock = $this->prophet->prophesize(SolrService::class);
+        $solrMock->extractByQuery(Argument::type(SolrCellQuery::class))
             ->willReturn([
                 $expectedValue,     // extracted text is index 0
                 'meta data element' // meta data is index 1
@@ -106,8 +107,8 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractByQueryTextUsesSolrCellQuery()
     {
-        $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
-        $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
+        $solrMock = $this->prophet->prophesize(SolrService::class);
+        $solrMock->extractByQuery(Argument::type(SolrCellQuery::class))
             ->shouldBeCalled();
 
         $service = new SolrCellService($this->getConfiguration());
@@ -128,7 +129,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractTextCleansUpTempFile()
     {
-        $serviceMock = $this->getMockBuilder('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService')
+        $serviceMock = $this->getMockBuilder(SolrCellService::class)
             ->setConstructorArgs([$this->getConfiguration()])
             ->setMethods(['cleanupTempFile'])
             ->getMock();
@@ -152,8 +153,8 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractMetaDataUsesSolrCellQuery()
     {
-        $solrMock = $this->prophet->prophesize('ApacheSolrForTypo3\\Solr\\SolrService');
-        $solrMock->extractByQuery(Argument::type('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery'))
+        $solrMock = $this->prophet->prophesize(SolrService::class);
+        $solrMock->extractByQuery(Argument::type(SolrCellQuery::class))
             ->shouldBeCalled()
             ->willReturn([
                     'foo', // extracted text is index 0
@@ -180,7 +181,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractMetaDataCleansUpTempFile()
     {
-        $serviceMock = $this->getMockBuilder('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService')
+        $serviceMock = $this->getMockBuilder(SolrCellService::class)
             ->setConstructorArgs([$this->getConfiguration()])
             ->setMethods(['cleanupTempFile'])
             ->getMock();

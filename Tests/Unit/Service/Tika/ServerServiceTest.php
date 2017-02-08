@@ -24,10 +24,12 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika\Fixtures\ServerServiceFixture;
 use Prophecy\Argument;
 use Prophecy\Prophet;
+use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -63,15 +65,13 @@ class ServerServiceTest extends ServiceUnitTestCase
     public function startServerStoresPidInRegistry()
     {
         // prepare
-        $registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
-        GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry',
-            $registryMock->reveal());
+        $registryMock = $this->prophet->prophesize(Registry::class);
+        GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize('ApacheSolrForTypo3\Tika\Process');
+        $processMock = $this->prophet->prophesize(Process::class);
         $processMock->start()->shouldBeCalled();
         $processMock->getPid()->willReturn(1000);
-        GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process',
-            $processMock->reveal());
+        GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         // execute
         $service = new ServerService($this->getConfiguration());
@@ -90,17 +90,15 @@ class ServerServiceTest extends ServiceUnitTestCase
     public function stopServerRemovesPidFromRegistry()
     {
         // prepare
-        $registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
+        $registryMock = $this->prophet->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
         $registryMock->remove('tx_tika', 'server.pid')->shouldBeCalled();
-        GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry',
-            $registryMock->reveal());
+        GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize('ApacheSolrForTypo3\Tika\Process');
+        $processMock = $this->prophet->prophesize(Process::class);
         $processMock->setPid(1000)->shouldBeCalled();
         $processMock->stop()->shouldBeCalled();
-        GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process',
-            $processMock->reveal());
+        GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         // execute
         $service = new ServerService($this->getConfiguration());
@@ -112,10 +110,9 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function getServerPidGetsPidFromRegistry()
     {
-        $registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
+        $registryMock = $this->prophet->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
-        GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry',
-            $registryMock->reveal());
+        GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
         $pid = $service->getServerPid();
@@ -128,15 +125,13 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function getServerPidFallsBackToProcess()
     {
-        $registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
+        $registryMock = $this->prophet->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
-        GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry',
-            $registryMock->reveal());
+        GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize('ApacheSolrForTypo3\Tika\Process');
+        $processMock = $this->prophet->prophesize(Process::class);
         $processMock->findPid()->willReturn(1000);
-        GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process',
-            $processMock->reveal());
+        GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
         $pid = $service->getServerPid();
@@ -149,10 +144,9 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function isServerRunningReturnsTrueForRunningServerFromRegistry()
     {
-        $registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
+        $registryMock = $this->prophet->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
-        GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry',
-            $registryMock->reveal());
+        GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
         $this->assertTrue($service->isServerRunning());
@@ -163,15 +157,13 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function isServerRunningReturnsTrueForRunningServerFromProcess()
     {
-        $registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
+        $registryMock = $this->prophet->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
-        GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry',
-            $registryMock->reveal());
+        GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize('ApacheSolrForTypo3\Tika\Process');
+        $processMock = $this->prophet->prophesize(Process::class);
         $processMock->findPid()->willReturn(1000);
-        GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process',
-            $processMock->reveal());
+        GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
         $this->assertTrue($service->isServerRunning());
@@ -182,15 +174,13 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function isServerRunningReturnsFalseForStoppedServer()
     {
-        $registryMock = $this->prophet->prophesize('TYPO3\CMS\Core\Registry');
+        $registryMock = $this->prophet->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
-        GeneralUtility::setSingletonInstance('TYPO3\CMS\Core\Registry',
-            $registryMock->reveal());
+        GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize('ApacheSolrForTypo3\Tika\Process');
+        $processMock = $this->prophet->prophesize(Process::class);
         $processMock->findPid()->willReturn('');
-        GeneralUtility::addInstance('ApacheSolrForTypo3\Tika\Process',
-            $processMock->reveal());
+        GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
         $this->assertFalse($service->isServerRunning());

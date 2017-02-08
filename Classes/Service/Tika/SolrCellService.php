@@ -25,6 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Solr\SolrService;
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -87,10 +88,7 @@ class SolrCellService extends AbstractService
     public function extractText(FileInterface $file)
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
-        $query = GeneralUtility::makeInstance(
-            'ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery',
-            $localTempFilePath
-        );
+        $query = GeneralUtility::makeInstance(SolrCellQuery::class, $localTempFilePath);
         $query->setExtractOnly();
 
         // todo: this can be removed when we drop EXT:solr 3.1 compatibility
@@ -122,10 +120,7 @@ class SolrCellService extends AbstractService
     public function extractMetaData(FileInterface $file)
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
-        $query = GeneralUtility::makeInstance(
-            'ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellQuery',
-            $localTempFilePath
-        );
+        $query = GeneralUtility::makeInstance(SolrCellQuery::class, $localTempFilePath);
         $query->setExtractOnly();
 
         // todo: this can be removed when we drop EXT:solr 3.1 compatibility

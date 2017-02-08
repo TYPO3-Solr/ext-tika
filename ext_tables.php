@@ -7,15 +7,15 @@ if (TYPO3_MODE == 'BE') {
     // adding the Solr connection status to the status report
     $statusSection = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr') ? 'solr' : 'tika';
 
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'][$statusSection][] = 'ApacheSolrForTypo3\\Tika\\Report\\TikaStatus';
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'][$statusSection][] = \ApacheSolrForTypo3\Tika\Report\TikaStatus::class;
     $extIconPath = 'EXT:tika/Resources/Public/Images/Icons/';
 
 
     $modulePrefix = 'extensions-tika-module';
-    $bitmapProvider = 'TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider';
+    $bitmapProvider = \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class;
 
     // register all module icons with extensions-solr-module-modulename
-    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconRegistry');
+    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
 
     $iconRegistry->registerIcon(
         $modulePrefix . '-tikacontrolpanel',
