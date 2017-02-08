@@ -24,6 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Report;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Solr\ConnectionManager;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -92,7 +94,7 @@ class TikaStatus implements StatusProviderInterface
      */
     protected function getOkStatus()
     {
-        return GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
+        return GeneralUtility::makeInstance(Status::class,
             'Apache Tika',
             'Configuration OK'
         );
@@ -105,13 +107,13 @@ class TikaStatus implements StatusProviderInterface
      */
     protected function getJavaInstalledStatus()
     {
-        $status = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
+        $status = GeneralUtility::makeInstance(Status::class,
             'Apache Tika',
             'Java OK'
         );
 
         if (!$this->isJavaInstalled()) {
-            $status = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
+            $status = GeneralUtility::makeInstance(Status::class,
                 'Apache Tika',
                 'Java Not Found',
                 '<p>Please install Java.</p>',
@@ -131,7 +133,7 @@ class TikaStatus implements StatusProviderInterface
     {
         $status = $this->getOkStatus();
         if (!$this->isFilePresent($this->tikaConfiguration['tikaPath'])) {
-            $status = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
+            $status = GeneralUtility::makeInstance(Status::class,
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not find Tika app jar.</p>',
@@ -153,7 +155,7 @@ class TikaStatus implements StatusProviderInterface
 
         $tikaServer = $this->getTikaServiceFromTikaConfiguration();
         if (!$tikaServer->isAvailable()) {
-            $status = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
+            $status = GeneralUtility::makeInstance(Status::class,
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not connect to Tika server.</p>',
@@ -198,7 +200,7 @@ class TikaStatus implements StatusProviderInterface
         }
 
         if (!$solrCellConfigurationOk) {
-            $status = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status',
+            $status = GeneralUtility::makeInstance(Status::class,
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not connect to Solr server.</p>',
@@ -214,7 +216,7 @@ class TikaStatus implements StatusProviderInterface
      */
     protected function getSolrServiceFromTikaConfiguration()
     {
-        return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Solr\\ConnectionManager')->getConnection(
+        return GeneralUtility::makeInstance(ConnectionManager::class)->getConnection(
             $this->tikaConfiguration['solrHost'],
             $this->tikaConfiguration['solrPort'],
             $this->tikaConfiguration['solrPath'],
@@ -228,7 +230,7 @@ class TikaStatus implements StatusProviderInterface
     protected function getTikaServiceFromTikaConfiguration()
     {
         return $tikaServer = GeneralUtility::makeInstance(
-            'ApacheSolrForTypo3\\Tika\\Service\\Tika\\ServerService',
+            ServerService::class,
             $this->tikaConfiguration
         );
     }

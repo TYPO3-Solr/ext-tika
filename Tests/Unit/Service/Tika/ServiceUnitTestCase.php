@@ -25,6 +25,9 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
+use TYPO3\CMS\Core\Resource\Index\MetaDataRepository;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -78,20 +81,19 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         $this->singletonInstances = GeneralUtility::getSingletonInstances();
 
         // Disable xml2array cache used by ResourceFactory
-        GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->setCacheConfigurations([
+        GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
             'cache_hash' => [
-                'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
-                'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\TransientMemoryBackend'
+                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
+                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
             ]
         ]);
 
         $this->setUpDocumentsStorageMock();
         $this->setUpLanguagesStorageMock();
 
-        $mockedMetaDataRepository = $this->getMock('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository');
+        $mockedMetaDataRepository = $this->getMock(MetaDataRepository::class);
         $mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(['file' => 1]));
-        GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Resource\\Index\\MetaDataRepository',
-            $mockedMetaDataRepository);
+        GeneralUtility::setSingletonInstance(MetaDataRepository::class, $mockedMetaDataRepository);
     }
 
     protected function setUpDocumentsStorageMock()
@@ -117,7 +119,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             ])
         ];
 
-        $this->documentsStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage',
+        $this->documentsStorageMock = $this->getMock(ResourceStorage::class,
             null, [$documentsDriver, $documentsStorageRecord]);
         $this->documentsStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->documentsStorageUid));
     }
@@ -145,7 +147,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             ])
         ];
 
-        $this->languagesStorageMock = $this->getMock('TYPO3\CMS\Core\Resource\ResourceStorage',
+        $this->languagesStorageMock = $this->getMock(ResourceStorage::class,
             null, [$languagesDriver, $languagesStorageRecord]);
         $this->languagesStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->languagesStorageUid));
     }
@@ -169,7 +171,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
     ) {
         /** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
-        $driver = $this->getAccessibleMock('TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver',
+        $driver = $this->getAccessibleMock(LocalDriver::class,
             $mockedDriverMethods, [$driverConfiguration]);
         $driver->expects($this->any())
             ->method('isPathValid')

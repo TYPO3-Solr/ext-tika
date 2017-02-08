@@ -28,10 +28,6 @@ use ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Resource\ResourceStorage;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 
 /**
  * Class MetaDataExtractorTest
@@ -84,13 +80,12 @@ class MetaDataExtractorTest extends UnitTestCase
         $fakedTikaExtractResponse = $this->getFakedExtratorResponseForJGEPImage();
 
         /** @var $metaDataExtractor \ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor */
-        $metaDataExtractor = $this->getMock('ApacheSolrForTypo3\\Tika\\Service\\Extractor\\MetaDataExtractor',
-            ['getExtractedMetaDataFromTikaService']);
+        $metaDataExtractor = $this->getMock(MetaDataExtractor::class, ['getExtractedMetaDataFromTikaService']);
         $metaDataExtractor->expects($this->once())->method('getExtractedMetaDataFromTikaService')->will($this->returnValue(
             $fakedTikaExtractResponse
         ));
 
-        $fileMock = $this->getDumbMock('TYPO3\CMS\Core\Resource\File');
+        $fileMock = $this->getDumbMock(File::class);
         $metaData = $metaDataExtractor->extractMetaData($fileMock);
 
         //@todo wrong data type should be int?
@@ -108,7 +103,7 @@ class MetaDataExtractorTest extends UnitTestCase
             ['application/vnd.sun.xml.writer']
         ));
 
-        $exeFileMock = $this->getDumbMock('TYPO3\CMS\Core\Resource\File');
+        $exeFileMock = $this->getDumbMock(File::class);
         $exeFileMock->expects($this->any())->method('getMimeType')->will($this->returnValue('exe'));
 
         $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)->setMethods(['getExtractor'])->getMock();
@@ -126,7 +121,7 @@ class MetaDataExtractorTest extends UnitTestCase
             ['application/vnd.sun.xml.writer']
         ));
 
-        $exeFileMock = $this->getDumbMock('TYPO3\CMS\Core\Resource\File');
+        $exeFileMock = $this->getDumbMock(File::class);
         $exeFileMock->expects($this->any())->method('getMimeType')->will($this->returnValue('application/vnd.sun.xml.writer'));
 
         $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)->setMethods(['getExtractor'])->getMock();

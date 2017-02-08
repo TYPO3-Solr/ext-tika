@@ -24,7 +24,10 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
@@ -47,8 +50,7 @@ class ServiceFactoryTest extends UnitTestCase
     public function getTikaReturnsAppServiceForJarExtractor()
     {
         $extractor = ServiceFactory::getTika('jar', $this->getConfiguration());
-        $this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\AppService',
-            $extractor);
+        $this->assertInstanceOf(AppService::class, $extractor);
     }
 
     /**
@@ -57,8 +59,7 @@ class ServiceFactoryTest extends UnitTestCase
     public function getTikaReturnsAppServiceForTikaExtractor()
     {
         $extractor = ServiceFactory::getTika('tika', $this->getConfiguration());
-        $this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\AppService',
-            $extractor);
+        $this->assertInstanceOf(AppService::class, $extractor);
     }
 
     /**
@@ -66,10 +67,8 @@ class ServiceFactoryTest extends UnitTestCase
      */
     public function getTikaReturnsServerServiceForServerExtractor()
     {
-        $extractor = ServiceFactory::getTika('server',
-            $this->getConfiguration());
-        $this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\ServerService',
-            $extractor);
+        $extractor = ServiceFactory::getTika('server', $this->getConfiguration());
+        $this->assertInstanceOf(ServerService::class, $extractor);
     }
 
     /**
@@ -82,8 +81,8 @@ class ServiceFactoryTest extends UnitTestCase
         }
 
         $extractor = ServiceFactory::getTika('solr', $this->getConfiguration());
-        $this->assertInstanceOf('\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService',
-            $extractor);
+        $this->assertInstanceOf(SolrCellService::class, $extractor);
+        $this->assertInstanceOf(SolrCellService::class, $extractor);
     }
 
     /**

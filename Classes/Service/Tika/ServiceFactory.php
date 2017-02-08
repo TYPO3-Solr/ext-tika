@@ -26,7 +26,6 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * Provides a Tika service depending on the extension's configuration
  *
@@ -63,14 +62,11 @@ class ServiceFactory
         switch ($tikaServiceType) {
             case 'jar':
             case 'tika': // backwards compatibility only
-                return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\AppService',
-                    $configuration);
+                return GeneralUtility::makeInstance(AppService::class, $configuration);
             case 'server':
-                return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\ServerService',
-                    $configuration);
+                return GeneralUtility::makeInstance(ServerService::class, $configuration);
             case 'solr':
-                return GeneralUtility::makeInstance('ApacheSolrForTypo3\\Tika\\Service\\Tika\\SolrCellService',
-                    $configuration);
+                return GeneralUtility::makeInstance(SolrCellService::class, $configuration);
             default:
                 throw new \InvalidArgumentException(
                     'Unknown Tika service type "' . $tikaServiceType . '". Must be one of jar, server, or solr.',

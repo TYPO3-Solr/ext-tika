@@ -24,7 +24,9 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
+use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -79,7 +81,7 @@ class ServerService extends AbstractService
     protected function getProcess($arguments = '')
     {
         $process = GeneralUtility::makeInstance(
-            'ApacheSolrForTypo3\\Tika\\Process',
+            Process::class,
             CommandUtility::getCommand('java'),
             $arguments
         );
@@ -114,7 +116,7 @@ class ServerService extends AbstractService
         $process->start();
         $pid = $process->getPid();
 
-        $registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+        $registry = GeneralUtility::makeInstance(Registry::class);
         $registry->set('tx_tika', 'server.pid', $pid);
     }
 
@@ -132,7 +134,7 @@ class ServerService extends AbstractService
         $process->stop();
 
         // unset pid in registry
-        $registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+        $registry = GeneralUtility::makeInstance(Registry::class);
         $registry->remove('tx_tika', 'server.pid');
     }
 
@@ -145,7 +147,7 @@ class ServerService extends AbstractService
      */
     public function getServerPid()
     {
-        $registry = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Registry');
+        $registry = GeneralUtility::makeInstance(Registry::class);
         $pid = $registry->get('tx_tika', 'server.pid');
 
         if (empty($pid)) {
