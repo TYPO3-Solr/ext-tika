@@ -13,6 +13,9 @@ logging = 0
 # cat=general//30; type=boolean; label=Show Tika Backend Module: Enables a Tika module within the Solr backend module (experimental, only works with Tika server)
 showTikaSolrModule = 0
 
+# cat=general//40;  type=string; label=Exclude mime types: List of mime types to be excluded in metadata extraction
+excludeMimeTypes =
+
 #  cat=jar//10; type=string; label=Tika App Jar Path: The absolute path to your Apache Tika app jar file (tika-app-x.x.jar)
 tikaPath =
 
