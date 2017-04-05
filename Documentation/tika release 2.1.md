@@ -1,3 +1,0 @@
-# Apache Solr for TYPO3 - Tika Addon version 2.1.0 released
-
-In this release we provide compatibility changes that are needed to use EXT:tika with EXT:solr 4.0.0 and PHP 7.0

@@ -1,6 +1,6 @@
-.. ==================================================
+.. ====================
 .. FOR YOUR INFORMATION
-.. --------------------------------------------------
+.. --------------------s
 .. -*- coding: utf-8 -*- with BOM.
 
 .. include:: Includes.txt
@@ -98,3 +98,11 @@ you're using.
 
 If you run into any issues with setting up EXT:tika don't hesitate to ask for help on the
 `TYPO3 Solr Slack channel <https://typo3.slack.com/messages/ext-solr/>`_
+
+
+.. toctree::
+   :maxdepth: 3
+   :titlesonly:
+   :glob:
+
+   Releases/Index
