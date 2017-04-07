@@ -80,7 +80,7 @@ class MetaDataExtractorTest extends UnitTestCase
         $fakedTikaExtractResponse = $this->getFakedExtratorResponseForJGEPImage();
 
         /** @var $metaDataExtractor \ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor */
-        $metaDataExtractor = $this->getMock(MetaDataExtractor::class, ['getExtractedMetaDataFromTikaService']);
+        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)->setMethods(['getExtractedMetaDataFromTikaService'])->getMock();
         $metaDataExtractor->expects($this->once())->method('getExtractedMetaDataFromTikaService')->will($this->returnValue(
             $fakedTikaExtractResponse
         ));
