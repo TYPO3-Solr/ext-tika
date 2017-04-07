@@ -47,8 +47,10 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
     public function setUp()
     {
         $this->viewMock = $this->getDumbMock(ViewInterface::class);
-        $this->controller = $this->getMock(TikaControlPanelModuleController::class,
-            ['addFlashMessage'], [], '', false);
+        $this->controller = $this->getMockBuilder(TikaControlPanelModuleController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['addFlashMessage'])
+            ->getMock();
         $this->controller->overwriteView($this->viewMock);
     }
 

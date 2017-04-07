@@ -71,7 +71,7 @@ class UnitTestCase extends TYPO3UnitTestCase
      */
     protected function getDumbMock($className)
     {
-        return $this->getMock($className, [], [], '', false);
+        return $this->getMockBuilder($className)->disableOriginalConstructor()->getMock();
     }
 
     /**

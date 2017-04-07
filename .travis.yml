@@ -4,20 +4,33 @@ php:
   - 5.5
   - 5.6
   - 7.0
+  - 7.1
 
 env:
   global:
     - TIKA_VERSION="1.14"
     - TIKA_PATH=$HOME/tika
+    - EXT_SOLR_VERSION="dev-master"
   matrix:
-    - TYPO3_VERSION="~7.6.5"
-    - TYPO3_VERSION="~8.0.1"
+    - TYPO3_VERSION="~7.6.16"
+    - TYPO3_VERSION="~8.7.0"
     - TYPO3_VERSION="dev-master"
 
 matrix:
   fast_finish: true
   allow_failures:
     - env: TYPO3_VERSION="dev-master"
+  exclude:
+    - php: 5.5
+      env: TYPO3_VERSION="~8.7.0"
+    - php: 5.6
+      env: TYPO3_VERSION="~8.7.0"
+    - php: 5.5
+      env: TYPO3_VERSION="dev-master"
+    - php: 5.6
+      env: TYPO3_VERSION="dev-master"
+    - php: 7.1
+      env: TYPO3_VERSION="~7.6.16"
 
 before_install:
   - composer self-update

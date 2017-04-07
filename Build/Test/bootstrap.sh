@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
+EXTENSION_ROOTPATH="$SCRIPTPATH/../../"
+
 #
 # Run this script once to set up a dev/test environment for this extension
 # Afterwards simply running cibuild.sh will execute the tests
@@ -9,6 +12,10 @@ if [[ $* == *--local* ]]; then
     echo -n "Choose a TYPO3 Version (e.g. dev-master,~6.2.17,~7.6.2): "
     read typo3Version
     export TYPO3_VERSION=$typo3Version
+
+    echo -n "Choose a EXT:solr Version (e.g. dev-master,~3.1.1): "
+    read extSolrVersion
+    export EXT_SOLR_VERSION=$extSolrVersion
 
     echo -n "Choose a tika Version (e.g. 1.14): "
     read tikaVersion
@@ -82,8 +89,26 @@ echo "Tika pid: $TIKA_PID"
 
 echo "PWD: $(pwd)"
 
-composer require typo3/cms="$TYPO3_VERSION"
-composer require apache-solr-for-typo3/solr:"^4.0.0 || dev-master"
+export TYPO3_PATH_PACKAGES="${EXTENSION_ROOTPATH}.Build/vendor/"
+export TYPO3_PATH_WEB="${EXTENSION_ROOTPATH}.Build/Web/"
+
+echo "Using extension path $EXTENSION_ROOTPATH"
+echo "Using package path $TYPO3_PATH_PACKAGES"
+echo "Using web path $TYPO3_PATH_WEB"
+
+if [[ $TYPO3_VERSION == "~8.7.0" ||  $TYPO3_VERSION == "dev-master" ]]; then
+    # For ~8.7.0 we need to use the new testing framework
+    # after dropping 7.x support we need to change this in the patched files
+    composer require --dev typo3/cms="$TYPO3_VERSION"
+    composer require --dev --prefer-source typo3/testing-framework="1.0.1"
+
+    sed  -i 's/Core\Tests\FunctionalTestCase as TYPO3IntegrationTest/TYPO3\TestingFramework\Core\FunctionalTestCase as TYPO3IntegrationTest/g' Tests/Integration/IntegrationTest.php
+    sed  -i 's/Core\Tests\UnitTestCase as TYPO3UnitTest/TYPO3\TestingFramework\Core\UnitTestCase as TYPO3UnitTest/g' Tests/Unit/UnitTest.php
+else
+    composer require --dev --prefer-source typo3/cms="$TYPO3_VERSION"
+fi
+
+composer require apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
 
 # Restore composer.json
 git checkout composer.json

@@ -91,8 +91,11 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         $this->setUpDocumentsStorageMock();
         $this->setUpLanguagesStorageMock();
 
-        $mockedMetaDataRepository = $this->getMock(MetaDataRepository::class);
-        $mockedMetaDataRepository->expects($this->any())->method('findByFile')->will($this->returnValue(['file' => 1]));
+        $mockedMetaDataRepository = $this->getMockBuilder(MetaDataRepository::class)->getMock();
+        $mockedMetaDataRepository
+            ->expects($this->any())
+            ->method('findByFile')
+            ->will($this->returnValue(['file' => 1]));
         GeneralUtility::setSingletonInstance(MetaDataRepository::class, $mockedMetaDataRepository);
     }
 
@@ -119,8 +122,10 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             ])
         ];
 
-        $this->documentsStorageMock = $this->getMock(ResourceStorage::class,
-            null, [$documentsDriver, $documentsStorageRecord]);
+        $this->documentsStorageMock = $this->getMockBuilder(ResourceStorage::class)
+            ->setMethods(['getUid'])
+            ->setConstructorArgs([$documentsDriver, $documentsStorageRecord])
+            ->getMock();
         $this->documentsStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->documentsStorageUid));
     }
 
@@ -147,9 +152,13 @@ abstract class ServiceUnitTestCase extends UnitTestCase
             ])
         ];
 
-        $this->languagesStorageMock = $this->getMock(ResourceStorage::class,
-            null, [$languagesDriver, $languagesStorageRecord]);
-        $this->languagesStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->languagesStorageUid));
+        $this->languagesStorageMock = $this->getMockBuilder(ResourceStorage::class)
+            ->setMethods(['getUid'])
+            ->setConstructorArgs([$languagesDriver, $languagesStorageRecord])
+            ->getMock();
+        $this->languagesStorageMock->expects($this->any())
+            ->method('getUid')
+            ->will($this->returnValue($this->languagesStorageUid));
     }
 
     protected function tearDown()
