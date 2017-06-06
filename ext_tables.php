@@ -32,11 +32,21 @@ if (TYPO3_MODE == 'BE') {
             && $tikaExtensionConfiguration['showTikaSolrModule'] == 1);
 
         if ($isSolrModuleEnabled) {
-            \ApacheSolrForTypo3\Solr\Backend\SolrModule\AdministrationModuleManager::registerModule(
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
                 'ApacheSolrForTypo3.' . $_EXTKEY,
+                'searchbackend',
                 'TikaControlPanel',
-                ['index']
+                'bottom',
+                [
+                    'Backend\\SolrModule\\TikaControlPanelModule' => 'index, startServer, stopServer'
+                ],
+                [
+                    'access' => 'user,group',
+                    'icon' => 'EXT:' . $_EXTKEY . '/Resources/Public/Images/Icons/Tika.png',
+                    'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xlf:solr.backend.tika.label'
+                ]
             );
         }
+
     }
 }

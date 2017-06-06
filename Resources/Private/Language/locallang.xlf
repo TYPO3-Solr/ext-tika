@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2017-06-02T11:42:09Z">
+        <header>
+            <generator>LFEditor</generator>
+        </header>
+        <body>
+
+            <!-- Backend module -->
+            <trans-unit id="solr.backend.tika.label" xml:space="preserve">
+				<source>Tika Server</source>
+			</trans-unit>
+
+        </body>
+    </file>
+</xliff>
