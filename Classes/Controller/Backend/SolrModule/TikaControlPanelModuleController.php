@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Backend\SolrModule;
+namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
 
 /***************************************************************
  *  Copyright notice
@@ -24,9 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Backend\SolrModule;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use ApacheSolrForTypo3\Solr\Backend\SolrModule\AbstractModuleController;
+use ApacheSolrForTypo3\Solr\Controller\Backend\Search\AbstractModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
-use ApacheSolrForTypo3\Tika\Service\Tika\ServiceInterface;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -39,20 +38,6 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
  */
 class TikaControlPanelModuleController extends AbstractModuleController
 {
-
-    /**
-     * Module name, used to identify a module f.e. in URL parameters.
-     *
-     * @var string
-     */
-    protected $moduleName = 'TikaControlPanel';
-
-    /**
-     * Module title, shows up in the module menu.
-     *
-     * @var string
-     */
-    protected $moduleTitle = 'Tika Server';
 
     /**
      * Tika configuration
@@ -153,7 +138,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
             );
         }
 
-        $this->forwardToIndex();
+        $this->redirect('index');
     }
 
     /**
@@ -175,7 +160,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
             );
         }
 
-        $this->forwardToIndex();
+        $this->redirect('index');
     }
 
     /**

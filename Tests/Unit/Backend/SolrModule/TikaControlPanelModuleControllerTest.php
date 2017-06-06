@@ -26,7 +26,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use ApacheSolrForTypo3\Tika\Backend\SolrModule\TikaControlPanelModuleController;
+use ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule\TikaControlPanelModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
@@ -35,7 +35,7 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 class TikaControlPanelModuleControllerTest extends UnitTestCase
 {
     /**
-     * @var \ApacheSolrForTypo3\Tika\Backend\SolrModule\TikaControlPanelModuleController
+     * @var TikaControlPanelModuleController
      */
     protected $controller;
 

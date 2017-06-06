@@ -44,7 +44,7 @@
 
 				<f:if condition="{server.isControllable}">
 					Tika can be controlled. PID: {server.pid}
-					<f:form controller="Administration" extensionName="solr" arguments="{module:'{module.name}', moduleAction:'stopServer'}" method="POST">
+					<f:form action="stopServer" method="POST">
 						<f:form.submit class="btn btn-sm btn-default" value="Stop Tika Server"/>
 					</f:form>
 				</f:if>
@@ -56,7 +56,7 @@
 
 				<f:if condition="{server.isControllable}">
 					Tika can be controlled.
-					<f:form controller="Administration" extensionName="solr" arguments="{module:'{module.name}', moduleAction:'startServer'}" method="POST">
+					<f:form action="startServer" method="POST">
 						<f:form.submit class="btn btn-sm btn-default" value="Start Tika Server"/>
 					</f:form>
 				</f:if>
