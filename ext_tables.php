@@ -12,15 +12,15 @@ if (TYPO3_MODE == 'BE') {
 
 
     $modulePrefix = 'extensions-tika-module';
-    $bitmapProvider = \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class;
+    $svgProvider = \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class;
 
-    // register all module icons with extensions-solr-module-modulename
+    /* @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */ // register all module icons with extensions-solr-module-modulename
     $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
 
     $iconRegistry->registerIcon(
         $modulePrefix . '-tikacontrolpanel',
-        $bitmapProvider,
-        ['source' => $extIconPath . 'Tika.png']
+        $svgProvider,
+        ['source' => $extIconPath . 'module-tika.svg']
     );
 
 
@@ -42,7 +42,7 @@ if (TYPO3_MODE == 'BE') {
                 ],
                 [
                     'access' => 'user,group',
-                    'icon' => 'EXT:' . $_EXTKEY . '/Resources/Public/Images/Icons/Tika.png',
+                    'icon' => 'EXT:' . $_EXTKEY . '/Resources/Public/Images/Icons/module-tika.svg',
                     'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xlf:solr.backend.tika.label'
                 ]
             );
