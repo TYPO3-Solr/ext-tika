@@ -31,6 +31,8 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * Provides a status report about whether Tika is properly configured
@@ -179,17 +181,20 @@ class TikaStatus implements StatusProviderInterface
         try {
             $solr = $this->getSolrServiceFromTikaConfiguration();
 
-            $solr->ping();
-            $plugins = $solr->getPluginsInformation();
-            if (array_key_exists(
-                '/update/extract',
-                $plugins->plugins->QUERYHANDLER
-            )) {
+            // try to extract text & meta data
+            $query = GeneralUtility::makeInstance(
+                SolrCellQuery::class,
+                ExtensionManagementUtility::extPath('tika', 'ext_emconf.php')
+            );
+            $query->setExtractOnly();
+            list($extractedContent, $extractedMetadata) = $solr->extractByQuery($query);
+
+            if (!is_null($extractedContent) && !empty($extractedMetadata)) {
                 $solrCellConfigurationOk = true;
             }
         } catch (\Exception $e) {
             $this->writeDevLog(
-                'Exception while retrieving Solr plugin list',
+                'Exception while trying to extract file content',
                 'tika',
                 3,
                 [
@@ -203,7 +208,7 @@ class TikaStatus implements StatusProviderInterface
             $status = GeneralUtility::makeInstance(Status::class,
                 'Apache Tika',
                 'Configuration Incomplete',
-                '<p>Could not connect to Solr server.</p>',
+                '<p>Could not extract file contents with Solr Cell.</p>',
                 Status::ERROR
             );
         }
