@@ -85,6 +85,42 @@ according settings tab.
 When done, check the TYPO3 system status report to validate your settings.
 
 
+Configuration of Tika App
+=========================
+
+General information about how to configure the Tika App can be found in the
+`official documentation <https://tika.apache.org/1.16/configuring.html>`_
+
+In case you want to exclude certain mime types from beeing processed by Tika,
+you can do the following:
+
+Create the file :file:`/etc/tika/tika-config.xml` with this content:
+
+.. highlight:: xml
+
+   <?xml version="1.0" encoding="UTF-8"?>
+   <properties>
+     <parsers>
+       <parser class="org.apache.tika.parser.DefaultParser">
+         <mime-exclude>application/zip</mime-exclude>
+       </parser>
+       <parser class="org.apache.tika.parser.EmptyParser">
+         <mime>application/zip</mime>
+       </parser>
+     </parsers>
+   </properties>
+
+This tells Tika to exclude zip files from DefaultParser and use EmptyParser instead,
+who does basically nothing.
+
+Then add one line to :file:`/etc/security/pam_env.con`:
+
+.. highlight:: bash
+
+   TIKA_CONFIG     DEFAULT="/etc/tika/tika-config.xml"
+
+This sets a global environment variable where Tika shold look for more configuration.
+
 
 Getting Help
 ============

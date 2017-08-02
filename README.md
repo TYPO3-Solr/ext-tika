@@ -15,9 +15,9 @@ We're open for [contributions](#Contributions) !
 Please find further information regarding Apache Tika on the [project's homepage](http://tika.apache.org)
 
 
-## Continues Integration
+## Continuous Integration
 
-We use travis ci for continues integration. To run the whole test suite locally for one TYPO3 & Tika Version
+We use travis ci for continuous integration. To run the whole test suite locally for one TYPO3 & Tika Version
 do the following:
 
 ```bash
