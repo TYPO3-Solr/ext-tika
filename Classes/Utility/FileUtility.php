@@ -17,7 +17,7 @@ namespace ApacheSolrForTypo3\Tika\Utility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class ShellUtility
+ * Class FileUtility
  */
 class FileUtility
 {
