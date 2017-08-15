@@ -6,11 +6,11 @@ php:
 
 env:
   global:
-    - TIKA_VERSION="1.15"
+    - TIKA_VERSION="1.16"
     - TIKA_PATH=$HOME/tika
     - EXT_SOLR_VERSION="dev-master"
   matrix:
-    - TYPO3_VERSION="~8.7.1"
+    - TYPO3_VERSION="^8.7"
     - TYPO3_VERSION="dev-master"
 
 matrix:
