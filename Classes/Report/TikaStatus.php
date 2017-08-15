@@ -69,16 +69,18 @@ class TikaStatus implements StatusProviderInterface
     public function getStatus()
     {
         $checks = [];
-        if ($this->tikaConfiguration['extractor'] != 'solr') {
-            $checks[] = $this->getJavaInstalledStatus();
-        }
 
         switch ($this->tikaConfiguration['extractor']) {
             case 'jar':
             case 'tika': // backwards compatibility only
+                // for the app java is required
+                $checks[] = $this->getJavaInstalledStatus(Status::ERROR);
                 $checks[] = $this->getAppConfigurationStatus();
+
                 break;
             case 'server':
+                // for the server only recommended since it could also run on another node
+                $checks[] = $this->getJavaInstalledStatus(Status::WARNING);
                 $checks[] = $this->getServerConfigurationStatus();
                 break;
             case 'solr':
@@ -105,9 +107,10 @@ class TikaStatus implements StatusProviderInterface
     /**
      * Creates a system status report status checking whether Java is installed.
      *
+     * @param integer $severity
      * @return \TYPO3\CMS\Reports\Status
      */
-    protected function getJavaInstalledStatus()
+    protected function getJavaInstalledStatus($severity = Status::ERROR)
     {
         $status = GeneralUtility::makeInstance(Status::class,
             'Apache Tika',
@@ -119,7 +122,7 @@ class TikaStatus implements StatusProviderInterface
                 'Apache Tika',
                 'Java Not Found',
                 '<p>Please install Java.</p>',
-                Status::ERROR
+                $severity
             );
         }
 
