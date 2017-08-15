@@ -8,12 +8,43 @@ This is the release for TYPO3 CMS LTS 8.
 New in this Release
 -------------------
 
-Support Apache Tika 1.15
+Support Apache Tika 1.16
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Since there as a change in the tika response in version 1.15 we adapted the detection, to check if the tika server is running.
+Since there as a change in the tika response in version 1.16 we adapted the detection, to check if the tika server is running.
 
 https://github.com/TYPO3-Solr/ext-tika/pull/63
+https://github.com/TYPO3-Solr/ext-tika/pull/71
+
+Fix Solr Cell status check
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As the extract handler is configured for lazy startups, it is possible that it's not loaded while testing. This commit improves the status check by performing a test extraction, instead of checking the plugin list.
+
+https://github.com/TYPO3-Solr/ext-tika/pull/67
+
+Corrected several typos
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Some typos in the code and documentation have been fixed.
+
+https://github.com/TYPO3-Solr/ext-tika/pull/68
+https://github.com/TYPO3-Solr/ext-tika/pull/69
+
+Improved documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+A paragraph with the configuration of the tika app was added that describes how to exlude mime types.
+
+https://github.com/TYPO3-Solr/ext-tika/pull/70
+
+Adjusted report to only require java for the app mode
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When you configure tika in server mode, it is not required to have java installed since it can also run on another node.
+Therefore the report checks have been changed to trigger an error when java is not installed when the app is used and only a warning, when the tika server mode is used.
+
+https://github.com/TYPO3-Solr/ext-tika/pull/73
 
 Thanks
 ------
@@ -22,74 +53,110 @@ Thanks to all contributors
 
 (patches, comments, bug reports, reviews, ... in alphabetical order)
 
-* Ingo Renner
-* Thomas Hohn
+* Markus Friedrich
+* Peter Kraume
+* Rafael Kähm
 * Timo Hund
 
-Also a big thanks to our partners that have joined the EB2016 program:
+Also a big thanks to our partners that have joined the EB2017 program:
 
-* Arrabiata Solutions GmbH & Co. KG
-* avonis
-* Bank CIC AG
-* Bitmotion GmbH
-* Citkomm services GmbH
-* cron IT
-* CS2 AG
-* Cosmoblonde GmbH
-* Daniz online markting
-* datenwerk innovationsagentur gmbh
-* Die Medialen GmbH
-* die_schnittsteller GmbH
-* E-magineurs
-* Fernando Hernáez Lopez
-* Future Connection AG
-* Gernot Leitgab
 * .hausformat
+* AGENTUR FRONTAG AG
+* amarantus - media design & conding Mario Drengner & Enrico Nemack GbR
+* Amedick & Sommer Neue Medien GmbH
+* Andrea Pausch
+* Animate Agentur für interaktive Medien GmbH
+* artig GmbH & Co. KG
+* b:dreizehn GmbH
+* BIBUS AG Group
+* Bitmotion GmbH
+* cab services ag
+* Causal Sarl
+* CHIARI GmbH
+* Citkomm services GmbH
+* clickstorm GmbH
+* Connecta AG
+* Creative360
+* cron IT GmbH
+* CYBERhouse Agentur für interaktive Kommukation GmbH
+* cyperfection GmbH
+* data-graphis GmbH
+* Deutsche Welthungerhilfe e.V.
+* Deutscher Ärzteverlag
+* Deutscher Volkshochschul-Verband
+* Die Medialen GmbH
+* die_schnittsteller gmbh
+* Dörfer engineering services
+* E-Magineurs
+* EYE Communications AG
+* Fachhochschule für öffentliche Verwaltung NRW Zentralverwaltung Gelsenkirchen
+* familie redlich AG
+* Fork Unstable Media GmbH
+* hauptsache.net GmbH
+* Havas Düsseldorf GmbH
 * Hirsch & Wölfl GmbH
-* hs-digital GmbH
-* IHK Neubrandenburg
-* internezzo AG
+* Hochschule Furtwangen - IMZ Online Services
+* Hochschule Konstanz
+* Institut der deutschen Wirtschaft Köln Medien GmbH
+* iresults gmbh
+* ITK Rheinland
+* itl Institut für technische Literatur AG
 * jweiland.net
-* L.N. Schaffrath DigitalMedien GmbH
-* mehrwert intermediale kommunikation GmbH
-* netlogix GmbH & Co. KG
-* Pixel Ink
-* Pixelpark AG
-* pixolith GmbH & Co. KG
+* Kassenärztliche Vereinigung Rheinland-Pfalz
+* Kerstin Nägler Web & Social Media Beratung
+* Landesinstitut für Schule und Medien Berlin-Brandenburg
+* Leibniz Universität IT Services
+* Libéo
+* Lime Flavour GbR
+* LINGNER CONSULTING NEW MEDIA GMBH
+* LOUIS INTERNET
+* Maximilian Walter
+* MEDIA:ESSENZ
+* mehrwert intermediäre kommunikation GmbH
+* Mercedes-AMG GmbH
+* mlm media process management GmbH
+* n@work Internet Informationssystems GmbH
+* Netcreators
+* netz-haut GmbH
+* neuwerk interactive
+* Nintendo of Europe GmbH
+* Onedrop Solutions GmbH
+* Open New Media GmbH
+* Paints Multimedia GmbG
+* pixelcreation GmbH
+* plan2net
+* Pluswerk AG
 * polargold GmbH
-* portrino GmbH
-* Q3i GmbH & Co. KG
-* raphael gmbh
-* RUAG Corporate Services AG
+* punkt.de GmbH
+* Raiffeisen OnLine GmbH
+* ruhmesmeile GmbH
+* Rundfunk und Telekom Regulierung GmbH
+* Schweizer Alpen-Club SAC
 * sitegeist media solutions GmbH
-* ST3 Elkartea
 * Star Finanz-Software Entwicklung und Vertriebs GmbH
-* Stefan Galinski Interndienstleistungen
-* Speedpartner GmbH
-* sunzinet AG
+* Stefan Galinski Internetdienstleistungen
+* Stratis - Toulon
+* Studio Mitte Digital Media GmbH
+* Studio 9 GmbH
 * Systime A/S
 * SYZYGY Deutschland GmbH
-* tecsis GmbH
-* web-vision GmbH
-* websedit AG - Internetagentur
-* Webstobe GmbH
-* werkraum GmbH
-* WIND Internet
-* wow! solution
-* zdreicon AG
-
-Thanks also to our partners who already singed up for a 2017 partnership (EB2017):
-
-* Amedick & Sommer Neue Medien GmbH
-* cron IT GmbH
-* b:dreizehn GmbH
-* Die Medialen GmbH
-* Leibniz Universität IT Services, Hannover
-* LOUIS INTERNET
-* polargold GmbH
-* Mercedes-AMG GmbH
+* takomat Agentur GbR
+* THE BRETTINGHAMS GmbH
+* TOUMORO
 * Triplesense Reply GmbH
-* zdreicom AG
+* Typoheads GmbH
+* unternehmen online GmbH & Co. KG
+* Universität Bremen
+* VERDURE Medienteam GmbH
+* WACON Internet GmbH
+* webedit AG
+* Webstore GmbH
+* Webtech AG
+* wegewerk GmbH
+* Wohnungsbau- und Verwaltungsgesellschaft mbH Greifswald
+* XIMA MEDIA GmbH
+* zdreicom GmbH
+* zimmer7 GmbH
 
 Thanks to everyone who helped in creating this release!
 
