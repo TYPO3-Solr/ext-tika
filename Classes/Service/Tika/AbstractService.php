@@ -77,7 +77,7 @@ abstract class AbstractService implements ServiceInterface
         $localTempFilePath,
         FileInterface $sourceFile
     ) {
-        if (PathUtility::basename($localTempFilePath) !== $sourceFile->getName()) {
+        if (PathUtility::basename($localTempFilePath) !== $sourceFile->getName() && file_exists($localTempFilePath)) {
             unlink($localTempFilePath);
         }
     }
