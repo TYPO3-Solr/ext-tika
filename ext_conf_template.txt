@@ -16,6 +16,9 @@ showTikaSolrModule = 0
 # cat=general//40;  type=string; label=Exclude mime types: List of mime types to be excluded in metadata extraction
 excludeMimeTypes =
 
+# cat=general//50; type=string; label=File size limit when a file should be processed (configured in MB)
+fileSizeLimit = 500
+
 #  cat=jar//10; type=string; label=Tika App Jar Path: The absolute path to your Apache Tika app jar file (tika-app-x.x.jar)
 tikaPath =
 

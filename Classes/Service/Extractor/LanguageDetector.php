@@ -70,8 +70,10 @@ class LanguageDetector extends AbstractExtractor
      */
     public function canProcess(File $file)
     {
-        return in_array($file->getProperty('extension'),
-            $this->supportedFileTypes);
+        $isSupportedFileType = in_array($file->getProperty('extension'), $this->supportedFileTypes);
+        $isSizeBelowLimit = $this->fileSizeValidator->isBelowLimit($file);
+
+        return $isSupportedFileType && $isSizeBelowLimit;
     }
 
     /**
