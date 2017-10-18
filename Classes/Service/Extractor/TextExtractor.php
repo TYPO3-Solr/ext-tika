@@ -28,9 +28,11 @@ if (version_compare(TYPO3_branch, '7.2', '<')) {
     include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tika') . 'Resources/Php/TextExtractorInterface.php');
 }
 
+use ApacheSolrForTypo3\Tika\Service\File\SizeValidator;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
@@ -81,6 +83,7 @@ class TextExtractor implements TextExtractorInterface
     public function __construct()
     {
         $this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $this->fileSizeValidator = GeneralUtility::makeInstance(SizeValidator::class);
     }
 
     /**
@@ -91,7 +94,10 @@ class TextExtractor implements TextExtractorInterface
      */
     public function canExtractText(FileInterface $file)
     {
-        return in_array($file->getExtension(), $this->supportedFileTypes);
+        $isSupportedFileExtension = in_array($file->getExtension(), $this->supportedFileTypes);
+        $isSizeBelowLimit = $this->fileSizeValidator->isBelowLimit($file);
+
+        return $isSizeBelowLimit && $isSupportedFileExtension;
     }
 
     /**

@@ -54,7 +54,10 @@ class MetaDataExtractor extends AbstractExtractor
         $mimeTypes = $tikaService->getSupportedMimeTypes();
         $allowedMimeTypes = $this->mergeAllowedMimeTypes($mimeTypes);
 
-        return in_array($file->getMimeType(), $allowedMimeTypes);
+        $isAllowedMimetype = in_array($file->getMimeType(), $allowedMimeTypes);
+        $isSizeBelowLimit = $this->fileSizeValidator->isBelowLimit($file);
+
+        return $isAllowedMimetype && $isSizeBelowLimit;
     }
 
     /**

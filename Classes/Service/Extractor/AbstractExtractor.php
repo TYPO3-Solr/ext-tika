@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Service\File\SizeValidator;
 use TYPO3\CMS\Core\Resource;
 use TYPO3\CMS\Core\Resource\Index\ExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -57,6 +58,7 @@ abstract class AbstractExtractor implements ExtractorInterface
     public function __construct()
     {
         $this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $this->fileSizeValidator = GeneralUtility::makeInstance(SizeValidator::class);
     }
 
     /**
