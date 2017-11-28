@@ -24,8 +24,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use ApacheSolrForTypo3\Solr\SolrService;
-use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery;
+use ApacheSolrForTypo3\Solr\ConnectionManager;
+use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -40,9 +40,9 @@ class SolrCellService extends AbstractService
     /**
      * Solr connection
      *
-     * @var SolrService
+     * @var SolrConnection
      */
-    protected $solr = null;
+    protected $solrConnection = null;
 
     /**
      * Service initialization
@@ -51,15 +51,9 @@ class SolrCellService extends AbstractService
      */
     protected function initializeService()
     {
-        // FIXME move connection building to EXT:solr
-        // currently explicitly using "new" to bypass
-        // \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance() or providing a Factory
-
-        // TODO just get *any* connection from EXT:solr
-
         // EM might define a different connection than already in use by
         // Index Queue
-        $this->solr = new SolrService(
+        $this->solrConnection = GeneralUtility::makeInstance(ConnectionManager::class)->getConnection(
             $this->configuration['solrHost'],
             $this->configuration['solrPort'],
             $this->configuration['solrPath'],
@@ -91,19 +85,14 @@ class SolrCellService extends AbstractService
         $query = GeneralUtility::makeInstance(SolrCellQuery::class, $localTempFilePath);
         $query->setExtractOnly();
 
-        // todo: this can be removed when we drop EXT:solr 3.1 compatibility
-        $solrVersion = $this->getExtSolrVersion();
-        if(version_compare($solrVersion, '3.1', '>')) {
-            $response = $this->solr->extractByQuery($query);
-        } else {
-            $response = $this->solr->extract($query);
-        }
+        $writer = $this->solrConnection->getWriteService();
+        $response = $writer->extractByQuery($query);
 
         $this->cleanupTempFile($localTempFilePath, $file);
 
         $this->log('Text Extraction using Solr', [
             'file' => $file,
-            'solr connection' => (array)$this->solr,
+            'solr connection' => (array)$writer,
             'query' => (array)$query,
             'response' => $response
         ]);
@@ -123,39 +112,21 @@ class SolrCellService extends AbstractService
         $query = GeneralUtility::makeInstance(SolrCellQuery::class, $localTempFilePath);
         $query->setExtractOnly();
 
-        // todo: this can be removed when we drop EXT:solr 3.1 compatibility
-        $solrVersion = $this->getExtSolrVersion();
-        if(version_compare($solrVersion, '3.1', '>')) {
-            $response = $this->solr->extractByQuery($query);
-        } else {
-            $response = $this->solr->extract($query);
-        }
+        $writer = $this->solrConnection->getWriteService();
+        $response = $writer->extractByQuery($query);
 
         $metaData = $this->solrResponseToArray($response[1]);
         $this->cleanupTempFile($localTempFilePath, $file);
 
         $this->log('Meta Data Extraction using Solr', [
             'file' => $file,
-            'solr connection' => (array)$this->solr,
+            'solr connection' => (array)$writer,
             'query' => (array)$query,
             'response' => $response,
             'meta data' => $metaData
         ]);
 
         return $metaData;
-    }
-
-    /**
-    * Gets the Solr Version reduced to major and minor digits
-    *
-    * @return float
-    */
-    protected function getExtSolrVersion()
-    {
-        $solrVersion = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion('solr');
-        $strippedSolrVersion = substr($solrVersion, 0, 3);
-
-        return $strippedSolrVersion;
     }
 
     /**
@@ -215,7 +186,7 @@ class SolrCellService extends AbstractService
     {
         // TODO add patch for endpoint on Apache Solr to return Tika version
         // for now returns the Solr version string f.e. "Apache Solr 5.2.0"
-        return $this->solr->getSolrServerVersion();
+        return $this->solrConnection->getAdminService()->getSolrServerVersion();
     }
 
     /**
@@ -272,6 +243,6 @@ class SolrCellService extends AbstractService
      */
     public function isAvailable()
     {
-        return $this->solr->ping();
+        return $this->solrConnection->getWriteService()->ping();
     }
 }

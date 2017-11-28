@@ -25,6 +25,8 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Solr\SolrService;
+use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
+use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Prophecy\Argument;
@@ -71,7 +73,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     public function newInstancesAreInitializedWithASolrConnection()
     {
         $service = new SolrCellService($this->getConfiguration());
-        $this->assertAttributeInstanceOf(SolrService::class, 'solr', $service);
+        $this->assertAttributeInstanceOf(SolrConnection::class, 'solrConnection', $service);
     }
 
     /**
@@ -80,15 +82,19 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     public function extractByQueryTextReturnsTextElementFromResponse()
     {
         $expectedValue = 'extracted text element';
-        $solrMock = $this->prophet->prophesize(SolrService::class);
-        $solrMock->extractByQuery(Argument::type(SolrCellQuery::class))
+
+        $solrWriter = $this->prophet->prophesize(SolrWriteService::class);
+        $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))
             ->willReturn([
                 $expectedValue,     // extracted text is index 0
                 'meta data element' // meta data is index 1
             ]);
 
+        $connectionMock = $this->prophet->prophesize(SolrConnection::class);
+        $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
+
         $service = new SolrCellService($this->getConfiguration());
-        $this->inject($service, 'solr', $solrMock->reveal());
+        $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
         $file = new File(
             [
@@ -107,12 +113,14 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractByQueryTextUsesSolrCellQuery()
     {
-        $solrMock = $this->prophet->prophesize(SolrService::class);
-        $solrMock->extractByQuery(Argument::type(SolrCellQuery::class))
-            ->shouldBeCalled();
+        $solrWriter = $this->prophet->prophesize(SolrWriteService::class);
+        $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))->shouldBeCalled();
+
+        $connectionMock = $this->prophet->prophesize(SolrConnection::class);
+        $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
-        $this->inject($service, 'solr', $solrMock->reveal());
+        $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
         $file = new File([
             'identifier' => 'testWORD.doc',
@@ -153,8 +161,8 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractMetaDataUsesSolrCellQuery()
     {
-        $solrMock = $this->prophet->prophesize(SolrService::class);
-        $solrMock->extractByQuery(Argument::type(SolrCellQuery::class))
+        $solrWriter = $this->prophet->prophesize(SolrWriteService::class);
+        $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))
             ->shouldBeCalled()
             ->willReturn([
                     'foo', // extracted text is index 0
@@ -162,8 +170,11 @@ class SolrCellServiceTest extends ServiceUnitTestCase
                 ]
             );
 
+        $connectionMock = $this->prophet->prophesize(SolrConnection::class);
+        $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
+
         $service = new SolrCellService($this->getConfiguration());
-        $this->inject($service, 'solr', $solrMock->reveal());
+        $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
         $file = new File(
             [
