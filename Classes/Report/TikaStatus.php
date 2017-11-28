@@ -182,7 +182,7 @@ class TikaStatus implements StatusProviderInterface
 
         $solrCellConfigurationOk = false;
         try {
-            $solr = $this->getSolrServiceFromTikaConfiguration();
+            $solr = $this->getSolrConnectionFromTikaConfiguration();
 
             // try to extract text & meta data
             $query = GeneralUtility::makeInstance(
@@ -190,7 +190,7 @@ class TikaStatus implements StatusProviderInterface
                 ExtensionManagementUtility::extPath('tika', 'ext_emconf.php')
             );
             $query->setExtractOnly();
-            list($extractedContent, $extractedMetadata) = $solr->extractByQuery($query);
+            list($extractedContent, $extractedMetadata) = $solr->getWriteService()->extractByQuery($query);
 
             if (!is_null($extractedContent) && !empty($extractedMetadata)) {
                 $solrCellConfigurationOk = true;
@@ -220,9 +220,9 @@ class TikaStatus implements StatusProviderInterface
     }
 
     /**
-     * @return \ApacheSolrForTypo3\Solr\SolrService
+     * @return \ApacheSolrForTypo3\Solr\System\Solr\SolrConnection
      */
-    protected function getSolrServiceFromTikaConfiguration()
+    protected function getSolrConnectionFromTikaConfiguration()
     {
         return GeneralUtility::makeInstance(ConnectionManager::class)->getConnection(
             $this->tikaConfiguration['solrHost'],
