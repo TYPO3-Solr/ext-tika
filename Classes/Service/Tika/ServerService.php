@@ -263,7 +263,7 @@ class ServerService extends AbstractService
     public function extractText(FileInterface $file)
     {
         $headers = [
-            TYPO3_user_agent,
+            $this->getUserAgent(),
             'Accept: text/plain',
             'Content-Type: application/octet-stream',
             'Connection: close'
@@ -292,7 +292,7 @@ class ServerService extends AbstractService
     public function extractMetaData(FileInterface $file)
     {
         $headers = [
-            TYPO3_user_agent,
+            $this->getUserAgent(),
             'Accept: application/json',
             'Content-Type: application/octet-stream',
             'Connection: close'
@@ -322,7 +322,7 @@ class ServerService extends AbstractService
     public function detectLanguageFromFile(FileInterface $file)
     {
         $headers = [
-            TYPO3_user_agent,
+            $this->getUserAgent(),
             'Content-Type: application/octet-stream',
             'Connection: close'
         ];
@@ -349,8 +349,7 @@ class ServerService extends AbstractService
      */
     public function detectLanguageFromString($input)
     {
-        $headers = [
-            TYPO3_user_agent,
+        $headers = [$this->getUserAgent(),
             'Content-Type: application/octet-stream',
             'Connection: close'
         ];
@@ -389,7 +388,7 @@ class ServerService extends AbstractService
     protected function getMimeTypeJsonFromTikaServer()
     {
         $headers = [
-            TYPO3_user_agent,
+            $this->getUserAgent(),
             'Content-Type: application/octet-stream',
             'Accept: application/json',
             'Connection: close'
@@ -429,5 +428,13 @@ class ServerService extends AbstractService
         $supportedTypes = array_filter($supportedTypes);
         asort($supportedTypes);
         return $supportedTypes;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUserAgent()
+    {
+        return 'User-Agent: ' . $GLOBALS['TYPO3_CONF_VARS']['HTTP']['headers']['User-Agent'] ?? 'TYPO3';
     }
 }
