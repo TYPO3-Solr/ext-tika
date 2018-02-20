@@ -6,7 +6,7 @@
 conf.py:
   copyright: 2009-2016
   project: Apache Tika for TYPO3
-  version: 2.5
+  version: 3.0
   release: 3.0.0
   latex_documents:
   - - Index
