@@ -1,0 +1,107 @@
+=========================================================
+Apache Solr for TYPO3 - Tika Addon version 3.0.0 released
+=========================================================
+
+We are happy to announce version 3.0.0 of EXT:tika.
+
+New in this Release
+-------------------
+
+This release contains only a few features and bugfixes
+
+Compatibility for EXT:solr 8.0.0
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There where several changes in EXT:solr 8.0.0 that requires adaptions in EXT:tika:
+
+* The ExtractionQuery was moved into "Domain\Search\Query\"
+* Usage of TYPO3_user_agent constant is deprecated
+* Solr Service was splitted into read and write services
+
+https://github.com/TYPO3-Solr/ext-tika/pull/83
+https://github.com/TYPO3-Solr/ext-tika/pull/82
+
+Add size limit for extracted files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By now EXT:tika tried to extract the content of a file no matter how big it was. For very large files this could lead to errors
+and it was not possible to exclude them.
+
+Now you can configure a limit in the extension configuration (fileSizeLimit). Above this limit a file will not we used for extraction.
+
+By default the limit is 500 MB
+
+Thanks: Thanks to SYZYGY for sponsoring this feature!
+
+https://github.com/TYPO3-Solr/ext-tika/pull/77
+
+Unlink tempfile only when it exists
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By now EXT:tika tried to delete a tempfile without checking if the file reaöly exists. No it will only be deleted when it exists.
+
+https://github.com/TYPO3-Solr/ext-tika/pull/79
+
+Thanks
+------
+
+Thanks to all contributors
+
+(patches, comments, bug reports, reviews, ... in alphabetical order)
+
+* Rafael Kähm
+* Timo Hund
+
+Also a big thanks to our partners that have joined the EB2018 program:
+
+* Albervanderveen
+* Amedick & Sommer
+* AUSY SA
+* bgm Websolutions GmbH
+* Citkomm services GmbH
+* Consulting Piezunka und Schamoni - Information Technologies GmbH
+* Cows Online GmbH
+* food media Frank Wörner
+* FTI Touristik GmbH
+* Hirsch & Wölfl GmbH
+* Hochschule Furtwangen
+* JUNGMUT Communications GmbH
+* Kreis Coesfeld
+* LOUIS INTERNET GmbH
+* L.N. Schaffrath DigitalMedien GmbH
+* Mercedes AMG GmbH
+* Petz & Co
+* Pluswerk AG
+* ressourcenmangel an der panke GmbH
+* Site'nGo
+* Studio B12 GmbH
+* systime
+* Talleux & Zöllner GbR
+* TOUMORO
+* TWT Interactive GmbH
+
+Special thanks to our premium EB 2018 partners:
+
+* b13 http://www.b13.de/
+* dkd http://www.dkd.de/
+* jweiland.net http://www.jweiland.net/
+
+Thanks to everyone who helped in creating this release!
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+* Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+* Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+* Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+* Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us in 2018 by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/ 
+
+or call:
+
++49 (0)69 - 2475218 0
