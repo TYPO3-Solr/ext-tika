@@ -30,17 +30,24 @@ use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Index\MetaDataRepository;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 
 /**
  * Class ServerServiceTest
  *
  */
-class ServerServiceTest extends UnitTestCase
+class ServerServiceTest extends FunctionalTestCase
 {
+    /**
+     * @var array
+     */
+    protected $testExtensionsToLoad = [
+        'typo3conf/ext/tika'
+    ];
 
     /**
      * @var array A backup of registered singleton instances
@@ -80,6 +87,7 @@ class ServerServiceTest extends UnitTestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->singletonInstances = GeneralUtility::getSingletonInstances();
 
         // Disable xml2array cache used by ResourceFactory
@@ -100,8 +108,7 @@ class ServerServiceTest extends UnitTestCase
 
     protected function setUpDocumentsStorageMock()
     {
-        $this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
-            . 'Tests/TestDocuments/';
+        $this->testDocumentsPath = $_ENV['EXTENSION_ROOTPATH'] . 'Tests/TestDocuments/';
 
         $documentsDriver = $this->createDriverFixture([
             'basePath' => $this->testDocumentsPath,
@@ -128,8 +135,7 @@ class ServerServiceTest extends UnitTestCase
 
     protected function setUpLanguagesStorageMock()
     {
-        $this->testLanguagesPath = ExtensionManagementUtility::extPath('tika')
-            . 'Tests/TestLanguages/';
+        $this->testLanguagesPath = $_ENV['EXTENSION_ROOTPATH'] . 'Tests/TestLanguages/';
 
         $languagesDriver = $this->createDriverFixture([
             'basePath' => $this->testLanguagesPath,

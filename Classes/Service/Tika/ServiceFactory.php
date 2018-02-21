@@ -75,4 +75,15 @@ class ServiceFactory
         }
     }
 
+    /**
+     * Creates a tika service instance from the extension configuration.
+     *
+     * @return AppService|ServerService|SolrCellService
+     */
+    public static function getConfiguredTika()
+    {
+        $tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        return static::getTika($tikaConfiguration['extractor'], $tikaConfiguration);
+    }
+
 }

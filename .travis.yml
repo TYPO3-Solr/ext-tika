@@ -9,6 +9,10 @@ env:
     - TIKA_VERSION="1.17"
     - TIKA_PATH=$HOME/tika
     - EXT_SOLR_VERSION="dev-master"
+    - TYPO3_DATABASE_NAME="typo3_ci"
+    - TYPO3_DATABASE_HOST="127.0.0.1"
+    - TYPO3_DATABASE_USERNAME="root"
+    - TYPO3_DATABASE_PASSWORD=""
   matrix:
     - TYPO3_VERSION="^8.7"
     - TYPO3_VERSION="dev-master"

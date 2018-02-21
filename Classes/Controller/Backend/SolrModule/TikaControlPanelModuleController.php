@@ -27,6 +27,8 @@ namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
 use ApacheSolrForTypo3\Solr\Controller\Backend\Search\AbstractModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 

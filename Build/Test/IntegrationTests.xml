@@ -5,20 +5,21 @@
 	convertErrorsToExceptions="true"
 	convertWarningsToExceptions="true"
 	forceCoversAnnotation="false"
-	processIsolation="false"
-	stopOnError="false"
-	stopOnFailure="false"
+	processIsolation="true"
+	stopOnError="true"
+	stopOnFailure="true"
 	stopOnIncomplete="false"
 	stopOnSkipped="false"
 	verbose="false">
 
 	<testsuites>
-		<testsuite name="tika-unit-tests">
-			<directory>../../Tests/Unit/</directory>
+		<testsuite name="tika-integration-tests">
+			<directory>../../Tests/Integration/</directory>
 		</testsuite>
+
 	</testsuites>
 	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
+		<whitelist processUncoveredFilesFromWhitelist="false">
 			<directory suffix=".php">../../Classes/</directory>
 		</whitelist>
 	</filter>
