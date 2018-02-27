@@ -4,7 +4,7 @@
   "description": "Apache Tika for TYPO3",
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "license": "GPL-2.0+",
+  "license": "GPL-3.0-or-later",
   "keywords": ["typo3", "cms", "tika", "meta data", "language", "text", "extraction"],
   "homepage": "http://www.typo3-solr.com",
   "authors": [
