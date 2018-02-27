@@ -96,6 +96,7 @@ echo "Using extension path $EXTENSION_ROOTPATH"
 echo "Using package path $TYPO3_PATH_PACKAGES"
 echo "Using web path $TYPO3_PATH_WEB"
 
+composer global require scrutinizer/ocular:"1.3.1"
 composer require --dev typo3/cms="$TYPO3_VERSION"
 composer require --dev --prefer-source typo3/testing-framework="1.0.7"
 composer require apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"

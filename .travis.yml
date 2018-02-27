@@ -29,6 +29,7 @@ install:
 script:
   - Build/Test/cibuild.sh
 after_script:
+  - Build/Test/publish_coverage.sh
   - Build/Release/ter_tag_uploader.sh
   - Build/Test/cleanup.sh
 
