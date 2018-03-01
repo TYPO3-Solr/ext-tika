@@ -102,15 +102,11 @@ class ServiceFactoryTest extends UnitTestCase
         $backup = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'];
         $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = 'invalid configuration';
 
-        try {
-            ServiceFactory::getTika('foo');
-        } catch (\RuntimeException $e) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $backup;
-            return;
-        }
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Invalid configuration');
+        ServiceFactory::getTika('foo');
 
         $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $backup;
-        $this->fail('Did not throw RuntimeException');
     }
 
     protected function setUp()

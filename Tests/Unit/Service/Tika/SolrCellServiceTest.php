@@ -55,15 +55,9 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         }
     }
 
-    protected function setup()
-    {
-        parent::setUp();
-        $this->prophet = new Prophet();
-    }
-
     protected function tearDown()
     {
-        $this->prophet->checkPredictions();
+        $this->verifyMockObjects();
         parent::tearDown();
     }
 
@@ -83,14 +77,14 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     {
         $expectedValue = 'extracted text element';
 
-        $solrWriter = $this->prophet->prophesize(SolrWriteService::class);
+        $solrWriter = $this->prophesize(SolrWriteService::class);
         $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))
             ->willReturn([
                 $expectedValue,     // extracted text is index 0
                 'meta data element' // meta data is index 1
             ]);
 
-        $connectionMock = $this->prophet->prophesize(SolrConnection::class);
+        $connectionMock = $this->prophesize(SolrConnection::class);
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
@@ -113,10 +107,10 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractByQueryTextUsesSolrCellQuery()
     {
-        $solrWriter = $this->prophet->prophesize(SolrWriteService::class);
+        $solrWriter = $this->prophesize(SolrWriteService::class);
         $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))->shouldBeCalled();
 
-        $connectionMock = $this->prophet->prophesize(SolrConnection::class);
+        $connectionMock = $this->prophesize(SolrConnection::class);
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
@@ -161,7 +155,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractMetaDataUsesSolrCellQuery()
     {
-        $solrWriter = $this->prophet->prophesize(SolrWriteService::class);
+        $solrWriter = $this->prophesize(SolrWriteService::class);
         $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))
             ->shouldBeCalled()
             ->willReturn([
@@ -170,7 +164,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
                 ]
             );
 
-        $connectionMock = $this->prophet->prophesize(SolrConnection::class);
+        $connectionMock = $this->prophesize(SolrConnection::class);
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());

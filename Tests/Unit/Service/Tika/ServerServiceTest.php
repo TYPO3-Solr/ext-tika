@@ -41,21 +41,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ServerServiceTest extends ServiceUnitTestCase
 {
 
-    /**
-     * @var Prophet
-     */
-    protected $prophet;
-
-
-    protected function setup()
-    {
-        parent::setUp();
-        $this->prophet = new Prophet();
-    }
-
     protected function tearDown()
     {
-        $this->prophet->checkPredictions();
+        $this->verifyMockObjects();
         parent::tearDown();
     }
 
@@ -65,10 +53,10 @@ class ServerServiceTest extends ServiceUnitTestCase
     public function startServerStoresPidInRegistry()
     {
         // prepare
-        $registryMock = $this->prophet->prophesize(Registry::class);
+        $registryMock = $this->prophesize(Registry::class);
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize(Process::class);
+        $processMock = $this->prophesize(Process::class);
         $processMock->start()->shouldBeCalled();
         $processMock->getPid()->willReturn(1000);
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
@@ -90,12 +78,12 @@ class ServerServiceTest extends ServiceUnitTestCase
     public function stopServerRemovesPidFromRegistry()
     {
         // prepare
-        $registryMock = $this->prophet->prophesize(Registry::class);
+        $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
         $registryMock->remove('tx_tika', 'server.pid')->shouldBeCalled();
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize(Process::class);
+        $processMock = $this->prophesize(Process::class);
         $processMock->setPid(1000)->shouldBeCalled();
         $processMock->stop()->shouldBeCalled();
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
@@ -110,7 +98,7 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function getServerPidGetsPidFromRegistry()
     {
-        $registryMock = $this->prophet->prophesize(Registry::class);
+        $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
@@ -125,11 +113,11 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function getServerPidFallsBackToProcess()
     {
-        $registryMock = $this->prophet->prophesize(Registry::class);
+        $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize(Process::class);
+        $processMock = $this->prophesize(Process::class);
         $processMock->findPid()->willReturn(1000);
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
@@ -144,7 +132,7 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function isServerRunningReturnsTrueForRunningServerFromRegistry()
     {
-        $registryMock = $this->prophet->prophesize(Registry::class);
+        $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
@@ -157,11 +145,11 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function isServerRunningReturnsTrueForRunningServerFromProcess()
     {
-        $registryMock = $this->prophet->prophesize(Registry::class);
+        $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize(Process::class);
+        $processMock = $this->prophesize(Process::class);
         $processMock->findPid()->willReturn(1000);
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
@@ -174,11 +162,11 @@ class ServerServiceTest extends ServiceUnitTestCase
      */
     public function isServerRunningReturnsFalseForStoppedServer()
     {
-        $registryMock = $this->prophet->prophesize(Registry::class);
+        $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
-        $processMock = $this->prophet->prophesize(Process::class);
+        $processMock = $this->prophesize(Process::class);
         $processMock->findPid()->willReturn('');
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
 

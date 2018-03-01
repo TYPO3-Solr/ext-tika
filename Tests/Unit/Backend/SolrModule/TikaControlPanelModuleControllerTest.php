@@ -85,18 +85,4 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
 
         $this->controller->indexAction();
     }
-
-    /**
-     * Can the controller render the information from the tika server service.
-     *
-     * @test
-     */
-    public function canShowInformationFromSolrCellService()
-    {
-        $this->markTestIncomplete();
-        $tikaServerService = $this->getMock(SolrCellService::class, [], [], '', false);
-        $this->controller->setTikaService($tikaServerService);
-        $this->controller->indexAction();
-    }
-
 }
