@@ -1,0 +1,125 @@
+=========================================================
+Apache Solr for TYPO3 - Tika Addon version 3.1.0 released
+=========================================================
+
+We are happy to announce version 3.1.0 of EXT:tika.
+
+New in this Release
+-------------------
+
+This release contains only a few features and bugfixes
+
+Allow to preview extracted content from file module
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As TYPO3 admin you can now get a preview of the extracted content of a file from the file module, by clicking "Tika Preview", in the context menu.
+This is useful for debugging and to check, why which content is visible in Solr.
+
+Tika version 1.18 supported
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+EXT:tika is now tested against version 1.18 of Apache Tika.
+
+Thanks
+------
+
+Thanks to all contributors
+
+(patches, comments, bug reports, reviews, ... in alphabetical order)
+
+* Timo Hund
+
+Also a big thanks to our partners that have joined the EB2018 program:
+
+* 4eyes GmbH
+* Albervanderveen
+* Agentur Frontal AG
+* AlrweNWR Internet BV
+* Amedick & Sommer
+* AUSY SA
+* Bibus AG
+* Bitmotion GmbH
+* bgm Websolutions GmbH
+* bplusd interactive GmbH
+* Centre de gestion de la Fonction Publique Territoriale du Nord (Siège)
+* Citkomm services GmbH
+* Consulting Piezunka und Schamoni - Information Technologies GmbH
+* Cobytes GmbH
+* Cows Online GmbH
+* creativ clicks GmbH
+* DACHCOM.DIGITAL AG
+* Deutsches Literaturarchiv Marbach
+* food media Frank Wörner
+* Fachhochschule für öffentliche Verwaltung NRW
+* FTI Touristik GmbH
+* GAYA - La Nouvelle Agence
+* Hirsch & Wölfl GmbH
+* Hochschule Furtwangen
+* ijuice Agentur GmbH
+* Image Transfer GmbH
+* JUNGMUT Communications GmbH
+* Kreis Coesfeld
+* LINGNER CONSULTING NEW MEDIA GMBH
+* LOUIS INTERNET GmbH
+* L.N. Schaffrath DigitalMedien GmbH
+* MEDIA::ESSENZ
+* Mehr Demokratie e.V.
+* mehrwert intermediale kommunikation GmbH
+* Mercedes AMG GmbH
+* Petz & Co
+* pietzpluswild GmbH
+* pixelcreation GmbH
+* plan.net
+* Pluswerk AG
+* Pottkinder GmbH
+* PROVITEX GmbH
+* Publicis Pixelpark
+* punkt.de GmbH
+* PROFILE MEDIA GmbG
+* Q3i GmbH & Co. KG
+* ressourcenmangel an der panke GmbH
+* Roza Sancken
+* Site'nGo
+* SIWA Online GmbH
+* snowflake productions gmbh
+* Studio B12 GmbH
+* systime
+* SYZYGY Deutschland GmbH
+* Talleux & Zöllner GbR
+* TOUMORO
+* THE BRETTINGHAMS GmbH
+* TWT Interactive GmbH
+* T-Systems Multimedia Solutions GmbH
+* Typoheads GmbH
+* Q3i GmbH
+* Ueberbit GmbH
+* zdreicon GmbH
+* zimmer7 GmbH
+
+Special thanks to our premium EB 2018 partners:
+
+* b13 http://www.b13.de/
+* dkd http://www.dkd.de/
+* Image Transfer GmbH https://www.image-transfer.de/
+* jweiland.net http://www.jweiland.net/
+* Sitegeist http://www.sitegeist.de/
+
+Thanks to everyone who helped in creating this release!
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+* Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+* Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+* Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+* Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us in 2018 by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/ 
+
+or call:
+
++49 (0)69 - 2475218 0
