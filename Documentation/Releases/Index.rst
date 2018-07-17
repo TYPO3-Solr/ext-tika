@@ -24,5 +24,7 @@ Releases
     2_3.rst
     2_2.rst
     2_1.rst
+    3_0.rst
+    3_1.rst
 
 
