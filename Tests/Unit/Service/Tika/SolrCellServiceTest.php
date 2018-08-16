@@ -27,10 +27,10 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
 use ApacheSolrForTypo3\Solr\SolrService;
 use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
-use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Prophecy\Argument;
 use Prophecy\Prophet;
+use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
@@ -78,7 +78,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $expectedValue = 'extracted text element';
 
         $solrWriter = $this->prophesize(SolrWriteService::class);
-        $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))
+        $solrWriter->extractByQuery(Argument::type(Query::class))
             ->willReturn([
                 $expectedValue,     // extracted text is index 0
                 'meta data element' // meta data is index 1
@@ -105,10 +105,10 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     /**
      * @test
      */
-    public function extractByQueryTextUsesSolrCellQuery()
+    public function extractByQueryTextUsesSolariumExtractQuery()
     {
         $solrWriter = $this->prophesize(SolrWriteService::class);
-        $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))->shouldBeCalled();
+        $solrWriter->extractByQuery(Argument::type(Query::class))->shouldBeCalled();
 
         $connectionMock = $this->prophesize(SolrConnection::class);
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
@@ -153,10 +153,10 @@ class SolrCellServiceTest extends ServiceUnitTestCase
     /**
      * @test
      */
-    public function extractMetaDataUsesSolrCellQuery()
+    public function extractMetaDataUsesSolariumExtractQuery()
     {
         $solrWriter = $this->prophesize(SolrWriteService::class);
-        $solrWriter->extractByQuery(Argument::type(SolrCellQuery::class))
+        $solrWriter->extractByQuery(Argument::type(Query::class))
             ->shouldBeCalled()
             ->willReturn([
                     'foo', // extracted text is index 0
@@ -186,10 +186,26 @@ class SolrCellServiceTest extends ServiceUnitTestCase
      */
     public function extractMetaDataCleansUpTempFile()
     {
+        $solrWriter = $this->prophesize(SolrWriteService::class);
+        $solrWriter->extractByQuery(Argument::type(Query::class))
+            ->shouldBeCalled()
+            ->willReturn([
+                    'foo', // extracted text is index 0
+                    ['bar'] // meta data is index 1
+                ]
+            );
+
+        $connectionMock = $this->prophesize(SolrConnection::class);
+        $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
+
+
         $serviceMock = $this->getMockBuilder(SolrCellService::class)
             ->setConstructorArgs([$this->getConfiguration()])
             ->setMethods(['cleanupTempFile'])
             ->getMock();
+
+        $this->inject($serviceMock, 'solrConnection', $connectionMock->reveal());
+
         $serviceMock->expects($this->once())->method('cleanupTempFile');
 
         $file = new File(
