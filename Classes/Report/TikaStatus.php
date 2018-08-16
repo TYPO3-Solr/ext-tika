@@ -27,11 +27,11 @@ namespace ApacheSolrForTypo3\Tika\Report;
 use ApacheSolrForTypo3\Solr\ConnectionManager;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
+use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
-use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellQuery;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
@@ -185,11 +185,12 @@ class TikaStatus implements StatusProviderInterface
             $solr = $this->getSolrConnectionFromTikaConfiguration();
 
             // try to extract text & meta data
-            $query = GeneralUtility::makeInstance(
-                SolrCellQuery::class,
-                ExtensionManagementUtility::extPath('tika', 'ext_emconf.php')
-            );
-            $query->setExtractOnly();
+            /** @var $query Query */
+            $query = GeneralUtility::makeInstance(Query::class);
+            $query->setExtractOnly(true);
+            $query->setFile(ExtensionManagementUtility::extPath('tika', 'ext_emconf.php'));
+            $query->addParam('extractFormat', 'text');
+
             list($extractedContent, $extractedMetadata) = $solr->getWriteService()->extractByQuery($query);
 
             if (!is_null($extractedContent) && !empty($extractedMetadata)) {

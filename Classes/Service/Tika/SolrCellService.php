@@ -26,6 +26,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use ApacheSolrForTypo3\Solr\ConnectionManager;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
+use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -82,8 +83,11 @@ class SolrCellService extends AbstractService
     public function extractText(FileInterface $file)
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
-        $query = GeneralUtility::makeInstance(SolrCellQuery::class, $localTempFilePath);
-        $query->setExtractOnly();
+         /** @var Query $query */
+        $query = GeneralUtility::makeInstance(Query::class);
+        $query->setFile($localTempFilePath);
+        $query->setExtractOnly(true);
+        $query->addParam('extractFormat', 'text');
 
         $writer = $this->solrConnection->getWriteService();
         $response = $writer->extractByQuery($query);
@@ -109,8 +113,11 @@ class SolrCellService extends AbstractService
     public function extractMetaData(FileInterface $file)
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
-        $query = GeneralUtility::makeInstance(SolrCellQuery::class, $localTempFilePath);
-        $query->setExtractOnly();
+        /** @var Query $query */
+        $query = GeneralUtility::makeInstance(Query::class);
+        $query->setFile($localTempFilePath);
+        $query->setExtractOnly(true);
+        $query->addParam('extractFormat', 'text');
 
         $writer = $this->solrConnection->getWriteService();
         $response = $writer->extractByQuery($query);
