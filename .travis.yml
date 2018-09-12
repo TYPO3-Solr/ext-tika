@@ -8,7 +8,7 @@ env:
   global:
     - TIKA_VERSION="1.18"
     - TIKA_PATH=$HOME/tika
-    - EXT_SOLR_VERSION="dev-master"
+    - EXT_SOLR_VERSION="8.1.1"
     - TYPO3_DATABASE_NAME="typo3_ci"
     - TYPO3_DATABASE_HOST="127.0.0.1"
     - TYPO3_DATABASE_USERNAME="root"
