@@ -28,7 +28,7 @@ class Preview extends AbstractProvider{
 
         // Current table is: $this->table
         // Current UID is: $this->identifier
-        if (!$this->table === 'sys_file') {
+        if ($this->table !== 'sys_file') {
             return false;
         }
 
