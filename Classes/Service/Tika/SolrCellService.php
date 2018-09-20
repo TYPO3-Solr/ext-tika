@@ -54,12 +54,17 @@ class SolrCellService extends AbstractService
     {
         // EM might define a different connection than already in use by
         // Index Queue
-        $this->solrConnection = GeneralUtility::makeInstance(ConnectionManager::class)->getConnection(
-            $this->configuration['solrHost'],
-            $this->configuration['solrPort'],
-            $this->configuration['solrPath'],
-            $this->configuration['solrScheme']
-        );
+            /** @var ConnectionManager $connectionManager */
+        $connectionManager =  GeneralUtility::makeInstance(ConnectionManager::class);
+
+        $readNode = [
+            'host' => $this->configuration['solrHost'],
+            'port' => $this->configuration['solrPort'],
+            'path' => $this->configuration['solrPath'],
+            'scheme' => $this->configuration['solrScheme']
+        ];
+        $writeNode = $readNode;
+        $this->solrConnection = $connectionManager->getSolrConnectionForNodes($readNode, $writeNode);
     }
 
     /**
