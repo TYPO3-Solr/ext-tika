@@ -64,25 +64,6 @@ abstract class AbstractService implements ServiceInterface
     }
 
     /**
-     * Removes a temporary file.
-     *
-     * When working with a file, the actual file might be on a remote storage.
-     * To work with it it gets copied to local storage, those temporary local
-     * copies need to be removed when they're not needed anymore.
-     *
-     * @param string $localTempFilePath Path to the local file copy
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $sourceFile Original file
-     */
-    protected function cleanupTempFile(
-        $localTempFilePath,
-        FileInterface $sourceFile
-    ) {
-        if (PathUtility::basename($localTempFilePath) !== $sourceFile->getName() && file_exists($localTempFilePath)) {
-            unlink($localTempFilePath);
-        }
-    }
-
-    /**
      * Logs a message and optionally data to devlog
      *
      * @param string $message Log message

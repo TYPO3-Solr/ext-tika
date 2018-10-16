@@ -97,8 +97,6 @@ class SolrCellService extends AbstractService
         $writer = $this->solrConnection->getWriteService();
         $response = $writer->extractByQuery($query);
 
-        $this->cleanupTempFile($localTempFilePath, $file);
-
         $this->log('Text Extraction using Solr', [
             'file' => $file,
             'solr connection' => (array)$writer,
@@ -128,7 +126,6 @@ class SolrCellService extends AbstractService
         $response = $writer->extractByQuery($query);
 
         $metaData = $this->solrResponseToArray($response[1]);
-        $this->cleanupTempFile($localTempFilePath, $file);
 
         $this->log('Meta Data Extraction using Solr', [
             'file' => $file,
