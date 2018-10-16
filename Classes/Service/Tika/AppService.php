@@ -94,7 +94,6 @@ class AppService extends AbstractService
             . ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
 
         $extractedText = shell_exec($tikaCommand);
-        $this->cleanupTempFile($localTempFilePath, $file);
 
         $this->log('Text Extraction using local Tika', [
             'file' => $file,
@@ -124,7 +123,6 @@ class AppService extends AbstractService
         $shellOutput = [];
         exec($tikaCommand, $shellOutput);
         $metaData = $this->shellOutputToArray($shellOutput);
-        $this->cleanupTempFile($localTempFilePath, $file);
 
         $this->log('Meta Data Extraction using local Tika', [
             'file' => $file,
@@ -145,11 +143,8 @@ class AppService extends AbstractService
     public function detectLanguageFromFile(FileInterface $file)
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
-        $language = $this->detectLanguageFromLocalFile($localTempFilePath);
 
-        $this->cleanupTempFile($localTempFilePath, $file);
-
-        return $language;
+        return $this->detectLanguageFromLocalFile($localTempFilePath);
     }
 
     /**

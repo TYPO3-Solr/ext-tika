@@ -126,28 +126,6 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $service->extractText($file);
     }
 
-    /**
-     * @test
-     */
-    public function extractTextCleansUpTempFile()
-    {
-        $serviceMock = $this->getMockBuilder(SolrCellService::class)
-            ->setConstructorArgs([$this->getConfiguration()])
-            ->setMethods(['cleanupTempFile'])
-            ->getMock();
-        $serviceMock->expects($this->once())->method('cleanupTempFile');
-
-        $file = new File(
-            [
-                'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
-            ],
-            $this->documentsStorageMock
-        );
-
-        $serviceMock->extractText($file);
-    }
-
     #TODO test return value, conversion of response to array
 
     /**
@@ -180,43 +158,4 @@ class SolrCellServiceTest extends ServiceUnitTestCase
 
         $service->extractMetaData($file);
     }
-
-    /**
-     * @test
-     */
-    public function extractMetaDataCleansUpTempFile()
-    {
-        $solrWriter = $this->prophesize(SolrWriteService::class);
-        $solrWriter->extractByQuery(Argument::type(Query::class))
-            ->shouldBeCalled()
-            ->willReturn([
-                    'foo', // extracted text is index 0
-                    ['bar'] // meta data is index 1
-                ]
-            );
-
-        $connectionMock = $this->prophesize(SolrConnection::class);
-        $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
-
-
-        $serviceMock = $this->getMockBuilder(SolrCellService::class)
-            ->setConstructorArgs([$this->getConfiguration()])
-            ->setMethods(['cleanupTempFile'])
-            ->getMock();
-
-        $this->inject($serviceMock, 'solrConnection', $connectionMock->reveal());
-
-        $serviceMock->expects($this->once())->method('cleanupTempFile');
-
-        $file = new File(
-            [
-                'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
-            ],
-            $this->documentsStorageMock
-        );
-
-        $serviceMock->extractMetaData($file);
-    }
-
 }
