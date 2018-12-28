@@ -180,7 +180,13 @@ class SolrCellService extends AbstractService
         $cleanedData = [];
 
         foreach ($metaDataResponse as $dataName => $dataArray) {
-            $cleanedData[$dataName] = $dataArray[0];
+            if(!($dataName % 2) == 0) {
+                continue;
+            }
+            $fieldName = $dataArray;
+            $fieldValue = $metaDataResponse[$dataName + 1] ?? [''];
+
+            $cleanedData[$fieldName] = $fieldValue[0];
         }
 
         return $cleanedData;
@@ -226,6 +232,7 @@ class SolrCellService extends AbstractService
             'audio/basic' => ['au'],
             'audio/midi' => ['mid'],
             'audio/mpeg3' => ['mp3'],
+            'audio/mpeg' => ['mp3'],
             'audio/wav' => ['wav'],
             'audio/x-mpeg-3' => ['mp3'],
             'audio/x-wav' => ['wav'],
