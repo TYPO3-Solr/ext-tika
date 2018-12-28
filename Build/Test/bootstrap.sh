@@ -106,3 +106,7 @@ git checkout composer.json
 export TYPO3_PATH_WEB=$PWD/.Build/Web
 
 mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp
+
+# Setup Solr using install script
+chmod u+x ${TYPO3_PATH_WEB}/typo3conf/ext/solr/Resources/Private/Install/install-solr.sh
+${TYPO3_PATH_WEB}/typo3conf/ext/solr/Resources/Private/Install/install-solr.sh -d "$HOME/solr" -t
