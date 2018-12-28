@@ -62,8 +62,7 @@ class ServerService extends AbstractService
 
         // Overwrite configuration of tikaServerScheme is configured
         if (!empty($this->configuration['tikaServerScheme'])) {
-            $this->tikaUrl = $this->configuration['tikaServerScheme'] . '://'
-                . $this->configuration['tikaServerHost'];
+            $this->tikaUrl = $this->configuration['tikaServerScheme'] . '://' . $this->configuration['tikaServerHost'];
         }
 
         // Only append tikaServerPort if configured
@@ -80,11 +79,7 @@ class ServerService extends AbstractService
      */
     protected function getProcess($arguments = '')
     {
-        $process = GeneralUtility::makeInstance(
-            Process::class,
-            CommandUtility::getCommand('java'),
-            $arguments
-        );
+        $process = GeneralUtility::makeInstance(Process::class, CommandUtility::getCommand('java'), $arguments);
 
         return $process;
     }
@@ -179,10 +174,7 @@ class ServerService extends AbstractService
     public function ping()
     {
         $tikaPing = $this->queryTika('/tika');
-        $tikaReachable = GeneralUtility::isFirstPartOfStr(
-            $tikaPing,
-            'This is Tika Server'
-        );
+        $tikaReachable = GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server');
 
         return $tikaReachable;
     }
@@ -242,9 +234,7 @@ class ServerService extends AbstractService
             $tikaOutput = file_get_contents($url, false, $context);
         } catch (\Exception $e) {
             $message = $e->getMessage();
-            if (strpos($message, 'Connection refused') === false &&
-                strpos($message, 'HTTP request failed') === false
-            ) {
+            if (strpos($message, 'Connection refused') === false && strpos($message, 'HTTP request failed') === false) {
                 // If the server is simply not available it would say Connection refused
                 // since that is not the case something else went wrong
                 throw $e;
@@ -262,23 +252,17 @@ class ServerService extends AbstractService
      */
     public function extractText(FileInterface $file)
     {
-        $headers = [
-            $this->getUserAgent(),
-            'Accept: text/plain',
-            'Content-Type: application/octet-stream',
-            'Connection: close'
-        ];
+        $headers = [$this->getUserAgent(), 'Accept: text/plain', 'Content-Type: application/octet-stream', 'Connection: close'];
 
-        $context = stream_context_create([
-            'http' => [
-                'protocol_version' => 1.1,
-                'method' => 'PUT',
-                'header' => implode(CRLF, $headers),
-                'content' => $file->getContents()
-            ]
-        ]);
+        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'PUT', 'header' => implode(CRLF, $headers), 'content' => $file->getContents()]]);
 
         $response = $this->queryTika('/tika', $context);
+
+        if ($response === FALSE) {
+            $this->log('Text Extraction using Tika Server failed', $this->getLogData($file, $response), 2);
+        } else {
+            $this->log('Text Extraction using Tika Server', $this->getLogData($file, $response));
+        }
 
         return $response;
     }
@@ -291,24 +275,19 @@ class ServerService extends AbstractService
      */
     public function extractMetaData(FileInterface $file)
     {
-        $headers = [
-            $this->getUserAgent(),
-            'Accept: application/json',
-            'Content-Type: application/octet-stream',
-            'Connection: close'
-        ];
+        $headers = [$this->getUserAgent(), 'Accept: application/json', 'Content-Type: application/octet-stream', 'Connection: close'];
 
-        $context = stream_context_create([
-            'http' => [
-                'protocol_version' => 1.1,
-                'method' => 'PUT',
-                'header' => implode(CRLF, $headers),
-                'content' => $file->getContents()
-            ]
-        ]);
+        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'PUT', 'header' => implode(CRLF, $headers), 'content' => $file->getContents()]]);
 
         $rawResponse = $this->queryTika('/meta', $context);
         $response = (array)json_decode($rawResponse);
+
+        if ($response === FALSE) {
+            $this->log('Meta Data Extraction using Tika Server failed', $this->getLogData($file, $response), 2);
+        } else {
+            $this->log('Meta Data Extraction using Tika Server', $this->getLogData($file, $response));
+        }
+
 
         return $response;
     }
@@ -321,22 +300,17 @@ class ServerService extends AbstractService
      */
     public function detectLanguageFromFile(FileInterface $file)
     {
-        $headers = [
-            $this->getUserAgent(),
-            'Content-Type: application/octet-stream',
-            'Connection: close'
-        ];
+        $headers = [$this->getUserAgent(), 'Content-Type: application/octet-stream', 'Connection: close'];
 
-        $context = stream_context_create([
-            'http' => [
-                'protocol_version' => 1.1,
-                'method' => 'PUT',
-                'header' => implode(CRLF, $headers),
-                'content' => $file->getContents()
-            ]
-        ]);
+        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'PUT', 'header' => implode(CRLF, $headers), 'content' => $file->getContents()]]);
 
         $response = $this->queryTika('/language/stream', $context);
+
+        if ($response === FALSE) {
+            $this->log('Language Detection using Tika Server failed', $this->getLogData($file, $response), 2);
+        } else {
+            $this->log('Language Detection using Tika Server', $this->getLogData($file, $response));
+        }
 
         return $response;
     }
@@ -349,19 +323,9 @@ class ServerService extends AbstractService
      */
     public function detectLanguageFromString($input)
     {
-        $headers = [$this->getUserAgent(),
-            'Content-Type: application/octet-stream',
-            'Connection: close'
-        ];
+        $headers = [$this->getUserAgent(), 'Content-Type: application/octet-stream', 'Connection: close'];
 
-        $context = stream_context_create([
-            'http' => [
-                'protocol_version' => 1.1,
-                'method' => 'PUT',
-                'header' => implode(CRLF, $headers),
-                'content' => $input
-            ]
-        ]);
+        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'PUT', 'header' => implode(CRLF, $headers), 'content' => $input]]);
 
         $response = $this->queryTika('/language/string', $context);
 
@@ -373,7 +337,7 @@ class ServerService extends AbstractService
      */
     public function getSupportedMimeTypes()
     {
-        if(is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
+        if (is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
             return self::$supportedMimeTypes;
         }
 
@@ -387,20 +351,9 @@ class ServerService extends AbstractService
      */
     protected function getMimeTypeJsonFromTikaServer()
     {
-        $headers = [
-            $this->getUserAgent(),
-            'Content-Type: application/octet-stream',
-            'Accept: application/json',
-            'Connection: close'
-        ];
+        $headers = [$this->getUserAgent(), 'Content-Type: application/octet-stream', 'Accept: application/json', 'Connection: close'];
 
-        $context = stream_context_create([
-            'http' => [
-                'protocol_version' => 1.1,
-                'method' => 'GET',
-                'header' => implode(CRLF, $headers),
-            ]
-        ]);
+        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'GET', 'header' => implode(CRLF, $headers),]]);
 
         $response = $this->queryTika('/mime-types', $context);
         return $response;
@@ -436,5 +389,16 @@ class ServerService extends AbstractService
     protected function getUserAgent()
     {
         return 'User-Agent: ' . $GLOBALS['TYPO3_CONF_VARS']['HTTP']['headers']['User-Agent'] ?? 'TYPO3';
+    }
+
+    /**
+     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param string $response
+     * @return array
+     */
+    protected function getLogData($file, $response)
+    {
+        $logData = ['file' => $file->getName(), 'file_path' => $file->getPublicUrl(), 'tika_url' => $this->getTikaServerUrl(), 'response' => $response];
+        return $logData;
     }
 }
