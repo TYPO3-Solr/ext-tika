@@ -1,0 +1,96 @@
+=========================================================
+Apache Solr for TYPO3 - Tika Addon version 4.0.0 released
+=========================================================
+
+We are happy to announce version 4.0.0 of EXT:tika.
+
+New in this Release
+-------------------
+
+This release is a compatibility release for EXT:solr 9.0.0
+
+Usage of solarium PHP-API
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Since we are using the solarium PHP-API in EXT:solr now, we want to use that in EXT:tika as well, when
+we use Apache Solr for tika extraction.
+
+* https://github.com/TYPO3-Solr/ext-tika/pull/103
+
+Tika version 1.20 supported
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+EXT:tika is now tested against version 1.20 of Apache Tika.
+
+* https://github.com/TYPO3-Solr/ext-tika/pull/114
+
+Add mimetype mpeg/audio to list of allowed mimetypes for solr cell
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Add's the mimetype mpeg/audio as allowed mimetype for the solr cell extraction
+
+* https://github.com/TYPO3-Solr/ext-tika/pull/117
+
+Bugfixes
+--------
+
+* https://github.com/TYPO3-Solr/ext-tika/pull/115 Do not unlink temporary files
+* https://github.com/TYPO3-Solr/ext-tika/pull/116 Improve logging of failed tika calls
+
+Thanks
+------
+
+Thanks to all contributors
+
+(patches, comments, bug reports, reviews, ... in alphabetical order)
+
+* Helmut Hummel
+* Timo Hund
+
+Also a big thanks to our partners that have joined the EB2019 program:
+
+* Amedick & Sommer Neue Medien GmbH
+* BIBUS AG Group
+* Bitmotion GmbH
+* CS2 AG
+* Gernot Leitgab
+* Getdesigned GmbH
+* Hirsch & Wölfl GmbH
+* ITK Rheinland
+* Kassenärztliche Vereinigung Bayerns (KZVB)
+* TOUMORO
+* Ueberbit Gmbh
+* XIMA MEDIA GmbH
+* b13 GmbH
+* bgm business websolutions GmbH & Co KG
+* datamints GmbH
+* medien.de mde GmbH
+* mehrwert intermediale kommunikation GmbH
+* mellowmessage GmbH
+* plan2net GmbH
+* punkt.de GmbH
+
+Special thanks to our premium EB 2019 partners:
+
+* jweiland.net
+* sitegeist media solutions GmbH
+
+Thanks to everyone who helped in creating this release!
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+* Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+* Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+* Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+* Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us in 2019 by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/
+
+or call:
+
++49 (0)69 - 2475218 0
