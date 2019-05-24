@@ -88,9 +88,7 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     public function getDriverRestrictions()
     {
-        return [
-            'Local',
-        ];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'];
     }
 
     /**
