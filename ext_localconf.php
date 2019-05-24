@@ -2,6 +2,16 @@
 // Prevent Script from beeing called directly
 defined('TYPO3_MODE') || die();
 
+if (empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'])) {
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'] = [];
+}
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'] = array_merge(
+    [
+        'Local',
+    ],
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions']
+);
+
 $metaDataExtractorRegistry = \TYPO3\CMS\Core\Resource\Index\ExtractorRegistry::getInstance();
 $metaDataExtractorRegistry->registerExtractionService(\ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor::class);
 
