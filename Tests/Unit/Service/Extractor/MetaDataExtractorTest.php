@@ -57,6 +57,8 @@ class MetaDataExtractorTest extends UnitTestCase
             'File Size' => "7686 bytes",
             'Image Height' => "75 pixels",
             'Image Width' => "100 pixels",
+            'Exif Image Height' => "75 pixels",
+            'Exif Image Width' => "100 pixels",
             'JPEG Comment' => "Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.",
             'Number of Components' => "3",
             'Resolution Units' => "inch",
