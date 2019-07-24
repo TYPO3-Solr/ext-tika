@@ -153,14 +153,14 @@ class MetaDataExtractor extends AbstractExtractor
                 case 'height':
                     $metaDataCleaned['height'] = $value;
                     break;
-                case 'Image Height':
+                case 'Exif Image Height':
                     list($height) = explode(' ', $value, 2);
                     $metaDataCleaned['height'] = $height;
                     break;
                 case 'width':
                     $metaDataCleaned['width'] = $value;
                     break;
-                case 'Image Width':
+                case 'Exif Image Width':
                     list($width) = explode(' ', $value, 2);
                     $metaDataCleaned['width'] = $width;
                     break;
