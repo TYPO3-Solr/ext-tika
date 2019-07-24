@@ -41,7 +41,6 @@ class MetaDataExtractor extends AbstractExtractor
      */
     protected $priority = 100;
 
-
     /**
      * Checks if the given file can be processed by this Extractor
      *
