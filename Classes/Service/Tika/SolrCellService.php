@@ -124,8 +124,11 @@ class SolrCellService extends AbstractService
 
         $writer = $this->solrConnection->getWriteService();
         $response = $writer->extractByQuery($query);
-
-        $metaData = $this->solrResponseToArray($response[1]);
+        
+        $metaData = [];
+        if (isset($response[1]) && is_array($response[1])) {
+            $metaData = $this->solrResponseToArray($response[1]);
+        }
 
         $this->log('Meta Data Extraction using Solr', [
             'file' => $file,
