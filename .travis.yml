@@ -1,12 +1,13 @@
 language: php
 
-php:
-  - 7.0
-  - 7.1
+services:
+  - docker
 
+php:
+  - 7.2
 env:
   global:
-    - TIKA_VERSION="1.20"
+    - TIKA_VERSION="1.22"
     - TIKA_PATH=$HOME/tika
     - EXT_SOLR_VERSION="dev-master"
     - TYPO3_DATABASE_NAME="typo3_ci"
@@ -14,13 +15,10 @@ env:
     - TYPO3_DATABASE_USERNAME="root"
     - TYPO3_DATABASE_PASSWORD=""
   matrix:
-    - TYPO3_VERSION="^8.7"
-    - TYPO3_VERSION="dev-master"
+    - TYPO3_VERSION="^9.5"
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - env: TYPO3_VERSION="dev-master"
 
 before_install:
   - composer self-update

@@ -173,10 +173,13 @@ class ServerService extends AbstractService
      */
     public function ping()
     {
-        $tikaPing = $this->queryTika('/tika');
-        $tikaReachable = GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server');
-
-        return $tikaReachable;
+        try {
+            $tikaPing = $this->queryTika('/tika');
+            $tikaReachable = GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server');
+            return $tikaReachable;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
