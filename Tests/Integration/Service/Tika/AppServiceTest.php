@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
+namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /***************************************************************
  *  Copyright notice
@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Resource\File;
  * Test case for class AppService
  *
  */
-class AppServiceTest extends ServiceUnitTestCase
+class AppServiceTest extends ServiceIntegrationTestCase
 {
 
     protected function setUp()

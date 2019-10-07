@@ -96,8 +96,18 @@ echo "Using extension path $EXTENSION_ROOTPATH"
 echo "Using package path $TYPO3_PATH_PACKAGES"
 echo "Using web path $TYPO3_PATH_WEB"
 
-composer global require scrutinizer/ocular:"1.3.1"
-composer require --dev typo3/cms="$TYPO3_VERSION"
+composer global require scrutinizer/ocular:"1.5.2"
+
+if [[ $TYPO3_VERSION = *"dev"* ]]; then
+    composer config minimum-stability dev
+fi
+
+if [[ $TYPO3_VERSION = *"master"* ]]; then
+    TYPO3_MASTER_DEPENDENCIES='nimut/testing-framework:dev-master'
+fi
+
+composer require --dev --update-with-dependencies --prefer-source typo3/cms-core:"$TYPO3_VERSION" typo3/cms-backend:"$TYPO3_VERSION" typo3/cms-fluid:"$TYPO3_VERSION" typo3/cms-frontend:"$TYPO3_VERSION" typo3/cms-extbase:"$TYPO3_VERSION" typo3/cms-reports:"$TYPO3_VERSION" typo3/cms-scheduler:"$TYPO3_VERSION" typo3/cms-tstemplate:"$TYPO3_VERSION" $TYPO3_MASTER_DEPENDENCIES
+
 composer require apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
 
 # Restore composer.json

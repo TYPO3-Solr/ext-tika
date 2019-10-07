@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika\Fixtures;
+namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures;
 
 /***************************************************************
  *  Copyright notice

@@ -225,12 +225,18 @@ class TikaStatus implements StatusProviderInterface
      */
     protected function getSolrConnectionFromTikaConfiguration()
     {
-        return GeneralUtility::makeInstance(ConnectionManager::class)->getConnection(
-            $this->tikaConfiguration['solrHost'],
-            $this->tikaConfiguration['solrPort'],
-            $this->tikaConfiguration['solrPath'],
-            $this->tikaConfiguration['solrScheme']
-        );
+        $solrConfig = [
+            'host' => $this->tikaConfiguration['solrHost'],
+            'port' => $this->tikaConfiguration['solrPort'],
+            'path' => $this->tikaConfiguration['solrPath'],
+            'scheme' => $this->tikaConfiguration['solrScheme']
+        ];
+
+        $config = [
+            'read' => $solrConfig,
+            'write' => $solrConfig
+        ];
+        return GeneralUtility::makeInstance(ConnectionManager::class)->getConnectionFromConfiguration($config);
     }
 
     /**

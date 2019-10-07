@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
+namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /***************************************************************
  *  Copyright notice
@@ -24,7 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use TYPO3\CMS\Core\Resource\Index\MetaDataRepository;
@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Base class for EXT:tika tests
  *
  */
-abstract class ServiceUnitTestCase extends UnitTestCase
+abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 {
 
     /**
@@ -75,14 +75,26 @@ abstract class ServiceUnitTestCase extends UnitTestCase
      */
     protected $languagesStorageUid = 9001;
 
+    /**
+     * @var array
+     */
+    protected $testExtensionsToLoad = [
+        'typo3conf/ext/solr',
+        'typo3conf/ext/tika'
+    ];
 
     protected function setUp()
     {
+        parent::setUp();
         $this->singletonInstances = GeneralUtility::getSingletonInstances();
 
         // Disable xml2array cache used by ResourceFactory
         GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
             'cache_hash' => [
+                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
+                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
+            ],
+            'cache_runtime' => [
                 'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
                 'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
             ]

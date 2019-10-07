@@ -1,5 +1,5 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
+namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /***************************************************************
  *  Copyright notice
@@ -28,15 +28,16 @@ use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
-use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
  * Class AppServiceTest
  *
  */
-class ServiceFactoryTest extends UnitTestCase
+class ServiceFactoryTest extends ServiceIntegrationTestCase
 {
 
     /**
@@ -111,9 +112,21 @@ class ServiceFactoryTest extends UnitTestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $this->globalsBackup = [
             'TYPO3_CONF_VARS' => $GLOBALS['TYPO3_CONF_VARS'],
         ];
+
+        GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
+            'cache_hash' => [
+                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
+                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
+            ],
+            'cache_runtime' => [
+                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
+                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
+            ]
+        ]);
         unset($GLOBALS['TYPO3_CONF_VARS']);
     }
 
