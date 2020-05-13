@@ -54,12 +54,6 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         }
     }
 
-    protected function tearDown()
-    {
-        $this->verifyMockObjects();
-        parent::tearDown();
-    }
-
     /**
      * @test
      */

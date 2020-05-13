@@ -48,7 +48,7 @@ class PreviewControllerTest extends UnitTestCase {
         ])->getMock();
 
         $fileMock = $this->getMockBuilder(FileInterface::class)->getMock();
-        $fileResourceFactoryMock = $this->getMockBuilder(ResourceFactory::class)->getMock();
+        $fileResourceFactoryMock = $this->getMockBuilder(ResourceFactory::class)->disableOriginalConstructor()->getMock();
         $fileResourceFactoryMock->expects($this->once())->method('getFileObjectFromCombinedIdentifier')->willReturn($fileMock);
         $controller->expects($this->once())->method('getFileResourceFactory')->willReturn($fileResourceFactoryMock);
 

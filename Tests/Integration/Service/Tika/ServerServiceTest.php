@@ -28,7 +28,6 @@ use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures\ServerServiceFixture;
 use Prophecy\Argument;
-use Prophecy\Prophet;
 use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -43,7 +42,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
 
     protected function tearDown()
     {
-        $this->verifyMockObjects();
+//        $this->verifyMockObjects();
         parent::tearDown();
     }
 

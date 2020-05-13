@@ -24,8 +24,12 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Util;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use TYPO3\CMS\Core\Resource\Index\MetaDataRepository;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
@@ -39,6 +43,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 {
+
+    /**
+     * @var array
+     */
+    protected $configurationToUseInTestInstance = [
+        'SYS' =>  [
+            'exceptionalErrors' =>  E_WARNING | E_RECOVERABLE_ERROR | E_DEPRECATED | E_USER_DEPRECATED
+        ]
+    ];
 
     /**
      * @var array A backup of registered singleton instances
@@ -91,19 +104,31 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         // Disable xml2array cache used by ResourceFactory
         GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
             'cache_hash' => [
-                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class
             ],
             'cache_runtime' => [
-                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class
             ]
         ]);
 
         $this->setUpDocumentsStorageMock();
         $this->setUpLanguagesStorageMock();
 
-        $mockedMetaDataRepository = $this->getMockBuilder(MetaDataRepository::class)->getMock();
+        $metaDataRepositoryConstructorArgs = [];
+
+        if (Util::getIsTYPO3VersionAbove9()) {
+            /** @noinspection PhpFullyQualifiedNameUsageInspection */
+            $metaDataRepositoryConstructorArgs = [
+                GeneralUtility::makeInstance(\TYPO3\CMS\Core\EventDispatcher\EventDispatcher::class)
+            ];
+        }
+
+        /* @var MetaDataRepository|MockObject $mockedMetaDataRepository */
+        $mockedMetaDataRepository = $this->getMockBuilder(MetaDataRepository::class)
+            ->setConstructorArgs($metaDataRepositoryConstructorArgs)
+            ->getMock();
         $mockedMetaDataRepository
             ->expects($this->any())
             ->method('findByFile')
@@ -184,13 +209,13 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      *
      * @param array $driverConfiguration
      * @param array $mockedDriverMethods
-     * @return \TYPO3\CMS\Core\Resource\Driver\LocalDriver
+     * @return LocalDriver
      */
     protected function createDriverFixture(
         array $driverConfiguration = [],
         $mockedDriverMethods = []
     ) {
-        /** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
+        /** @var LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
         $driver = $this->getAccessibleMock(LocalDriver::class,
             $mockedDriverMethods, [$driverConfiguration]);
@@ -237,7 +262,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected function getConfiguration()
     {
-        $tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.10';
+        $tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.24.1';
         $tikaPath = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : '/opt/tika';
 
         return [
