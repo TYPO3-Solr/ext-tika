@@ -27,7 +27,9 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures\ServerServiceFixture;
+use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -42,7 +44,6 @@ class ServerServiceTest extends ServiceIntegrationTestCase
 
     protected function tearDown()
     {
-//        $this->verifyMockObjects();
         parent::tearDown();
     }
 
@@ -52,9 +53,11 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function startServerStoresPidInRegistry()
     {
         // prepare
+        /* @var Registry|ObjectProphecy $registryMock */
         $registryMock = $this->prophesize(Registry::class);
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
+        /* @var Process|ObjectProphecy $processMock */
         $processMock = $this->prophesize(Process::class);
         $processMock->start()->shouldBeCalled();
         $processMock->getPid()->willReturn(1000);
@@ -178,9 +181,18 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function getTikaUrlBuildsUrlFromConfiguration()
     {
-        $service = new ServerService($this->getConfiguration());
-        $this->assertEquals('http://localhost:9998',
-            $service->getTikaServerUrl());
+        $tikaExtensionConfiguration = $this->getConfiguration();
+        $service = new ServerService($tikaExtensionConfiguration);
+
+        $expectedTikaAuthority = vsprintf(
+            '%s://%s:%s',
+            [
+                $tikaExtensionConfiguration['tikaServerScheme'],
+                $tikaExtensionConfiguration['tikaServerHost'],
+                $tikaExtensionConfiguration['tikaServerPort'],
+            ]
+        );
+        $this->assertEquals($expectedTikaAuthority, $service->getTikaServerUrl());
     }
 
     /**
@@ -188,16 +200,8 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function extractTextQueriesTikaEndpoint()
     {
-        $file = new File(
-            [
-                'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
-            ],
-            $this->documentsStorageMock
-        );
-
         $service = new ServerServiceFixture($this->getConfiguration());
-        $service->extractText($file);
+        $service->extractText($this->getMockedFileInstanceForTestWordDotDocFile());
 
         $this->assertEquals('/tika', $service->getRecordedEndpoint());
     }
@@ -207,16 +211,8 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function extractMetaDataQueriesMetaEndpoint()
     {
-        $file = new File(
-            [
-                'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
-            ],
-            $this->documentsStorageMock
-        );
-
         $service = new ServerServiceFixture($this->getConfiguration());
-        $service->extractMetaData($file);
+        $service->extractMetaData($this->getMockedFileInstanceForTestWordDotDocFile());
 
         $this->assertEquals('/meta', $service->getRecordedEndpoint());
     }
@@ -226,16 +222,8 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function detectLanguageFromFileQueriesLanguageStreamEndpoint()
     {
-        $file = new File(
-            [
-                'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
-            ],
-            $this->documentsStorageMock
-        );
-
         $service = new ServerServiceFixture($this->getConfiguration());
-        $service->detectLanguageFromFile($file);
+        $service->detectLanguageFromFile($this->getMockedFileInstanceForTestWordDotDocFile());
 
         $this->assertEquals('/language/stream',
             $service->getRecordedEndpoint());
@@ -276,15 +264,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File(
-            [
-                'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
-            ],
-            $this->documentsStorageMock
-        );
-
-        $metaData = $service->extractMetaData($file);
+        $metaData = $service->extractMetaData($this->getMockedFileInstanceForTestWordDotDocFile());
 
         $this->assertEquals('application/msword', $metaData['Content-Type']);
         $this->assertEquals('Microsoft Office Word', $metaData['Application-Name']);
@@ -305,10 +285,14 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function extractsMetaDataFromMp3File()
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $fileMock = $this->getMockedFileInstance(
+            [
+                'identifier' => 'testMP3.mp3',
+                'name' => 'testMP3.mp3'
+            ]
+        );
 
-        $file = new File(['identifier' => 'testMP3.mp3', 'name' => 'testMP3.mp3'], $this->documentsStorageMock);
-
-        $metaData = $service->extractMetaData($file);
+        $metaData = $service->extractMetaData($fileMock);
 
         $this->assertEquals('audio/mpeg', $metaData['Content-Type']);
         $this->assertEquals('Test Title', $metaData['title']);
@@ -321,16 +305,8 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File(
-            [
-                'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
-            ],
-            $this->documentsStorageMock
-        );
-
         $expectedText = 'Sample Word Document';
-        $extractedText = $service->extractText($file);
+        $extractedText = $service->extractText($this->getMockedFileInstanceForTestWordDotDocFile());
 
         $this->assertContains($expectedText, $extractedText);
     }
@@ -342,16 +318,13 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File(
+        $expectedTextFromWord = 'Sample Word Document';
+        $extractedText = $service->extractText($this->getMockedFileInstance(
             [
                 'identifier' => 'test-documents.zip',
                 'name' => 'test-documents.zip'
-            ],
-            $this->documentsStorageMock
-        );
-
-        $expectedTextFromWord = 'Sample Word Document';
-        $extractedText = $service->extractText($file);
+            ]
+        ));
         $expectedTextFromPDF= 'Tika - Content Analysis Toolkit';
 
         $this->assertContains($expectedTextFromWord, $extractedText);
@@ -390,15 +363,15 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     {
         $service = new ServerService($this->getTikaServerConfiguration());
 
-        $file = new File(
-            [
-                'identifier' => $language . '.test',
-                'name' => $language . '.test'
-            ],
-            $this->languagesStorageMock
+        $detectedLanguage = $service->detectLanguageFromFile(
+            $this->getMockedFileInstance(
+                [
+                    'identifier' => $language . '.test',
+                    'name' => $language . '.test'
+                ],
+                $this->languagesStorageMock
+            )
         );
-
-        $detectedLanguage = $service->detectLanguageFromFile($file);
 
         $this->assertSame($language, $detectedLanguage);
     }
@@ -439,5 +412,18 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         $pingResult = $service->ping();
 
         $this->assertTrue($pingResult, 'Could not ping tika server');
+    }
+
+    /**
+     * @return MockObject|File
+     */
+    protected function getMockedFileInstanceForTestWordDotDocFile()
+    {
+        return $this->getMockedFileInstance(
+            [
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ]
+        );
     }
 }

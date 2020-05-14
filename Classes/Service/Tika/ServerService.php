@@ -280,9 +280,23 @@ class ServerService extends AbstractService
      */
     public function extractMetaData(FileInterface $file)
     {
-        $headers = [$this->getUserAgent(), 'Accept: application/json', 'Content-Type: application/octet-stream', 'Connection: close'];
+        $headers = [
+            $this->getUserAgent(),
+            'Accept: application/json',
+            'Content-Type: application/octet-stream',
+            'Connection: close'
+        ];
 
-        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'PUT', 'header' => implode(CRLF, $headers), 'content' => $file->getContents()]]);
+        $context = stream_context_create(
+            [
+                'http' => [
+                    'protocol_version' => 1.1,
+                    'method' => 'PUT',
+                    'header' => implode(CRLF, $headers),
+                    'content' => $file->getContents()
+                ]
+            ]
+        );
 
         $rawResponse = $this->queryTika('/meta', $context);
         $response = (array)json_decode($rawResponse);
