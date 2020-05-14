@@ -157,28 +157,17 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
      */
     public function extractsMetaDataFromMp3File()
     {
-        $service = new SolrCellService($this->getSolrCellConfiguration());
-        $file = new File(['identifier' => 'testMP3.mp3', 'name' => 'testMP3.mp3'], $this->documentsStorageMock);
-        $this->assertTrue(in_array($file->getMimeType(), $service->getSupportedMimeTypes()));
-        $metaData = $service->extractMetaData($file);
+        $service = new SolrCellService($this->getConfiguration());
+        $mockedFile = $this->getMockedFileInstance(
+            [
+                'identifier' => 'testMP3.mp3',
+                'name' => 'testMP3.mp3'
+            ]
+        );
+        $this->assertTrue(in_array($mockedFile->getMimeType(), $service->getSupportedMimeTypes()));
+        $metaData = $service->extractMetaData($mockedFile);
         $this->assertEquals('audio/mpeg', $metaData['Content-Type']);
         $this->assertEquals('Test Title', $metaData['title']);
-    }
-
-    /**
-     * Creates Tika Server connection configuration pointing to
-     * http://localhost:9998
-     *
-     * @return array
-     */
-    protected function getSolrCellConfiguration()
-    {
-        return [
-            'solrScheme' => 'http',
-            'solrHost' => 'localhost',
-            'solrPath' => '/solr/core_en',
-            'solrPort' => '8999'
-        ];
     }
 
 }

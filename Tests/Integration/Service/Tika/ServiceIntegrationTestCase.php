@@ -289,6 +289,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $tikaPath = getenv('TIKA_PATH') ?: '/opt/tika';
 
         $envVarNamePrefix = 'TESTING_TIKA_';
+
         return [
             'extractor' => '',
             'logging' => 0,
@@ -302,8 +303,8 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 
             'solrScheme' => getenv('TESTING_SOLR_SCHEME') ?: 'http',
             'solrHost' => getenv('TESTING_SOLR_HOST') ?: 'localhost',
-            'solrPort' => getenv('TESTING_SOLR_PORT') ?: '8080',
-            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/'
+            'solrPort' => getenv('TESTING_SOLR_PORT') ?: 8999,
+            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/core_en'
         ];
     }
 
