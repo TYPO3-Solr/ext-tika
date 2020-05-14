@@ -54,13 +54,6 @@ class ServiceFactory
             $configuration = Util::getTikaExtensionConfiguration();
         }
 
-        if (!is_array($configuration)) {
-            throw new RuntimeException(
-                'Invalid configuration',
-                1439352237
-            );
-        }
-
         switch ($tikaServiceType) {
             case 'jar':
             case 'tika': // backwards compatibility only
