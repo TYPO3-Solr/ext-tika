@@ -57,12 +57,16 @@ abstract class AbstractExtractor implements ExtractorInterface
 
     /**
      * Constructor
-     *
+     * @param array $extensionConfiguration
+     * @param SizeValidator $fileSizeValidator
      */
-    public function __construct()
+    public function __construct(array $extensionConfiguration = null, SizeValidator $fileSizeValidator = null)
     {
-        $this->configuration = Util::getTikaExtensionConfiguration();
-        $this->fileSizeValidator = GeneralUtility::makeInstance(SizeValidator::class);
+        $this->configuration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
+        $this->fileSizeValidator = $fileSizeValidator ?? GeneralUtility::makeInstance(
+            SizeValidator::class,
+            $this->configuration
+        );
     }
 
     /**

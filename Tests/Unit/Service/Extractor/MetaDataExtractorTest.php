@@ -79,8 +79,11 @@ class MetaDataExtractorTest extends UnitTestCase
     {
         $fakedTikaExtractResponse = $this->getFakedExtratorResponseForJGEPImage();
 
-        /** @var $metaDataExtractor \ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor */
-        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)->setMethods(['getExtractedMetaDataFromTikaService'])->getMock();
+        /** @var $metaDataExtractor MetaDataExtractor */
+        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)
+            ->setConstructorArgs([[]])
+            ->setMethods(['getExtractedMetaDataFromTikaService'])
+            ->getMock();
         $metaDataExtractor->expects($this->once())->method('getExtractedMetaDataFromTikaService')->will($this->returnValue(
             $fakedTikaExtractResponse
         ));
@@ -106,7 +109,9 @@ class MetaDataExtractorTest extends UnitTestCase
         $exeFileMock = $this->getDumbMock(File::class);
         $exeFileMock->expects($this->any())->method('getMimeType')->will($this->returnValue('exe'));
 
-        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)->setMethods(['getExtractor'])->getMock();
+        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)
+            ->setConstructorArgs([[]])
+            ->setMethods(['getExtractor'])->getMock();
         $metaDataExtractor->expects($this->once())->method('getExtractor')->will($this->returnValue($tikaAppServiceMock));
         $this->assertFalse($metaDataExtractor->canProcess($exeFileMock));
     }
@@ -124,7 +129,9 @@ class MetaDataExtractorTest extends UnitTestCase
         $exeFileMock = $this->getDumbMock(File::class);
         $exeFileMock->expects($this->any())->method('getMimeType')->will($this->returnValue('application/vnd.sun.xml.writer'));
 
-        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)->setMethods(['getExtractor'])->getMock();
+        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)
+            ->setConstructorArgs([[]])
+            ->setMethods(['getExtractor'])->getMock();
         $metaDataExtractor->expects($this->once())->method('getExtractor')->will($this->returnValue($tikaAppServiceMock));
         $this->assertTrue($metaDataExtractor->canProcess($exeFileMock));
     }

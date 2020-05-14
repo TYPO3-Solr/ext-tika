@@ -97,6 +97,7 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
 
     /**
      * @test
+     * Todo: check whats going on here!
      */
     public function getTikaThrowsExceptionForInvalidConfiguration()
     {

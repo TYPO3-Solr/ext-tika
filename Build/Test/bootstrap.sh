@@ -63,11 +63,13 @@ fi
 if [ ! -d "$TIKA_PATH" ]; then
 	mkdir -p "$TIKA_PATH"
 fi
+
 if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
 	wget "http://apache.osuosl.org/tika/tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
 else
 	echo "Cached $TIKA_PATH/tika-app-$TIKA_VERSION.jar present"
 fi
+
 if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
 	wget "http://apache.osuosl.org/tika/tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
 else

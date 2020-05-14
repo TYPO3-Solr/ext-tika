@@ -40,10 +40,11 @@ class SizeValidator {
 
     /**
      * Constructor
+     * @param array|null $extensionConfiguration
      */
-    public function __construct()
+    public function __construct(array $extensionConfiguration = null)
     {
-        $this->configuration = Util::getTikaExtensionConfiguration();
+        $this->configuration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
     }
 
     /**

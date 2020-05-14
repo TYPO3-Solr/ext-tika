@@ -29,7 +29,9 @@ class PreviewController {
     {
         $response = new HtmlResponse('');
         if (!$this->getIsAdmin()) {
-            return $response->withStatus(403, 'Only admins can see the tika preview');
+            $messageText = 'Only admins can see the tika preview';
+            $response->getBody()->write($messageText);
+            return $response->withStatus(403, $messageText);
         }
 
         $identifier = (string)$request->getQueryParams()['identifier'];
