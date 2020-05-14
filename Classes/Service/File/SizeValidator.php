@@ -2,6 +2,9 @@
 
 namespace ApacheSolrForTypo3\Tika\Service\File;
 
+use ApacheSolrForTypo3\Tika\Util;
+use TYPO3\CMS\Core\Resource\FileInterface;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -27,23 +30,27 @@ namespace ApacheSolrForTypo3\Tika\Service\File;
 
 /**
  * Class SizeValidator
- * @package ApacheSolrForTypo3\Tika\Service\File
  */
 class SizeValidator {
+
+    /**
+     * @var array
+     */
+    protected $configuration;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $this->configuration = Util::getTikaExtensionConfiguration();
     }
 
     /**
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param FileInterface $file
      * @return bool
      */
-    public function isBelowLimit(\TYPO3\CMS\Core\Resource\FileInterface $file) {
+    public function isBelowLimit(FileInterface $file) {
         return $file->getSize() < $this->getFileSizeLimit();
     }
 

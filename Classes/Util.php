@@ -1,6 +1,7 @@
 <?php
 namespace ApacheSolrForTypo3\Tika;
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -57,5 +58,15 @@ class Util
     public static function getIsTYPO3Version10Lts()
     {
         return GeneralUtility::makeInstance(Typo3Version::class)->getBranch() === '10.4';
+    }
+
+    /**
+     * Returns extension configuration.
+     *
+     * @return array
+     */
+    public static function getTikaExtensionConfiguration(): array
+    {
+        return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('tika');
     }
 }

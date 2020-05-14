@@ -175,7 +175,7 @@ class SolrCellService extends AbstractService
      * @param array $metaDataResponse The part of the Solr response containing the meta data
      * @return array The cleaned meta data, matching the Tika jar call format
      */
-    protected function solrResponseToArray(array $metaDataResponse)
+    protected function solrResponseToArray(array $metaDataResponse = [])
     {
         $cleanedData = [];
 

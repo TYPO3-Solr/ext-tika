@@ -11,7 +11,6 @@
  * but will be extended further.
  */
 return [
-    //
     'tika_preview' => [
         'path' => '/tika/preview',
         'target' => \ApacheSolrForTypo3\Tika\Controller\Backend\PreviewController::class . '::previewAction'

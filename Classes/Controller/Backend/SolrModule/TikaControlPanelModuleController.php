@@ -25,11 +25,16 @@ namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Solr\Controller\Backend\Search\AbstractModuleController;
+use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
+use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
+use ApacheSolrForTypo3\Tika\Util;
+use Exception;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
-use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
 /**
@@ -49,14 +54,14 @@ class TikaControlPanelModuleController extends AbstractModuleController
     protected $tikaConfiguration = [];
 
     /**
-     * @var \ApacheSolrForTypo3\Tika\Service\Tika\AppService|\ApacheSolrForTypo3\Tika\Service\Tika\ServerService|\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService
+     * @var AppService|ServerService|SolrCellService
      */
     protected $tikaService = null;
 
     /**
      * Can be used in the test context to force a view.
      *
-     * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view
+     * @param ViewInterface $view
      */
     public function overwriteView(ViewInterface $view)
     {
@@ -64,9 +69,9 @@ class TikaControlPanelModuleController extends AbstractModuleController
     }
 
     /**
-     * @param \ApacheSolrForTypo3\Tika\Service\Tika\AbstractService $tikaService
+     * @param AbstractService $tikaService
      */
-    public function setTikaService(\ApacheSolrForTypo3\Tika\Service\Tika\AbstractService $tikaService)
+    public function setTikaService(AbstractService $tikaService)
     {
         $this->tikaService = $tikaService;
     }
@@ -80,7 +85,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
     {
         parent::initializeAction();
 
-        $tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $tikaConfiguration = Util::getTikaExtensionConfiguration();
         $this->setTikaConfiguration($tikaConfiguration);
         $this->tikaService = ServiceFactory::getTika($this->tikaConfiguration['extractor']);
     }
@@ -97,7 +102,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * Index action
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function indexAction()
     {
@@ -125,6 +130,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * Starts the Tika server
      *
      * @return void
+     * @throws StopActionException
      */
     public function startServerAction()
     {
@@ -147,6 +153,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * Stops the Tika server
      *
      * @return void
+     * @throws StopActionException
      */
     public function stopServerAction()
     {
@@ -169,7 +176,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * Gets the Tika server version
      *
      * @return string Tika server version string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getTikaServerVersion()
     {
@@ -180,7 +187,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * Tries to connect to Tika server
      *
      * @return bool TRUE if the Tika server responds, FALSE otherwise.
-     * @throws \Exception
+     * @throws Exception
      */
     protected function isTikaServerRunning()
     {
@@ -217,9 +224,9 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * Checks whether exec() is allowed and whether configuration is available.
      *
      * @return bool TRUE if Tika server can be started/stopped
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function isTikaServerControllable()
+    protected function isTikaServerControllable(): bool
     {
         $disabledFunctions = ini_get('disable_functions')
             . ',' . ini_get('suhosin.executor.func.blacklist');
@@ -252,6 +259,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * flash message according to the result of the check.
      *
      * @return void
+     * @throws Exception
      */
     protected function checkTikaServerConnection()
     {

@@ -25,7 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\File\SizeValidator;
-use TYPO3\CMS\Core\Resource;
+use ApacheSolrForTypo3\Tika\Util;
 use TYPO3\CMS\Core\Resource\Index\ExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -50,6 +50,10 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     protected $priority = 0;
 
+    /**
+     * @var SizeValidator
+     */
+    protected $fileSizeValidator;
 
     /**
      * Constructor
@@ -57,7 +61,7 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     public function __construct()
     {
-        $this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $this->configuration = Util::getTikaExtensionConfiguration();
         $this->fileSizeValidator = GeneralUtility::makeInstance(SizeValidator::class);
     }
 

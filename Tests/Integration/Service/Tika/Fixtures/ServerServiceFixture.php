@@ -25,6 +25,8 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use Exception;
+use TYPO3\CMS\Core\Resource\FileInterface;
 
 
 /**
@@ -50,15 +52,16 @@ class ServerServiceFixture extends ServerService
      * @param string $endpoint
      * @param resource $context optional stream context
      * @return string Tika output
-     * @throws \Exception
+     * @throws Exception
      */
     protected function queryTika($endpoint, $context = null)
     {
         $this->recordedEndpoint = $endpoint;
+        return parent::queryTika($endpoint, $context);
     }
 
     /**
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param FileInterface $file
      * @param string $response
      * @return array
      */

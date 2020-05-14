@@ -360,7 +360,13 @@ class ServerService extends AbstractService
     {
         $headers = [$this->getUserAgent(), 'Content-Type: application/octet-stream', 'Accept: application/json', 'Connection: close'];
 
-        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'GET', 'header' => implode(CRLF, $headers),]]);
+        $context = stream_context_create([
+            'http' => [
+                'protocol_version' => 1.1,
+                'method' => 'GET',
+                'header' => implode(CRLF, $headers)
+            ]
+        ]);
 
         return $this->queryTika('/mime-types', $context);
     }

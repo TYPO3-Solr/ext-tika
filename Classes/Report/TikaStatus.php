@@ -26,6 +26,7 @@ namespace ApacheSolrForTypo3\Tika\Report;
 
 use ApacheSolrForTypo3\Solr\ConnectionManager;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Util;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Utility\CommandUtility;
@@ -58,7 +59,7 @@ class TikaStatus implements StatusProviderInterface
      */
     public function __construct()
     {
-        $this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $this->tikaConfiguration = Util::getTikaExtensionConfiguration();
     }
 
     /**

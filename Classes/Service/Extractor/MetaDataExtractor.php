@@ -24,7 +24,11 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
+use Exception;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Resource\File;
 
@@ -32,7 +36,6 @@ use TYPO3\CMS\Core\Resource\File;
  * A service to extract meta data from files using Apache Tika
  *
  * @author Ingo Renner <ingo@typo3.org>
- * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
 class MetaDataExtractor extends AbstractExtractor
 {
@@ -47,6 +50,7 @@ class MetaDataExtractor extends AbstractExtractor
      *
      * @param File $file
      * @return boolean
+     * @throws Exception
      */
     public function canProcess(File $file)
     {
@@ -79,7 +83,7 @@ class MetaDataExtractor extends AbstractExtractor
     }
 
     /**
-     * @return \ApacheSolrForTypo3\Tika\Service\Tika\AppService|\ApacheSolrForTypo3\Tika\Service\Tika\ServerService|\ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService
+     * @return AppService|ServerService|SolrCellService
      */
     protected function getExtractor() {
         return ServiceFactory::getTika($this->configuration['extractor']);
@@ -91,15 +95,11 @@ class MetaDataExtractor extends AbstractExtractor
      * @param File $file
      * @param array $previousExtractedData Already extracted/existing data
      * @return array
+     * @throws Exception
      */
-    public function extractMetaData(
-        File $file,
-        array $previousExtractedData = []
-    ) {
+    public function extractMetaData(File $file, array $previousExtractedData = []) {
         $extractedMetaData = $this->getExtractedMetaDataFromTikaService($file);
-        $metaData = $this->normalizeMetaData($extractedMetaData);
-
-        return $metaData;
+        return $this->normalizeMetaData($extractedMetaData);
     }
 
     /**
@@ -107,13 +107,12 @@ class MetaDataExtractor extends AbstractExtractor
      *
      * @param File $file
      * @return array
+     * @throws Exception
      */
     protected function getExtractedMetaDataFromTikaService($file)
     {
         $tikaService = $this->getExtractor();
-        $result= $tikaService->extractMetaData($file);
-
-        return $result;
+        return $tikaService->extractMetaData($file);
     }
 
     /**
