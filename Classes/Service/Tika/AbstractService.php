@@ -24,10 +24,9 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
-
 
 /**
  * Abstract Tika service implementing shared methods
@@ -78,7 +77,9 @@ abstract class AbstractService implements ServiceInterface
             return;
         }
 
-        GeneralUtility::devLog($message, 'tika', $severity, $data);
+        /* @var Logger $logger */
+        $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
+        $logger->log($severity, $message, $data);
     }
 
     /**

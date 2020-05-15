@@ -27,7 +27,6 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 use ApacheSolrForTypo3\Tika\Util;
 use InvalidArgumentException;
 use RuntimeException;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -47,6 +46,7 @@ class ServiceFactory
      *
      * @throws InvalidArgumentException for unknown Tika service type
      * @throws RuntimeException if configuration cannot be initialized
+     * @noinspection PhpIncompatibleReturnTypeInspection
      */
     public static function getTika($tikaServiceType, array $configuration = null)
     {

@@ -26,6 +26,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 use ApacheSolrForTypo3\Tika\Service\File\SizeValidator;
 use ApacheSolrForTypo3\Tika\Util;
+use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Resource\Index\ExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -120,12 +122,13 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     protected function log($message, array $data = [])
     {
-        // TODO have logger injected
         if (!$this->configuration['logging']) {
             return;
         }
 
-        GeneralUtility::devLog($message, 'tika', 0, $data);
+        /* @var Logger $logger */
+        $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
+        $logger->log(0, $message, $data);
     }
 
 }

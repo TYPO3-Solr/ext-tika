@@ -55,6 +55,7 @@ class ServerService extends AbstractService
      * Service initialization
      *
      * @return void
+     * @noinspection PhpUnused
      */
     protected function initializeService()
     {
@@ -275,10 +276,10 @@ class ServerService extends AbstractService
      * Takes a file reference and extracts its meta data.
      *
      * @param FileInterface $file
-     * @return array
+     * @return array|null
      * @throws Exception
      */
-    public function extractMetaData(FileInterface $file)
+    public function extractMetaData(FileInterface $file): ?array
     {
         $headers = [
             $this->getUserAgent(),
@@ -299,15 +300,14 @@ class ServerService extends AbstractService
         );
 
         $rawResponse = $this->queryTika('/meta', $context);
-        $response = (array)json_decode($rawResponse);
+        $response = json_decode($rawResponse, true);
 
-        if ($response === FALSE) {
-            $this->log('Meta Data Extraction using Tika Server failed', $this->getLogData($file, $response), 2);
-        } else {
-            $this->log('Meta Data Extraction using Tika Server', $this->getLogData($file, $response));
+        if (!is_array($response)) {
+            $this->log('Meta Data Extraction using Tika Server failed', $this->getLogData($file, $rawResponse), 2);
+            return [];
         }
 
-
+        $this->log('Meta Data Extraction using Tika Server', $this->getLogData($file, $rawResponse));
         return $response;
     }
 

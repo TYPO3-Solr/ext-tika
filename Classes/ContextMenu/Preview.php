@@ -6,7 +6,8 @@ use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class Preview extends AbstractProvider{
+class Preview extends AbstractProvider
+{
 
     protected $itemsConfiguration = [
         'tika_preview' => [

@@ -9,6 +9,7 @@ use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\HtmlResponse;
+use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\InvalidExtensionNameException;
@@ -22,7 +23,7 @@ class PreviewController {
 
     /**
      * @param ServerRequestInterface $request
-     * @return string
+     * @return string|Response
      * @throws Exception
      */
     public function previewAction(ServerRequestInterface $request)

@@ -44,6 +44,6 @@ class BackendControllerHook
      */
     protected function getBackendUriBuilder(): UriBuilder
     {
-       return GeneralUtility::makeInstance(UriBuilder::class);
+        return GeneralUtility::makeInstance(UriBuilder::class);
     }
 }
