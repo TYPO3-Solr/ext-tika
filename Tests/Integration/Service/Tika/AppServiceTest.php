@@ -122,7 +122,6 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $this->assertContains('-l', ExecRecorder::$execCommand);
     }
 
-
     /**
      * @test
      */
@@ -133,7 +132,6 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $this->assertContains('--list-supported-types', ExecRecorder::$execCommand);
     }
 
-
     /**
      * @test
      */
@@ -142,7 +140,9 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $fixtureContent = file_get_contents(dirname(__FILE__) . '/Fixtures/mimeOut');
 
         /** @var $service AppService */
-        $service = $this->getMockBuilder(AppService::class)->disableOriginalConstructor()->setMethods(['getMimeTypeOutputFromTikaJar'])->getMock();
+        $service = $this->getMockBuilder(AppService::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getMimeTypeOutputFromTikaJar'])->getMock();
         $service->expects($this->once())->method('getMimeTypeOutputFromTikaJar')->will($this->returnValue($fixtureContent));
 
         $supportedMimeTypes = $service->getSupportedMimeTypes();

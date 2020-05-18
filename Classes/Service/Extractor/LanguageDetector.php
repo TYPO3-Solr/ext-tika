@@ -25,6 +25,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use Exception;
 use TYPO3\CMS\Core\Resource\File;
 
 
@@ -82,6 +83,7 @@ class LanguageDetector extends AbstractExtractor
      * @param File $file
      * @param array $previousExtractedData Already extracted/existing data
      * @return array
+     * @throws Exception
      */
     public function extractMetaData(
         File $file,

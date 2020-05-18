@@ -27,7 +27,7 @@ class FileUtility
      */
     public static function getAbsoluteFilePath($path) {
         if (version_compare(TYPO3_version, '8.0', '<')) {
-            return GeneralUtility::getFileAbsFileName($path, false);
+            return GeneralUtility::getFileAbsFileName($path);
         } else {
             if (substr($path, 0, 1) === "/") {
                 // if the path start with a "/" we thread it as absolute

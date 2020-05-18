@@ -1,4 +1,3 @@
-
 <?php
 $_EXTKEY = 'tika';
 $rootPath = dirname(__FILE__) . "/../../";

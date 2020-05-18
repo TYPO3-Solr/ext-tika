@@ -1,6 +1,6 @@
 .. ====================
 .. FOR YOUR INFORMATION
-.. --------------------s
+.. --------------------
 .. -*- coding: utf-8 -*- with BOM.
 
 .. include:: Includes.txt
@@ -18,7 +18,7 @@ Apache Tika for TYPO3
 		tika
 
 	:Version:
-		|release|
+		6.0.0
 
 	:Language:
 		en

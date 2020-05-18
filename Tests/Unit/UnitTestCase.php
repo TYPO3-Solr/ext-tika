@@ -25,6 +25,9 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit;
  ***************************************************************/
 
 use Nimut\TestingFramework\TestCase\UnitTestCase as TYPO3UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Testcase to check if the status check returns the expected results.
@@ -42,7 +45,7 @@ class UnitTestCase extends TYPO3UnitTestCase
      */
     protected function getConfiguration()
     {
-        $tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.10';
+        $tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.24.1';
         $tikaPath = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : '/opt/tika';
 
         return [
@@ -65,9 +68,10 @@ class UnitTestCase extends TYPO3UnitTestCase
 
     /**
      * Returns a mocked class where all functionality is mocked, just to fullfill the required data type
-     * and to fake custome behaviour.
+     * and to fake custom behaviour.
      *
      * @param string $className
+     * @return MockObject
      */
     protected function getDumbMock($className)
     {
@@ -78,6 +82,7 @@ class UnitTestCase extends TYPO3UnitTestCase
      * Returns a path for a fixture.
      *
      * @param string $fixtureName
+     * @return string
      * @throws string
      */
     protected function getFixturePath($fixtureName)
@@ -89,10 +94,11 @@ class UnitTestCase extends TYPO3UnitTestCase
      * Returns the directory on runtime.
      *
      * @return string
+     * @throws ReflectionException
      */
     protected function getRuntimeDirectory()
     {
-        $rc = new \ReflectionClass(get_class($this));
+        $rc = new ReflectionClass(get_class($this));
         return dirname($rc->getFileName());
     }
 

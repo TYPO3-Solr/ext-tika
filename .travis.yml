@@ -1,21 +1,27 @@
+dist: bionic
+
 language: php
 
 services:
+  - mysql
   - docker
 
 php:
   - 7.2
+  - 7.4
+
 env:
   global:
-    - TIKA_VERSION="1.22"
+    - TIKA_VERSION="1.24.1"
     - TIKA_PATH=$HOME/tika
-    - EXT_SOLR_VERSION="dev-master"
+    - EXT_SOLR_VERSION="dev-release-11.0.x"
     - TYPO3_DATABASE_NAME="typo3_ci"
     - TYPO3_DATABASE_HOST="127.0.0.1"
     - TYPO3_DATABASE_USERNAME="root"
     - TYPO3_DATABASE_PASSWORD=""
   matrix:
     - TYPO3_VERSION="^9.5"
+    - TYPO3_VERSION="^10.4"
 
 matrix:
   fast_finish: true
@@ -31,7 +37,7 @@ install:
 script:
   - Build/Test/cibuild.sh
 after_script:
-  - Build/Test/publish_coverage.sh
+  - .Build/Web/typo3conf/ext/solr/Build/Test/publish_coverage.sh
   - Build/Release/ter_tag_uploader.sh
   - Build/Test/cleanup.sh
 

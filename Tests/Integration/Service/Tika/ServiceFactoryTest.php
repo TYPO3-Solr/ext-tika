@@ -95,21 +95,6 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
         ServiceFactory::getTika('foo', $this->getConfiguration());
     }
 
-    /**
-     * @test
-     */
-    public function getTikaThrowsExceptionForInvalidConfiguration()
-    {
-        $backup = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'];
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = 'invalid configuration';
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Invalid configuration');
-        ServiceFactory::getTika('foo');
-
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika'] = $backup;
-    }
-
     protected function setUp()
     {
         parent::setUp();

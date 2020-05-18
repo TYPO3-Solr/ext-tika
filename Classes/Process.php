@@ -178,9 +178,7 @@ class Process
     public function start()
     {
         $this->runCommand();
-        $status = $this->isRunning();
-
-        return $status;
+        return $this->isRunning();
     }
 
     /**

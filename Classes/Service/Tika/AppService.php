@@ -26,6 +26,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use ApacheSolrForTypo3\Tika\Utility\ShellUtility;
+use RuntimeException;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -51,14 +52,14 @@ class AppService extends AbstractService
     {
         if (!is_file(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
         ) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'Invalid path or filename for Tika application jar: ' . $this->configuration['tikaPath'],
                 1266864929
             );
         }
 
         if (!CommandUtility::checkCommand('java')) {
-            throw new \RuntimeException('Could not find Java', 1421208775);
+            throw new RuntimeException('Could not find Java', 1421208775);
         }
     }
 
@@ -80,7 +81,7 @@ class AppService extends AbstractService
     /**
      * Takes a file reference and extracts the text from it.
      *
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param FileInterface $file
      * @return string
      */
     public function extractText(FileInterface $file)
@@ -107,7 +108,7 @@ class AppService extends AbstractService
     /**
      * Takes a file reference and extracts its meta data.
      *
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param FileInterface $file
      * @return array
      */
     public function extractMetaData(FileInterface $file)
@@ -137,7 +138,7 @@ class AppService extends AbstractService
     /**
      * Takes a file reference and detects its content's language.
      *
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param FileInterface $file
      * @return string Language ISO code
      */
     public function detectLanguageFromFile(FileInterface $file)
@@ -306,9 +307,9 @@ class AppService extends AbstractService
     }
 
     /**
-     * @return array
+     * @return string
      */
-    protected function getMimeTypeOutputFromTikaJar()
+    protected function getMimeTypeOutputFromTikaJar(): string
     {
         $tikaCommand = ShellUtility::getLanguagePrefix() . CommandUtility::getCommand('java') . ' -Dfile.encoding=UTF8' . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath'])) . ' --list-supported-types';
         return trim(shell_exec($tikaCommand));

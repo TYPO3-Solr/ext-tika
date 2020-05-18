@@ -1,14 +1,18 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Controller\Backend;
 
+use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
-use Psr\Http\Message\ResponseInterface;
+use Exception;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Http\HtmlResponse;
+use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Exception\InvalidExtensionNameException;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
@@ -19,14 +23,16 @@ class PreviewController {
 
     /**
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @return string
+     * @return string|Response
+     * @throws Exception
      */
-    public function previewAction(ServerRequestInterface $request, ResponseInterface $response)
+    public function previewAction(ServerRequestInterface $request)
     {
+        $response = new HtmlResponse('');
         if (!$this->getIsAdmin()) {
-            $response->getBody()->write('Only admins can see the tika preview');
-            return $response;
+            $messageText = 'Only admins can see the tika preview';
+            $response->getBody()->write($messageText);
+            return $response->withStatus(403, $messageText);
         }
 
         $identifier = (string)$request->getQueryParams()['identifier'];
@@ -38,7 +44,7 @@ class PreviewController {
 
         try {
             $language = $tikaService->detectLanguageFromFile($file);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $language = 'not detectable';
         }
 
@@ -56,21 +62,23 @@ class PreviewController {
     /**
      * @return AppService|ServerService|SolrCellService
      */
-    protected function getConfiguredTikaService()
+    protected function getConfiguredTikaService(): AbstractService
     {
         return ServiceFactory::getConfiguredTika();
     }
 
     /**
-     * @return \TYPO3\CMS\Core\Resource\ResourceFactory
+     * @return ResourceFactory
+     * @noinspection PhpIncompatibleReturnTypeInspection
      */
     protected function getFileResourceFactory(): ResourceFactory
     {
-        return \TYPO3\CMS\Core\Resource\ResourceFactory::getInstance();
+        return GeneralUtility::makeInstance(ResourceFactory::class);
     }
 
     /**
      * @return StandaloneView
+     * @throws InvalidExtensionNameException
      */
     protected function getInitializedPreviewView(): StandaloneView
     {

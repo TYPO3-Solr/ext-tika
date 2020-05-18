@@ -24,6 +24,9 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Util;
+use InvalidArgumentException;
+use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -41,22 +44,14 @@ class ServiceFactory
      * @param array $configuration EXT:tika EM configuration (initialized by this factory, parameter exists for tests)
      * @return AppService|ServerService|SolrCellService
      *
-     * @throws \InvalidArgumentException for unknown Tika service type
-     * @throws \RuntimeException if configuration cannot be initialized
+     * @throws InvalidArgumentException for unknown Tika service type
+     * @throws RuntimeException if configuration cannot be initialized
+     * @noinspection PhpIncompatibleReturnTypeInspection
      */
-    public static function getTika(
-        $tikaServiceType,
-        array $configuration = null
-    ) {
+    public static function getTika($tikaServiceType, array $configuration = null)
+    {
         if (empty($configuration)) {
-            $configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-        }
-
-        if (!is_array($configuration)) {
-            throw new \RuntimeException(
-                'Invalid configuration',
-                1439352237
-            );
+            $configuration = Util::getTikaExtensionConfiguration();
         }
 
         switch ($tikaServiceType) {
@@ -68,7 +63,7 @@ class ServiceFactory
             case 'solr':
                 return GeneralUtility::makeInstance(SolrCellService::class, $configuration);
             default:
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     'Unknown Tika service type "' . $tikaServiceType . '". Must be one of jar, server, or solr.',
                     1423035119
                 );
@@ -80,10 +75,9 @@ class ServiceFactory
      *
      * @return AppService|ServerService|SolrCellService
      */
-    public static function getConfiguredTika()
+    public static function getConfiguredTika(): AbstractService
     {
-        $tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
-        return static::getTika($tikaConfiguration['extractor'], $tikaConfiguration);
+        $tikaConfiguration = Util::getTikaExtensionConfiguration();
+        return static::getTika($tikaConfiguration['extractor'], Util::getTikaExtensionConfiguration());
     }
-
 }

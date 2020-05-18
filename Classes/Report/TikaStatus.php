@@ -25,8 +25,12 @@ namespace ApacheSolrForTypo3\Tika\Report;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Solr\ConnectionManager;
+use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Util;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
+use Exception;
+use Psr\Log\LoggerAwareTrait;
 use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -38,11 +42,10 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  * Provides a status report about whether Tika is properly configured
  *
  * @author Ingo Renner <ingo@typo3.org>
- * @package TYPO3
- * @subpackage tika
  */
 class TikaStatus implements StatusProviderInterface
 {
+    use LoggerAwareTrait;
 
     /**
      * EXT:tika configuration.
@@ -51,20 +54,21 @@ class TikaStatus implements StatusProviderInterface
      */
     protected $tikaConfiguration = [];
 
-
     /**
      * Constructor, reads the extension's configuration
-     *
+     * @param array|null $extensionConfiguration
      */
-    public function __construct()
+    public function __construct(array $extensionConfiguration = null)
     {
-        $this->tikaConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $this->tikaConfiguration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
     }
 
     /**
      * Checks whether Tika is properly configured
      *
      * TODO Check whether EXT:tika is installed AFTER EXT:solr
+     * @throws Exception
+     * @noinspection PhpUnused
      */
     public function getStatus()
     {
@@ -95,6 +99,7 @@ class TikaStatus implements StatusProviderInterface
      * Creates a configuration OK status.
      *
      * @return Status
+     * @noinspection PhpIncompatibleReturnTypeInspection
      */
     protected function getOkStatus()
     {
@@ -108,10 +113,11 @@ class TikaStatus implements StatusProviderInterface
      * Creates a system status report status checking whether Java is installed.
      *
      * @param integer $severity
-     * @return \TYPO3\CMS\Reports\Status
+     * @return Status
      */
     protected function getJavaInstalledStatus($severity = Status::ERROR)
     {
+        /* @var Status $status */
         $status = GeneralUtility::makeInstance(Status::class,
             'Apache Tika',
             'Java OK'
@@ -153,6 +159,7 @@ class TikaStatus implements StatusProviderInterface
      * Checks configuration for use with Tika server jar
      *
      * @return Status
+     * @throws Exception
      */
     protected function getServerConfigurationStatus()
     {
@@ -196,11 +203,10 @@ class TikaStatus implements StatusProviderInterface
             if (!is_null($extractedContent) && !empty($extractedMetadata)) {
                 $solrCellConfigurationOk = true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->writeDevLog(
                 'Exception while trying to extract file content',
                 'tika',
-                3,
                 [
                     'configuration' => $this->tikaConfiguration,
                     'exception' => $e,
@@ -221,7 +227,7 @@ class TikaStatus implements StatusProviderInterface
     }
 
     /**
-     * @return \ApacheSolrForTypo3\Solr\System\Solr\SolrConnection
+     * @return SolrConnection
      */
     protected function getSolrConnectionFromTikaConfiguration()
     {
@@ -240,11 +246,12 @@ class TikaStatus implements StatusProviderInterface
     }
 
     /**
-     * @return \ApacheSolrForTypo3\Tika\Service\Tika\ServerService
+     * @return ServerService
+     * @noinspection PhpIncompatibleReturnTypeInspection
      */
     protected function getTikaServiceFromTikaConfiguration()
     {
-        return $tikaServer = GeneralUtility::makeInstance(
+        return GeneralUtility::makeInstance(
             ServerService::class,
             $this->tikaConfiguration
         );
@@ -276,11 +283,16 @@ class TikaStatus implements StatusProviderInterface
      *
      * @param string $message message
      * @param string $extKey extension key
-     * @param int $severity severity
      * @param array $data data
      */
-    protected function writeDevLog($message, $extKey, $severity = 0, $data = [])
+    protected function writeDevLog($message, $extKey, $data = [])
     {
-        GeneralUtility::devLog($message, $extKey, $severity, $data);
+        $this->logger->debug(
+            $message,
+            [
+                'extension' => $extKey,
+                'data' => $data
+            ]
+        );
     }
 }

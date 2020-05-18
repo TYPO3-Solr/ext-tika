@@ -3,8 +3,11 @@ namespace ApacheSolrForTypo3\Tika\ContextMenu;
 
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
 use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class Preview extends AbstractProvider{
+class Preview extends AbstractProvider
+{
 
     protected $itemsConfiguration = [
         'tika_preview' => [
@@ -32,7 +35,7 @@ class Preview extends AbstractProvider{
             return false;
         }
 
-        $resourceFactory = \TYPO3\CMS\Core\Resource\ResourceFactory::getInstance();
+        $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
         $item = $resourceFactory->retrieveFileOrFolderObject($this->identifier);
 
         // we only handle files, no folders

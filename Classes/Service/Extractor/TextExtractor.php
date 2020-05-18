@@ -24,12 +24,10 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-if (version_compare(TYPO3_branch, '7.2', '<')) {
-    include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tika') . 'Resources/Php/TextExtractorInterface.php');
-}
-
 use ApacheSolrForTypo3\Tika\Service\File\SizeValidator;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use ApacheSolrForTypo3\Tika\Util;
+use Exception;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -75,14 +73,18 @@ class TextExtractor implements TextExtractorInterface
         'zip'
     ];
 
+    /**
+     * @var SizeValidator
+     */
+    private $fileSizeValidator;
+
 
     /**
      * Constructor
-     *
      */
     public function __construct()
     {
-        $this->configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tika']);
+        $this->configuration = Util::getTikaExtensionConfiguration();
         $this->fileSizeValidator = GeneralUtility::makeInstance(SizeValidator::class);
     }
 
@@ -105,6 +107,7 @@ class TextExtractor implements TextExtractorInterface
      *
      * @param FileInterface $file
      * @return string Text extracted from the input file
+     * @throws Exception
      */
     public function extractText(FileInterface $file)
     {

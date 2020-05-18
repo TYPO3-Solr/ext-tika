@@ -29,9 +29,8 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend;
 use ApacheSolrForTypo3\Tika\Controller\Backend\PreviewController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
+use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 
@@ -42,16 +41,18 @@ class PreviewControllerTest extends UnitTestCase {
      */
     public function previewActionTriggersTikaServices()
     {
-            /** @var $controller PreviewController */
+        /** @var $controller PreviewController */
         $controller = $this->getMockBuilder(PreviewController::class)->setMethods([
-            'getFileResourceFactory', 'getInitializedPreviewView', 'getConfiguredTikaService', 'getIsAdmin'
+            'getFileResourceFactory',
+            'getInitializedPreviewView',
+            'getConfiguredTikaService',
+            'getIsAdmin'
         ])->getMock();
 
         $fileMock = $this->getMockBuilder(FileInterface::class)->getMock();
-        $fileResourceFactoryMock = $this->getMockBuilder(ResourceFactory::class)->getMock();
+        $fileResourceFactoryMock = $this->getMockBuilder(ResourceFactory::class)->disableOriginalConstructor()->getMock();
         $fileResourceFactoryMock->expects($this->once())->method('getFileObjectFromCombinedIdentifier')->willReturn($fileMock);
         $controller->expects($this->once())->method('getFileResourceFactory')->willReturn($fileResourceFactoryMock);
-
 
         $serviceMock = $this->getMockBuilder(ServerService::class)->disableOriginalConstructor()->getMock();
         $serviceMock->expects($this->once())->method('extractText')->with($fileMock)->willReturn('Extracted Text');
@@ -63,12 +64,7 @@ class PreviewControllerTest extends UnitTestCase {
 
 
         $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
-
-        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
-        $bodyMock = $this->getMockBuilder(StreamInterface::class)->getMock();
-        $response->expects($this->once())->method('getBody')->willReturn($bodyMock);
-
-        $controller->previewAction($request, $response);
+        $controller->previewAction($request);
     }
 
     /**
@@ -78,17 +74,18 @@ class PreviewControllerTest extends UnitTestCase {
     {
         /** @var $controller PreviewController */
         $controller = $this->getMockBuilder(PreviewController::class)->setMethods([
-            'getFileResourceFactory', 'getInitializedPreviewView', 'getConfiguredTikaService', 'getIsAdmin'
+            'getFileResourceFactory',
+            'getInitializedPreviewView',
+            'getConfiguredTikaService',
+            'getIsAdmin'
         ])->getMock();
         $controller->expects($this->once())->method('getIsAdmin')->willReturn(false);
 
         $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
 
-        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
-        $bodyMock = $this->getMockBuilder(StreamInterface::class)->getMock();
-        $bodyMock->expects($this->once())->method('write')->with('Only admins can see the tika preview');
-        $response->expects($this->once())->method('getBody')->willReturn($bodyMock);
-
-        $controller->previewAction($request, $response);
+        /* @var Response $response */
+        $response = $controller->previewAction($request);
+        $this->assertEquals(403, $response->getStatusCode(), 'Non admin BE users do not get 403.');
+        $this->assertEquals('Only admins can see the tika preview', $response->getBody(), 'Non admin user do not get proper forbidden message.');
     }
 }

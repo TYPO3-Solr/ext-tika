@@ -24,13 +24,20 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Util;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Index\MetaDataRepository;
+use TYPO3\CMS\Core\Resource\MetaDataAspect;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use function getenv;
 
 
 /**
@@ -39,6 +46,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 {
+
+    /**
+     * @var array
+     */
+    protected $configurationToUseInTestInstance = [
+        'SYS' =>  [
+            'exceptionalErrors' =>  E_WARNING | E_RECOVERABLE_ERROR | E_DEPRECATED | E_USER_DEPRECATED
+        ]
+    ];
 
     /**
      * @var array A backup of registered singleton instances
@@ -83,6 +99,21 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         'typo3conf/ext/tika'
     ];
 
+    /**
+     * Avoid serialization of some properties containing objects
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        $objectVars = parent::__sleep();
+        unset(
+            $objectVars['documentsStorageMock'],
+            $objectVars['languagesStorageMock']
+        );
+        return $objectVars;
+    }
+
     protected function setUp()
     {
         parent::setUp();
@@ -91,21 +122,33 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         // Disable xml2array cache used by ResourceFactory
         GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
             'cache_hash' => [
-                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class
             ],
             'cache_runtime' => [
-                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class
             ]
         ]);
 
         $this->setUpDocumentsStorageMock();
         $this->setUpLanguagesStorageMock();
 
-        $mockedMetaDataRepository = $this->getMockBuilder(MetaDataRepository::class)->getMock();
+        $metaDataRepositoryConstructorArgs = [];
+
+        if (Util::getIsTYPO3VersionAbove9()) {
+            /** @noinspection PhpFullyQualifiedNameUsageInspection */
+            $metaDataRepositoryConstructorArgs = [
+                GeneralUtility::makeInstance(\TYPO3\CMS\Core\EventDispatcher\EventDispatcher::class)
+            ];
+        }
+
+        /* @var MetaDataRepository|MockObject $mockedMetaDataRepository */
+        $mockedMetaDataRepository = $this->getMockBuilder(MetaDataRepository::class)
+            ->setConstructorArgs($metaDataRepositoryConstructorArgs)
+            ->getMock();
         $mockedMetaDataRepository
-            ->expects($this->any())
+            ->expects(self::any())
             ->method('findByFile')
             ->will($this->returnValue(['file' => 1]));
         GeneralUtility::setSingletonInstance(MetaDataRepository::class, $mockedMetaDataRepository);
@@ -138,7 +181,12 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             ->setMethods(['getUid'])
             ->setConstructorArgs([$documentsDriver, $documentsStorageRecord])
             ->getMock();
-        $this->documentsStorageMock->expects($this->any())->method('getUid')->will($this->returnValue($this->documentsStorageUid));
+
+        $this->documentsStorageMock
+            ->expects(self::any())->method('getUid')
+            ->will(
+                $this->returnValue($this->documentsStorageUid)
+            );
     }
 
     protected function setUpLanguagesStorageMock()
@@ -168,7 +216,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             ->setMethods(['getUid'])
             ->setConstructorArgs([$languagesDriver, $languagesStorageRecord])
             ->getMock();
-        $this->languagesStorageMock->expects($this->any())
+        $this->languagesStorageMock->expects(self::any())
             ->method('getUid')
             ->will($this->returnValue($this->languagesStorageUid));
     }
@@ -184,17 +232,17 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      *
      * @param array $driverConfiguration
      * @param array $mockedDriverMethods
-     * @return \TYPO3\CMS\Core\Resource\Driver\LocalDriver
+     * @return LocalDriver
      */
     protected function createDriverFixture(
         array $driverConfiguration = [],
         $mockedDriverMethods = []
     ) {
-        /** @var \TYPO3\CMS\Core\Resource\Driver\LocalDriver $driver */
+        /** @var LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
         $driver = $this->getAccessibleMock(LocalDriver::class,
             $mockedDriverMethods, [$driverConfiguration]);
-        $driver->expects($this->any())
+        $driver->expects(self::any())
             ->method('isPathValid')
             ->will(
                 $this->returnValue(true)
@@ -237,25 +285,62 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected function getConfiguration()
     {
-        $tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.10';
-        $tikaPath = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : '/opt/tika';
+        $tikaVersion = getenv('TIKA_VERSION') ?: '1.24.1';
+        $tikaPath = getenv('TIKA_PATH') ?: '/opt/tika';
+
+        $envVarNamePrefix = 'TESTING_TIKA_';
 
         return [
             'extractor' => '',
             'logging' => 0,
 
-            'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
+            'tikaPath' => getenv($envVarNamePrefix . 'APP_JAR_PATH') ?: "$tikaPath/tika-app-$tikaVersion.jar",
 
-            'tikaServerPath' => "$tikaPath/tika-server-$tikaVersion.jar",
-            'tikaServerScheme' => 'http',
-            'tikaServerHost' => 'localhost',
-            'tikaServerPort' => '9998',
+            'tikaServerPath' => getenv($envVarNamePrefix . 'SERVER_JAR_PATH') ?: "$tikaPath/tika-server-$tikaVersion.jar",
+            'tikaServerScheme' => getenv($envVarNamePrefix . 'SERVER_SCHEME') ?: 'http',
+            'tikaServerHost' => getenv($envVarNamePrefix . 'SERVER_HOST') ?: 'localhost',
+            'tikaServerPort' => getenv($envVarNamePrefix . 'SERVER_PORT') ?: '9998',
 
-            'solrScheme' => 'http',
-            'solrHost' => 'localhost',
-            'solrPort' => '8080',
-            'solrPath' => '/solr/',
+            'solrScheme' => getenv('TESTING_SOLR_SCHEME') ?: 'http',
+            'solrHost' => getenv('TESTING_SOLR_HOST') ?: 'localhost',
+            'solrPort' => getenv('TESTING_SOLR_PORT') ?: 8999,
+            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/core_en'
         ];
+    }
+
+    /**
+     * @param array $fileData
+     * @param ResourceStorage|null $storage
+     * @param array $metaData
+     * @return MockObject|File
+     */
+    protected function getMockedFileInstance(
+        array $fileData,
+        ResourceStorage $storage = null,
+        array $metaData = []
+    ) {
+        if (Util::getIsTYPO3VersionBelow10()) {
+            return new File($fileData, $storage ?: $this->documentsStorageMock, $metaData);
+        }
+
+        $fileMock = $this->getMockBuilder(File::class)
+            ->setConstructorArgs([
+                $fileData,
+                $storage ?? $this->documentsStorageMock,
+                $metaData
+            ])
+            ->setMethods(['getMetaData'])
+            ->getMock();
+
+        $metaDataAspectMock = $this->getMockBuilder(MetaDataAspect::class)
+            ->setConstructorArgs([$fileMock])
+            ->setMethods(['get'])
+            ->getMock();
+        $metaDataAspectMock->expects(self::any())->method('get')->willReturn($metaData);
+
+        $fileMock->expects(self::any())->method('getMetaData')->willReturn($metaDataAspectMock);
+
+        return $fileMock;
     }
 
 }

@@ -9,15 +9,15 @@ EXTENSION_ROOTPATH="$SCRIPTPATH/../../"
 #
 
 if [[ $* == *--local* ]]; then
-    echo -n "Choose a TYPO3 Version (e.g. dev-master,~6.2.17,~7.6.2): "
+    echo -n "Choose a TYPO3 Version (e.g. dev-master, ^9.5.16, ^10.4.2): "
     read typo3Version
     export TYPO3_VERSION=$typo3Version
 
-    echo -n "Choose a EXT:solr Version (e.g. dev-master,~3.1.1): "
+    echo -n "Choose a EXT:solr Version (e.g. dev-master, dev-release-11.0.x): "
     read extSolrVersion
     export EXT_SOLR_VERSION=$extSolrVersion
 
-    echo -n "Choose a tika Version (e.g. 1.15): "
+    echo -n "Choose a tika Version (e.g. 1.24.1): "
     read tikaVersion
     export TIKA_VERSION=$tikaVersion
 
@@ -63,11 +63,13 @@ fi
 if [ ! -d "$TIKA_PATH" ]; then
 	mkdir -p "$TIKA_PATH"
 fi
+
 if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
 	wget "http://apache.osuosl.org/tika/tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
 else
 	echo "Cached $TIKA_PATH/tika-app-$TIKA_VERSION.jar present"
 fi
+
 if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
 	wget "http://apache.osuosl.org/tika/tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
 else
@@ -96,8 +98,6 @@ echo "Using extension path $EXTENSION_ROOTPATH"
 echo "Using package path $TYPO3_PATH_PACKAGES"
 echo "Using web path $TYPO3_PATH_WEB"
 
-composer global require scrutinizer/ocular:"1.5.2"
-
 if [[ $TYPO3_VERSION = *"dev"* ]]; then
     composer config minimum-stability dev
 fi
@@ -106,17 +106,23 @@ if [[ $TYPO3_VERSION = *"master"* ]]; then
     TYPO3_MASTER_DEPENDENCIES='nimut/testing-framework:dev-master'
 fi
 
-composer require --dev --update-with-dependencies --prefer-source typo3/cms-core:"$TYPO3_VERSION" typo3/cms-backend:"$TYPO3_VERSION" typo3/cms-fluid:"$TYPO3_VERSION" typo3/cms-frontend:"$TYPO3_VERSION" typo3/cms-extbase:"$TYPO3_VERSION" typo3/cms-reports:"$TYPO3_VERSION" typo3/cms-scheduler:"$TYPO3_VERSION" typo3/cms-tstemplate:"$TYPO3_VERSION" $TYPO3_MASTER_DEPENDENCIES
-
-composer require apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
-
-# Restore composer.json
-git checkout composer.json
+composer require --dev --update-with-dependencies --prefer-source \
+  typo3/cms-core:"$TYPO3_VERSION" \
+  typo3/cms-backend:"$TYPO3_VERSION" \
+  typo3/cms-fluid:"$TYPO3_VERSION" \
+  typo3/cms-frontend:"$TYPO3_VERSION" \
+  typo3/cms-extbase:"$TYPO3_VERSION" \
+  typo3/cms-reports:"$TYPO3_VERSION" \
+  typo3/cms-scheduler:"$TYPO3_VERSION" \
+  apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION" \
+  typo3/cms-tstemplate:"$TYPO3_VERSION" $TYPO3_MASTER_DEPENDENCIES
 
 export TYPO3_PATH_WEB=$PWD/.Build/Web
 
 mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp
 
 # Setup Solr using install script
-chmod u+x ${TYPO3_PATH_WEB}/typo3conf/ext/solr/Resources/Private/Install/install-solr.sh
-${TYPO3_PATH_WEB}/typo3conf/ext/solr/Resources/Private/Install/install-solr.sh -d "$HOME/solr" -t
+if [[ $* != *--skip-solr-install* ]]; then
+    chmod u+x ${TYPO3_PATH_WEB}/typo3conf/ext/solr/Resources/Private/Install/install-solr.sh
+    ${TYPO3_PATH_WEB}/typo3conf/ext/solr/Resources/Private/Install/install-solr.sh -d "$HOME/solr" -t
+fi

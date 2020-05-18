@@ -26,6 +26,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
+use Exception;
 use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
@@ -54,6 +55,7 @@ class ServerService extends AbstractService
      * Service initialization
      *
      * @return void
+     * @noinspection PhpUnused
      */
     protected function initializeService()
     {
@@ -75,13 +77,12 @@ class ServerService extends AbstractService
      * Initializes a Tika server process.
      *
      * @param string $arguments
-     * @return \ApacheSolrForTypo3\Tika\Process
+     * @return Process
+     * @noinspection PhpIncompatibleReturnTypeInspection
      */
     protected function getProcess($arguments = '')
     {
-        $process = GeneralUtility::makeInstance(Process::class, CommandUtility::getCommand('java'), $arguments);
-
-        return $process;
+        return GeneralUtility::makeInstance(Process::class, CommandUtility::getCommand('java'), $arguments);
     }
 
     /**
@@ -169,15 +170,14 @@ class ServerService extends AbstractService
      * Ping the Tika server
      *
      * @return bool true if the Tika server can be reached, false if not
-     * @throws \Exception
+     * @throws Exception
      */
     public function ping()
     {
         try {
             $tikaPing = $this->queryTika('/tika');
-            $tikaReachable = GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server');
-            return $tikaReachable;
-        } catch (\Exception $e) {
+            return GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server');
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -186,6 +186,7 @@ class ServerService extends AbstractService
      * The tika server is available when the server is pingable.
      *
      * @return bool
+     * @throws Exception
      */
     public function isAvailable()
     {
@@ -206,7 +207,7 @@ class ServerService extends AbstractService
      * Gets the Tika server version
      *
      * @return string Tika server version string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTikaVersion()
     {
@@ -225,7 +226,7 @@ class ServerService extends AbstractService
      * @param string $endpoint
      * @param resource $context optional stream context
      * @return string Tika output
-     * @throws \Exception
+     * @throws Exception
      */
     protected function queryTika($endpoint, $context = null)
     {
@@ -235,7 +236,7 @@ class ServerService extends AbstractService
         $tikaOutput = '';
         try {
             $tikaOutput = file_get_contents($url, false, $context);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             if (strpos($message, 'Connection refused') === false && strpos($message, 'HTTP request failed') === false) {
                 // If the server is simply not available it would say Connection refused
@@ -250,8 +251,9 @@ class ServerService extends AbstractService
     /**
      * Takes a file reference and extracts the text from it.
      *
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param FileInterface $file
      * @return string
+     * @throws Exception
      */
     public function extractText(FileInterface $file)
     {
@@ -273,33 +275,48 @@ class ServerService extends AbstractService
     /**
      * Takes a file reference and extracts its meta data.
      *
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
-     * @return array
+     * @param FileInterface $file
+     * @return array|null
+     * @throws Exception
      */
-    public function extractMetaData(FileInterface $file)
+    public function extractMetaData(FileInterface $file): ?array
     {
-        $headers = [$this->getUserAgent(), 'Accept: application/json', 'Content-Type: application/octet-stream', 'Connection: close'];
+        $headers = [
+            $this->getUserAgent(),
+            'Accept: application/json',
+            'Content-Type: application/octet-stream',
+            'Connection: close'
+        ];
 
-        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'PUT', 'header' => implode(CRLF, $headers), 'content' => $file->getContents()]]);
+        $context = stream_context_create(
+            [
+                'http' => [
+                    'protocol_version' => 1.1,
+                    'method' => 'PUT',
+                    'header' => implode(CRLF, $headers),
+                    'content' => $file->getContents()
+                ]
+            ]
+        );
 
         $rawResponse = $this->queryTika('/meta', $context);
-        $response = (array)json_decode($rawResponse);
+        $response = json_decode($rawResponse, true);
 
-        if ($response === FALSE) {
-            $this->log('Meta Data Extraction using Tika Server failed', $this->getLogData($file, $response), 2);
-        } else {
-            $this->log('Meta Data Extraction using Tika Server', $this->getLogData($file, $response));
+        if (!is_array($response)) {
+            $this->log('Meta Data Extraction using Tika Server failed', $this->getLogData($file, $rawResponse), 2);
+            return [];
         }
 
-
+        $this->log('Meta Data Extraction using Tika Server', $this->getLogData($file, $rawResponse));
         return $response;
     }
 
     /**
      * Takes a file reference and detects its content's language.
      *
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param FileInterface $file
      * @return string Language ISO code
+     * @throws Exception
      */
     public function detectLanguageFromFile(FileInterface $file)
     {
@@ -323,6 +340,7 @@ class ServerService extends AbstractService
      *
      * @param string $input
      * @return string Language ISO code
+     * @throws Exception
      */
     public function detectLanguageFromString($input)
     {
@@ -330,13 +348,12 @@ class ServerService extends AbstractService
 
         $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'PUT', 'header' => implode(CRLF, $headers), 'content' => $input]]);
 
-        $response = $this->queryTika('/language/string', $context);
-
-        return $response;
+        return $this->queryTika('/language/string', $context);
     }
 
     /**
      * @return array
+     * @throws Exception
      */
     public function getSupportedMimeTypes()
     {
@@ -351,19 +368,26 @@ class ServerService extends AbstractService
 
     /**
      * @return string
+     * @throws Exception
      */
     protected function getMimeTypeJsonFromTikaServer()
     {
         $headers = [$this->getUserAgent(), 'Content-Type: application/octet-stream', 'Accept: application/json', 'Connection: close'];
 
-        $context = stream_context_create(['http' => ['protocol_version' => 1.1, 'method' => 'GET', 'header' => implode(CRLF, $headers),]]);
+        $context = stream_context_create([
+            'http' => [
+                'protocol_version' => 1.1,
+                'method' => 'GET',
+                'header' => implode(CRLF, $headers)
+            ]
+        ]);
 
-        $response = $this->queryTika('/mime-types', $context);
-        return $response;
+        return $this->queryTika('/mime-types', $context);
     }
 
     /**
      * @return array
+     * @throws Exception
      */
     protected function buildSupportedMimeTypes()
     {
@@ -395,13 +419,17 @@ class ServerService extends AbstractService
     }
 
     /**
-     * @param \TYPO3\CMS\Core\Resource\FileInterface $file
+     * @param FileInterface $file
      * @param string $response
      * @return array
      */
     protected function getLogData($file, $response)
     {
-        $logData = ['file' => $file->getName(), 'file_path' => $file->getPublicUrl(), 'tika_url' => $this->getTikaServerUrl(), 'response' => $response];
-        return $logData;
+        return [
+            'file' => $file->getName(),
+            'file_path' => $file->getPublicUrl(),
+            'tika_url' => $this->getTikaServerUrl(),
+            'response' => $response
+        ];
     }
 }
