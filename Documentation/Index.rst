@@ -96,7 +96,7 @@ you can do the following:
 
 Create the file :file:`/etc/tika/tika-config.xml` with this content:
 
-.. highlight:: xml
+.. code-block:: xml
 
    <?xml version="1.0" encoding="UTF-8"?>
    <properties>
@@ -115,7 +115,7 @@ who does basically nothing.
 
 Then add one line to :file:`/etc/security/pam_env.con`:
 
-.. highlight:: bash
+.. code-block:: bash
 
    TIKA_CONFIG     DEFAULT="/etc/tika/tika-config.xml"
 
