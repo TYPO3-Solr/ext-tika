@@ -1,26 +1,31 @@
 language: php
 
+services:
+  - mysql
+
 php:
   - 7.0
   - 7.1
+  - 7.2
+
+jdk:
+  - openjdk8
 
 env:
   global:
-    - TIKA_VERSION="1.18"
+    - TIKA_VERSION="1.24.1"
     - TIKA_PATH=$HOME/tika
-    - EXT_SOLR_VERSION="8.1.1"
+    - EXT_SOLR_VERSION="dev-release-8.1.x"
     - TYPO3_DATABASE_NAME="typo3_ci"
     - TYPO3_DATABASE_HOST="127.0.0.1"
     - TYPO3_DATABASE_USERNAME="root"
     - TYPO3_DATABASE_PASSWORD=""
   matrix:
     - TYPO3_VERSION="^8.7"
-    - TYPO3_VERSION="dev-master"
+    - TYPO3_VERSION="dev-8.7"
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - env: TYPO3_VERSION="dev-master"
 
 before_install:
   - composer self-update

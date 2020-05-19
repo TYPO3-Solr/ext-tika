@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Index\MetaDataRepository;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
@@ -394,4 +393,19 @@ class ServerServiceTest extends FunctionalTestCase
         $this->assertTrue($pingResult, 'Could not ping tika server');
     }
 
+    /**
+     * Avoid serialization of some properties containing objects
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        $objectVars = parent::__sleep();
+        unset(
+            $objectVars['languagesStorageMock'],
+            $objectVars['documentsStorageMock']
+        );
+
+        return $objectVars;
+    }
 }
