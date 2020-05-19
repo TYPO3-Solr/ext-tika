@@ -46,6 +46,11 @@ if [ -z $TIKA_VERSION ]; then
 	exit 1
 fi
 
+if [ -z $EXT_SOLR_VERSION ]; then
+	echo "Must set env var EXT_SOLR_VERSION"
+	exit 1
+fi
+
 if [ -z $TYPO3_VERSION ]; then
 	echo "Must set env var TYPO3_VERSION"
 	exit 1
@@ -57,19 +62,22 @@ if [ $? -ne "0" ]; then
 	exit 1
 fi
 
-
+if ! java -version 2>&1 >/dev/null ; then
+  echo "Java is not available, please make sure the test environment has Java installed."
+  exit 1
+fi
 
 # download Tika if not present
 if [ ! -d "$TIKA_PATH" ]; then
 	mkdir -p "$TIKA_PATH"
 fi
 if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
-	wget "http://apache.osuosl.org/tika/tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
+	wget "https://archive.apache.org/dist/tika/tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
 else
 	echo "Cached $TIKA_PATH/tika-app-$TIKA_VERSION.jar present"
 fi
 if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
-	wget "http://apache.osuosl.org/tika/tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
+	wget "https://archive.apache.org/dist/tika/tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
 else
 	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
 fi
@@ -83,9 +91,17 @@ fi
 
 # start tika server
 echo "Starting Apache Tika"
-TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
-echo $TIKA_PID > tika_pid
-echo "Tika pid: $TIKA_PID"
+TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > tika_log 2>&1 & echo $!`
+
+# check if Tika process is really running
+if ps -p "$TIKA_PID" > /dev/null
+then
+	echo $TIKA_PID > tika_pid
+	echo "Tika pid: $TIKA_PID"
+else
+  echo "Tika start failure"
+	cat tika_log
+fi
 
 echo "PWD: $(pwd)"
 
@@ -96,12 +112,9 @@ echo "Using extension path $EXTENSION_ROOTPATH"
 echo "Using package path $TYPO3_PATH_PACKAGES"
 echo "Using web path $TYPO3_PATH_WEB"
 
-composer global require scrutinizer/ocular:"1.3.1"
-composer require --dev typo3/cms="$TYPO3_VERSION"
-composer require apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
-
-# Restore composer.json
-git checkout composer.json
+composer global require --update-with-dependencies scrutinizer/ocular:"^1.7"
+composer require --dev --update-with-dependencies --prefer-source \
+  apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
 
 export TYPO3_PATH_WEB=$PWD/.Build/Web
 
