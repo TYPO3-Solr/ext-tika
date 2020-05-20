@@ -112,7 +112,6 @@ echo "Using extension path $EXTENSION_ROOTPATH"
 echo "Using package path $TYPO3_PATH_PACKAGES"
 echo "Using web path $TYPO3_PATH_WEB"
 
-composer global require --update-with-dependencies scrutinizer/ocular:"^1.7"
 composer require --dev --update-with-dependencies --prefer-source \
   apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
 
