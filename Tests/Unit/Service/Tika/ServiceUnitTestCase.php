@@ -25,8 +25,10 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Index\MetaDataRepository;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -123,6 +125,7 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         ];
 
         $this->documentsStorageMock = $this->getMockBuilder(ResourceStorage::class)
+            ->disableOriginalConstructor()
             ->setMethods(['getUid'])
             ->setConstructorArgs([$documentsDriver, $documentsStorageRecord])
             ->getMock();
@@ -153,18 +156,13 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         ];
 
         $this->languagesStorageMock = $this->getMockBuilder(ResourceStorage::class)
+            ->disableOriginalConstructor()
             ->setMethods(['getUid'])
             ->setConstructorArgs([$languagesDriver, $languagesStorageRecord])
             ->getMock();
         $this->languagesStorageMock->expects($this->any())
             ->method('getUid')
             ->will($this->returnValue($this->languagesStorageUid));
-    }
-
-    protected function tearDown()
-    {
-        GeneralUtility::resetSingletonInstances($this->singletonInstances);
-        parent::tearDown();
     }
 
     /**
@@ -246,4 +244,23 @@ abstract class ServiceUnitTestCase extends UnitTestCase
         ];
     }
 
+    /**
+     * @param array $fileData
+     * @param ResourceStorage|null $storage
+     * @param array $metaData
+     * @return MockObject|File
+     */
+    protected function getMockedFileInstance(
+        array $fileData,
+        ResourceStorage $storage = null,
+        array $metaData = []
+    ) {
+        return $this->getMockBuilder(File::class)
+            ->setConstructorArgs([
+                $fileData,
+                $storage ?? $this->documentsStorageMock,
+                $metaData
+            ])
+            ->getMock();
+    }
 }
