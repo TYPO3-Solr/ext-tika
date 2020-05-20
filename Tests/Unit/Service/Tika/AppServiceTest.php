@@ -26,7 +26,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
-use TYPO3\CMS\Core\Resource\File;
 
 
 /**
@@ -58,7 +57,7 @@ class AppServiceTest extends ServiceUnitTestCase
      */
     public function extractTextUsesTParameter()
     {
-        $file = new File(
+        $file = $this->getMockedFileInstance(
             [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
@@ -78,7 +77,7 @@ class AppServiceTest extends ServiceUnitTestCase
     public function extractMetaDataUsesMParameter()
     {
         ExecRecorder::setReturnExecOutput(['foo']);
-        $file = new File(
+        $file = $this->getMockedFileInstance(
             [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
@@ -97,7 +96,7 @@ class AppServiceTest extends ServiceUnitTestCase
      */
     public function detectLanguageFromFileUsesLParameter()
     {
-        $file = new File(
+        $file = $this->getMockedFileInstance(
             [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'

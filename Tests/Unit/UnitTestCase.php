@@ -24,7 +24,12 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Nimut\TestingFramework\TestCase\UnitTestCase as TYPO3UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionClass;
+use ReflectionException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Testcase to check if the status check returns the expected results.
@@ -68,6 +73,7 @@ class UnitTestCase extends TYPO3UnitTestCase
      * and to fake custome behaviour.
      *
      * @param string $className
+     * @return MockObject
      */
     protected function getDumbMock($className)
     {
@@ -78,7 +84,8 @@ class UnitTestCase extends TYPO3UnitTestCase
      * Returns a path for a fixture.
      *
      * @param string $fixtureName
-     * @throws string
+     * @return string
+     * @throws ReflectionException
      */
     protected function getFixturePath($fixtureName)
     {
@@ -89,11 +96,28 @@ class UnitTestCase extends TYPO3UnitTestCase
      * Returns the directory on runtime.
      *
      * @return string
+     * @throws ReflectionException
      */
     protected function getRuntimeDirectory()
     {
-        $rc = new \ReflectionClass(get_class($this));
+        $rc = new ReflectionClass(get_class($this));
         return dirname($rc->getFileName());
     }
 
+    /**
+     *
+     * @param object $instance
+     * @param string $className
+     * @throws ReflectionException
+     */
+    protected function forceReturnGivenInstanceOnGeneralUtilityGetInstance($instance, $className = null)
+    {
+        $className = $className ?: get_class($instance);
+
+        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
+        $reflection->setAccessible(true);
+        $singletonInstances = GeneralUtility::getSingletonInstances();
+        $singletonInstances[$className] = $instance;
+        $reflection->setValue(null, $singletonInstances);
+    }
 }

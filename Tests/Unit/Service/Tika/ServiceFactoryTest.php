@@ -80,8 +80,12 @@ class ServiceFactoryTest extends UnitTestCase
             $this->markTestSkipped('EXT:solr is required for this test, but is not loaded.');
         }
 
+        $solrCellServiceMock = $this->getMockBuilder(SolrCellService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->forceReturnGivenInstanceOnGeneralUtilityGetInstance($solrCellServiceMock, SolrCellService::class);
+
         $extractor = ServiceFactory::getTika('solr', $this->getConfiguration());
-        $this->assertInstanceOf(SolrCellService::class, $extractor);
         $this->assertInstanceOf(SolrCellService::class, $extractor);
     }
 

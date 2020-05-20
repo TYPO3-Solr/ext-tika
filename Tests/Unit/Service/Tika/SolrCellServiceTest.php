@@ -24,6 +24,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use ApacheSolrForTypo3\Solr\ConnectionManager;
 use ApacheSolrForTypo3\Solr\SolrService;
 use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
@@ -31,8 +32,8 @@ use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Prophecy\Argument;
 use Prophecy\Prophet;
 use Solarium\QueryType\Extract\Query;
-use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 /**
@@ -55,17 +56,18 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         }
     }
 
-    protected function tearDown()
-    {
-        $this->verifyMockObjects();
-        parent::tearDown();
-    }
-
     /**
      * @test
      */
     public function newInstancesAreInitializedWithASolrConnection()
     {
+        $connectionManagerMock = $this->createConfiguredMock(ConnectionManager::class,
+            [
+                'getSolrConnectionForNodes' => $this->getDumbMock(SolrConnection::class)
+            ]
+        );
+        GeneralUtility::setSingletonInstance(ConnectionManager::class, $connectionManagerMock);
+
         $service = new SolrCellService($this->getConfiguration());
         $this->assertAttributeInstanceOf(SolrConnection::class, 'solrConnection', $service);
     }
@@ -90,7 +92,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $service = new SolrCellService($this->getConfiguration());
         $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
-        $file = new File(
+        $file = $this->getMockedFileInstance(
             [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'
@@ -116,10 +118,11 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $service = new SolrCellService($this->getConfiguration());
         $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
-        $file = new File([
-            'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc'
-        ],
+        $file = $this->getMockedFileInstance(
+            [
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc'
+            ],
             $this->documentsStorageMock
         );
 
@@ -148,7 +151,7 @@ class SolrCellServiceTest extends ServiceUnitTestCase
         $service = new SolrCellService($this->getConfiguration());
         $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
-        $file = new File(
+        $file = $this->getMockedFileInstance(
             [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc'

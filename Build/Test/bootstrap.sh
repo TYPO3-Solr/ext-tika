@@ -114,6 +114,7 @@ echo "Using package path $TYPO3_PATH_PACKAGES"
 echo "Using web path $TYPO3_PATH_WEB"
 
 composer require --dev --update-with-dependencies --prefer-source \
+  typo3/cms-core:"$TYPO3_VERSION" \
   apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
 
 export TYPO3_PATH_WEB=$PWD/.Build/Web
