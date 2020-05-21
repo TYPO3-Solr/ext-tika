@@ -1,4 +1,24 @@
 =========================================================
+Apache Solr for TYPO3 - Tika Addon version 5.0.1 released
+=========================================================
+
+We are happy to announce version 5.0.1 of EXT:tika.
+
+New in this Release
+-------------------
+
+[BUGFIX] wrong width and height properties taken from EXIF
+  https://github.com/TYPO3-Solr/ext-tika/pull/124
+
+[FEATURE] Tika version 1.24 supported
+  EXT:tika is now tested against version 1.24 of Apache Tika.
+
+Thanks
+------
+
+* Rostyslav Matviyiv
+
+=========================================================
 Apache Solr for TYPO3 - Tika Addon version 5.0.0 released
 =========================================================
 
