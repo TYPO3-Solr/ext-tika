@@ -1,0 +1,157 @@
+=========================================================
+Apache Solr for TYPO3 - Tika Addon version 5.0.1 released
+=========================================================
+
+We are happy to announce version 5.0.1 of EXT:tika.
+
+New in this Release
+-------------------
+
+[BUGFIX] wrong width and height properties taken from EXIF
+  https://github.com/TYPO3-Solr/ext-tika/pull/124
+
+[FEATURE] Tika version 1.24 supported
+  EXT:tika is now tested against version 1.24 of Apache Tika.
+
+Thanks
+------
+
+* Rostyslav Matviyiv
+
+=========================================================
+Apache Solr for TYPO3 - Tika Addon version 5.0.0 released
+=========================================================
+
+We are happy to announce version 5.0.0 of EXT:tika.
+
+New in this Release
+-------------------
+
+This release is a compatibility release for EXT:solr 10.0.0
+
+EXT:solr 10.0.0 support
+^^^^^^^^^^^^^^^^^^^^^^^
+
+EXT:solr 10 support's the configuration of Solr together with your TYPO3 site. Beside that some methods have been marked as deprecated and have been removed from the EXT:solr API.
+This release of tika add's the compatibility for EXT:solr 10.
+
+
+Thanks
+------
+
+Thanks to all contributors
+
+(patches, comments, bug reports, reviews, ... in alphabetical order)
+
+* Timo Hund
+
+Also a big thanks to our partners that have joined the EB2019 program:
+
+* 21TORR GmbH
+* 3m5, Media GmbH
+* Absolut Research GmbH
+* AgenturWebfox GmbH
+* Amedick & Sommer Neue Medien GmbH
+* arndtteunissen GmbH
+* Arrabiata Solutions GmbH
+* artif GmbH & Co. KG
+* Atol Conseils & Développements
+* b13 GmbH
+* bgm business websolutions GmbH & Co KG
+* Bitmotion GmbH
+* BIBUS AG Group
+* Bitmotion GmbH
+* Columbus Interactive GmbH
+* Consulting Piezunka und Schamoni - Information Technologies GmbH
+* cosmoblonde GmbH
+* CS2 AG
+* datamints GmbH
+* Diesel Technic AG
+* Die Medialen GmbH
+* Direction des Systèmes d’Information - Département du Morbihan
+* dörler engineering services
+* E-Magineurs
+* Fachhochschule für öffentliche Verwaltung NRW Zentralverwaltung
+* fixpunkt werbeagentur gmbh
+* Flowd GmbH
+* Frequentis Comsoft GmbH
+* GAYA - La Nouvelle Agence
+* Gernot Leitgab
+* Getdesigned GmbH
+* .hausformat GmbH
+* Haute école de travail social et de la santé - EESP
+* Hirsch & Wölfl GmbH
+* Hochschule Furtwangen
+* Hypo Tirol Bank AG
+* Intera Gesellschaft für Software-Entwicklung mbH
+* interactive tools GmbH - Agentur für digitale Medien
+* internezzo ag
+* iresults gmbh
+* ITK Rheinland
+* LOUIS INTERNET GmbH
+* Kassenärztliche Vereinigung Bayerns (KZVB)
+* KONVERTO AG
+* kraftwerk Agentur für neue Kommunikation GmbH
+* Landesinstitut für Schule und Medien Berlin-Brandenburg
+* Libéo
+* LINGNER CONSULTING NEW MEDIA GMBH
+* MaxServ B.V.
+* McLicense GmbH
+* MeinEinkauf AG
+* NEW.EGO GmbH
+* medien.de mde GmbH
+* mehrwert intermediale kommunikation GmbH
+* mellowmessage GmbH
+* mentronic . Digitale Kommunikation
+* MOSAIQ GmbH
+* pietzpluswild GmbH
+* plan2net GmbH
+* plan.net - agence conseil en stratégies digitales
+* Proud Nerds
+* +Pluswerk AG
+* punkt.de GmbH
+* Redkiwi
+* ressourcenmangel dresden GmbH
+* rrdata
+* RKW Rationalisierungs- und Innovationszentrum der Deutschen Wirtschaft e.V.
+* Site’nGo
+* SIWA Online GmbH
+* Stadt Wien - Wiener Wohnen Kundenservice GmbH
+* Stadtverwaltung Villingen-Schwenningen
+* Stefan Galinski Internetdienstleistungen
+* Studio Mitte Digital Media GmbH
+* TOUMORO
+* Ueberbit Gmbh
+* WACON Internet GmbH
+* webconsulting business services gmbh
+* webschuppen GmbH
+* Webstobe GmbH
+* webit! Gesellschaft für neue Medien mbH
+* wegewerk GmbH
+* werkraum Digitalmanufaktur GmbH
+* XIMA MEDIA GmbH
+
+Special thanks to our premium EB 2019 partners:
+
+* jweiland.net
+* sitegeist media solutions GmbH
+
+Thanks to everyone who helped in creating this release!
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+* Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+* Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+* Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+* Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us in 2019 by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/
+
+or call:
+
++49 (0)69 - 2475218 0
