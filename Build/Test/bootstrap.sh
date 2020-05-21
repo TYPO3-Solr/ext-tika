@@ -9,33 +9,33 @@ EXTENSION_ROOTPATH="$SCRIPTPATH/../../"
 #
 
 if [[ $* == *--local* ]]; then
-    echo -n "Choose a TYPO3 Version (e.g. dev-master,~6.2.17,~7.6.2): "
-    read typo3Version
-    export TYPO3_VERSION=$typo3Version
+	echo -n "Choose a TYPO3 Version (e.g. dev-master,~6.2.17,~7.6.2): "
+	read typo3Version
+	export TYPO3_VERSION=$typo3Version
 
-    echo -n "Choose a EXT:solr Version (e.g. dev-master,~3.1.1): "
-    read extSolrVersion
-    export EXT_SOLR_VERSION=$extSolrVersion
+	echo -n "Choose a EXT:solr Version (e.g. dev-master,~3.1.1): "
+	read extSolrVersion
+	export EXT_SOLR_VERSION=$extSolrVersion
 
-    echo -n "Choose a tika Version (e.g. 1.15): "
-    read tikaVersion
-    export TIKA_VERSION=$tikaVersion
+	echo -n "Choose a tika Version (e.g. 1.15): "
+	read tikaVersion
+	export TIKA_VERSION=$tikaVersion
 
-    echo -n "Choose a database hostname: "
-    read typo3DbHost
-    export TYPO3_DATABASE_HOST=$typo3DbHost
+	echo -n "Choose a database hostname: "
+	read typo3DbHost
+	export TYPO3_DATABASE_HOST=$typo3DbHost
 
-    echo -n "Choose a database name: "
-    read typo3DbName
-    export TYPO3_DATABASE_NAME=$typo3DbName
+	echo -n "Choose a database name: "
+	read typo3DbName
+	export TYPO3_DATABASE_NAME=$typo3DbName
 
-    echo -n "Choose a database user: "
-    read typo3DbUser
-    export TYPO3_DATABASE_USERNAME=$typo3DbUser
+	echo -n "Choose a database user: "
+	read typo3DbUser
+	export TYPO3_DATABASE_USERNAME=$typo3DbUser
 
-    echo -n "Choose a database password: "
-    read typo3DbPassword
-    export TYPO3_DATABASE_PASSWORD=$typo3DbPassword
+	echo -n "Choose a database password: "
+	read typo3DbPassword
+	export TYPO3_DATABASE_PASSWORD=$typo3DbPassword
 fi
 
 test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin"
@@ -43,6 +43,11 @@ test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin"
 
 if [ -z $TIKA_VERSION ]; then
 	echo "Must set env var TIKA_VERSION"
+	exit 1
+fi
+
+if [ -z $EXT_SOLR_VERSION ]; then
+	echo "Must set env var EXT_SOLR_VERSION"
 	exit 1
 fi
 
@@ -57,19 +62,22 @@ if [ $? -ne "0" ]; then
 	exit 1
 fi
 
-
+if ! java -version 2>&1 >/dev/null ; then
+	echo "Java is not available, please make sure the test environment has Java installed."
+	exit 1
+fi
 
 # download Tika if not present
 if [ ! -d "$TIKA_PATH" ]; then
 	mkdir -p "$TIKA_PATH"
 fi
 if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
-	wget "http://apache.osuosl.org/tika/tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
+	wget "https://archive.apache.org/dist/tika/tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
 else
 	echo "Cached $TIKA_PATH/tika-app-$TIKA_VERSION.jar present"
 fi
 if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
-	wget "http://apache.osuosl.org/tika/tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
+	wget "https://archive.apache.org/dist/tika/tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
 else
 	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
 fi
@@ -83,9 +91,18 @@ fi
 
 # start tika server
 echo "Starting Apache Tika"
-TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
-echo $TIKA_PID > tika_pid
-echo "Tika pid: $TIKA_PID"
+TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > tika_log 2>&1 & echo $!`
+
+# check if Tika process is really running
+if ps -p "$TIKA_PID" > /dev/null
+then
+	echo $TIKA_PID > tika_pid
+	echo "Tika pid: $TIKA_PID"
+else
+	echo "Tika start failure"
+	cat tika_log
+	exit 1
+fi
 
 echo "PWD: $(pwd)"
 
@@ -96,22 +113,9 @@ echo "Using extension path $EXTENSION_ROOTPATH"
 echo "Using package path $TYPO3_PATH_PACKAGES"
 echo "Using web path $TYPO3_PATH_WEB"
 
-composer global require scrutinizer/ocular:"1.5.2"
-
-if [[ $TYPO3_VERSION = *"dev"* ]]; then
-    composer config minimum-stability dev
-fi
-
-if [[ $TYPO3_VERSION = *"master"* ]]; then
-    TYPO3_MASTER_DEPENDENCIES='nimut/testing-framework:dev-master'
-fi
-
-composer require --dev --update-with-dependencies --prefer-source typo3/cms-core:"$TYPO3_VERSION" typo3/cms-backend:"$TYPO3_VERSION" typo3/cms-fluid:"$TYPO3_VERSION" typo3/cms-frontend:"$TYPO3_VERSION" typo3/cms-extbase:"$TYPO3_VERSION" typo3/cms-reports:"$TYPO3_VERSION" typo3/cms-scheduler:"$TYPO3_VERSION" typo3/cms-tstemplate:"$TYPO3_VERSION" $TYPO3_MASTER_DEPENDENCIES
-
-composer require apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
-
-# Restore composer.json
-git checkout composer.json
+composer require --dev --update-with-dependencies --prefer-source \
+  typo3/cms-core:"$TYPO3_VERSION" \
+  apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION"
 
 export TYPO3_PATH_WEB=$PWD/.Build/Web
 

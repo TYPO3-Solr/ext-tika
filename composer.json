@@ -24,7 +24,10 @@
     "typo3-ter/tika": "self.version"
   },
   "require": {
-    "typo3/cms-core": ">=9.5.0"
+    "typo3/cms-core": "^9.5.0",
+    "typo3/cms-backend": "*",
+    "typo3/cms-extbase": "*",
+    "typo3/cms-reports": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.0",
