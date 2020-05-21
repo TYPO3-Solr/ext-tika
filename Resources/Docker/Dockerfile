@@ -1,7 +1,7 @@
 FROM ubuntu:trusty
 MAINTAINER ingo@typo3.org
 
-ENV TIKA_VERSION 1.22
+ENV TIKA_VERSION 1.24.1
 
 # install dependencies
 # Java 8 is not available for trusty/14.04
