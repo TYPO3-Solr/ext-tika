@@ -1,0 +1,53 @@
+=========================================================
+Apache Solr for TYPO3 - Tika Addon version 6.0.0 released
+=========================================================
+
+We are happy to announce version 6.0.0 of EXT:tika.
+
+New in this Release
+-------------------
+
+[FEATURE] Allow driver configuration for extractor services
+  https://github.com/TYPO3-Solr/ext-tika/pull/142
+
+To be able to extract data for files from file storages with other drivers, a
+configuration option is added to the extension.
+
+Usage:
+
+.. code-block::
+
+   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'][] = 'MaxServ.FalS3';
+
+
+[BUGFIX] wrong width and height properties taken from EXIF
+  https://github.com/TYPO3-Solr/ext-tika/pull/124
+
+[FEATURE] Tika version 1.24 supported
+  EXT:tika is now tested against version 1.24 of Apache Tika.
+
+Thanks
+------
+
+* Nicole Cordes
+* Rostyslav Matviyiv
+
+Thanks to everyone who helped in creating this release!
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+* Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+* Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+* Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+* Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us in 2020 by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/
+
+or call:
+
++49 (0)69 - 2475218 0
