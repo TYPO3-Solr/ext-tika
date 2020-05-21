@@ -1,8 +1,8 @@
 # Apache Tika for TYPO3
 
-[![Build Status](https://travis-ci.org/TYPO3-Solr/ext-tika.svg?branch=master)](https://travis-ci.org/TYPO3-Solr/ext-tika)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=master)
+[![Build Status](https://travis-ci.org/TYPO3-Solr/ext-tika.svg?branch=release-6.0.x)](https://travis-ci.org/TYPO3-Solr/ext-tika)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/quality-score.png?b=release-6.0.x)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/coverage.png?b=release-6.0.x)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/apache-solr-for-typo3/tika/v/stable)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![Latest Unstable Version](https://poser.pugx.org/apache-solr-for-typo3/tika/v/unstable)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![License](https://poser.pugx.org/apache-solr-for-typo3/tika/license)](https://packagist.org/packages/apache-solr-for-typo3/tika)
