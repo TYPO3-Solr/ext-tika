@@ -26,10 +26,12 @@
   "require": {
     "ext-json": "*",
     "ext-pdo": "*",
-    "typo3/cms-core": "^9.5.16 || ^10.4.2",
+
+    "typo3/cms-core": "^10.4.10",
     "typo3/cms-backend": "*",
     "typo3/cms-extbase": "*",
-    "typo3/cms-reports": "*"
+    "typo3/cms-reports": "*",
+    "typo3/cms-filemetadata": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.5.6 || ^8",
@@ -62,9 +64,10 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "6.0.x-dev"
+      "dev-master": "6.1.x-dev"
     },
     "typo3/cms": {
+      "extension-key": "apache_solr_for_typo3_sitepackage",
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/Web"
     }
