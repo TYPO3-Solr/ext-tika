@@ -4,10 +4,10 @@
 
 ---
 conf.py:
-  copyright: 2009-2020
+  copyright: 2009-2021
   project: Apache Tika for TYPO3
-  version: 6.0.0
-  release: 6.0.0
+  version: 6.1.0-dev
+  release: 6.1.0-dev
   latex_documents:
   - - Index
     - tika.tex
