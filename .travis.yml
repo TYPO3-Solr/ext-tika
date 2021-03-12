@@ -1,3 +1,5 @@
+dist: bionic
+
 language: php
 
 services:
@@ -5,11 +7,12 @@ services:
 
 php:
   - 7.2
+  - 7.3
   - 7.4
 
 env:
   global:
-    - TIKA_VERSION="1.24.1"
+    - TIKA_VERSION="1.22"
     - TIKA_PATH=$HOME/tika
     - EXT_SOLR_VERSION="dev-release-10.0.x"
     - TYPO3_DATABASE_NAME="typo3_ci"
@@ -18,9 +21,12 @@ env:
     - TYPO3_DATABASE_PASSWORD=""
   matrix:
     - TYPO3_VERSION="^9.5"
+    - TYPO3_VERSION="9.5.x-dev"
 
 matrix:
   fast_finish: true
+  allow_failures:
+    - env: TYPO3_VERSION="9.5.x-dev"
 
 before_install:
   - composer self-update

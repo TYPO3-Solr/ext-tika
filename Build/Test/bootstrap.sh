@@ -75,14 +75,22 @@ fi
 
 if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
 	wget "${TIKA_SERVER_SOURCE}tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
-	test -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" || echo "Could not download tika-app-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}" && exit 1
+	if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
+		echo "Could not download tika-app-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}"
+		exit 1
+	fi
+	echo "Download of tika-app-$TIKA_VERSION.jar successful"
 else
 	echo "Cached $TIKA_PATH/tika-app-$TIKA_VERSION.jar present"
 fi
 
 if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
 	wget "${TIKA_SERVER_SOURCE}tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
-	test -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" || echo "Could not download tika-server-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}" && exit 1
+	if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
+		echo "Could not download tika-server-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}"
+		exit 1
+	fi
+	echo "Download of tika-server-$TIKA_VERSION.jar successful"
 else
 	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
 fi
