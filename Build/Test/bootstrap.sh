@@ -2,6 +2,7 @@
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 EXTENSION_ROOTPATH="$SCRIPTPATH/../../"
+TIKA_SERVER_SOURCE="https://archive.apache.org/dist/tika/"
 
 #
 # Run this script once to set up a dev/test environment for this extension
@@ -65,13 +66,15 @@ if [ ! -d "$TIKA_PATH" ]; then
 fi
 
 if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
-	wget "http://apache.osuosl.org/tika/tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
+	wget "${TIKA_SERVER_SOURCE}tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
+	test -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" || echo "Could not download tika-app-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}" && exit 1
 else
 	echo "Cached $TIKA_PATH/tika-app-$TIKA_VERSION.jar present"
 fi
 
 if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
-	wget "http://apache.osuosl.org/tika/tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
+	wget "${TIKA_SERVER_SOURCE}tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
+	test -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" || echo "Could not download tika-server-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}" && exit 1
 else
 	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
 fi
