@@ -1,63 +1,56 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
-use Exception;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Resource\FileInterface;
-
 
 /**
  * Class ServerServiceFixture
  *
+ * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 class ServerServiceFixture extends ServerService
 {
 
+    /**
+     * The endpoint to be used
+     *
+     * @var string
+     */
     protected $recordedEndpoint = '';
 
     /**
      * @return string
      */
-    public function getRecordedEndpoint()
+    public function getRecordedEndpoint(): string
     {
         return $this->recordedEndpoint;
     }
 
     /**
-     * Records the requested endpoint
+     * Override endpoint method in order to validate the correct endpoint is in use
      *
      * @param string $endpoint
-     * @param resource $context optional stream context
-     * @return string Tika output
-     * @throws Exception
+     * @return Uri
      */
-    protected function queryTika($endpoint, $context = null)
+    protected function createEndpoint(string $endpoint): Uri
     {
         $this->recordedEndpoint = $endpoint;
-        return parent::queryTika($endpoint, $context);
+        return parent::createEndpoint($endpoint);
     }
 
     /**
@@ -65,7 +58,7 @@ class ServerServiceFixture extends ServerService
      * @param string $response
      * @return array
      */
-    protected function getLogData($file, $response)
+    protected function getLogData(FileInterface $file, string $response): array
     {
         //overwrite to skip logging in unit test
         return [];
