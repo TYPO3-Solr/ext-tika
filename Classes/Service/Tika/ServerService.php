@@ -17,10 +17,12 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use Exception;
+use GuzzleHttp\Exception\BadResponseException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
+use Psr\Log\LogLevel;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;
@@ -259,7 +261,11 @@ class ServerService extends AbstractService
         try {
             $response = $this->psr7Client->sendRequest($request);
             if (!in_array($response->getStatusCode(), $this->validStatusCodes)) {
-                throw new \Exception($response->getReasonPhrase(), $response->getStatusCode());
+                throw new BadResponseException(
+                    'Invalid status code ' . $response->getStatusCode(),
+                    $request,
+                    $response
+                );
             }
 
             $tikaOutput = $response->getBody()->getContents();
@@ -273,6 +279,8 @@ class ServerService extends AbstractService
                 // since that is not the case something else went wrong
                 throw $exception;
             }
+
+            $this->log($exception->getMessage(), [], LogLevel::ERROR);
         }
 
         return $tikaOutput;
@@ -297,7 +305,11 @@ class ServerService extends AbstractService
         $response = $this->queryTika($request);
 
         if ($response === false) {
-            $this->log('Text Extraction using Tika Server failed', $this->getLogData($file, $response), 2);
+            $this->log(
+                'Text Extraction using Tika Server failed',
+                $this->getLogData($file, $response),
+                LogLevel::CRITICAL
+            );
         } else {
             $this->log('Text Extraction using Tika Server', $this->getLogData($file, $response));
         }
@@ -325,7 +337,11 @@ class ServerService extends AbstractService
         $response = json_decode($rawResponse, true);
 
         if (!is_array($response)) {
-            $this->log('Meta Data Extraction using Tika Server failed', $this->getLogData($file, $rawResponse), 2);
+            $this->log(
+                'Meta Data Extraction using Tika Server failed',
+                $this->getLogData($file, $rawResponse),
+                LogLevel::CRITICAL
+            );
             return [];
         }
 
@@ -351,7 +367,11 @@ class ServerService extends AbstractService
         $response = $this->queryTika($request);
 
         if ($response === false) {
-            $this->log('Language Detection using Tika Server failed', $this->getLogData($file, $response), 2);
+            $this->log(
+                'Language Detection using Tika Server failed',
+                $this->getLogData($file, $response),
+                LogLevel::CRITICAL
+            );
         } else {
             $this->log('Language Detection using Tika Server', $this->getLogData($file, $response));
         }
@@ -422,8 +442,18 @@ class ServerService extends AbstractService
     protected function buildSupportedMimeTypes(): array
     {
         $response = $this->getMimeTypeJsonFromTikaServer();
+        // In case the response is empty, there need no more further processing
+        if (empty($response)) {
+            return [];
+        }
 
         $result = (json_decode($response));
+
+        // In case the result is not an object, there need no more further processing
+        if (!(is_object($result))) {
+            return [];
+        }
+
         $definitions = get_object_vars($result);
         $coreTypes = [];
         $aliasTypes = [];
@@ -462,7 +492,7 @@ class ServerService extends AbstractService
      */
     protected function createRequest(UriInterface $uri, string $method = 'GET'): RequestInterface
     {
-        /* @var RequestFactory $requestFactory*/
+        /* @var RequestFactory $requestFactory */
         $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
         $request = $requestFactory->createRequest(
             $method,
