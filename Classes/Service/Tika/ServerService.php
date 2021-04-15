@@ -15,9 +15,9 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  */
 
 use ApacheSolrForTypo3\Tika\Process;
-use ApacheSolrForTypo3\Tika\Util;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use Exception;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -36,7 +36,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ServerService extends AbstractService
 {
-
     /**
      * @var ClientInterface
      */
@@ -47,14 +46,14 @@ class ServerService extends AbstractService
      *
      * @var int[]
      */
-    protected $validStatusCodes = [200, 202];
+    protected $validStatusCodes = [200, 202, 204];
 
     /**
      * Tika server URL
      *
      * @var Uri
      */
-    protected $tikaUrl = null;
+    protected $tikaUri = null;
 
     /**
      * @var array
@@ -64,24 +63,23 @@ class ServerService extends AbstractService
     /**
      * Service initialization
      *
-     * @return void
      * @noinspection PhpUnused
      */
-    protected function initializeService()
+    protected function initializeService(): void
     {
         $this->psr7Client = GeneralUtility::getContainer()->get(ClientInterface::class);
 
         // Fallback default configuration is with http protocol
-        $this->tikaUrl = new Uri('http://' . $this->configuration['tikaServerHost']);
+        $this->tikaUri = new Uri('http://' . $this->configuration['tikaServerHost']);
 
         // Overwrite configuration of tikaServerScheme is configured
         if (!empty($this->configuration['tikaServerScheme'])) {
-            $this->tikaUrl = $this->tikaUrl->withScheme($this->configuration['tikaServerScheme']);
+            $this->tikaUri = $this->tikaUri->withScheme($this->configuration['tikaServerScheme']);
         }
 
         // Only append tikaServerPort if configured
         if (!empty($this->configuration['tikaServerPort'])) {
-            $this->tikaUrl = $this->tikaUrl->withPort((int)$this->configuration['tikaServerPort']);
+            $this->tikaUri = $this->tikaUri->withPort((int)$this->configuration['tikaServerPort']);
         }
     }
 
@@ -189,14 +187,13 @@ class ServerService extends AbstractService
      * Ping the Tika server
      *
      * @return bool true if the Tika server can be reached, false if not
-     * @throws Exception
      */
     public function ping(): bool
     {
         try {
             $tikaPing = $this->queryTika($this->createRequestForEndpoint('/tika'));
             return GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server');
-        } catch (Exception $e) {
+        } catch (ClientExceptionInterface | Exception $exception) {
             return false;
         }
     }
@@ -219,7 +216,7 @@ class ServerService extends AbstractService
      */
     public function getTikaServerUrl(): string
     {
-        return (string)$this->tikaUrl;
+        return (string)$this->tikaUri;
     }
 
     /**
@@ -229,14 +226,14 @@ class ServerService extends AbstractService
      */
     public function getTikaServerUri(): Uri
     {
-        return $this->tikaUrl;
+        return $this->tikaUri;
     }
 
     /**
      * Gets the Tika server version
      *
      * @return string Tika server version string
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     public function getTikaVersion(): string
     {
@@ -254,7 +251,7 @@ class ServerService extends AbstractService
      *
      * @param RequestInterface $request
      * @return string Tika output
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     protected function queryTika(RequestInterface $request): string
     {
@@ -266,9 +263,8 @@ class ServerService extends AbstractService
             }
 
             $tikaOutput = $response->getBody()->getContents();
-        } catch (Exception $exception) {
+        } catch (ClientExceptionInterface | Exception $exception) {
             $message = $exception->getMessage();
-            print 'EXCEPTION: ' . $exception->getMessage() . PHP_EOL;
             if (
                 strpos($message, 'Connection refused') === false &&
                 strpos($message, 'HTTP request failed') === false
@@ -287,7 +283,7 @@ class ServerService extends AbstractService
      *
      * @param FileInterface $file
      * @return string
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     public function extractText(FileInterface $file): string
     {
@@ -314,7 +310,7 @@ class ServerService extends AbstractService
      *
      * @param FileInterface $file
      * @return array|null
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     public function extractMetaData(FileInterface $file): ?array
     {
@@ -341,8 +337,8 @@ class ServerService extends AbstractService
      * Takes a file reference and detects its content's language.
      *
      * @param FileInterface $file
-     * @return string Language ISO code
-     * @throws Exception
+     * @return string
+     * @throws ClientExceptionInterface
      */
     public function detectLanguageFromFile(FileInterface $file): string
     {
@@ -367,8 +363,8 @@ class ServerService extends AbstractService
      * Takes a string as input and detects its language.
      *
      * @param string $input
-     * @return string Language ISO code
-     * @throws Exception
+     * @return string
+     * @throws ClientExceptionInterface
      */
     public function detectLanguageFromString($input): string
     {
@@ -384,6 +380,8 @@ class ServerService extends AbstractService
     }
 
     /**
+     * List of supported mime types
+     *
      * @return array
      * @throws Exception
      */
@@ -399,8 +397,10 @@ class ServerService extends AbstractService
     }
 
     /**
+     * Returns the mime type from the tika server
+     *
      * @return string
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     protected function getMimeTypeJsonFromTikaServer(): string
     {
@@ -414,8 +414,10 @@ class ServerService extends AbstractService
     }
 
     /**
+     * Build the list of supported mime types
+     *
      * @return array
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     protected function buildSupportedMimeTypes(): array
     {
@@ -495,6 +497,8 @@ class ServerService extends AbstractService
     }
 
     /**
+     * Returns the user agent that should be used for the requests
+     *
      * @return string
      */
     protected function getUserAgent(): string
@@ -503,6 +507,8 @@ class ServerService extends AbstractService
     }
 
     /**
+     * Build the log information
+     *
      * @param FileInterface $file
      * @param string $response
      * @return array
