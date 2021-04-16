@@ -47,6 +47,7 @@ class UnitTestCase extends TYPO3UnitTestCase
     {
         $tikaVersion = getenv('TIKA_VERSION') ? getenv('TIKA_VERSION') : '1.24.1';
         $tikaPath = getenv('TIKA_PATH') ? getenv('TIKA_PATH') : '/opt/tika';
+        $envVarNamePrefix = 'TESTING_TIKA_';
 
         return [
             'extractor' => '',
@@ -55,14 +56,19 @@ class UnitTestCase extends TYPO3UnitTestCase
             'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
 
             'tikaServerPath' => "$tikaPath/tika-server-$tikaVersion.jar",
-            'tikaServerScheme' => 'http',
-            'tikaServerHost' => 'localhost',
-            'tikaServerPort' => '9998',
+            'tikaServerScheme' => getenv($envVarNamePrefix . 'SERVER_SCHEME') ?: 'http',
+            'tikaServerHost' => getenv($envVarNamePrefix . 'SERVER_HOST') ?: 'localhost',
+            'tikaServerPort' => getenv($envVarNamePrefix . 'SERVER_PORT') ?: '9998',
 
-            'solrScheme' => 'http',
-            'solrHost' => 'localhost',
-            'solrPort' => '8080',
-            'solrPath' => '/solr/',
+            'solrScheme' => getenv('TESTING_SOLR_SCHEME') ?: 'http',
+            'solrHost' => getenv('TESTING_SOLR_HOST') ?: 'localhost',
+            /*
+             * TODO: The port number differs that is in use for the integration test
+             *       This needs to be checked
+             * @see \ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\ServiceIntegrationTestCase::getConfiguration
+             */
+            'solrPort' => getenv('TESTING_SOLR_PORT') ?: 8080,
+            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/'
         ];
     }
 

@@ -1,28 +1,18 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Solr\SolrService;
 use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
@@ -30,6 +20,7 @@ use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Prophecy\Argument;
 use Prophecy\Prophet;
+use Psr\Log\NullLogger;
 use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -37,10 +28,10 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 /**
  * Class AppServiceTest
  *
+ * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 class SolrCellServiceTest extends ServiceIntegrationTestCase
 {
-
     /**
      * @var Prophet
      */
@@ -60,6 +51,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     public function newInstancesAreInitializedWithASolrConnection()
     {
         $service = new SolrCellService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $this->assertAttributeInstanceOf(SolrConnection::class, 'solrConnection', $service);
     }
 
@@ -81,6 +73,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
         $file = new File(
@@ -107,6 +100,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
         $file = new File([
@@ -139,6 +133,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
         $file = new File(
@@ -158,6 +153,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     public function extractsMetaDataFromMp3File()
     {
         $service = new SolrCellService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $mockedFile = $this->getMockedFileInstance(
             [
                 'identifier' => 'testMP3.mp3',

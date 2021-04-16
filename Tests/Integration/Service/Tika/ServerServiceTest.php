@@ -1,28 +1,18 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
@@ -30,14 +20,15 @@ use ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures\ServerServic
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\NullLogger;
 use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * Class ServerServiceTest
  *
+ * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 class ServerServiceTest extends ServiceIntegrationTestCase
 {
@@ -65,6 +56,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
 
         // execute
         $service = new ServerService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->startServer();
 
         // test
@@ -92,6 +84,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
 
         // execute
         $service = new ServerService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->stopServer();
     }
 
@@ -105,6 +98,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $pid = $service->getServerPid();
 
         $this->assertEquals(1000, $pid);
@@ -124,6 +118,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $pid = $service->getServerPid();
 
         $this->assertEquals(1000, $pid);
@@ -139,6 +134,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $this->assertTrue($service->isServerRunning());
     }
 
@@ -156,6 +152,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $this->assertTrue($service->isServerRunning());
     }
 
@@ -173,6 +170,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $this->assertFalse($service->isServerRunning());
     }
 
@@ -183,6 +181,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     {
         $tikaExtensionConfiguration = $this->getConfiguration();
         $service = new ServerService($tikaExtensionConfiguration);
+        $service->setLogger(new NullLogger());
 
         $expectedTikaAuthority = vsprintf(
             '%s://%s:%s',
@@ -201,6 +200,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function extractTextQueriesTikaEndpoint()
     {
         $service = new ServerServiceFixture($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->extractText($this->getMockedFileInstanceForTestWordDotDocFile());
 
         $this->assertEquals('/tika', $service->getRecordedEndpoint());
@@ -212,6 +212,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function extractMetaDataQueriesMetaEndpoint()
     {
         $service = new ServerServiceFixture($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->extractMetaData($this->getMockedFileInstanceForTestWordDotDocFile());
 
         $this->assertEquals('/meta', $service->getRecordedEndpoint());
@@ -223,6 +224,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function detectLanguageFromFileQueriesLanguageStreamEndpoint()
     {
         $service = new ServerServiceFixture($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->detectLanguageFromFile($this->getMockedFileInstanceForTestWordDotDocFile());
 
         $this->assertEquals('/language/stream',
@@ -235,10 +237,11 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function detectLanguageFromStringQueriesLanguageStringEndpoint()
     {
         $service = new ServerServiceFixture($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->detectLanguageFromString('foo');
 
         $this->assertEquals(
-            '/language/string', 
+            '/language/string',
             $service->getRecordedEndpoint()
         );
     }
@@ -250,10 +253,12 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     protected function getTikaServerConfiguration()
     {
+        $envVarNamePrefix = 'TESTING_TIKA_';
+
         return [
-            'tikaServerScheme' => 'http',
-            'tikaServerHost' => 'localhost',
-            'tikaServerPort' => '9998'
+            'tikaServerScheme' => getenv($envVarNamePrefix . 'SERVER_SCHEME') ?: 'http',
+            'tikaServerHost' => getenv($envVarNamePrefix . 'SERVER_HOST') ?: 'localhost',
+            'tikaServerPort' => getenv($envVarNamePrefix . 'SERVER_PORT') ?: '9998'
         ];
     }
 
@@ -263,6 +268,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function extractsMetaDataFromDocFile()
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $service->setLogger(new NullLogger());
 
         $metaData = $service->extractMetaData($this->getMockedFileInstanceForTestWordDotDocFile());
 
@@ -285,6 +291,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function extractsMetaDataFromMp3File()
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $service->setLogger(new NullLogger());
         $fileMock = $this->getMockedFileInstance(
             [
                 'identifier' => 'testMP3.mp3',
@@ -304,6 +311,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function extractsTextFromDocFile()
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $service->setLogger(new NullLogger());
 
         $expectedText = 'Sample Word Document';
         $extractedText = $service->extractText($this->getMockedFileInstanceForTestWordDotDocFile());
@@ -317,6 +325,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function extractsTextFromZipFile()
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $service->setLogger(new NullLogger());
 
         $expectedTextFromWord = 'Sample Word Document';
         $extractedText = $service->extractText($this->getMockedFileInstance(
@@ -362,6 +371,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function detectsLanguageFromFile($language)
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $service->setLogger(new NullLogger());
 
         $detectedLanguage = $service->detectLanguageFromFile(
             $this->getMockedFileInstance(
@@ -383,6 +393,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function detectsLanguageFromString($language)
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $service->setLogger(new NullLogger());
 
         $file = $this->testLanguagesPath . $language . '.test';
         $languageString = file_get_contents($file);
@@ -398,6 +409,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function canGetMimeTypesFromServerAndParseThem()
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $service->setLogger(new NullLogger());
         $mimeTypes = $service->getSupportedMimeTypes();
         $this->assertContains('application/pdf', $mimeTypes, 'Server did not indicate to support pdf documents');
         $this->assertContains('application/vnd.openxmlformats-officedocument.wordprocessingml.document', $mimeTypes, 'Server did not indicate to support docx documents');
@@ -409,6 +421,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     public function canPing()
     {
         $service = new ServerService($this->getTikaServerConfiguration());
+        $service->setLogger(new NullLogger());
         $pingResult = $service->ping();
 
         $this->assertTrue($pingResult, 'Could not ping tika server');

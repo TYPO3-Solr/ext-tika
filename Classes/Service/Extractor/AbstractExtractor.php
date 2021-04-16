@@ -1,33 +1,24 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Service\File\SizeValidator;
 use ApacheSolrForTypo3\Tika\Util;
-use TYPO3\CMS\Core\Log\Logger;
-use TYPO3\CMS\Core\Log\LogManager;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LogLevel;
 use TYPO3\CMS\Core\Resource\Index\ExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -36,9 +27,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class AbstractExtractor
  *
  * @package ApacheSolrForTypo3\Tika\Service\Extractor
+ * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
-abstract class AbstractExtractor implements ExtractorInterface
+abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
 
     /**
      * @var array
@@ -112,21 +105,22 @@ abstract class AbstractExtractor implements ExtractorInterface
     }
 
     /**
-     * Logs a message and optionally data to devlog
+     * Logs a message and optionally data to log file
      *
      * @param string $message Log message
      * @param array $data Optional data
      * @return void
      */
-    protected function log($message, array $data = [])
+    protected function log(string $message, array $data = [])
     {
         if (!$this->configuration['logging']) {
             return;
         }
-
-        /* @var Logger $logger */
-        $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
-        $logger->log(0, $message, $data);
+        $this->logger->log(
+            LogLevel::DEBUG, // Previous value 0
+            $message,
+            $data
+        );
     }
 
 }

@@ -308,10 +308,13 @@ class ServerService extends AbstractService
             $this->log(
                 'Text Extraction using Tika Server failed',
                 $this->getLogData($file, $response),
-                LogLevel::CRITICAL
+                LogLevel::ERROR
             );
         } else {
-            $this->log('Text Extraction using Tika Server', $this->getLogData($file, $response));
+            $this->log(
+                'Text Extraction using Tika Server',
+                $this->getLogData($file, $response)
+            );
         }
 
         return $response;
@@ -340,12 +343,15 @@ class ServerService extends AbstractService
             $this->log(
                 'Meta Data Extraction using Tika Server failed',
                 $this->getLogData($file, $rawResponse),
-                LogLevel::CRITICAL
+                LogLevel::ERROR
             );
             return [];
         }
 
-        $this->log('Meta Data Extraction using Tika Server', $this->getLogData($file, $rawResponse));
+        $this->log(
+            'Meta Data Extraction using Tika Server',
+            $this->getLogData($file, $rawResponse)
+        );
         return $response;
     }
 
@@ -370,10 +376,13 @@ class ServerService extends AbstractService
             $this->log(
                 'Language Detection using Tika Server failed',
                 $this->getLogData($file, $response),
-                LogLevel::CRITICAL
+                LogLevel::ERROR
             );
         } else {
-            $this->log('Language Detection using Tika Server', $this->getLogData($file, $response));
+            $this->log(
+                'Language Detection using Tika Server',
+                $this->getLogData($file, $response)
+            );
         }
 
         return $response;

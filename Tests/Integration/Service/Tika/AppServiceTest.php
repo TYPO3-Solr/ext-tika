@@ -1,37 +1,29 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
+use Psr\Log\NullLogger;
 use TYPO3\CMS\Core\Resource\File;
 
 
 /**
  * Test case for class AppService
  *
+ * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 class AppServiceTest extends ServiceIntegrationTestCase
 {
@@ -48,6 +40,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
     public function getTikaVersionUsesVParameter()
     {
         $service = new AppService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->getTikaVersion();
 
         $this->assertContains('-V', ExecRecorder::$execCommand);
@@ -67,6 +60,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
         );
 
         $service = new AppService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->extractText($file);
 
         $this->assertContains('-t', ExecRecorder::$execCommand);
@@ -87,6 +81,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
         );
 
         $service = new AppService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->extractMetaData($file);
 
         $this->assertContains('-m', ExecRecorder::$execCommand);
@@ -106,6 +101,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
         );
 
         $service = new AppService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->detectLanguageFromFile($file);
 
         $this->assertContains('-l', ExecRecorder::$execCommand);
@@ -117,6 +113,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
     public function detectLanguageFromStringUsesLParameter()
     {
         $service = new AppService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->detectLanguageFromString('foo');
 
         $this->assertContains('-l', ExecRecorder::$execCommand);
@@ -128,6 +125,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
     public function callsTikaAppCorrectlyToGetMimeList()
     {
         $service = new AppService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
         $service->getSupportedMimeTypes();
         $this->assertContains('--list-supported-types', ExecRecorder::$execCommand);
     }
