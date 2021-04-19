@@ -1,28 +1,18 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use ApacheSolrForTypo3\Tika\Utility\ShellUtility;
@@ -31,10 +21,10 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * A Tika service implementation using the tika-app.jar
  *
+ * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 class AppService extends AbstractService
 {
@@ -96,11 +86,14 @@ class AppService extends AbstractService
 
         $extractedText = shell_exec($tikaCommand);
 
-        $this->log('Text Extraction using local Tika', [
-            'file' => $file,
-            'tika command' => $tikaCommand,
-            'shell output' => $extractedText
-        ]);
+        $this->log(
+            'Text Extraction using local Tika',
+            [
+                'file' => $file,
+                'tika command' => $tikaCommand,
+                'shell output' => $extractedText
+            ]
+        );
 
         return $extractedText;
     }
@@ -125,12 +118,15 @@ class AppService extends AbstractService
         exec($tikaCommand, $shellOutput);
         $metaData = $this->shellOutputToArray($shellOutput);
 
-        $this->log('Meta Data Extraction using local Tika', [
-            'file' => $file,
-            'tika command' => $tikaCommand,
-            'shell output' => $shellOutput,
-            'meta data' => $metaData
-        ]);
+        $this->log(
+            'Meta Data Extraction using local Tika',
+            [
+                'file' => $file,
+                'tika command' => $tikaCommand,
+                'shell output' => $shellOutput,
+                'meta data' => $metaData
+            ]
+        );
 
         return $metaData;
     }
@@ -185,11 +181,14 @@ class AppService extends AbstractService
 
         $language = trim(shell_exec($tikaCommand));
 
-        $this->log('Language Detection using local Tika', [
-            'file' => $localFilePath,
-            'tika command' => $tikaCommand,
-            'shell output' => $language
-        ]);
+        $this->log(
+            'Language Detection using local Tika',
+            [
+                'file' => $localFilePath,
+                'tika command' => $tikaCommand,
+                'shell output' => $language
+            ]
+        );
 
         return $language;
     }

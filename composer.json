@@ -67,7 +67,7 @@
       "dev-master": "6.1.x-dev"
     },
     "typo3/cms": {
-      "extension-key": "apache_solr_for_typo3_sitepackage",
+      "extension-key": "tika",
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/Web"
     }
