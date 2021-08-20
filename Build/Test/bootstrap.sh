@@ -10,11 +10,11 @@ TIKA_SERVER_SOURCE="https://archive.apache.org/dist/tika/"
 #
 
 if [[ $* == *--local* ]]; then
-    echo -n "Choose a TYPO3 Version (e.g. dev-master, ^9.5.16, ^10.4.2): "
+    echo -n "Choose a TYPO3 Version (e.g. dev-master, ^10.4.20): "
     read typo3Version
     export TYPO3_VERSION=$typo3Version
 
-    echo -n "Choose a EXT:solr Version (e.g. dev-master, dev-release-11.0.x): "
+    echo -n "Choose a EXT:solr Version (e.g. dev-master, dev-release-11.1.x): "
     read extSolrVersion
     export EXT_SOLR_VERSION=$extSolrVersion
 
@@ -58,8 +58,6 @@ if [ $? -ne "0" ]; then
 	exit 1
 fi
 
-
-
 # download Tika if not present
 if [ ! -d "$TIKA_PATH" ]; then
 	mkdir -p "$TIKA_PATH"
@@ -76,29 +74,31 @@ else
 	echo "Cached $TIKA_PATH/tika-app-$TIKA_VERSION.jar present"
 fi
 
-if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
-	wget "${TIKA_SERVER_SOURCE}tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
-	if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
-		echo "Could not download tika-server-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}"
-		exit 1
-	fi
-	echo "Download of tika-server-$TIKA_VERSION.jar successful"
-else
-	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
-fi
+if [[ $* != *--skip-tika-server-install* ]]; then
+    if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
+    	wget "${TIKA_SERVER_SOURCE}tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
+    	if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
+    		echo "Could not download tika-server-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}"
+    		exit 1
+    	fi
+    	echo "Download of tika-server-$TIKA_VERSION.jar successful"
+    else
+    	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
+    fi
 
-# stop Tika server if one is still running
-if [ -f ./tika_pid ]; then
-	TIKA_PID=cat ./tika_pid
-	echo "Stopping Tika ($TIKA_PID)"
-	kill $TIKA_PID
-fi
+    # stop Tika server if one is still running
+    if [ -f ./tika_pid ]; then
+    	TIKA_PID=cat ./tika_pid
+    	echo "Stopping Tika ($TIKA_PID)"
+    	kill $TIKA_PID
+    fi
 
-# start tika server
-echo "Starting Apache Tika"
-TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
-echo $TIKA_PID > tika_pid
-echo "Tika pid: $TIKA_PID"
+    # start tika server
+    echo "Starting Apache Tika"
+    TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
+    echo $TIKA_PID > tika_pid
+    echo "Tika pid: $TIKA_PID"
+fi
 
 echo "PWD: $(pwd)"
 
