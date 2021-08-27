@@ -22,8 +22,6 @@ $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\
         ['source' => $extIconPath . 'module-tika.svg']
     );
 
-
-
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
     $tikaExtensionConfiguration = \ApacheSolrForTypo3\Tika\Util::getTikaExtensionConfiguration();
     $isSolrModuleEnabled = (is_array($tikaExtensionConfiguration)
@@ -37,7 +35,7 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
             'TikaControlPanel',
             'bottom',
             [
-                'Backend\\SolrModule\\TikaControlPanelModule' => 'index, startServer, stopServer'
+                \ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule\TikaControlPanelModuleController::class => 'index, startServer, stopServer'
             ],
             [
                 'access' => 'user,group',
