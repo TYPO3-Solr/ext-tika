@@ -1,0 +1,131 @@
+==========================================================
+Apache Solr for TYPO3 - Tika Addon version 10.0.0 released
+==========================================================
+
+We are happy to announce version 10.0.0 of EXT:tika.
+
+**Important**: This version is compatible with 10 LTS only.
+
+
+New in this Release
+-------------------
+
+[TASK] Introduce TYPO3 PSR-18 client (#156)
+===========================================
+
+   https://github.com/TYPO3-Solr/ext-tika/pull/156
+   https://github.com/TYPO3-Solr/ext-tika/issues/154
+
+The implementation to fetch website content based on the stream context and
+method 'file_get_content()' is removed. Instead the TYPO3 build in
+HTTP client is in use to access the Tika server. This client supports
+PSR-18 and allows to use proxy information configured in TYPO3.
+
+Internally the string representation replaced by the URI interface.
+This allows an easier and better way to handle server URIs.
+
+Replace use of general exception with BadResponseException.
+Log exception in case it should not thrown.
+
+* Reduce log warnings while building supported mime types.
+* Refactor unit and integration tests according to internal changes.
+* Switch log severity from integer to LogLevel constants.
+* Several code changes to method declaration.
+
+[TASK] Refactor logging (#161)
+==============================
+
+   https://github.com/TYPO3-Solr/ext-tika/pull/161
+   https://github.com/TYPO3-Solr/ext-tika/issues/137
+   https://github.com/TYPO3-Solr/ext-tika/issues/160
+
+Use LoggerAwareInterface and LoggerAwareTrait instead of setup logging over the log manager.
+
+Replace log severity numbers with LogLevel constants. Set default level to debug.
+
+Unit tests:
+
+- Inject instance of NullLogger due changes to the logging behaviour.
+- Access environment variables for unit and integration tests
+  in order to allow different testing environments.
+
+Contributors
+------------
+
+* Lars Tode
+* Markus Friedrich
+* Rafael Kähm
+
+Thanks to everyone who helped in creating this release!
+
+Also a big thanks to our partners that have joined the EB2021 program:
+
+* +Pluswerk AG
+* 711media websolutions GmbH
+* Abt Sportsline GmbH
+* ACO Severin Ahlmann GmbH & Co. KG
+* AVM Computersysteme Vertriebs GmbH
+* cosmoblonde GmbH
+* creativ clicks GmbH
+* cron IT GmbH
+* CS2 AG
+* CW Media & Systems
+* Earlybird GmbH & Co KG
+* FLOWSITE GmbH
+* form4 GmbH & Co. KG
+* Getdesigned GmbH
+* Granpasso Digital Strategy GmbH
+* Ikanos GmbH
+* internezzo ag
+* Intersim AG
+* Ion2s GmbH
+* Leitgab Gernot
+* mellowmessage GmbH
+* Moselwal Digitalagentur UG (haftungsbeschränkt)
+* network.publishing Möller-Westbunk GmbH
+* OST Ostschweizer Fachhochschule
+* Plan.Net Suisse AG
+* Provitex GmbH
+* punkt.de GmbH
+* queo GmbH
+* Rechnungshof
+* Schoene neue kinder GmbH
+* SIT GmbH
+* SIZ GmbH
+* Stämpfli AG
+* Triplesense Reply Frankfurt
+* TWT reality bytes GmbH
+* visol digitale Dienstleistungen GmbH
+* Web Commerce GmbH
+* webconsulting business services gmbh
+* webschuppen GmbH
+* Webstobe GmbH
+* Webtech AG
+* wow! solution
+* XIMA MEDIA GmbH
+* Bundesanstalt Statistik Österreich
+* ECOS TECHNOLOGY GMBH
+* Fachhochschule Erfurt
+* Hochschule Furtwangen - IMZ Online-Services
+* Hochschule Niederrhein University of Applied Sciences
+* l'Autorité des marchés financiers
+* La Financière agricole du Québec
+* LfdA - Labor für digitale Angelegenheiten GmbH
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+* Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+* Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+* Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+* Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us in 2021 by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/
+
+or call:
+
++49 (0)69 - 2475218 0
