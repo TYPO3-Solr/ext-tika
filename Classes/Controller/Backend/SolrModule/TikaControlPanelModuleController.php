@@ -134,12 +134,12 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     public function startServerAction()
     {
-        $this->tikaService->startServer();
+        $this->tikaService->/** @scrutinizer ignore-call */startServer();
 
         // give it some time to start
         sleep(2);
 
-        if ($this->tikaService->isServerRunning()) {
+        if ($this->tikaService->/** @scrutinizer ignore-call */isServerRunning()) {
             $this->addFlashMessage(
                 'Tika server started.',
                 FlashMessage::OK
@@ -157,7 +157,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     public function stopServerAction()
     {
-        $this->tikaService->stopServer();
+        $this->tikaService->/** @scrutinizer ignore-call */stopServer();
 
         // give it some time to stop
         sleep(2);
@@ -202,7 +202,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     protected function getTikaServerPid()
     {
-        return $this->tikaService->getServerPid();
+        return $this->tikaService->/** @scrutinizer ignore-call */getServerPid();
     }
 
     /**
@@ -263,15 +263,15 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     protected function checkTikaServerConnection()
     {
-        if ($this->tikaService->ping()) {
+        if ($this->tikaService->/** @scrutinizer ignore-call */ping()) {
             $this->addFlashMessage(
-                'Tika host contacted at: ' . $this->tikaService->getTikaServerUrl(),
+                'Tika host contacted at: ' . $this->tikaService->/** @scrutinizer ignore-call */getTikaServerUrl(),
                 'Your Apache Tika server has been contacted.',
                 FlashMessage::OK
             );
         } else {
             $this->addFlashMessage(
-                'Could not connect to Tika at: ' . $this->tikaService->getTikaServerUrl(),
+                'Could not connect to Tika at: ' . $this->tikaService->/** @scrutinizer ignore-call */getTikaServerUrl(),
                 'Unable to contact Apache Tika server.',
                 FlashMessage::ERROR
             );
