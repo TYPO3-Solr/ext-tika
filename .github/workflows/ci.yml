@@ -3,6 +3,8 @@ name: EXT:tika Github Actions
 on:
   push:
     branches: [ master ]
+    tags:
+      - "**"
   pull_request:
     branches: [ master ]
 
@@ -35,45 +37,44 @@ jobs:
 
     name: TYPO3 ${{ matrix.TYPO3 }} on PHP ${{ matrix.PHP }}
     steps:
-      -
-        name: Checkout current state
+      - name: Checkout current state
         uses: actions/checkout@v2
-      -
-        name: Cache Apache Tika Binaries
+
+      - name: Cache Apache Tika Binaries
         id: tika-bineries
         uses: actions/cache@v2
         with:
           path: $TIKA_PATH
           key: tika-bineries
-      -
-        name: Mount RAMFS
+
+      - name: Mount RAMFS
         run: |
           id
           sudo mkdir /ramfs
           sudo mount -t tmpfs -o size=2048m none /ramfs
           sudo mkdir -p /ramfs/data-{solr,mysql,build} && sudo chown $USER /ramfs/data-* && sudo chown 8983:8983 /ramfs/data-solr
-      -
-        name: Setup PHP
+
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.PHP }}
           coverage: xdebug
           tools: composer:v2
-      -
-        name: CI-Bootstrap
+
+      - name: CI-Bootstrap
         run: |
           echo "CI_BUILD_DIRECTORY=$CI_BUILD_DIRECTORY/"
           cp -r ../ext-tika $CI_BUILD_DIRECTORY/.
           cd $CI_BUILD_DIRECTORY/ext-tika
           ./Build/Test/bootstrap.sh --skip-solr-install --skip-tika-server-install
           echo "Current Size of EXT:tika build Artefacts: " && du -sh $CI_BUILD_DIRECTORY/ext-tika
-      -
-        name: Build ext-solr docker image
+
+      - name: Build ext-solr docker image
         run: |
           cd $CI_BUILD_DIRECTORY/ext-tika
           docker build -t $LOCAL_IMAGE_NAME -f .Build/Web/typo3conf/ext/solr/Docker/SolrServer/Dockerfile .Build/Web/typo3conf/ext/solr/
-      -
-        name: 'Start Docker: Solr, Tika, MySQL'
+
+      - name: 'Start Docker: Solr, Tika, MySQL'
         run: |
           docker run --name "MySQL-CI" -v /ramfs/data-mysql:/var/lib/mysql -p 3306:3306 \
             -e MYSQL_DATABASE=$TYPO3_DATABASE_NAME \
@@ -84,9 +85,62 @@ jobs:
           docker run --rm --name="$LOCAL_CONTAINER_NAME" -d -p 127.0.0.1:8983:8983 -v "$LOCAL_VOLUME_NAME":"/var/solr" "$LOCAL_IMAGE_NAME"
           docker run -d -p 9998:9998 apache/tika:$TIKA_VERSION"-full"
           docker ps
-      -
-        name: CI-Build
+
+      - name: CI-Build
         run: |
           cd $CI_BUILD_DIRECTORY/ext-tika
           ./Build/Test/cibuild.sh
           echo "Current Size of EXT:tika build Artefacts: " && du -sh $CI_BUILD_DIRECTORY/ && du -sh $CI_BUILD_DIRECTORY/ext-tika/.Build/*
+
+      - name: Upload code coverage to Scrutinizer
+        run: |
+          cd $CI_BUILD_DIRECTORY/ext-tika
+          mkdir -p $GITHUB_WORKSPACE/bin
+          wget https://scrutinizer-ci.com/ocular.phar -O $GITHUB_WORKSPACE/bin/ocular && chmod +x $GITHUB_WORKSPACE/bin/ocular
+          php $GITHUB_WORKSPACE/bin/ocular code-coverage:upload --format=php-clover coverage.unit.clover
+          php $GITHUB_WORKSPACE/bin/ocular code-coverage:upload --format=php-clover coverage.integration.clover
+
+  publish:
+    name: Publish new version to TER
+    needs: tests
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-20.04
+    env:
+      TYPO3_API_TOKEN: ${{ secrets.TYPO3_API_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check tag
+        run: |
+          if ! [[ ${{ github.ref }} =~ ^refs/tags/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$ ]]; then
+            exit 1
+          fi
+      - name: Get version
+        id: get-version
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+
+      - name: Get comment
+        id: get-comment
+        run: |
+          readonly local comment=$(git tag -n10 -l ${{ steps.get-version.outputs.version }} | sed "s/^[0-9.]*[ ]*//g")
+          if [[ -z "${comment// }" ]]; then
+            echo ::set-output name=comment::Released version ${{ steps.get-version.outputs.version }} of tailor_ext
+          else
+            echo ::set-output name=comment::$comment
+          fi
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: intl, mbstring, json, zip, curl
+          tools: composer:v2
+
+      - name: Install tailor
+        run: composer global require typo3/tailor --prefer-dist --no-progress
+
+      - name: Publish EXT:tika to TER
+        run: php ~/.composer/vendor/bin/tailor ter:publish --comment "${{ steps.get-comment.outputs.comment }}" ${{ steps.get-version.outputs.version }}
+
+

@@ -17,7 +17,6 @@
   "support": {
     "email": "typo3-project-solr@lists.typo3.org",
     "issues": "https://github.com/TYPO3-Solr/ext-tika/issues",
-    "forum": "http://forum.typo3.org/index.php/f/53/",
     "source": "https://github.com/TYPO3-Solr/ext-tika"
   },
   "replace": {
@@ -64,7 +63,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "6.1.x-dev"
+      "dev-master": "10.0.x-dev"
     },
     "typo3/cms": {
       "extension-key": "tika",
