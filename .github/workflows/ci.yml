@@ -37,7 +37,14 @@ jobs:
 
     name: TYPO3 ${{ matrix.TYPO3 }} on PHP ${{ matrix.PHP }}
     steps:
-      - name: Checkout current state
+      # Workaround for issue with actions/checkout@v2 wrong PR commit checkout: See https://github.com/actions/checkout/issues/299#issuecomment-677674415
+      - name: Checkout current state of Pull Request
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Checkout current state of Branch
+        if: github.event_name == 'push'
         uses: actions/checkout@v2
 
       - name: Cache Apache Tika Binaries
@@ -111,6 +118,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Check tag
         run: |

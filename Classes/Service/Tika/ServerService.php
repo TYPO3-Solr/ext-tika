@@ -306,7 +306,7 @@ class ServerService extends AbstractService
 
         $response = $this->queryTika($request);
 
-        if ($response === false) {
+        if (empty($response)) {
             $this->log(
                 'Text Extraction using Tika Server failed',
                 $this->getLogData($file, $response),
@@ -374,7 +374,7 @@ class ServerService extends AbstractService
 
         $response = $this->queryTika($request);
 
-        if ($response === false) {
+        if (empty($response)) {
             $this->log(
                 'Language Detection using Tika Server failed',
                 $this->getLogData($file, $response),
