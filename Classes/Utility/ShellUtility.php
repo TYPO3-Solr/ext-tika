@@ -1,6 +1,8 @@
 <?php
 namespace ApacheSolrForTypo3\Tika\Utility;
 
+use TYPO3\CMS\Core\Core\Environment;
+
     /**
      * This file is part of the TYPO3 CMS project.
      *
@@ -24,7 +26,7 @@ class ShellUtility
      */
     public static function getLanguagePrefix()
     {
-        if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']) && TYPO3_OS !== 'WIN') {
+        if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']) && !Environment::isWindows()) {
             return 'LC_CTYPE="' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'] . '" ';
         }
         return '';
