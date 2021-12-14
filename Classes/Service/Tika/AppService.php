@@ -28,6 +28,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class AppService extends AbstractService
 {
+    protected const JAVA_COMMAND_OPTIONS_REGEX = '/-D(?P<property>[\w.]+)=(?P<value>"[^"]+"|\'[^\']+\'|[^\\s\'"]+)/';
+
     /**
     * @var array
     */
@@ -62,6 +64,7 @@ class AppService extends AbstractService
     {
         $tikaCommand = CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8' // forces UTF8 output
+            . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -V';
 
@@ -80,6 +83,7 @@ class AppService extends AbstractService
         $tikaCommand = ShellUtility::getLanguagePrefix()
             . CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8' // forces UTF8 output
+            . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -t'
             . ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
@@ -110,6 +114,7 @@ class AppService extends AbstractService
         $tikaCommand = ShellUtility::getLanguagePrefix()
             . CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
+            . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -m'
             . ' ' . ShellUtility::escapeShellArgument($localTempFilePath);
@@ -175,6 +180,7 @@ class AppService extends AbstractService
         $tikaCommand = ShellUtility::getLanguagePrefix()
             . CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
+            . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -l'
             . ' ' . ShellUtility::escapeShellArgument($localFilePath);
@@ -310,7 +316,46 @@ class AppService extends AbstractService
      */
     protected function getMimeTypeOutputFromTikaJar(): string
     {
-        $tikaCommand = ShellUtility::getLanguagePrefix() . CommandUtility::getCommand('java') . ' -Dfile.encoding=UTF8' . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath'])) . ' --list-supported-types';
+        $tikaCommand = ShellUtility::getLanguagePrefix()
+            . CommandUtility::getCommand('java')
+            . ' -Dfile.encoding=UTF8'
+            . $this->getAdditionalCommandOptions()
+            . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
+            . ' --list-supported-types';
+
         return trim(shell_exec($tikaCommand));
+    }
+
+    /**
+     * Parse additional Java command options.
+     *
+     * Reads the configuration value `javaCommandOptions` and tries to parse it to a
+     * safe argument string. For safety reasons, only the following variants are
+     * allowed (multiple separated by space):
+     *
+     * -Dfoo=bar
+     * -Dfoo='hello world'
+     * -Dfoo="hello world"
+     *
+     * @return string Parsed additional Java command options
+     */
+    protected function getAdditionalCommandOptions(): string
+    {
+        $commandOptions = trim((string)($this->configuration['javaCommandOptions'] ?? ''));
+
+        // Early return if no additional command options are configured
+        // or configuration does not match required pattern (only -D parameter is supported)
+        if ('' === $commandOptions || !preg_match_all(self::JAVA_COMMAND_OPTIONS_REGEX, $commandOptions, $matches)) {
+            return '';
+        }
+
+        // Combine matched command options with escaped argument value
+        $commandOptionsString = '';
+        foreach (array_combine($matches['property'], $matches['value']) as $property => $unescapedValue) {
+            $escapedValue = CommandUtility::escapeShellArgument(trim($unescapedValue, '"\''));
+            $commandOptionsString .= sprintf(' -D%s=%s', $property, $escapedValue);
+        }
+
+        return $commandOptionsString;
     }
 }
