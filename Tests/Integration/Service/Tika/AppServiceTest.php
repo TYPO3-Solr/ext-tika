@@ -149,5 +149,15 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $this->assertContains('gzip/document', $supportedMimeTypes, 'Mimetype from alias was not found');
     }
 
+    /**
+     * @test
+     */
+    public function includesAdditionalCommandOptions()
+    {
+        $service = new AppService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
+        $service->getTikaVersion();
+        $this->assertContains('-Dlog4j2.formatMsgNoLookups=\'true\'', ExecRecorder::$execCommand);
+    }
 }
 

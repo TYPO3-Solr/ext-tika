@@ -21,6 +21,9 @@ fileSizeLimit = 500
 #  cat=jar//10; type=string; label=Tika App Jar Path: The absolute path to your Apache Tika app jar file (tika-app-x.x.jar)
 tikaPath =
 
+#  cat=jar//20; type=string; label=Java command options: Additional command options passed to the java executable (only -D parameter is supported). Separate multiple parameters with a space.
+javaCommandOptions =
+
 #  cat=server//10; type=string; label=Tika Server Jar Path: [Optional] The absolute path to your Apache Tika server jar file (tika-server-x.x.jar). When set you can use the backend module to start and stop the Tika server from the TYPO3 backend. Otherwise the host and port settings will be used.
 tikaServerPath =
 
