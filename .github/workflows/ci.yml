@@ -2,11 +2,11 @@ name: build
 
 on:
   push:
-    branches: [ master, release-10.0.x ]
+    branches: [ main, release-10.0.x, release-6.0.x ]
     tags:
       - "**"
   pull_request:
-    branches: [ master, release-10.0.x ]
+    branches: [ main, release-10.0.x, release-6.0.x ]
 
 env:
   TIKA_VERSION: '1.24.1'
