@@ -1,10 +1,9 @@
 # Apache Tika for TYPO3
 
-[![Build Status](https://travis-ci.org/TYPO3-Solr/ext-tika.svg?branch=release-6.0.x)](https://travis-ci.org/TYPO3-Solr/ext-tika)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/quality-score.png?b=release-6.0.x)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/coverage.png?b=release-6.0.x)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=master)
+[![Build Status](https://github.com/TYPO3-Solr/ext-tika/actions/workflows/ci.yml/badge.svg?branch=release-6.0.x)](https://github.com/TYPO3-Solr/ext-tika/actions?query=branch:master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/quality-score.png?b=release-6.0.x)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=release-6.0.x)
+[![Code Coverage](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/coverage.png?b=release-6.0.x)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=release-6.0.x)
 [![Latest Stable Version](https://poser.pugx.org/apache-solr-for-typo3/tika/v/stable)](https://packagist.org/packages/apache-solr-for-typo3/tika)
-[![Latest Unstable Version](https://poser.pugx.org/apache-solr-for-typo3/tika/v/unstable)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![License](https://poser.pugx.org/apache-solr-for-typo3/tika/license)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![Monthly Downloads](https://poser.pugx.org/apache-solr-for-typo3/tika/d/monthly)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 
@@ -23,16 +22,24 @@ Please find further information regarding Apache Tika on the [project's homepage
 
 ## Continuous Integration
 
-We use travis ci for continuous integration. To run the whole test suite locally for one TYPO3 & Tika Version
-do the following:
+We use GitHub Actions for continuous integration.
 
-```bash
-export TIKA_VERSION="1.11"
-export TIKA_PATH="/tmp/tika"
-export TYPO3_VERSION="dev-master"
-chmod +x ./Build/Test/*.sh
-./Build/Test/bootstrap.sh
-./Build/Test/cibuild.sh
+To run the test suite locally, please use our DDEV docker environment https://github.com/TYPO3-Solr/solr-ddev-site.
+
+**Note**:
+  This requires a proper combination of branches:
+* solr-ddev-site on master branch:
+  * packages/ext-solr on master
+  * packages/ext-tika on master
+* solr-ddev-site on release-11.0.x branch
+    * packages/ext-solr on release-11.0.x
+    * packages/ext-tika on release-6.0.x
+* Please refer to [version matrix](https://raw.githubusercontent.com/TYPO3-Solr/ext-solr/master/Documentation/Appendix/VersionMatrix.rst) for proper combination of branches
+
+```shell
+ddev enable tika
+ddev tests-unit-tika
+ddev tests-integration-tika
 ```
 
 ## <a name="Contributions"></a>Contributions

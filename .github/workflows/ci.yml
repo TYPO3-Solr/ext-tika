@@ -1,10 +1,12 @@
-name: EXT:tika Github Actions
+name: build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, release-10.0.x ]
+    tags:
+      - "**"
   pull_request:
-    branches: [ master ]
+    branches: [ master, release-10.0.x ]
 
 env:
   TIKA_VERSION: '1.24.1'
@@ -90,3 +92,58 @@ jobs:
           cd $CI_BUILD_DIRECTORY/ext-tika
           ./Build/Test/cibuild.sh
           echo "Current Size of EXT:tika build Artefacts: " && du -sh $CI_BUILD_DIRECTORY/ && du -sh $CI_BUILD_DIRECTORY/ext-tika/.Build/*
+
+      - name: Upload code coverage to Scrutinizer
+        run: |
+          cd $CI_BUILD_DIRECTORY/ext-tika
+          mkdir -p $GITHUB_WORKSPACE/bin
+          wget https://scrutinizer-ci.com/ocular.phar -O $GITHUB_WORKSPACE/bin/ocular && chmod +x $GITHUB_WORKSPACE/bin/ocular
+          php $GITHUB_WORKSPACE/bin/ocular code-coverage:upload --format=php-clover coverage.unit.clover
+          php $GITHUB_WORKSPACE/bin/ocular code-coverage:upload --format=php-clover coverage.integration.clover
+
+  publish:
+    name: Publish new version to TER
+    needs: tests
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-20.04
+    env:
+      TYPO3_API_TOKEN: ${{ secrets.TYPO3_API_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Check tag
+        run: |
+          if ! [[ ${{ github.ref }} =~ ^refs/tags/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$ ]]; then
+            exit 1
+          fi
+      - name: Get version
+        id: get-version
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+
+      - name: Get comment
+        id: get-comment
+        run: |
+          readonly local comment=$(git tag -n99 -l ${{ steps.get-version.outputs.version }} | sed "s/^[0-9.]*[ ]*//g")
+          if [[ -z "${comment// }" ]]; then
+            echo ::set-output name=comment::Released version ${{ steps.get-version.outputs.version }} of EXT:tika
+          else
+            echo ::set-output name=comment::$comment
+          fi
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: intl, mbstring, json, zip, curl
+          tools: composer:v2
+
+      - name: Install tailor
+        run: composer global require typo3/tailor --prefer-dist --no-progress
+
+      - name: Publish EXT:tika to TER
+        run: php ~/.composer/vendor/bin/tailor ter:publish --comment "${{ steps.get-comment.outputs.comment }}" ${{ steps.get-version.outputs.version }}
+
+
