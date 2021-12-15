@@ -1,0 +1,92 @@
+name: EXT:tika Github Actions
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  TIKA_VERSION: '1.24.1'
+  TIKA_PATH: /ramfs/data-tika-binaries
+  EXT_SOLR_VERSION: 'dev-release-11.1.x'
+  TYPO3_DATABASE_NAME: 'typo3_ci'
+  TYPO3_DATABASE_HOST: '127.0.0.1'
+  TYPO3_DATABASE_USERNAME: 'root'
+  TYPO3_DATABASE_PASSWORD: 'root'
+  PHP_CS_FIXER_VERSION: '^3.0.2'
+
+  LOCAL_IMAGE_NAME: 'solrci-image:latest'
+  LOCAL_CONTAINER_NAME: 'solrci-container'
+  TESTING_SOLR_PORT: 8983
+  LOCAL_SOLR_VOLUME_NAME: 'solrci-volume'
+  LOCAL_SOLR_VOLUME_PATH: '/ramfs/data-solr'
+
+  CI_BUILD_DIRECTORY: '/ramfs/data-build'
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        PHP: [ '7.2', '7.3', '7.4' ]
+        TYPO3: [ '^10.4', '10.4.x-dev' ]
+    env:
+      TYPO3_VERSION: ${{ matrix.TYPO3 }}
+
+    name: TYPO3 ${{ matrix.TYPO3 }} on PHP ${{ matrix.PHP }}
+    steps:
+      -
+        name: Checkout current state
+        uses: actions/checkout@v2
+      -
+        name: Cache Apache Tika Binaries
+        id: tika-bineries
+        uses: actions/cache@v2
+        with:
+          path: $TIKA_PATH
+          key: tika-bineries
+      -
+        name: Mount RAMFS
+        run: |
+          id
+          sudo mkdir /ramfs
+          sudo mount -t tmpfs -o size=2048m none /ramfs
+          sudo mkdir -p /ramfs/data-{solr,mysql,build} && sudo chown $USER /ramfs/data-* && sudo chown 8983:8983 /ramfs/data-solr
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.PHP }}
+          coverage: xdebug
+          tools: composer:v2
+      -
+        name: CI-Bootstrap
+        run: |
+          echo "CI_BUILD_DIRECTORY=$CI_BUILD_DIRECTORY/"
+          cp -r ../ext-tika $CI_BUILD_DIRECTORY/.
+          cd $CI_BUILD_DIRECTORY/ext-tika
+          ./Build/Test/bootstrap.sh --skip-solr-install --skip-tika-server-install
+          echo "Current Size of EXT:tika build Artefacts: " && du -sh $CI_BUILD_DIRECTORY/ext-tika
+      -
+        name: Build ext-solr docker image
+        run: |
+          cd $CI_BUILD_DIRECTORY/ext-tika
+          docker build -t $LOCAL_IMAGE_NAME -f .Build/Web/typo3conf/ext/solr/Docker/SolrServer/Dockerfile .Build/Web/typo3conf/ext/solr/
+      -
+        name: 'Start Docker: Solr, Tika, MySQL'
+        run: |
+          docker run --name "MySQL-CI" -v /ramfs/data-mysql:/var/lib/mysql -p 3306:3306 \
+            -e MYSQL_DATABASE=$TYPO3_DATABASE_NAME \
+            -e MYSQL_ROOT_PASSWORD=$TYPO3_DATABASE_PASSWORD \
+            -d mysql:8.0 mysqld --default-authentication-plugin=mysql_native_password
+          sudo chmod g+w "$LOCAL_SOLR_VOLUME_PATH"
+          docker volume create --name "$LOCAL_VOLUME_NAME" --opt type=none --opt device="$LOCAL_SOLR_VOLUME_PATH" --opt o=bind
+          docker run --rm --name="$LOCAL_CONTAINER_NAME" -d -p 127.0.0.1:8983:8983 -v "$LOCAL_VOLUME_NAME":"/var/solr" "$LOCAL_IMAGE_NAME"
+          docker run -d -p 9998:9998 apache/tika:$TIKA_VERSION"-full"
+          docker ps
+      -
+        name: CI-Build
+        run: |
+          cd $CI_BUILD_DIRECTORY/ext-tika
+          ./Build/Test/cibuild.sh
+          echo "Current Size of EXT:tika build Artefacts: " && du -sh $CI_BUILD_DIRECTORY/ && du -sh $CI_BUILD_DIRECTORY/ext-tika/.Build/*
