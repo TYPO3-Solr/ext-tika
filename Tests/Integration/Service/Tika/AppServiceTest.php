@@ -157,7 +157,6 @@ class AppServiceTest extends ServiceIntegrationTestCase
     public function includesAdditionalCommandOptions()
     {
         $service = new AppService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
         $service->getTikaVersion();
         $this->assertContains('-Dlog4j2.formatMsgNoLookups=\'true\'', ExecRecorder::$execCommand);
     }
