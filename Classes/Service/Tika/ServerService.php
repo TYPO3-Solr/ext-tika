@@ -82,6 +82,8 @@ class ServerService extends AbstractService
      */
     protected function getProcess($arguments = '')
     {
+        $arguments = trim($this->getAdditionalCommandOptions() . ' ' . $arguments);
+
         return GeneralUtility::makeInstance(Process::class, CommandUtility::getCommand('java'), $arguments);
     }
 
