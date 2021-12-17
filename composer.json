@@ -62,9 +62,10 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "6.0.x-dev"
+      "dev-release-6.0.x": "6.0.x-dev"
     },
     "typo3/cms": {
+      "extension-key": "tika",
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/Web"
     }
