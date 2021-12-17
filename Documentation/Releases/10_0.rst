@@ -1,4 +1,43 @@
 ==========================================================
+Apache Solr for TYPO3 - Tika Addon version 10.0.2 released
+==========================================================
+
+**Important**:
+This version contains CVE-2021-44228 fixes for users, who starting
+the Tika Server-daemons within TYPO3 BE or using Tika app modes.
+All users using dedicated Tika server or Apache Solr Tika cell connections do not benefit from the update
+and should harden the Solr Servers and/or Tika Servers with official CVE-2021-44228 patches manually.
+
+Manual action required for Tika App or enabled Tika Server module
+
+Please note that the release does not automatically include security measures against CVE-2021-44228. Rather, it is
+now possible to specify additional parameters that can be passed when the java binary is executed.
+The parameters can be set using the extension configuration javaCommandOptions.
+Example:
+
+.. code-block::
+
+   # LocalConfiguration.php
+   return [
+       'EXTENSIONS' => [
+           'tika' => [
+               'javaCommandOptions' => '-Dlog4j2.formatMsgNoLookups=true',
+           ],
+       ],
+   ];
+
+
+==========================================================
+Apache Solr for TYPO3 - Tika Addon version 10.0.1 released
+==========================================================
+
+**Important**:
+This version contains CVE-2021-44228 fixes for users, who starting
+the Tika Server-daemons within TYPO3 BE or using Tika app modes.
+All users using dedicated Tika server or Apache Solr Tika cell connections do not benefit from the update
+and should harden the Solr Servers and/or Tika Servers with official CVE-2021-44228 patches manually.
+
+==========================================================
 Apache Solr for TYPO3 - Tika Addon version 10.0.0 released
 ==========================================================
 
