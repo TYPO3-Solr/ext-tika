@@ -61,7 +61,7 @@ class Process
      */
     public function __construct($executable, $arguments = '')
     {
-        $this->executable = $executable;
+        $this->executable = (string)$executable;
         $this->arguments = $arguments;
     }
 
