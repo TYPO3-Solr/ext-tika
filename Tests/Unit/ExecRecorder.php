@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /***************************************************************
  *  Copyright notice
  *
@@ -34,13 +36,10 @@ eval('namespace ApacheSolrForTypo3\Tika\Service\Tika { ?>' . file_get_contents(_
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-
 namespace ApacheSolrForTypo3\Tika\Tests\Unit;
-
 
 /**
  * Class ExecRecorder, holds exec() results
- *
  */
 class ExecRecorder
 {
@@ -66,11 +65,10 @@ class ExecRecorder
      */
     public static $execCalled = 0;
 
-
     /**
      * Resets the exec() mock
      */
-    public static function reset()
+    public static function reset(): void
     {
         self::$execCalled = 0;
         self::$execCommand = '';
@@ -82,7 +80,7 @@ class ExecRecorder
      *
      * @param array $lines One line of returned output per element in $lines
      */
-    public static function setReturnExecOutput(array $lines)
+    public static function setReturnExecOutput(array $lines): void
     {
         self::$execOutput[] = $lines;
     }

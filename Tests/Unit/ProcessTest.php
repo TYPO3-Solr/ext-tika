@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Unit;
 
 /***************************************************************
@@ -25,12 +27,9 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Process;
-use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
-
 
 /**
  * Test case for class \ApacheSolrForTypo3\Tika\Process
- *
  */
 class ProcessTest extends UnitTestCase
 {
@@ -38,47 +37,47 @@ class ProcessTest extends UnitTestCase
     /**
      * @test
      */
-    public function constructorSetsExecutableAndArguments()
+    public function constructorSetsExecutableAndArguments(): void
     {
         $process = new Process('foo', '-bar');
 
-        $this->assertEquals('foo', $process->getExecutable());
-        $this->assertEquals('-bar', $process->getArguments());
+        self::assertEquals('foo', $process->getExecutable());
+        self::assertEquals('-bar', $process->getArguments());
     }
 
     /**
      * @test
      */
-    public function findPidUsesExecutableBasename()
+    public function findPidUsesExecutableBasename(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
         ExecRecorder::setReturnExecOutput(['foo']);
 
         $process->findPid();
 
-        $this->assertTrue((bool)ExecRecorder::$execCalled);
-        $this->assertContains('foo', ExecRecorder::$execCommand);
-        $this->assertNotContains('/usr/bin', ExecRecorder::$execCommand);
+        self::assertTrue((bool)ExecRecorder::$execCalled);
+        self::assertContains('foo', ExecRecorder::$execCommand);
+        self::assertNotContains('/usr/bin', ExecRecorder::$execCommand);
     }
 
     /**
      * @test
      */
-    public function isRunningUsesPid()
+    public function isRunningUsesPid(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
         $process->setPid(1337);
 
         $process->isRunning();
 
-        $this->assertTrue((bool)ExecRecorder::$execCalled);
-        $this->assertContains('1337', ExecRecorder::$execCommand);
+        self::assertTrue((bool)ExecRecorder::$execCalled);
+        self::assertContains('1337', ExecRecorder::$execCommand);
     }
 
     /**
      * @test
      */
-    public function isRunningReturnsTrueForRunningProcess()
+    public function isRunningReturnsTrueForRunningProcess(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
         $process->setPid(1337);
@@ -86,61 +85,60 @@ class ProcessTest extends UnitTestCase
 
         $running = $process->isRunning();
 
-        $this->assertTrue($running);
+        self::assertTrue($running);
     }
 
     /**
      * @test
      */
-    public function isRunningReturnsFalseForStoppedProcess()
+    public function isRunningReturnsFalseForStoppedProcess(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
 
         $running = $process->isRunning();
 
-        $this->assertFalse($running);
+        self::assertFalse($running);
     }
 
     /**
      * @test
      */
-    public function startStartsProcess()
+    public function startStartsProcess(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
 
         ExecRecorder::setReturnExecOutput(['foo']);
         $running = $process->isRunning();
-        $this->assertFalse($running);
+        self::assertFalse($running);
 
         ExecRecorder::setReturnExecOutput(['1337']); // runCommand() return pid of started process = 1337
         ExecRecorder::setReturnExecOutput(['1337 /usr/bin/foo -bar']); // isRunning()
         $running = $process->start();
 
-        $this->assertTrue($running);
+        self::assertTrue($running);
     }
 
     /**
      * @test
      */
-    public function stopStopsProcess()
+    public function stopStopsProcess(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
         $process->setPid(1337);
         ExecRecorder::setReturnExecOutput(['1337 /usr/bin/foo -bar']);
 
         $running = $process->isRunning();
-        $this->assertTrue($running);
+        self::assertTrue($running);
 
         $stopped = $process->stop();
-        $this->assertTrue($stopped);
+        self::assertTrue($stopped);
 
         $running = $process->isRunning();
-        $this->assertFalse($running);
+        self::assertFalse($running);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         ExecRecorder::reset();
     }
-
 }

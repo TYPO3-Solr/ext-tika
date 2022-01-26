@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /*
@@ -22,7 +24,6 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 /**
  * Abstract Tika service implementing shared methods
  *
- * @package ApacheSolrForTypo3\Tika\Service
  * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
@@ -49,10 +50,8 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
 
     /**
      * Service initialization
-     *
-     * @return void
      */
-    protected function initializeService()
+    protected function initializeService(): void
     {
     }
 
@@ -61,11 +60,10 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
      *
      * @param string $message Log message
      * @param array $data Optional data
-     * @param integer|string $severity Use constants from class LogLevel
-     * @return void
+     * @param int|string $severity Use constants from class LogLevel
      * @see LogLevel For supported log levels
      */
-    protected function log(string $message, array $data = [], $severity = LogLevel::DEBUG)
+    protected function log(string $message, array $data = [], $severity = LogLevel::DEBUG): void
     {
         if (!$this->configuration['logging']) {
             return;
@@ -80,7 +78,8 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
     /**
      * @return mixed
      */
-    public function getSupportedMimeTypes() {
+    public function getSupportedMimeTypes()
+    {
         return [];
     }
 

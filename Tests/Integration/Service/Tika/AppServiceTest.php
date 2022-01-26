@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /*
@@ -19,7 +21,6 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
 use Psr\Log\NullLogger;
 use TYPO3\CMS\Core\Resource\File;
 
-
 /**
  * Test case for class AppService
  *
@@ -27,8 +28,7 @@ use TYPO3\CMS\Core\Resource\File;
  */
 class AppServiceTest extends ServiceIntegrationTestCase
 {
-
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         ExecRecorder::reset();
@@ -37,24 +37,24 @@ class AppServiceTest extends ServiceIntegrationTestCase
     /**
      * @test
      */
-    public function getTikaVersionUsesVParameter()
+    public function getTikaVersionUsesVParameter(): void
     {
         $service = new AppService($this->getConfiguration());
         $service->setLogger(new NullLogger());
         $service->getTikaVersion();
 
-        $this->assertContains('-V', ExecRecorder::$execCommand);
+        self::assertContains('-V', ExecRecorder::$execCommand);
     }
 
     /**
      * @test
      */
-    public function extractTextUsesTParameter()
+    public function extractTextUsesTParameter(): void
     {
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
+                'name' => 'testWORD.doc',
             ],
             $this->documentsStorageMock
         );
@@ -63,19 +63,19 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service->setLogger(new NullLogger());
         $service->extractText($file);
 
-        $this->assertContains('-t', ExecRecorder::$execCommand);
+        self::assertContains('-t', ExecRecorder::$execCommand);
     }
 
     /**
      * @test
      */
-    public function extractMetaDataUsesMParameter()
+    public function extractMetaDataUsesMParameter(): void
     {
         ExecRecorder::setReturnExecOutput(['foo']);
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
+                'name' => 'testWORD.doc',
             ],
             $this->documentsStorageMock
         );
@@ -84,18 +84,18 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service->setLogger(new NullLogger());
         $service->extractMetaData($file);
 
-        $this->assertContains('-m', ExecRecorder::$execCommand);
+        self::assertContains('-m', ExecRecorder::$execCommand);
     }
 
     /**
      * @test
      */
-    public function detectLanguageFromFileUsesLParameter()
+    public function detectLanguageFromFileUsesLParameter(): void
     {
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
+                'name' => 'testWORD.doc',
             ],
             $this->documentsStorageMock
         );
@@ -104,60 +104,59 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service->setLogger(new NullLogger());
         $service->detectLanguageFromFile($file);
 
-        $this->assertContains('-l', ExecRecorder::$execCommand);
+        self::assertContains('-l', ExecRecorder::$execCommand);
     }
 
     /**
      * @test
      */
-    public function detectLanguageFromStringUsesLParameter()
+    public function detectLanguageFromStringUsesLParameter(): void
     {
         $service = new AppService($this->getConfiguration());
         $service->setLogger(new NullLogger());
         $service->detectLanguageFromString('foo');
 
-        $this->assertContains('-l', ExecRecorder::$execCommand);
+        self::assertContains('-l', ExecRecorder::$execCommand);
     }
 
     /**
      * @test
      */
-    public function callsTikaAppCorrectlyToGetMimeList()
+    public function callsTikaAppCorrectlyToGetMimeList(): void
     {
         $service = new AppService($this->getConfiguration());
         $service->setLogger(new NullLogger());
         $service->getSupportedMimeTypes();
-        $this->assertContains('--list-supported-types', ExecRecorder::$execCommand);
+        self::assertContains('--list-supported-types', ExecRecorder::$execCommand);
     }
 
     /**
      * @test
      */
-    public function canParseMimeList()
+    public function canParseMimeList(): void
     {
-        $fixtureContent = file_get_contents(dirname(__FILE__) . '/Fixtures/mimeOut');
+        $fixtureContent = file_get_contents(__DIR__ . '/Fixtures/mimeOut');
 
         /** @var $service AppService */
         $service = $this->getMockBuilder(AppService::class)
             ->disableOriginalConstructor()
             ->setMethods(['getMimeTypeOutputFromTikaJar'])->getMock();
-        $service->expects($this->once())->method('getMimeTypeOutputFromTikaJar')->will($this->returnValue($fixtureContent));
+        $service->expects(self::once())->method('getMimeTypeOutputFromTikaJar')->willReturn($fixtureContent);
 
         $supportedMimeTypes = $service->getSupportedMimeTypes();
 
-        $this->assertContains('application/gzip', $supportedMimeTypes, 'Mimetype from listing was not found');
-        $this->assertContains('gzip/document', $supportedMimeTypes, 'Mimetype from alias was not found');
+        self::assertContains('application/gzip', $supportedMimeTypes, 'Mimetype from listing was not found');
+        self::assertContains('gzip/document', $supportedMimeTypes, 'Mimetype from alias was not found');
     }
 
     /**
      * @test
      */
-    public function includesAdditionalCommandOptions()
+    public function includesAdditionalCommandOptions(): void
     {
         $service = new AppService($this->getConfiguration());
         $service->setLogger(new NullLogger());
         $service->getTikaVersion();
-        $this->assertContains('-Dlog4j2.formatMsgNoLookups=\'true\'', ExecRecorder::$execCommand);
+        self::assertContains('-Dlog4j2.formatMsgNoLookups=\'true\'', ExecRecorder::$execCommand);
     }
 }
-

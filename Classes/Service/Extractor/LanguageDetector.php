@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 /***************************************************************
@@ -28,16 +30,13 @@ use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use Exception;
 use TYPO3\CMS\Core\Resource\File;
 
-
 /**
  * A service to detect a text's language using Apache Tika
  *
  * @author Ingo Renner <ingo@typo3.org>
- * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
 class LanguageDetector extends AbstractExtractor
 {
-
     protected $supportedFileTypes = [
         'doc',
         'docx',
@@ -54,20 +53,19 @@ class LanguageDetector extends AbstractExtractor
         'sxw',
         'txt',
         'xls',
-        'xlsx'
+        'xlsx',
     ];
 
     /**
-     * @var integer
+     * @var int
      */
     protected $priority = 98;
-
 
     /**
      * Checks if the given file can be processed by this Extractor
      *
      * @param File $file
-     * @return boolean
+     * @return bool
      */
     public function canProcess(File $file)
     {
@@ -96,5 +94,4 @@ class LanguageDetector extends AbstractExtractor
 
         return $metaData;
     }
-
 }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Hooks;
 
 use TYPO3\CMS\Backend\Controller\BackendController;
@@ -21,12 +23,13 @@ class BackendControllerHook
      * @noinspection PhpUnused
      * @noinspection PhpUnusedParameterInspection
      */
-    public function addJavaScript(array $configuration, BackendController $backendController)
+    public function addJavaScript(array $configuration, BackendController $backendController): void
     {
         $this->getPageRenderer()->addInlineSetting(
             'TikaPreview',
             'moduleUrl',
-            (string)$this->getBackendUriBuilder()->buildUriFromRoute('tika_preview'));
+            (string)$this->getBackendUriBuilder()->buildUriFromRoute('tika_preview')
+        );
     }
 
     /**

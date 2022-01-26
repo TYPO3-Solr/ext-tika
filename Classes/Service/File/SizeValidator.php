@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\File;
 
 use ApacheSolrForTypo3\Tika\Util;
@@ -31,7 +33,8 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 /**
  * Class SizeValidator
  */
-class SizeValidator {
+class SizeValidator
+{
 
     /**
      * @var array
@@ -51,7 +54,8 @@ class SizeValidator {
      * @param FileInterface $file
      * @return bool
      */
-    public function isBelowLimit(FileInterface $file) {
+    public function isBelowLimit(FileInterface $file)
+    {
         return $file->getSize() < $this->getFileSizeLimit();
     }
 
@@ -77,6 +81,6 @@ class SizeValidator {
      */
     protected function getConfigurationOrDefaultValue($key, $defaultValue)
     {
-        return isset($this->configuration[$key]) ? $this->configuration[$key] : $defaultValue;
+        return $this->configuration[$key] ?? $defaultValue;
     }
 }
