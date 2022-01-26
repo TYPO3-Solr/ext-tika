@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 /***************************************************************
@@ -29,8 +31,8 @@ use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Exception;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * A service to extract meta data from files using Apache Tika
@@ -40,16 +42,15 @@ use TYPO3\CMS\Core\Resource\File;
 class MetaDataExtractor extends AbstractExtractor
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $priority = 100;
-
 
     /**
      * Checks if the given file can be processed by this Extractor
      *
      * @param File $file
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function canProcess(File $file)
@@ -85,7 +86,8 @@ class MetaDataExtractor extends AbstractExtractor
     /**
      * @return AppService|ServerService|SolrCellService
      */
-    protected function getExtractor() {
+    protected function getExtractor()
+    {
         return ServiceFactory::getTika($this->configuration['extractor']);
     }
 
@@ -97,7 +99,8 @@ class MetaDataExtractor extends AbstractExtractor
      * @return array
      * @throws Exception
      */
-    public function extractMetaData(File $file, array $previousExtractedData = []) {
+    public function extractMetaData(File $file, array $previousExtractedData = [])
+    {
         $extractedMetaData = $this->getExtractedMetaDataFromTikaService($file);
         return $this->normalizeMetaData($extractedMetaData);
     }
@@ -153,14 +156,14 @@ class MetaDataExtractor extends AbstractExtractor
                     $metaDataCleaned['height'] = $value;
                     break;
                 case 'Exif Image Height':
-                    list($height) = explode(' ', $value, 2);
+                    [$height] = explode(' ', $value, 2);
                     $metaDataCleaned['height'] = $height;
                     break;
                 case 'width':
                     $metaDataCleaned['width'] = $value;
                     break;
                 case 'Exif Image Width':
-                    list($width) = explode(' ', $value, 2);
+                    [$width] = explode(' ', $value, 2);
                     $metaDataCleaned['width'] = $width;
                     break;
                 case 'Color space':
@@ -220,7 +223,7 @@ class MetaDataExtractor extends AbstractExtractor
      * exiftags: 2002:09:07 15:29:52
      *
      * @param string $date An exif date string
-     * @return integer Unix timestamp
+     * @return int Unix timestamp
      */
     protected function exifDateToTimestamp($date)
     {

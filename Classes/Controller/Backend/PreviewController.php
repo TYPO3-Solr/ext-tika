@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Controller\Backend;
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
@@ -17,9 +19,9 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Class PreviewController
- * @package ApacheSolrForTypo3\Tika\Controller\Backend
  */
-class PreviewController {
+class PreviewController
+{
 
     /**
      * @param ServerRequestInterface $request
@@ -91,7 +93,7 @@ class PreviewController {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     protected function getIsAdmin()
     {

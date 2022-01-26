@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /***************************************************************
@@ -25,17 +27,15 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
-use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * Class AppServiceTest
- *
  */
 class ServiceFactoryTest extends ServiceIntegrationTestCase
 {
@@ -48,54 +48,54 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
     /**
      * @test
      */
-    public function getTikaReturnsAppServiceForJarExtractor()
+    public function getTikaReturnsAppServiceForJarExtractor(): void
     {
         $extractor = ServiceFactory::getTika('jar', $this->getConfiguration());
-        $this->assertInstanceOf(AppService::class, $extractor);
+        self::assertInstanceOf(AppService::class, $extractor);
     }
 
     /**
      * @test
      */
-    public function getTikaReturnsAppServiceForTikaExtractor()
+    public function getTikaReturnsAppServiceForTikaExtractor(): void
     {
         $extractor = ServiceFactory::getTika('tika', $this->getConfiguration());
-        $this->assertInstanceOf(AppService::class, $extractor);
+        self::assertInstanceOf(AppService::class, $extractor);
     }
 
     /**
      * @test
      */
-    public function getTikaReturnsServerServiceForServerExtractor()
+    public function getTikaReturnsServerServiceForServerExtractor(): void
     {
         $extractor = ServiceFactory::getTika('server', $this->getConfiguration());
-        $this->assertInstanceOf(ServerService::class, $extractor);
+        self::assertInstanceOf(ServerService::class, $extractor);
     }
 
     /**
      * @test
      */
-    public function getTikaReturnsSolrCellServiceForSolrExtractor()
+    public function getTikaReturnsSolrCellServiceForSolrExtractor(): void
     {
         if (!ExtensionManagementUtility::isLoaded('solr')) {
-            $this->markTestSkipped('EXT:solr is required for this test, but is not loaded.');
+            self::markTestSkipped('EXT:solr is required for this test, but is not loaded.');
         }
 
         $extractor = ServiceFactory::getTika('solr', $this->getConfiguration());
-        $this->assertInstanceOf(SolrCellService::class, $extractor);
-        $this->assertInstanceOf(SolrCellService::class, $extractor);
+        self::assertInstanceOf(SolrCellService::class, $extractor);
+        self::assertInstanceOf(SolrCellService::class, $extractor);
     }
 
     /**
      * @test
      * @expectedException \InvalidArgumentException
      */
-    public function getTikaThrowsExceptionForInvalidExtractor()
+    public function getTikaThrowsExceptionForInvalidExtractor(): void
     {
         ServiceFactory::getTika('foo', $this->getConfiguration());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->globalsBackup = [
@@ -105,22 +105,21 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
         GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
             'cache_hash' => [
                 'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
+                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class,
             ],
             'cache_runtime' => [
                 'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class
-            ]
+                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class,
+            ],
         ]);
         unset($GLOBALS['TYPO3_CONF_VARS']);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach ($this->globalsBackup as $key => $data) {
             $GLOBALS[$key] = $data;
         }
         unset($this->globalsBackup);
     }
-
 }

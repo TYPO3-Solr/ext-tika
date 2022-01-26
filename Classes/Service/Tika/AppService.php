@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /*
@@ -35,10 +37,8 @@ class AppService extends AbstractService
 
     /**
      * Service initialization
-     *
-     * @return void
      */
-    protected function initializeService()
+    protected function initializeService(): void
     {
         if (!is_file(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
         ) {
@@ -93,7 +93,7 @@ class AppService extends AbstractService
             [
                 'file' => $file,
                 'tika command' => $tikaCommand,
-                'shell output' => $extractedText
+                'shell output' => $extractedText,
             ]
         );
 
@@ -127,7 +127,7 @@ class AppService extends AbstractService
                 'file' => $file,
                 'tika command' => $tikaCommand,
                 'shell output' => $shellOutput,
-                'meta data' => $metaData
+                'meta data' => $metaData,
             ]
         );
 
@@ -190,7 +190,7 @@ class AppService extends AbstractService
             [
                 'file' => $localFilePath,
                 'tika command' => $tikaCommand,
-                'shell output' => $language
+                'shell output' => $language,
             ]
         );
 
@@ -202,7 +202,7 @@ class AppService extends AbstractService
      */
     public function getSupportedMimeTypes()
     {
-        if(is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
+        if (is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
             return self::$supportedMimeTypes;
         }
 
@@ -224,15 +224,14 @@ class AppService extends AbstractService
         preg_match_all('/^[\s]*alias:[\s]*.*/im', $mimeTypeOutput, $aliasTypes);
 
         $supportedTypes = $coreTypes[0];
-        foreach($aliasTypes[0] as $aliasType) {
-            $supportedTypes[] = trim(str_replace('alias:','', $aliasType));
+        foreach ($aliasTypes[0] as $aliasType) {
+            $supportedTypes[] = trim(str_replace('alias:', '', $aliasType));
         }
 
         $supportedTypes = array_filter($supportedTypes);
         asort($supportedTypes);
         return $supportedTypes;
     }
-
 
     /**
      * Takes shell output from exec() and turns it into an array of key => value
@@ -246,7 +245,7 @@ class AppService extends AbstractService
         $metaData = [];
 
         foreach ($shellOutput as $line) {
-            list($key, $value) = explode(':', $line, 2);
+            [$key, $value] = explode(':', $line, 2);
             $value = trim($value);
 
             if (in_array($key, [
@@ -256,11 +255,11 @@ class AppService extends AbstractService
                 'tiff',
                 'xmp',
                 'xmpTPg',
-                'xmpDM'
+                'xmpDM',
             ])) {
                 // Dublin Core metadata and co
                 $keyPrefix = $key;
-                list($key, $value) = explode(':', $value, 2);
+                [$key, $value] = explode(':', $value, 2);
 
                 $key = $keyPrefix . ':' . $key;
                 $value = trim($value);
@@ -292,7 +291,7 @@ class AppService extends AbstractService
     /**
      * The app is available when the jar can be opened
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable()
     {

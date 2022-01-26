@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 // Prevent Script from beeing called directly
 defined('TYPO3_MODE') || die();
 
@@ -8,7 +10,6 @@ $statusSection = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('s
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'][$statusSection][] =
     \ApacheSolrForTypo3\Tika\Report\TikaStatus::class;
 $extIconPath = 'EXT:tika/Resources/Public/Images/Icons/';
-
 
 $modulePrefix = 'extensions-tika-module';
 $svgProvider = \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class;
@@ -35,14 +36,13 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
             'TikaControlPanel',
             'bottom',
             [
-                \ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule\TikaControlPanelModuleController::class => 'index, startServer, stopServer'
+                \ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule\TikaControlPanelModuleController::class => 'index, startServer, stopServer',
             ],
             [
                 'access' => 'user,group',
                 'icon' => 'EXT:tika/Resources/Public/Images/Icons/module-tika.svg',
-                'labels' => 'LLL:EXT:tika/Resources/Private/Language/locallang.xlf:solr.backend.tika.label'
+                'labels' => 'LLL:EXT:tika/Resources/Private/Language/locallang.xlf:solr.backend.tika.label',
             ]
         );
     }
-
 }

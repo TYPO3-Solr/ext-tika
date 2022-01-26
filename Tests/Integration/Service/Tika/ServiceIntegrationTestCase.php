@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /***************************************************************
@@ -25,6 +27,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  ***************************************************************/
 
 use ApacheSolrForTypo3\Tika\Util;
+use function getenv;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
@@ -37,12 +40,9 @@ use TYPO3\CMS\Core\Resource\MetaDataAspect;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use function getenv;
-
 
 /**
  * Base class for EXT:tika tests
- *
  */
 abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 {
@@ -52,8 +52,8 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected $configurationToUseInTestInstance = [
         'SYS' =>  [
-            'exceptionalErrors' =>  E_WARNING | E_RECOVERABLE_ERROR | E_DEPRECATED | E_USER_DEPRECATED
-        ]
+            'exceptionalErrors' =>  E_WARNING | E_RECOVERABLE_ERROR | E_DEPRECATED | E_USER_DEPRECATED,
+        ],
     ];
 
     /**
@@ -96,7 +96,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = [
         'typo3conf/ext/solr',
-        'typo3conf/ext/tika'
+        'typo3conf/ext/tika',
     ];
 
     /**
@@ -114,7 +114,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         return $objectVars;
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->singletonInstances = GeneralUtility::getSingletonInstances();
@@ -123,12 +123,12 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
             'cache_hash' => [
                 'frontend' => VariableFrontend::class,
-                'backend' => TransientMemoryBackend::class
+                'backend' => TransientMemoryBackend::class,
             ],
             'cache_runtime' => [
                 'frontend' => VariableFrontend::class,
-                'backend' => TransientMemoryBackend::class
-            ]
+                'backend' => TransientMemoryBackend::class,
+            ],
         ]);
 
         $this->setUpDocumentsStorageMock();
@@ -139,7 +139,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         if (Util::getIsTYPO3VersionAbove9()) {
             /** @noinspection PhpFullyQualifiedNameUsageInspection */
             $metaDataRepositoryConstructorArgs = [
-                GeneralUtility::makeInstance(\TYPO3\CMS\Core\EventDispatcher\EventDispatcher::class)
+                GeneralUtility::makeInstance(\TYPO3\CMS\Core\EventDispatcher\EventDispatcher::class),
             ];
         }
 
@@ -150,18 +150,18 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $mockedMetaDataRepository
             ->expects(self::any())
             ->method('findByFile')
-            ->will($this->returnValue(['file' => 1]));
+            ->willReturn(['file' => 1]);
         GeneralUtility::setSingletonInstance(MetaDataRepository::class, $mockedMetaDataRepository);
     }
 
-    protected function setUpDocumentsStorageMock()
+    protected function setUpDocumentsStorageMock(): void
     {
         $this->testDocumentsPath = ExtensionManagementUtility::extPath('tika')
             . 'Tests/TestDocuments/';
 
         $documentsDriver = $this->createDriverFixture([
             'basePath' => $this->testDocumentsPath,
-            'caseSensitive' => true
+            'caseSensitive' => true,
         ]);
 
         $documentsStorageRecord = [
@@ -173,8 +173,8 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             'configuration' => $this->convertConfigurationArrayToFlexformXml([
                 'basePath' => $this->testDocumentsPath,
                 'pathType' => 'absolute',
-                'caseSensitive' => '1'
-            ])
+                'caseSensitive' => '1',
+            ]),
         ];
 
         $this->documentsStorageMock = $this->getMockBuilder(ResourceStorage::class)
@@ -184,19 +184,19 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 
         $this->documentsStorageMock
             ->expects(self::any())->method('getUid')
-            ->will(
-                $this->returnValue($this->documentsStorageUid)
+            ->willReturn(
+                $this->documentsStorageUid
             );
     }
 
-    protected function setUpLanguagesStorageMock()
+    protected function setUpLanguagesStorageMock(): void
     {
         $this->testLanguagesPath = ExtensionManagementUtility::extPath('tika')
             . 'Tests/TestLanguages/';
 
         $languagesDriver = $this->createDriverFixture([
             'basePath' => $this->testLanguagesPath,
-            'caseSensitive' => true
+            'caseSensitive' => true,
         ]);
 
         $languagesStorageRecord = [
@@ -208,8 +208,8 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             'configuration' => $this->convertConfigurationArrayToFlexformXml([
                 'basePath' => $this->testLanguagesPath,
                 'pathType' => 'absolute',
-                'caseSensitive' => '1'
-            ])
+                'caseSensitive' => '1',
+            ]),
         ];
 
         $this->languagesStorageMock = $this->getMockBuilder(ResourceStorage::class)
@@ -218,10 +218,10 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             ->getMock();
         $this->languagesStorageMock->expects(self::any())
             ->method('getUid')
-            ->will($this->returnValue($this->languagesStorageUid));
+            ->willReturn($this->languagesStorageUid);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         GeneralUtility::resetSingletonInstances($this->singletonInstances);
         parent::tearDown();
@@ -240,12 +240,15 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
     ) {
         /** @var LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
-        $driver = $this->getAccessibleMock(LocalDriver::class,
-            $mockedDriverMethods, [$driverConfiguration]);
+        $driver = $this->getAccessibleMock(
+            LocalDriver::class,
+            $mockedDriverMethods,
+            [$driverConfiguration]
+        );
         $driver->expects(self::any())
             ->method('isPathValid')
-            ->will(
-                $this->returnValue(true)
+            ->willReturn(
+                true
             );
 
         $driver->setStorageUid($this->documentsStorageUid);
@@ -267,9 +270,9 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $flexformArray = [
             'data' => [
                 'sDEF' => [
-                    'lDEF' => []
-                ]
-            ]
+                    'lDEF' => [],
+                ],
+            ],
         ];
         foreach ($configuration as $key => $value) {
             $flexformArray['data']['sDEF']['lDEF'][$key] = ['vDEF' => $value];
@@ -305,7 +308,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             'solrScheme' => getenv('TESTING_SOLR_SCHEME') ?: 'http',
             'solrHost' => getenv('TESTING_SOLR_HOST') ?: 'localhost',
             'solrPort' => getenv('TESTING_SOLR_PORT') ?: 8999,
-            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/core_en'
+            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/core_en',
         ];
     }
 
@@ -328,7 +331,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             ->setConstructorArgs([
                 $fileData,
                 $storage ?? $this->documentsStorageMock,
-                $metaData
+                $metaData,
             ])
             ->setMethods(['getMetaData'])
             ->getMock();
@@ -343,5 +346,4 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 
         return $fileMock;
     }
-
 }

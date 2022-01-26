@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend;
 
 /***************************************************************
@@ -34,34 +36,34 @@ use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 
-class PreviewControllerTest extends UnitTestCase {
+class PreviewControllerTest extends UnitTestCase
+{
 
     /**
      * @test
      */
-    public function previewActionTriggersTikaServices()
+    public function previewActionTriggersTikaServices(): void
     {
         /** @var $controller PreviewController */
         $controller = $this->getMockBuilder(PreviewController::class)->setMethods([
             'getFileResourceFactory',
             'getInitializedPreviewView',
             'getConfiguredTikaService',
-            'getIsAdmin'
+            'getIsAdmin',
         ])->getMock();
 
         $fileMock = $this->getMockBuilder(FileInterface::class)->getMock();
         $fileResourceFactoryMock = $this->getMockBuilder(ResourceFactory::class)->disableOriginalConstructor()->getMock();
-        $fileResourceFactoryMock->expects($this->once())->method('getFileObjectFromCombinedIdentifier')->willReturn($fileMock);
-        $controller->expects($this->once())->method('getFileResourceFactory')->willReturn($fileResourceFactoryMock);
+        $fileResourceFactoryMock->expects(self::once())->method('getFileObjectFromCombinedIdentifier')->willReturn($fileMock);
+        $controller->expects(self::once())->method('getFileResourceFactory')->willReturn($fileResourceFactoryMock);
 
         $serviceMock = $this->getMockBuilder(ServerService::class)->disableOriginalConstructor()->getMock();
-        $serviceMock->expects($this->once())->method('extractText')->with($fileMock)->willReturn('Extracted Text');
-        $serviceMock->expects($this->once())->method('extractMetaData')->with($fileMock)->willReturn(['metaKey' => 'metaValue']);
-        $serviceMock->expects($this->once())->method('detectLanguageFromFile')->with($fileMock)->willReturn('de');
+        $serviceMock->expects(self::once())->method('extractText')->with($fileMock)->willReturn('Extracted Text');
+        $serviceMock->expects(self::once())->method('extractMetaData')->with($fileMock)->willReturn(['metaKey' => 'metaValue']);
+        $serviceMock->expects(self::once())->method('detectLanguageFromFile')->with($fileMock)->willReturn('de');
 
-        $controller->expects($this->once())->method('getIsAdmin')->willReturn(true);
-        $controller->expects($this->once())->method('getConfiguredTikaService')->willReturn($serviceMock);
-
+        $controller->expects(self::once())->method('getIsAdmin')->willReturn(true);
+        $controller->expects(self::once())->method('getConfiguredTikaService')->willReturn($serviceMock);
 
         $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
         $controller->previewAction($request);
@@ -70,22 +72,22 @@ class PreviewControllerTest extends UnitTestCase {
     /**
      * @test
      */
-    public function previewActionShowsErrorWhenNoAdmin()
+    public function previewActionShowsErrorWhenNoAdmin(): void
     {
         /** @var $controller PreviewController */
         $controller = $this->getMockBuilder(PreviewController::class)->setMethods([
             'getFileResourceFactory',
             'getInitializedPreviewView',
             'getConfiguredTikaService',
-            'getIsAdmin'
+            'getIsAdmin',
         ])->getMock();
-        $controller->expects($this->once())->method('getIsAdmin')->willReturn(false);
+        $controller->expects(self::once())->method('getIsAdmin')->willReturn(false);
 
         $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
 
         /* @var Response $response */
         $response = $controller->previewAction($request);
-        $this->assertEquals(403, $response->getStatusCode(), 'Non admin BE users do not get 403.');
-        $this->assertEquals('Only admins can see the tika preview', $response->getBody(), 'Non admin user do not get proper forbidden message.');
+        self::assertEquals(403, $response->getStatusCode(), 'Non admin BE users do not get 403.');
+        self::assertEquals('Only admins can see the tika preview', $response->getBody(), 'Non admin user do not get proper forbidden message.');
     }
 }

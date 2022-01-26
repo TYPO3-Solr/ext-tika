@@ -1,6 +1,7 @@
 <?php
-namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
 
+declare(strict_types=1);
+namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
 
 /***************************************************************
  *  Copyright notice
@@ -28,7 +29,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
 
 use ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule\TikaControlPanelModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
-use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
@@ -44,7 +44,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
      */
     protected $viewMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->viewMock = $this->getDumbMock(ViewInterface::class);
         $this->controller = $this->getMockBuilder(TikaControlPanelModuleController::class)
@@ -59,27 +59,27 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
      *
      * @test
      */
-    public function canShowInformationFromStandaloneTikaServer()
+    public function canShowInformationFromStandaloneTikaServer(): void
     {
         $tikaServerService = $this->getDumbMock(ServerService::class);
-        $tikaServerService->expects($this->atLeastOnce())->method('isServerRunning')->will($this->returnValue(true));
-        $tikaServerService->expects($this->atLeastOnce())->method('getServerPid')->will($this->returnValue(4711));
-        $tikaServerService->expects($this->atLeastOnce())->method('getTikaVersion')->will($this->returnValue("1.11"));
+        $tikaServerService->expects(self::atLeastOnce())->method('isServerRunning')->willReturn(true);
+        $tikaServerService->expects(self::atLeastOnce())->method('getServerPid')->willReturn(4711);
+        $tikaServerService->expects(self::atLeastOnce())->method('getTikaVersion')->willReturn('1.11');
 
         $this->controller->setTikaService($tikaServerService);
         $this->controller->setTikaConfiguration([
             'extractor' => 'server',
-            'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar')
+            'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar'),
         ]);
 
-        $this->viewMock->expects($this->at(2))->method('assign')->with(
+        $this->viewMock->expects(self::at(2))->method('assign')->with(
             'server',
             [
                 'jarAvailable' => true,
                 'isRunning' => true,
                 'isControllable' => true,
                 'pid' => 4711,
-                'version' => "1.11"
+                'version' => '1.11',
             ]
         );
 

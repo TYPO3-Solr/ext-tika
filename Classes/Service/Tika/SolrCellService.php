@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /***************************************************************
@@ -30,10 +32,8 @@ use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * A Tika service implementation using a Solr server
- *
  */
 class SolrCellService extends AbstractService
 {
@@ -43,25 +43,23 @@ class SolrCellService extends AbstractService
      *
      * @var SolrConnection
      */
-    protected $solrConnection = null;
+    protected $solrConnection;
 
     /**
      * Service initialization
-     *
-     * @return void
      */
-    protected function initializeService()
+    protected function initializeService(): void
     {
         // EM might define a different connection than already in use by
         // Index Queue
-            /** @var ConnectionManager $connectionManager */
+        /** @var ConnectionManager $connectionManager */
         $connectionManager =  GeneralUtility::makeInstance(ConnectionManager::class);
 
         $readNode = [
             'host' => $this->configuration['solrHost'],
             'port' => $this->configuration['solrPort'],
             'path' => $this->configuration['solrPath'],
-            'scheme' => $this->configuration['solrScheme']
+            'scheme' => $this->configuration['solrScheme'],
         ];
         $writeNode = $readNode;
         $this->solrConnection = $connectionManager->getSolrConnectionForNodes($readNode, $writeNode);
@@ -76,7 +74,7 @@ class SolrCellService extends AbstractService
      */
     protected function getConfigurationOrDefaultValue($key, $defaultValue)
     {
-        return isset($this->configuration[$key]) ? $this->configuration[$key] : $defaultValue;
+        return $this->configuration[$key] ?? $defaultValue;
     }
 
     /**
@@ -88,7 +86,7 @@ class SolrCellService extends AbstractService
     public function extractText(FileInterface $file)
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
-         /** @var Query $query */
+        /** @var Query $query */
         $query = GeneralUtility::makeInstance(Query::class);
         $query->setFile($localTempFilePath);
         $query->setExtractOnly(true);
@@ -101,7 +99,7 @@ class SolrCellService extends AbstractService
             'file' => $file,
             'solr connection' => (array)$writer,
             'query' => (array)$query,
-            'response' => $response
+            'response' => $response,
         ]);
 
         return $response[0];
@@ -124,7 +122,7 @@ class SolrCellService extends AbstractService
 
         $writer = $this->solrConnection->getWriteService();
         $response = $writer->extractByQuery($query);
-        
+
         $metaData = [];
         if (isset($response[1]) && is_array($response[1])) {
             $metaData = $this->solrResponseToArray($response[1]);
@@ -135,7 +133,7 @@ class SolrCellService extends AbstractService
             'solr connection' => (array)$writer,
             'query' => (array)$query,
             'response' => $response,
-            'meta data' => $metaData
+            'meta data' => $metaData,
         ]);
 
         return $metaData;
@@ -183,7 +181,7 @@ class SolrCellService extends AbstractService
         $cleanedData = [];
 
         foreach ($metaDataResponse as $dataName => $dataArray) {
-            if(!($dataName % 2) == 0) {
+            if (!($dataName % 2) == 0) {
                 continue;
             }
             $fieldName = $dataArray;
@@ -216,7 +214,7 @@ class SolrCellService extends AbstractService
     {
         $mapping = [
             'application/epub+zip' => ['epub'],
-            'application/gzip' => ['gz','tgz'],
+            'application/gzip' => ['gz', 'tgz'],
             'application/msword' => ['doc'],
             'application/pdf' => ['pdf'],
             'application/rtf' => ['rtf'],
@@ -231,7 +229,7 @@ class SolrCellService extends AbstractService
             'application/zip' => ['zip'],
             'application/x-midi' => ['mid'],
             'application/xml' => ['xml'],
-            'audio/aiff' => ['aif','aiff'],
+            'audio/aiff' => ['aif', 'aiff'],
             'audio/basic' => ['au'],
             'audio/midi' => ['mid'],
             'audio/mpeg3' => ['mp3'],
@@ -241,15 +239,15 @@ class SolrCellService extends AbstractService
             'audio/x-wav' => ['wav'],
             'image/bmp' => ['bmp'],
             'image/gif' => ['gif'],
-            'image/jpeg' => ['jpg','jpeg'],
+            'image/jpeg' => ['jpg', 'jpeg'],
             'image/png' => ['png'],
             'image/svg+xml' => ['svg'],
-            'image/tiff' => ['tif','tiff'],
-            'text/html' => ['html','htm'],
+            'image/tiff' => ['tif', 'tiff'],
+            'text/html' => ['html', 'htm'],
             'text/plain' => ['txt'],
             'text/xml' => ['xml'],
             'video/mpeg' => ['mp3'],
-            'video/x-mpeg' => ['mp3']
+            'video/x-mpeg' => ['mp3'],
         ];
 
         return array_keys($mapping);

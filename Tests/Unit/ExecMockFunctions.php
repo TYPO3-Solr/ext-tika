@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
 
 /**
@@ -8,7 +10,7 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
  * @param $command
  * @param array $output
  */
-function exec($command, array &$output = [])
+function exec($command, array &$output = []): void
 {
     $output = ExecRecorder::$execOutput[ExecRecorder::$execCalled];
     ExecRecorder::$execCalled++;

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /*
@@ -55,7 +57,7 @@ class ServerService extends AbstractService
      *
      * @var Uri
      */
-    protected $tikaUri = null;
+    protected $tikaUri;
 
     /**
      * @var array
@@ -117,10 +119,8 @@ class ServerService extends AbstractService
 
     /**
      * Starts the Tika server
-     *
-     * @return void
      */
-    public function startServer()
+    public function startServer(): void
     {
         $process = $this->getProcess($this->getStartCommand());
         $process->start();
@@ -133,10 +133,8 @@ class ServerService extends AbstractService
 
     /**
      * Stops the Tika server
-     *
-     * @return void
      */
-    public function stopServer()
+    public function stopServer(): void
     {
         $pid = $this->getServerPid();
 
@@ -560,7 +558,7 @@ class ServerService extends AbstractService
             'file' => $file->getName(),
             'file_path' => $file->getPublicUrl(),
             'tika_url' => $this->getTikaServerUrl(),
-            'response' => $response
+            'response' => $response,
         ];
     }
 }

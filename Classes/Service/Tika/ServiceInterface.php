@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /***************************************************************
@@ -26,12 +28,9 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use TYPO3\CMS\Core\Resource\FileInterface;
 
-
 /**
  * A common interface for the different ways of accessing Tika, e.g. app,
  * server, and Solr Cell.
- *
- * @package ApacheSolrForTypo3\Tika\Service
  */
 interface ServiceInterface
 {
@@ -83,8 +82,7 @@ interface ServiceInterface
     /**
      * Public method to check the availability of this service.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable();
-
 }
