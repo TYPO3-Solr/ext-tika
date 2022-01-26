@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 // Prevent Script from beeing called directly
 defined('TYPO3_MODE') || die();
 

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Utility;
 
 use TYPO3\CMS\Core\Core\Environment;
@@ -44,8 +46,10 @@ class ShellUtility
         $isUTF8Filesystem = !empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']);
         if ($isUTF8Filesystem) {
             $currentLocale = setlocale(LC_CTYPE, 0);
-            setlocale(LC_CTYPE,
-                $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale']);
+            setlocale(
+                LC_CTYPE,
+                $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale']
+            );
         }
 
         $argument = escapeshellarg($argument);

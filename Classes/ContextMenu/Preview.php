@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\ContextMenu;
 
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
@@ -8,14 +10,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Preview extends AbstractProvider
 {
-
     protected $itemsConfiguration = [
         'tika_preview' => [
             'type' => 'item',
             'label' => 'Tika Preview', // you can use "LLL:" syntax here
             'iconIdentifier' => 'actions-document-view',
-            'callbackAction' => 'tikaPreview'
-        ]
+            'callbackAction' => 'tikaPreview',
+        ],
     ];
 
     /**
@@ -39,7 +40,7 @@ class Preview extends AbstractProvider
         $item = $resourceFactory->retrieveFileOrFolderObject($this->identifier);
 
         // we only handle files, no folders
-        return ($item instanceof File);
+        return $item instanceof File;
     }
 
     /**
@@ -81,7 +82,6 @@ class Preview extends AbstractProvider
      */
     public function addItems(array $items): array
     {
-
         $this->initDisabledItems();
         $localItems = $this->prepareItems($this->itemsConfiguration);
         $items = $items + $localItems;

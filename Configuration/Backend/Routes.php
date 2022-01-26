@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Definitions for routes provided by EXT:backend
  * Contains all "regular" routes for entry points
@@ -13,6 +15,6 @@
 return [
     'tika_preview' => [
         'path' => '/tika/preview',
-        'target' => \ApacheSolrForTypo3\Tika\Controller\Backend\PreviewController::class . '::previewAction'
+        'target' => \ApacheSolrForTypo3\Tika\Controller\Backend\PreviewController::class . '::previewAction',
     ],
 ];

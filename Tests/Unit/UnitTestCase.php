@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Unit;
 
 /***************************************************************
@@ -33,8 +35,6 @@ use ReflectionException;
  * Testcase to check if the status check returns the expected results.
  *
  * @author Timo Schmidt <timo.schmidt@dkd.de>
- * @package TYPO3
- * @subpackage tika
  */
 class UnitTestCase extends TYPO3UnitTestCase
 {
@@ -68,7 +68,7 @@ class UnitTestCase extends TYPO3UnitTestCase
              * @see \ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\ServiceIntegrationTestCase::getConfiguration
              */
             'solrPort' => getenv('TESTING_SOLR_PORT') ?: 8080,
-            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/'
+            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/',
         ];
     }
 
@@ -107,5 +107,4 @@ class UnitTestCase extends TYPO3UnitTestCase
         $rc = new ReflectionClass(get_class($this));
         return dirname($rc->getFileName());
     }
-
 }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /***************************************************************
@@ -29,10 +31,7 @@ use RuntimeException;
 /**
  * Exception thrown by Tika service implementations if they don't support a
  * particular feature, f.e. Solr Cell does not support language detection.
- *
- * @package ApacheSolrForTypo3\Tika\Service
  */
 class UnsupportedOperationException extends RuntimeException
 {
-
 }

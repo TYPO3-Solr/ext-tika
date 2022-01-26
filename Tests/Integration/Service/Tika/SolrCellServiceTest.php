@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /*
@@ -14,7 +16,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  * The TYPO3 project - inspiring people to share!
  */
 
-use ApacheSolrForTypo3\Solr\SolrService;
 use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
@@ -37,28 +38,27 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
      */
     protected $prophet;
 
-
-    protected function assertPreConditions()
+    protected function assertPreConditions(): void
     {
         if (!ExtensionManagementUtility::isLoaded('solr')) {
-            $this->markTestSkipped('EXT:solr is required for this test, but is not loaded.');
+            self::markTestSkipped('EXT:solr is required for this test, but is not loaded.');
         }
     }
 
     /**
      * @test
      */
-    public function newInstancesAreInitializedWithASolrConnection()
+    public function newInstancesAreInitializedWithASolrConnection(): void
     {
         $service = new SolrCellService($this->getConfiguration());
         $service->setLogger(new NullLogger());
-        $this->assertAttributeInstanceOf(SolrConnection::class, 'solrConnection', $service);
+        self::assertAttributeInstanceOf(SolrConnection::class, 'solrConnection', $service);
     }
 
     /**
      * @test
      */
-    public function extractByQueryTextReturnsTextElementFromResponse()
+    public function extractByQueryTextReturnsTextElementFromResponse(): void
     {
         $expectedValue = 'extracted text element';
 
@@ -66,7 +66,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $solrWriter->extractByQuery(Argument::type(Query::class))
             ->willReturn([
                 $expectedValue,     // extracted text is index 0
-                'meta data element' // meta data is index 1
+                'meta data element', // meta data is index 1
             ]);
 
         $connectionMock = $this->prophesize(SolrConnection::class);
@@ -79,19 +79,19 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
+                'name' => 'testWORD.doc',
             ],
             $this->documentsStorageMock
         );
 
         $actualValue = $service->extractText($file);
-        $this->assertEquals($expectedValue, $actualValue);
+        self::assertEquals($expectedValue, $actualValue);
     }
 
     /**
      * @test
      */
-    public function extractByQueryTextUsesSolariumExtractQuery()
+    public function extractByQueryTextUsesSolariumExtractQuery(): void
     {
         $solrWriter = $this->prophesize(SolrWriteService::class);
         $solrWriter->extractByQuery(Argument::type(Query::class))->shouldBeCalled();
@@ -103,9 +103,10 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $service->setLogger(new NullLogger());
         $this->inject($service, 'solrConnection', $connectionMock->reveal());
 
-        $file = new File([
+        $file = new File(
+            [
             'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc'
+            'name' => 'testWORD.doc',
         ],
             $this->documentsStorageMock
         );
@@ -113,19 +114,20 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $service->extractText($file);
     }
 
-    #TODO test return value, conversion of response to array
+    //TODO test return value, conversion of response to array
 
     /**
      * @test
      */
-    public function extractMetaDataUsesSolariumExtractQuery()
+    public function extractMetaDataUsesSolariumExtractQuery(): void
     {
         $solrWriter = $this->prophesize(SolrWriteService::class);
         $solrWriter->extractByQuery(Argument::type(Query::class))
             ->shouldBeCalled()
-            ->willReturn([
+            ->willReturn(
+                [
                     'foo', // extracted text is index 0
-                    ['bar'] // meta data is index 1
+                    ['bar'], // meta data is index 1
                 ]
             );
 
@@ -139,7 +141,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
-                'name' => 'testWORD.doc'
+                'name' => 'testWORD.doc',
             ],
             $this->documentsStorageMock
         );
@@ -150,20 +152,19 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     /**
      * @test
      */
-    public function extractsMetaDataFromMp3File()
+    public function extractsMetaDataFromMp3File(): void
     {
         $service = new SolrCellService($this->getConfiguration());
         $service->setLogger(new NullLogger());
         $mockedFile = $this->getMockedFileInstance(
             [
                 'identifier' => 'testMP3.mp3',
-                'name' => 'testMP3.mp3'
+                'name' => 'testMP3.mp3',
             ]
         );
-        $this->assertTrue(in_array($mockedFile->getMimeType(), $service->getSupportedMimeTypes()));
+        self::assertTrue(in_array($mockedFile->getMimeType(), $service->getSupportedMimeTypes()));
         $metaData = $service->extractMetaData($mockedFile);
-        $this->assertEquals('audio/mpeg', $metaData['Content-Type']);
-        $this->assertEquals('Test Title', $metaData['title']);
+        self::assertEquals('audio/mpeg', $metaData['Content-Type']);
+        self::assertEquals('Test Title', $metaData['title']);
     }
-
 }

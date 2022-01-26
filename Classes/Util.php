@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika;
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -36,7 +38,7 @@ class Util
 
     /**
      * @todo This method is just added for compatibility checks for TYPO3 version 9 and will be removed when TYPO9 support is dropped
-     * @return boolean
+     * @return bool
      */
     public static function getIsTYPO3VersionBelow10()
     {
@@ -45,7 +47,7 @@ class Util
 
     /**
      * @todo This method is just added for compatibility checks for TYPO3 version 9 and will be removed when TYPO9 support is dropped
-     * @return boolean
+     * @return bool
      */
     public static function getIsTYPO3VersionAbove9()
     {
@@ -53,7 +55,7 @@ class Util
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public static function getIsTYPO3Version10Lts()
     {

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 /*
@@ -22,11 +24,9 @@ use Psr\Log\LogLevel;
 use TYPO3\CMS\Core\Resource\Index\ExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * Class AbstractExtractor
  *
- * @package ApacheSolrForTypo3\Tika\Service\Extractor
  * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInterface
@@ -41,7 +41,7 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
     /**
      * Priority in handling extraction
      *
-     * @var integer
+     * @var int
      */
     protected $priority = 0;
 
@@ -87,7 +87,7 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
     /**
      * Returns the data priority of the extraction Service.
      *
-     * @return integer
+     * @return int
      */
     public function getPriority()
     {
@@ -97,7 +97,7 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
     /**
      * Returns the execution priority of the extraction Service
      *
-     * @return integer
+     * @return int
      */
     public function getExecutionPriority()
     {
@@ -109,9 +109,8 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
      *
      * @param string $message Log message
      * @param array $data Optional data
-     * @return void
      */
-    protected function log(string $message, array $data = [])
+    protected function log(string $message, array $data = []): void
     {
         if (!$this->configuration['logging']) {
             return;
@@ -122,5 +121,4 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
             $data
         );
     }
-
 }

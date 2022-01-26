@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 /***************************************************************
@@ -32,12 +34,10 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * A service to extract text from files using Apache Tika
  *
  * @author Ingo Renner <ingo@typo3.org>
- * @package ApacheSolrForTypo3\Tika\Service\Extractor
  */
 class TextExtractor implements TextExtractorInterface
 {
@@ -70,14 +70,13 @@ class TextExtractor implements TextExtractorInterface
         'txt',
         'xls',
         'xlsx',
-        'zip'
+        'zip',
     ];
 
     /**
      * @var SizeValidator
      */
     private $fileSizeValidator;
-
 
     /**
      * Constructor

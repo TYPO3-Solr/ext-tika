@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika;
 
 /***************************************************************
@@ -24,11 +26,8 @@ namespace ApacheSolrForTypo3\Tika;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-
 /**
  * Run, check, and stop external processes. Linux only.
- *
- * @package ApacheSolrForTypo3\Tika
  */
 class Process
 {
@@ -36,9 +35,9 @@ class Process
     /**
      * Process ID
      *
-     * @var integer|NULL
+     * @var int|null
      */
-    protected $pid = null;
+    protected $pid;
 
     /**
      * Executable running the command
@@ -53,7 +52,6 @@ class Process
      * @var string
      */
     protected $arguments;
-
 
     /**
      * Constructor
@@ -82,7 +80,7 @@ class Process
      *
      * @param $arguments
      */
-    public function setArguments($arguments)
+    public function setArguments($arguments): void
     {
         $this->arguments = $arguments;
     }
@@ -110,10 +108,9 @@ class Process
     /**
      * Sets the process ID
      *
-     * @param integer $pid
-     * @return void
+     * @param int $pid
      */
-    public function setPid($pid)
+    public function setPid($pid): void
     {
         $this->pid = (int)$pid;
     }
@@ -135,7 +132,7 @@ class Process
         exec($ps, $output);
 
         foreach ($output as $line) {
-            list($pid, $command) = explode(' ', trim($line), 2);
+            [$pid, $command] = explode(' ', trim($line), 2);
             $command = $this->escapePsOutputCommand($command);
             if ($command == $processCommand) {
                 return (int)$pid;
@@ -183,10 +180,8 @@ class Process
 
     /**
      * Executes the command
-     *
-     * @return void
      */
-    protected function runCommand()
+    protected function runCommand(): void
     {
         $command = 'nohup ' . $this->executable;
         if (!empty($this->arguments)) {
