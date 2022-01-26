@@ -10,14 +10,10 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Ingo Renner, Timo Hund, Markus Friedrich',
     'author_email' => 'ingo@typo3.org',
     'author_company' => 'dkd Internet Service GmbH',
-    'module' => '',
-    'uploadfolder' => 0,
-    'createDirs' => '',
-    'modify_tables' => '',
-    'clearCacheOnLoad' => 1,
+    'clearCacheOnLoad' => true,
     'constraints' => [
         'depends' => [
-            'typo3' => '10.4.10-10.4.99',
+            'typo3' => '10.4.10-11.5.99',
             'filemetadata' => '',
         ],
         'conflicts' => [],
