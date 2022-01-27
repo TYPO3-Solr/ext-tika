@@ -11,7 +11,7 @@ on:
 env:
   TIKA_VERSION: '1.24.1'
   TIKA_PATH: /ramfs/data-tika-binaries
-  EXT_SOLR_VERSION: 'dev-release-11.1.x'
+  EXT_SOLR_VERSION: 'dev-release-11.5.x'
   TYPO3_DATABASE_NAME: 'typo3_ci'
   TYPO3_DATABASE_HOST: '127.0.0.1'
   TYPO3_DATABASE_USERNAME: 'root'
@@ -30,8 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        PHP: [ '7.2', '7.3', '7.4' ]
-        TYPO3: [ '^10.4', '10.4.x-dev' ]
+        PHP: [ '7.4' ]
+        TYPO3: [ '^11.5']
     env:
       TYPO3_VERSION: ${{ matrix.TYPO3 }}
 
