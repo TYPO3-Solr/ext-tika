@@ -102,7 +102,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      *
      * @throws Exception
      */
-    public function indexAction(): void
+    public function indexAction()
     {
         $this->view->assign('configuration', $this->tikaConfiguration);
         $this->view->assign(
@@ -124,6 +124,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
                 ]
             );
         }
+        return $this->getModuleTemplateResponse();
     }
 
     /**
