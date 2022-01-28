@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /*
@@ -35,7 +36,7 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
     /**
      * @var array
      */
-    protected $configuration;
+    protected array $configuration;
 
     /**
      * Constructor
@@ -65,7 +66,7 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
      */
     protected function log(string $message, array $data = [], $severity = LogLevel::DEBUG): void
     {
-        if (!$this->configuration['logging']) {
+        if (empty($this->configuration['logging'])) {
             return;
         }
         $this->logger->log(
@@ -76,9 +77,9 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getSupportedMimeTypes()
+    public function getSupportedMimeTypes(): array
     {
         return [];
     }

@@ -1,35 +1,29 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
-use ApacheSolrForTypo3\Tika\Util;
 use function getenv;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
+use Prophecy\PhpUnit\ProphecyTrait;
+use ReflectionException;
+use ReflectionObject;
+use RuntimeException;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
@@ -40,12 +34,16 @@ use TYPO3\CMS\Core\Resource\MetaDataAspect;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Base class for EXT:tika tests
+ *
+ * @author Ingo Renner <ingo@typo3.org>
  */
 abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 {
+    use ProphecyTrait;
 
     /**
      * @var array
@@ -59,37 +57,37 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
     /**
      * @var array A backup of registered singleton instances
      */
-    protected $singletonInstances = [];
+    protected array $singletonInstances = [];
 
     /**
      * @var string
      */
-    protected $testDocumentsPath;
+    protected string $testDocumentsPath;
 
     /**
      * @var string
      */
-    protected $testLanguagesPath;
+    protected string $testLanguagesPath;
 
     /**
      * @var ResourceStorage
      */
-    protected $documentsStorageMock;
+    protected ResourceStorage $documentsStorageMock;
 
     /**
      * @var ResourceStorage
      */
-    protected $languagesStorageMock;
+    protected ResourceStorage $languagesStorageMock;
 
     /**
      * @var int
      */
-    protected $documentsStorageUid = 9000;
+    protected int $documentsStorageUid = 9000;
 
     /**
      * @var int
      */
-    protected $languagesStorageUid = 9001;
+    protected int $languagesStorageUid = 9001;
 
     /**
      * @var array
@@ -106,7 +104,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     public function __sleep()
     {
-        $objectVars = parent::__sleep();
+        $objectVars = get_object_vars($this);
         unset(
             $objectVars['documentsStorageMock'],
             $objectVars['languagesStorageMock']
@@ -134,14 +132,10 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $this->setUpDocumentsStorageMock();
         $this->setUpLanguagesStorageMock();
 
-        $metaDataRepositoryConstructorArgs = [];
-
-        if (Util::getIsTYPO3VersionAbove9()) {
-            /** @noinspection PhpFullyQualifiedNameUsageInspection */
-            $metaDataRepositoryConstructorArgs = [
-                GeneralUtility::makeInstance(\TYPO3\CMS\Core\EventDispatcher\EventDispatcher::class),
-            ];
-        }
+        /** @noinspection PhpFullyQualifiedNameUsageInspection */
+        $metaDataRepositoryConstructorArgs = [
+            GeneralUtility::makeInstance(\TYPO3\CMS\Core\EventDispatcher\EventDispatcher::class),
+        ];
 
         /* @var MetaDataRepository|MockObject $mockedMetaDataRepository */
         $mockedMetaDataRepository = $this->getMockBuilder(MetaDataRepository::class)
@@ -152,6 +146,8 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             ->method('findByFile')
             ->willReturn(['file' => 1]);
         GeneralUtility::setSingletonInstance(MetaDataRepository::class, $mockedMetaDataRepository);
+        // Set $GLOBALS['TYPO3_CONF_VARS'], to avoid PHP 8.0+ warning like "Undefined global variable"
+        $GLOBALS['TYPO3_CONF_VARS']['BE']['disable_exec_function'] = false;
     }
 
     protected function setUpDocumentsStorageMock(): void
@@ -178,7 +174,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         ];
 
         $this->documentsStorageMock = $this->getMockBuilder(ResourceStorage::class)
-            ->setMethods(['getUid'])
+            ->onlyMethods(['getUid'])
             ->setConstructorArgs([$documentsDriver, $documentsStorageRecord])
             ->getMock();
 
@@ -213,7 +209,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         ];
 
         $this->languagesStorageMock = $this->getMockBuilder(ResourceStorage::class)
-            ->setMethods(['getUid'])
+            ->onlyMethods(['getUid'])
             ->setConstructorArgs([$languagesDriver, $languagesStorageRecord])
             ->getMock();
         $this->languagesStorageMock->expects(self::any())
@@ -236,9 +232,9 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected function createDriverFixture(
         array $driverConfiguration = [],
-        $mockedDriverMethods = []
-    ) {
-        /** @var LocalDriver $driver */
+        array $mockedDriverMethods = []
+    ): LocalDriver {
+        /* @var LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
         $driver = $this->getAccessibleMock(
             LocalDriver::class,
@@ -277,8 +273,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         foreach ($configuration as $key => $value) {
             $flexformArray['data']['sDEF']['lDEF'][$key] = ['vDEF' => $value];
         }
-        $configuration = GeneralUtility::array2xml($flexformArray);
-        return $configuration;
+        return GeneralUtility::array2xml($flexformArray);
     }
 
     /**
@@ -323,27 +318,90 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         ResourceStorage $storage = null,
         array $metaData = []
     ) {
-        if (Util::getIsTYPO3VersionBelow10()) {
-            return new File($fileData, $storage ?: $this->documentsStorageMock, $metaData);
-        }
-
         $fileMock = $this->getMockBuilder(File::class)
             ->setConstructorArgs([
                 $fileData,
                 $storage ?? $this->documentsStorageMock,
                 $metaData,
             ])
-            ->setMethods(['getMetaData'])
+            ->onlyMethods(['getMetaData'])
             ->getMock();
 
         $metaDataAspectMock = $this->getMockBuilder(MetaDataAspect::class)
             ->setConstructorArgs([$fileMock])
-            ->setMethods(['get'])
+            ->onlyMethods(['get'])
             ->getMock();
         $metaDataAspectMock->expects(self::any())->method('get')->willReturn($metaData);
 
         $fileMock->expects(self::any())->method('getMetaData')->willReturn($metaDataAspectMock);
 
         return $fileMock;
+    }
+
+    /*
+        Nimut testing framework goodies, copied from https://github.com/Nimut/testing-framework
+     */
+
+    /**
+     * Injects $dependency into property $name of $target
+     *
+     * This is a convenience method for setting a protected or private property in
+     * a test subject for the purpose of injecting a dependency.
+     *
+     * Copied from https://github.com/Nimut/testing-framework/blob/3d0573b23fe16157460b4e73e51e1cc0903ea35c/src/TestingFramework/TestCase/AbstractTestCase.php#L247-L284
+     *
+     * @param object $target The instance which needs the dependency
+     * @param string $name Name of the property to be injected
+     * @param mixed $dependency The dependency to inject – usually an object but can also be any other type
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
+     */
+    protected function inject(object $target, string $name, $dependency)
+    {
+        if (!is_object($target)) {
+            throw new InvalidArgumentException('Wrong type for argument $target, must be object.', 1476107338);
+        }
+
+        $objectReflection = new ReflectionObject($target);
+        $methodNamePart = strtoupper($name[0]) . substr($name, 1);
+        if ($objectReflection->hasMethod('set' . $methodNamePart)) {
+            $methodName = 'set' . $methodNamePart;
+            $target->$methodName($dependency);
+        } elseif ($objectReflection->hasMethod('inject' . $methodNamePart)) {
+            $methodName = 'inject' . $methodNamePart;
+            $target->$methodName($dependency);
+        } elseif ($objectReflection->hasProperty($name)) {
+            $property = $objectReflection->getProperty($name);
+            $property->setAccessible(true);
+            $property->setValue($target, $dependency);
+        } else {
+            throw new RuntimeException(
+                'Could not inject ' . $name . ' into object of type ' . get_class($target),
+                1476107339
+            );
+        }
+    }
+
+    /**
+     * Helper function to call protected or private methods
+     *
+     * Copied from https://github.com/Nimut/testing-framework/blob/3d0573b23fe16157460b4e73e51e1cc0903ea35c/src/TestingFramework/TestCase/AbstractTestCase.php#L227-L245
+     *
+     * @param object $object The object to be invoked
+     * @param string $name the name of the method to call
+     * @return mixed
+     * @throws ReflectionException
+     */
+    protected function callInaccessibleMethod(object $object, string $name)
+    {
+        // Remove first two arguments ($object and $name)
+        $arguments = func_get_args();
+        array_splice($arguments, 0, 2);
+
+        $reflectionObject = new ReflectionObject($object);
+        $reflectionMethod = $reflectionObject->getMethod($name);
+        $reflectionMethod->setAccessible(true);
+
+        return $reflectionMethod->invokeArgs($object, $arguments);
     }
 }

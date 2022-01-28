@@ -1,22 +1,23 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Utility;
 
-use TYPO3\CMS\Core\Core\Environment;
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
-    /**
-     * This file is part of the TYPO3 CMS project.
-     *
-     * It is free software; you can redistribute it and/or modify it under
-     * the terms of the GNU General Public License, either version 2
-     * of the License, or any later version.
-     *
-     * For the full copyright and license information, please read the
-     * LICENSE.txt file that was distributed with this source code.
-     *
-     * The TYPO3 project - inspiring people to share!
-     */
+use TYPO3\CMS\Core\Core\Environment;
 
 /**
  * Class ShellUtility
@@ -40,7 +41,7 @@ class ShellUtility
      * @param string $argument
      * @return string
      */
-    public static function escapeShellArgument($argument)
+    public static function escapeShellArgument(string $argument): string
     {
         $currentLocale = null;
         $isUTF8Filesystem = !empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']);

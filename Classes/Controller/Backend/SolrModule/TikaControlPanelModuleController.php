@@ -1,30 +1,21 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Solr\Controller\Backend\Search\AbstractModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
@@ -33,11 +24,13 @@ use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Util;
-use Exception;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
-use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
+use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * Tika Control Panel
@@ -52,7 +45,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      *
      * @var array
      */
-    protected $tikaConfiguration = [];
+    protected array $tikaConfiguration = [];
 
     /**
      * @var AppService|ServerService|SolrCellService
@@ -60,13 +53,27 @@ class TikaControlPanelModuleController extends AbstractModuleController
     protected $tikaService;
 
     /**
-     * Can be used in the test context to force a view.
+     * Can be used in the test context to mock a {@link view}.
+     *
+     * Purpose: PhpUnit
      *
      * @param ViewInterface $view
      */
     public function overwriteView(ViewInterface $view): void
     {
         $this->view = $view;
+    }
+
+    /**
+     * Can be used in the test context to mock a {@link moduleTemplate}.
+     *
+     * Purpose: PhpUnit
+     *
+     * @param ModuleTemplate $moduleTemplate
+     */
+    public function overwriteModuleTemplate(ModuleTemplate $moduleTemplate): void
+    {
+        $this->moduleTemplate = $moduleTemplate;
     }
 
     /**
@@ -79,14 +86,14 @@ class TikaControlPanelModuleController extends AbstractModuleController
 
     /**
      * Initializes resources commonly needed for several actions.
+     * @noinspection PhpUnused
      */
     protected function initializeAction(): void
     {
         parent::initializeAction();
-
         $tikaConfiguration = Util::getTikaExtensionConfiguration();
         $this->setTikaConfiguration($tikaConfiguration);
-        $this->tikaService = ServiceFactory::getTika($this->tikaConfiguration['extractor']);
+        $this->tikaService = ServiceFactory::getTika($this->tikaConfiguration['extractor'] ?? '');
     }
 
     /**
@@ -100,17 +107,18 @@ class TikaControlPanelModuleController extends AbstractModuleController
     /**
      * Index action
      *
-     * @throws Exception
+     * @return ResponseInterface
+     * @throws ClientExceptionInterface
      */
-    public function indexAction()
+    public function indexAction(): ResponseInterface
     {
         $this->view->assign('configuration', $this->tikaConfiguration);
         $this->view->assign(
             'extractor',
-            ucfirst($this->tikaConfiguration['extractor'])
+            ucfirst($this->tikaConfiguration['extractor'] ?? '')
         );
 
-        if ($this->tikaConfiguration['extractor'] == 'server') {
+        if ($this->tikaConfiguration['extractor'] === 'server') {
             $this->checkTikaServerConnection();
 
             $this->view->assign(
@@ -129,10 +137,9 @@ class TikaControlPanelModuleController extends AbstractModuleController
 
     /**
      * Starts the Tika server
-     *
-     * @throws StopActionException
+     * @noinspection PhpUnused
      */
-    public function startServerAction(): void
+    public function startServerAction(): ResponseInterface
     {
         $this->tikaService->/** @scrutinizer ignore-call */startServer();
 
@@ -146,15 +153,14 @@ class TikaControlPanelModuleController extends AbstractModuleController
             );
         }
 
-        $this->redirect('index');
+        return new RedirectResponse($this->uriBuilder->uriFor('index'), 303);
     }
 
     /**
      * Stops the Tika server
-     *
-     * @throws StopActionException
+     * @noinspection PhpUnused
      */
-    public function stopServerAction(): void
+    public function stopServerAction(): ResponseInterface
     {
         $this->tikaService->/** @scrutinizer ignore-call */stopServer();
 
@@ -168,16 +174,16 @@ class TikaControlPanelModuleController extends AbstractModuleController
             );
         }
 
-        $this->redirect('index');
+        return new RedirectResponse($this->uriBuilder->uriFor('index'), 303);
     }
 
     /**
      * Gets the Tika server version
      *
      * @return string Tika server version string
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
-    protected function getTikaServerVersion()
+    protected function getTikaServerVersion(): string
     {
         return $this->tikaService->getTikaVersion();
     }
@@ -186,9 +192,8 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * Tries to connect to Tika server
      *
      * @return bool TRUE if the Tika server responds, FALSE otherwise.
-     * @throws Exception
      */
-    protected function isTikaServerRunning()
+    protected function isTikaServerRunning(): bool
     {
         return $this->tikaService->isServerRunning();
     }
@@ -199,7 +204,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      *
      * @return int|null Tika Server pid or null if not found
      */
-    protected function getTikaServerPid()
+    protected function getTikaServerPid(): ?int
     {
         return $this->tikaService->/** @scrutinizer ignore-call */getServerPid();
     }
@@ -207,14 +212,14 @@ class TikaControlPanelModuleController extends AbstractModuleController
     /**
      * Checks whether the server jar has been configured properly.
      *
-     * @return bool TRUE if a path for the jar has been configure and the path exists
+     * @return bool TRUE if a path for the jar has been configured and the path exists
      */
-    protected function isTikaServerJarAvailable()
+    protected function isTikaServerJarAvailable(): bool
     {
-        $serverJarSet = !empty($this->tikaConfiguration['tikaServerPath']);
-        $serverJarExists = file_exists($this->tikaConfiguration['tikaServerPath']);
-
-        return $serverJarSet && $serverJarExists;
+        if (!empty($this->tikaConfiguration['tikaServerPath'])) {
+            return file_exists($this->tikaConfiguration['tikaServerPath']);
+        }
+        return false;
     }
 
     /**
@@ -223,7 +228,6 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * Checks whether exec() is allowed and whether configuration is available.
      *
      * @return bool TRUE if Tika server can be started/stopped
-     * @throws Exception
      */
     protected function isTikaServerControllable(): bool
     {
@@ -258,8 +262,6 @@ class TikaControlPanelModuleController extends AbstractModuleController
     /**
      * Checks whether the configured Tika server can be reached and provides a
      * flash message according to the result of the check.
-     *
-     * @throws Exception
      */
     protected function checkTikaServerConnection(): void
     {

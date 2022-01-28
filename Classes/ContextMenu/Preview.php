@@ -1,9 +1,24 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\ContextMenu;
 
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
+use TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -23,10 +38,11 @@ class Preview extends AbstractProvider
      * Checks if this provider may be called to provide the list of context menu items for given table.
      *
      * @return bool
+     * @throws ResourceDoesNotExistException
      */
     public function canHandle(): bool
     {
-        if (!$GLOBALS['BE_USER']->isAdmin()) {
+        if (empty($GLOBALS['BE_USER']) || !$GLOBALS['BE_USER']->isAdmin()) {
             return false;
         }
 

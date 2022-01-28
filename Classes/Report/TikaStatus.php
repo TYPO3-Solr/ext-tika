@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Report;
 
 /*
@@ -59,10 +60,9 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Checks whether Tika is properly configured
+     * @return array
      *
-     * TODO Check whether EXT:tika is installed AFTER EXT:solr
      * @throws Exception
-     * @noinspection PhpUnused
      */
     public function getStatus()
     {
@@ -93,7 +93,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * Creates a configuration OK status.
      *
      * @return Status
-     * @noinspection PhpIncompatibleReturnTypeInspection
      */
     protected function getOkStatus()
     {
@@ -110,7 +109,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @param int $severity
      * @return Status
      */
-    protected function getJavaInstalledStatus($severity = Status::ERROR)
+    protected function getJavaInstalledStatus(int $severity = Status::ERROR): Status
     {
         /* @var Status $status */
         $status = GeneralUtility::makeInstance(
