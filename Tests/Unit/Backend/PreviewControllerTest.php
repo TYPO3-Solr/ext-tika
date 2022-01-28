@@ -4,48 +4,42 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2018 Timo Hund <timo.hund@dkd.de>
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  All rights reserved
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Controller\Backend\PreviewController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 
+/**
+ * Class PreviewControllerTest
+ *
+ * @author Timo Hund <timo.hund@dkd.de>
+ */
 class PreviewControllerTest extends UnitTestCase
 {
-
     /**
      * @test
      */
     public function previewActionTriggersTikaServices(): void
     {
-        /** @var $controller PreviewController */
-        $controller = $this->getMockBuilder(PreviewController::class)->setMethods([
+        /** @var $controller PreviewController|MockObject */
+        $controller = $this->getMockBuilder(PreviewController::class)->onlyMethods([
             'getFileResourceFactory',
             'getInitializedPreviewView',
             'getConfiguredTikaService',
@@ -66,6 +60,7 @@ class PreviewControllerTest extends UnitTestCase
         $controller->expects(self::once())->method('getConfiguredTikaService')->willReturn($serviceMock);
 
         $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $request->expects(self::once())->method('getQueryParams')->willReturn(self::returnValue(['identifier' => '']));
         $controller->previewAction($request);
     }
 
@@ -74,8 +69,8 @@ class PreviewControllerTest extends UnitTestCase
      */
     public function previewActionShowsErrorWhenNoAdmin(): void
     {
-        /** @var $controller PreviewController */
-        $controller = $this->getMockBuilder(PreviewController::class)->setMethods([
+        /** @var $controller PreviewController|MockObject */
+        $controller = $this->getMockBuilder(PreviewController::class)->onlyMethods([
             'getFileResourceFactory',
             'getInitializedPreviewView',
             'getConfiguredTikaService',

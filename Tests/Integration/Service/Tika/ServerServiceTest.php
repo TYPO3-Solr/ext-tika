@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /*
@@ -34,11 +35,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ServerServiceTest extends ServiceIntegrationTestCase
 {
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     /**
      * @test
      */
@@ -75,12 +71,13 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function stopServerRemovesPidFromRegistry(): void
     {
-        // prepare
+        /* @var Registry|ObjectProphecy $registryMock */
         $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
         $registryMock->remove('tx_tika', 'server.pid')->shouldBeCalled();
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
+        /* @var Process|ObjectProphecy $processMock */
         $processMock = $this->prophesize(Process::class);
         $processMock->setPid(1000)->shouldBeCalled();
         $processMock->stop()->shouldBeCalled();
@@ -97,6 +94,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function getServerPidGetsPidFromRegistry(): void
     {
+        /* @var Registry|ObjectProphecy $registryMock */
         $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
@@ -113,6 +111,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function getServerPidFallsBackToProcess(): void
     {
+        /* @var Registry|ObjectProphecy $registryMock */
         $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
@@ -133,6 +132,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function isServerRunningReturnsTrueForRunningServerFromRegistry(): void
     {
+        /* @var Registry|ObjectProphecy $registryMock */
         $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn(1000);
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
@@ -147,10 +147,12 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function isServerRunningReturnsTrueForRunningServerFromProcess(): void
     {
+        /* @var Registry|ObjectProphecy $registryMock */
         $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
+        /* @var Process|ObjectProphecy $processMock */
         $processMock = $this->prophesize(Process::class);
         $processMock->findPid()->willReturn(1000);
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
@@ -165,12 +167,14 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      */
     public function isServerRunningReturnsFalseForStoppedServer(): void
     {
+        /* @var Registry|ObjectProphecy $registryMock */
         $registryMock = $this->prophesize(Registry::class);
         $registryMock->get('tx_tika', 'server.pid')->willReturn('');
         GeneralUtility::setSingletonInstance(Registry::class, $registryMock->reveal());
 
+        /* @var Process|ObjectProphecy $processMock */
         $processMock = $this->prophesize(Process::class);
-        $processMock->findPid()->willReturn('');
+        $processMock->findPid()->willReturn(null);
         GeneralUtility::addInstance(Process::class, $processMock->reveal());
 
         $service = new ServerService($this->getConfiguration());
@@ -322,7 +326,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         $expectedText = 'Sample Word Document';
         $extractedText = $service->extractText($this->getMockedFileInstanceForTestWordDotDocFile());
 
-        self::assertContains($expectedText, $extractedText);
+        self::assertStringContainsString($expectedText, $extractedText);
     }
 
     /**
@@ -342,8 +346,8 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         ));
         $expectedTextFromPDF= 'Tika - Content Analysis Toolkit';
 
-        self::assertContains($expectedTextFromWord, $extractedText);
-        self::assertContains($expectedTextFromPDF, $extractedText);
+        self::assertStringContainsString($expectedTextFromWord, $extractedText);
+        self::assertStringContainsString($expectedTextFromPDF, $extractedText);
     }
 
     /**
@@ -351,7 +355,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      *
      * @return array
      */
-    public function languageFileDataProvider()
+    public function languageFileDataProvider(): array
     {
         return [
             'danish' => ['da'],

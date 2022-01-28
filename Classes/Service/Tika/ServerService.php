@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /*
@@ -18,13 +19,14 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
-use Exception;
 use GuzzleHttp\Exception\BadResponseException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LogLevel;
+use function str_starts_with;
+use Throwable;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;
@@ -43,26 +45,26 @@ class ServerService extends AbstractService
     /**
      * @var ClientInterface
      */
-    protected $psr7Client;
+    protected ClientInterface $psr7Client;
 
     /**
      * List of valid status codes
      *
      * @var int[]
      */
-    protected $validStatusCodes = [200, 202, 204];
+    protected array $validStatusCodes = [200, 202, 204];
 
     /**
      * Tika server URL
      *
      * @var Uri
      */
-    protected $tikaUri;
+    protected Uri $tikaUri;
 
     /**
      * @var array
      */
-    protected static $supportedMimeTypes = [];
+    protected static array $supportedMimeTypes = [];
 
     /**
      * Service initialization
@@ -92,9 +94,8 @@ class ServerService extends AbstractService
      *
      * @param string $arguments
      * @return Process
-     * @noinspection PhpIncompatibleReturnTypeInspection
      */
-    protected function getProcess($arguments = ''): Process
+    protected function getProcess(string $arguments = ''): Process
     {
         $arguments = trim($this->getAdditionalCommandOptions() . ' ' . $arguments);
 
@@ -194,8 +195,8 @@ class ServerService extends AbstractService
     {
         try {
             $tikaPing = $this->queryTika($this->createRequestForEndpoint('/tika'));
-            return GeneralUtility::isFirstPartOfStr($tikaPing, 'This is Tika Server');
-        } catch (ClientExceptionInterface | Exception $exception) {
+            return str_starts_with($tikaPing, 'This is Tika Server');
+        } catch (Throwable $exception) {
             return false;
         }
     }
@@ -204,7 +205,6 @@ class ServerService extends AbstractService
      * The tika server is available when the server is pingable.
      *
      * @return bool
-     * @throws Exception
      */
     public function isAvailable(): bool
     {
@@ -269,7 +269,7 @@ class ServerService extends AbstractService
             }
 
             $tikaOutput = $response->getBody()->getContents();
-        } catch (ClientExceptionInterface | Exception $exception) {
+        } catch (Throwable $exception) {
             $message = $exception->getMessage();
             if (
                 strpos($message, 'Connection refused') === false &&
@@ -299,7 +299,7 @@ class ServerService extends AbstractService
             ->withAddedHeader('Content-Type', 'application/octet-stream')
             ->withAddedHeader('Accept', 'text/plain')
             ->withAddedHeader('Connection', 'close')
-            ->withProtocolVersion(1.1)
+            ->withProtocolVersion('1.1')
             ->withBody($this->convertFileIntoStream($file));
 
         $response = $this->queryTika($request);
@@ -324,16 +324,16 @@ class ServerService extends AbstractService
      * Takes a file reference and extracts its meta data.
      *
      * @param FileInterface $file
-     * @return array|null
+     * @return array
      * @throws ClientExceptionInterface
      */
-    public function extractMetaData(FileInterface $file): ?array
+    public function extractMetaData(FileInterface $file): array
     {
         $request = $this->createRequestForEndpoint('/meta', 'PUT')
             ->withAddedHeader('Content-Type', 'application/octet-stream')
             ->withAddedHeader('Accept', 'application/json')
             ->withAddedHeader('Connection', 'close')
-            ->withProtocolVersion(1.1)
+            ->withProtocolVersion('1.1')
             ->withBody($this->convertFileIntoStream($file));
 
         $rawResponse = $this->queryTika($request);
@@ -367,7 +367,7 @@ class ServerService extends AbstractService
         $request = $this->createRequestForEndpoint('/language/stream', 'PUT')
             ->withAddedHeader('Content-Type', 'application/octet-stream')
             ->withAddedHeader('Connection', 'close')
-            ->withProtocolVersion(1.1)
+            ->withProtocolVersion('1.1')
             ->withBody($this->convertFileIntoStream($file));
 
         $response = $this->queryTika($request);
@@ -395,14 +395,14 @@ class ServerService extends AbstractService
      * @return string
      * @throws ClientExceptionInterface
      */
-    public function detectLanguageFromString($input): string
+    public function detectLanguageFromString(string $input): string
     {
         $stream = new Stream('php://temp', 'rw');
         $stream->write($input);
         $request = $this->createRequestForEndpoint('/language/string', 'PUT')
             ->withAddedHeader('Content-Type', 'application/octet-stream')
             ->withAddedHeader('Connection', 'close')
-            ->withProtocolVersion(1.1)
+            ->withProtocolVersion('1.1')
             ->withBody($stream);
 
         return $this->queryTika($request);
@@ -412,7 +412,7 @@ class ServerService extends AbstractService
      * List of supported mime types
      *
      * @return array
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
     public function getSupportedMimeTypes(): array
     {
@@ -437,7 +437,7 @@ class ServerService extends AbstractService
             ->withAddedHeader('Content-Type', 'application/octet-stream')
             ->withAddedHeader('Accept', 'application/json')
             ->withAddedHeader('Connection', 'close')
-            ->withProtocolVersion(1.1);
+            ->withProtocolVersion('1.1');
 
         return $this->queryTika($request);
     }

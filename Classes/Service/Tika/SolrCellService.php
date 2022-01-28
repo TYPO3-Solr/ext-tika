@@ -1,30 +1,21 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Solr\ConnectionManager;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
@@ -34,6 +25,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * A Tika service implementation using a Solr server
+ *
+ * @author Ingo Renner <ingo@typo3.org>
  */
 class SolrCellService extends AbstractService
 {
@@ -43,7 +36,7 @@ class SolrCellService extends AbstractService
      *
      * @var SolrConnection
      */
-    protected $solrConnection;
+    protected SolrConnection $solrConnection;
 
     /**
      * Service initialization
@@ -72,7 +65,7 @@ class SolrCellService extends AbstractService
      * @param mixed $defaultValue
      * @return mixed
      */
-    protected function getConfigurationOrDefaultValue($key, $defaultValue)
+    protected function getConfigurationOrDefaultValue(string $key, $defaultValue)
     {
         return $this->configuration[$key] ?? $defaultValue;
     }
@@ -83,7 +76,7 @@ class SolrCellService extends AbstractService
      * @param FileInterface $file
      * @return string
      */
-    public function extractText(FileInterface $file)
+    public function extractText(FileInterface $file): string
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
         /** @var Query $query */
@@ -102,16 +95,16 @@ class SolrCellService extends AbstractService
             'response' => $response,
         ]);
 
-        return $response[0];
+        return $response[0] ?? '';
     }
 
     /**
-     * Takes a file reference and extracts its meta data.
+     * Takes a file reference and extracts its meta-data.
      *
      * @param FileInterface $file
      * @return array
      */
-    public function extractMetaData(FileInterface $file)
+    public function extractMetaData(FileInterface $file): array
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
         /** @var Query $query */
@@ -145,7 +138,7 @@ class SolrCellService extends AbstractService
      * @param FileInterface $file
      * @return string Language ISO code
      */
-    public function detectLanguageFromFile(FileInterface $file)
+    public function detectLanguageFromFile(FileInterface $file): string
     {
         // TODO check whether Solr supports text extraction now
         throw new UnsupportedOperationException(
@@ -160,7 +153,7 @@ class SolrCellService extends AbstractService
      * @param string $input
      * @return string Language ISO code
      */
-    public function detectLanguageFromString($input)
+    public function detectLanguageFromString(string $input): string
     {
         // TODO check whether Solr supports text extraction now
         throw new UnsupportedOperationException(
@@ -173,10 +166,10 @@ class SolrCellService extends AbstractService
      * Turns the nested Solr response into the same format as produced by a
      * local Tika jar call
      *
-     * @param array $metaDataResponse The part of the Solr response containing the meta data
-     * @return array The cleaned meta data, matching the Tika jar call format
+     * @param array $metaDataResponse The part of the Solr response containing the meta-data
+     * @return array The cleaned meta-data, matching the Tika jar call format
      */
-    protected function solrResponseToArray(array $metaDataResponse = [])
+    protected function solrResponseToArray(array $metaDataResponse = []): array
     {
         $cleanedData = [];
 
@@ -198,10 +191,10 @@ class SolrCellService extends AbstractService
      *
      * @return string Apache Solr server version string
      */
-    public function getTikaVersion()
+    public function getTikaVersion(): string
     {
         // TODO add patch for endpoint on Apache Solr to return Tika version
-        // for now returns the Solr version string f.e. "Apache Solr 5.2.0"
+        // for now returns the Solr version string f.e. "Apache Solr X.Y.Z"
         return $this->solrConnection->getAdminService()->getSolrServerVersion();
     }
 
@@ -210,7 +203,7 @@ class SolrCellService extends AbstractService
      *
      * @return array
      */
-    public function getSupportedMimeTypes()
+    public function getSupportedMimeTypes(): array
     {
         $mapping = [
             'application/epub+zip' => ['epub'],
@@ -258,7 +251,7 @@ class SolrCellService extends AbstractService
      *
      * @return bool
      */
-    public function isAvailable()
+    public function isAvailable(): bool
     {
         return $this->solrConnection->getWriteService()->ping();
     }

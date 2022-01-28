@@ -1,33 +1,25 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Run, check, and stop external processes. Linux only.
+ * @author Ingo Renner <ingo@typo3.org>
  */
 class Process
 {
@@ -37,21 +29,21 @@ class Process
      *
      * @var int|null
      */
-    protected $pid;
+    protected ?int $pid = null;
 
     /**
      * Executable running the command
      *
      * @var string
      */
-    protected $executable;
+    protected string $executable;
 
     /**
      * Executable arguments
      *
      * @var string
      */
-    protected $arguments;
+    protected string $arguments;
 
     /**
      * Constructor
@@ -59,9 +51,9 @@ class Process
      * @param string $executable
      * @param string $arguments
      */
-    public function __construct($executable, $arguments = '')
+    public function __construct(string $executable, string $arguments = '')
     {
-        $this->executable = (string)$executable;
+        $this->executable = $executable;
         $this->arguments = $arguments;
     }
 
@@ -70,7 +62,7 @@ class Process
      *
      * @return string
      */
-    public function getArguments()
+    public function getArguments(): string
     {
         return $this->arguments;
     }
@@ -78,9 +70,9 @@ class Process
     /**
      * Arguments setter
      *
-     * @param $arguments
+     * @param string $arguments
      */
-    public function setArguments($arguments): void
+    public function setArguments(string $arguments): void
     {
         $this->arguments = $arguments;
     }
@@ -90,7 +82,7 @@ class Process
      *
      * @return string
      */
-    public function getExecutable()
+    public function getExecutable(): string
     {
         return $this->executable;
     }
@@ -98,9 +90,9 @@ class Process
     /**
      * Gets the process ID
      *
-     * @return int process ID
+     * @return int|null process ID
      */
-    public function getPid()
+    public function getPid(): ?int
     {
         return $this->pid;
     }
@@ -110,9 +102,9 @@ class Process
      *
      * @param int $pid
      */
-    public function setPid($pid): void
+    public function setPid(int $pid): void
     {
-        $this->pid = (int)$pid;
+        $this->pid = $pid;
     }
 
     /**
@@ -120,7 +112,7 @@ class Process
      *
      * @return int|null Null if the pid can't be found, otherwise the pid
      */
-    public function findPid()
+    public function findPid(): ?int
     {
         $processCommand = $this->executable;
         if (!empty($this->arguments)) {
@@ -146,10 +138,10 @@ class Process
      * Escapes 'ps' command output to match what we expect to get as arguments
      * when executing a command.
      *
-     * @param $command
+     * @param string $command
      * @return string
      */
-    protected function escapePsOutputCommand($command)
+    protected function escapePsOutputCommand(string $command): string
     {
         $command = explode(' ', $command);
 
@@ -172,7 +164,7 @@ class Process
      *
      * @return bool TRUE if the process could be started, FALSE otherwise
      */
-    public function start()
+    public function start(): bool
     {
         $this->runCommand();
         return $this->isRunning();
@@ -200,7 +192,7 @@ class Process
      *
      * @return bool TRUE if the process is running, FALSE otherwise
      */
-    public function isRunning()
+    public function isRunning(): bool
     {
         if (is_null($this->pid)) {
             return false;
@@ -224,10 +216,8 @@ class Process
      *
      * @return bool
      */
-    public function stop()
+    public function stop(): bool
     {
-        $stopped = null;
-
         $command = 'kill ' . $this->pid;
         exec($command);
 

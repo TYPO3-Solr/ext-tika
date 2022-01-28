@@ -1,26 +1,52 @@
-
 <div xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
-	f:schemaLocation="https://fluidtypo3.org/schemas/fluid-master.xsd">
+     xmlns:tika="http://typo3.org/ns/ApacheSolrForTypo3/Tika/ViewHelpers/Backend"
+     f:schemaLocation="https://fluidtypo3.org/schemas/fluid-master.xsd">
 
-	<div>
-		<table>
-			<tr>
-				<td>Extracted content:</td>
-				<td>
-					<pre style="height: 200px; overflow:scroll;">{content}</pre>
-				</td>
-			</tr>
+    <div>
+        <h4>Extracted content:</h4>
+        <pre style="height: 20em; width:100%; max-width: 1000px; overflow:scroll;">{content}</pre>
 
-			<tr>
-				<td>Detected Language:</td>
-				<td>{language}</td>
-			</tr>
-			<f:for each="{metadata}" key="key" as="value">
-				<tr>
-					<td>{key}:</td>
-					<td>{value}</td>
-				</tr>
-			</f:for>
-		</table>
-	</div>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>Detected Language:</th>
+                <td>{language}</td>
+            </tr>
+            <f:render section="Rows" arguments="{tableRows: metadata}"/>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<f:section name="Rows">
+    <f:for each="{tableRows}" key="tableRowFiledName" as="tableRowValue" >
+        <tr>
+            <th scope="row">{tableRowFiledName}</th>
+            <tika:isString value="{tableRowValue}">
+                <f:then>
+                    <td>{tableRowValue}</td>
+                </f:then>
+                <f:else>
+                    <td>
+                        <f:render section="SubTable" arguments="{tableRows: tableRowValue}"/>
+                    </td>
+                </f:else>
+            </tika:isString>
+        </tr>
+    </f:for>
+</f:section>
+
+<f:section name="SubTable">
+    <table class="table table-condensed table-hover table-striped table-bordered">
+        <thead><tr><th>Key</th> <th>Value</th></tr></thead>
+        <tbody>
+        <f:render section="Rows" arguments="{tableRows: tableRows}"/>
+        </tbody>
+    </table>
+</f:section>

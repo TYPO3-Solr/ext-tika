@@ -1,50 +1,40 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
+use InvalidArgumentException;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class AppServiceTest
+ *
+ * @author Ingo Renner <ingo@typo3.org>
  */
 class ServiceFactoryTest extends ServiceIntegrationTestCase
 {
-
-    /**
-     * @var array
-     */
-    private $globalsBackup;
-
     /**
      * @test
      */
@@ -88,38 +78,25 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      */
     public function getTikaThrowsExceptionForInvalidExtractor(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         ServiceFactory::getTika('foo', $this->getConfiguration());
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->globalsBackup = [
-            'TYPO3_CONF_VARS' => $GLOBALS['TYPO3_CONF_VARS'],
-        ];
-
         GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
             'cache_hash' => [
-                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class,
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class,
             ],
             'cache_runtime' => [
-                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class,
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class,
             ],
         ]);
-        unset($GLOBALS['TYPO3_CONF_VARS']);
-    }
-
-    protected function tearDown(): void
-    {
-        foreach ($this->globalsBackup as $key => $data) {
-            $GLOBALS[$key] = $data;
-        }
-        unset($this->globalsBackup);
     }
 }

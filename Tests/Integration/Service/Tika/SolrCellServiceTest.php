@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /*
@@ -20,7 +21,7 @@ use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Prophecy\Argument;
-use Prophecy\Prophet;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\NullLogger;
 use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Resource\File;
@@ -30,14 +31,11 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  * Class AppServiceTest
  *
  * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
+ *
+ * @todo: Move duplicated code in methods.
  */
 class SolrCellServiceTest extends ServiceIntegrationTestCase
 {
-    /**
-     * @var Prophet
-     */
-    protected $prophet;
-
     protected function assertPreConditions(): void
     {
         if (!ExtensionManagementUtility::isLoaded('solr')) {
@@ -52,7 +50,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     {
         $service = new SolrCellService($this->getConfiguration());
         $service->setLogger(new NullLogger());
-        self::assertAttributeInstanceOf(SolrConnection::class, 'solrConnection', $service);
+        self::assertTrue($service->isAvailable());
     }
 
     /**
@@ -62,6 +60,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     {
         $expectedValue = 'extracted text element';
 
+        /* @var SolrWriteService|ObjectProphecy $solrWriter */
         $solrWriter = $this->prophesize(SolrWriteService::class);
         $solrWriter->extractByQuery(Argument::type(Query::class))
             ->willReturn([
@@ -69,6 +68,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                 'meta data element', // meta data is index 1
             ]);
 
+        /* @var SolrConnection|ObjectProphecy $connectionMock */
         $connectionMock = $this->prophesize(SolrConnection::class);
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
@@ -96,6 +96,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $solrWriter = $this->prophesize(SolrWriteService::class);
         $solrWriter->extractByQuery(Argument::type(Query::class))->shouldBeCalled();
 
+        /* @var SolrConnection|ObjectProphecy $connectionMock */
         $connectionMock = $this->prophesize(SolrConnection::class);
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 
@@ -105,9 +106,9 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
 
         $file = new File(
             [
-            'identifier' => 'testWORD.doc',
-            'name' => 'testWORD.doc',
-        ],
+                'identifier' => 'testWORD.doc',
+                'name' => 'testWORD.doc',
+            ],
             $this->documentsStorageMock
         );
 
@@ -131,6 +132,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                 ]
             );
 
+        /* @var SolrConnection|ObjectProphecy $connectionMock */
         $connectionMock = $this->prophesize(SolrConnection::class);
         $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
 

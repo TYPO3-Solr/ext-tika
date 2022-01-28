@@ -55,14 +55,14 @@ master_doc = 'Index'
 
 # General information about the project.
 project = u'EXT:tika Apache Tika for TYPO3'
-copyright = u'2021, Ingo Renner'
+copyright = u'2022, Ingo Renner'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '10.0'
+version = '11.0'
 # The full version, including alpha/beta/rc tags.
 release = '11.0.0'
 

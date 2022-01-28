@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 /*
@@ -18,13 +19,16 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use TYPO3\CMS\Core\Resource\File;
 
 /**
  * Test case for class AppService
  *
- * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
+ * @author Ingo Renner <ingo@typo3.org>
+ *
+ * @todo: Move all *Parameter() methods to Unit, to speedup the tests.
  */
 class AppServiceTest extends ServiceIntegrationTestCase
 {
@@ -43,7 +47,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service->setLogger(new NullLogger());
         $service->getTikaVersion();
 
-        self::assertContains('-V', ExecRecorder::$execCommand);
+        self::assertStringContainsString('-V', ExecRecorder::$execCommand);
     }
 
     /**
@@ -63,7 +67,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service->setLogger(new NullLogger());
         $service->extractText($file);
 
-        self::assertContains('-t', ExecRecorder::$execCommand);
+        self::assertStringContainsString('-t', ExecRecorder::$execCommand);
     }
 
     /**
@@ -71,7 +75,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
      */
     public function extractMetaDataUsesMParameter(): void
     {
-        ExecRecorder::setReturnExecOutput(['foo']);
+        ExecRecorder::setReturnExecOutput(['foo : bar']);
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
@@ -82,9 +86,9 @@ class AppServiceTest extends ServiceIntegrationTestCase
 
         $service = new AppService($this->getConfiguration());
         $service->setLogger(new NullLogger());
-        $service->extractMetaData($file);
+        $array = $service->extractMetaData($file);
 
-        self::assertContains('-m', ExecRecorder::$execCommand);
+        self::assertStringContainsString('-m', ExecRecorder::$execCommand);
     }
 
     /**
@@ -104,7 +108,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service->setLogger(new NullLogger());
         $service->detectLanguageFromFile($file);
 
-        self::assertContains('-l', ExecRecorder::$execCommand);
+        self::assertStringContainsString('-l', ExecRecorder::$execCommand);
     }
 
     /**
@@ -116,7 +120,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service->setLogger(new NullLogger());
         $service->detectLanguageFromString('foo');
 
-        self::assertContains('-l', ExecRecorder::$execCommand);
+        self::assertStringContainsString('-l', ExecRecorder::$execCommand);
     }
 
     /**
@@ -127,7 +131,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service = new AppService($this->getConfiguration());
         $service->setLogger(new NullLogger());
         $service->getSupportedMimeTypes();
-        self::assertContains('--list-supported-types', ExecRecorder::$execCommand);
+        self::assertStringContainsString('--list-supported-types', ExecRecorder::$execCommand);
     }
 
     /**
@@ -137,10 +141,10 @@ class AppServiceTest extends ServiceIntegrationTestCase
     {
         $fixtureContent = file_get_contents(__DIR__ . '/Fixtures/mimeOut');
 
-        /** @var $service AppService */
+        /** @var $service AppService|MockObject */
         $service = $this->getMockBuilder(AppService::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getMimeTypeOutputFromTikaJar'])->getMock();
+            ->onlyMethods(['getMimeTypeOutputFromTikaJar'])->getMock();
         $service->expects(self::once())->method('getMimeTypeOutputFromTikaJar')->willReturn($fixtureContent);
 
         $supportedMimeTypes = $service->getSupportedMimeTypes();
@@ -157,6 +161,6 @@ class AppServiceTest extends ServiceIntegrationTestCase
         $service = new AppService($this->getConfiguration());
         $service->setLogger(new NullLogger());
         $service->getTikaVersion();
-        self::assertContains('-Dlog4j2.formatMsgNoLookups=\'true\'', ExecRecorder::$execCommand);
+        self::assertStringContainsString('-Dlog4j2.formatMsgNoLookups=\'true\'', ExecRecorder::$execCommand);
     }
 }

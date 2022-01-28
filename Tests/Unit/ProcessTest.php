@@ -1,35 +1,28 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Tests\Unit;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Process;
 
 /**
  * Test case for class \ApacheSolrForTypo3\Tika\Process
+ *
+ * @author Ingo Renner <ingo@typo3.org>
  */
 class ProcessTest extends UnitTestCase
 {
@@ -51,13 +44,13 @@ class ProcessTest extends UnitTestCase
     public function findPidUsesExecutableBasename(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
-        ExecRecorder::setReturnExecOutput(['foo']);
+        ExecRecorder::setReturnExecOutput(['78986 foo']);
 
         $process->findPid();
 
         self::assertTrue((bool)ExecRecorder::$execCalled);
-        self::assertContains('foo', ExecRecorder::$execCommand);
-        self::assertNotContains('/usr/bin', ExecRecorder::$execCommand);
+        self::assertStringContainsString('foo', ExecRecorder::$execCommand);
+        self::assertStringNotContainsString('/usr/bin', ExecRecorder::$execCommand);
     }
 
     /**
@@ -67,11 +60,12 @@ class ProcessTest extends UnitTestCase
     {
         $process = new Process('/usr/bin/foo', '-bar');
         $process->setPid(1337);
+        ExecRecorder::setReturnExecOutput(['1337 foo']);
 
         $process->isRunning();
 
         self::assertTrue((bool)ExecRecorder::$execCalled);
-        self::assertContains('1337', ExecRecorder::$execCommand);
+        self::assertStringContainsString('1337', ExecRecorder::$execCommand);
     }
 
     /**
@@ -125,11 +119,13 @@ class ProcessTest extends UnitTestCase
     {
         $process = new Process('/usr/bin/foo', '-bar');
         $process->setPid(1337);
-        ExecRecorder::setReturnExecOutput(['1337 /usr/bin/foo -bar']);
+        $outputLinesForIsRunningCall = ['1337 /usr/bin/foo -bar'];
 
+        ExecRecorder::setReturnExecOutput($outputLinesForIsRunningCall);
         $running = $process->isRunning();
         self::assertTrue($running);
 
+        ExecRecorder::setReturnExecOutput($outputLinesForIsRunningCall);
         $stopped = $process->stop();
         self::assertTrue($stopped);
 
