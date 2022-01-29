@@ -26,6 +26,8 @@ use Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Solarium\QueryType\Extract\Query;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -47,11 +49,13 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @var array
      */
-    protected $tikaConfiguration = [];
+    protected array $tikaConfiguration = [];
 
     /**
      * Constructor, reads the extension's configuration
      * @param array|null $extensionConfiguration
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public function __construct(array $extensionConfiguration = null)
     {
@@ -94,7 +98,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @return Status
      */
-    protected function getOkStatus()
+    protected function getOkStatus(): Status
     {
         return GeneralUtility::makeInstance(
             Status::class,
@@ -136,7 +140,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @return Status
      */
-    protected function getAppConfigurationStatus()
+    protected function getAppConfigurationStatus(): Status
     {
         $status = $this->getOkStatus();
         if (!$this->isFilePresent($this->tikaConfiguration['tikaPath'])) {
@@ -158,7 +162,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @return Status
      * @throws Exception
      */
-    protected function getServerConfigurationStatus()
+    protected function getServerConfigurationStatus(): Status
     {
         $status = $this->getOkStatus();
 
@@ -181,7 +185,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @return Status
      */
-    protected function getSolrCellConfigurationStatus()
+    protected function getSolrCellConfigurationStatus(): Status
     {
         $status = $this->getOkStatus();
 
@@ -228,7 +232,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
     /**
      * @return SolrConnection
      */
-    protected function getSolrConnectionFromTikaConfiguration()
+    protected function getSolrConnectionFromTikaConfiguration(): SolrConnection
     {
         $solrConfig = [
             'host' => $this->tikaConfiguration['solrHost'],
@@ -248,7 +252,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @return ServerService
      * @noinspection PhpIncompatibleReturnTypeInspection
      */
-    protected function getTikaServiceFromTikaConfiguration()
+    protected function getTikaServiceFromTikaConfiguration(): ServerService
     {
         return GeneralUtility::makeInstance(
             ServerService::class,
@@ -261,7 +265,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @return bool
      */
-    protected function isJavaInstalled()
+    protected function isJavaInstalled(): bool
     {
         return CommandUtility::checkCommand('java');
     }
@@ -272,7 +276,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @param string $fileName
      * @return bool
      */
-    protected function isFilePresent($fileName)
+    protected function isFilePresent(string $fileName): bool
     {
         return is_file(FileUtility::getAbsoluteFilePath($fileName));
     }
@@ -286,7 +290,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      */
     protected function writeDevLog(string $message, string $extKey, array $data = []): void
     {
-        $this->logger->debug(
+        $this->logger->/** @scrutinizer ignore-call */ debug(
             $message,
             [
                 'extension' => $extKey,

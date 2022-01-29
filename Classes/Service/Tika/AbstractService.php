@@ -69,7 +69,7 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
         if (empty($this->configuration['logging'])) {
             return;
         }
-        $this->logger->log(
+        $this->logger->/** @scrutinizer ignore-call */ log(
             $severity,
             $message,
             $data

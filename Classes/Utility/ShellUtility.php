@@ -27,7 +27,7 @@ class ShellUtility
     /**
      * @return string
      */
-    public static function getLanguagePrefix()
+    public static function getLanguagePrefix(): string
     {
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']) && !Environment::isWindows()) {
             return 'LC_CTYPE="' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'] . '" ';
@@ -43,7 +43,6 @@ class ShellUtility
      */
     public static function escapeShellArgument(string $argument): string
     {
-        $currentLocale = null;
         $isUTF8Filesystem = !empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']);
         if ($isUTF8Filesystem) {
             $currentLocale = setlocale(LC_CTYPE, 0);

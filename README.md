@@ -5,7 +5,9 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/badges/coverage.png?b=release-11.0.x)](https://scrutinizer-ci.com/g/TYPO3-Solr/ext-tika/?branch=release-11.0.x)
 [![Latest Stable Version](https://poser.pugx.org/apache-solr-for-typo3/tika/v/stable)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![License](https://poser.pugx.org/apache-solr-for-typo3/tika/license)](https://packagist.org/packages/apache-solr-for-typo3/tika)
+[![Total Downloads](http://poser.pugx.org/apache-solr-for-typo3/tika/downloads)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![Monthly Downloads](https://poser.pugx.org/apache-solr-for-typo3/tika/d/monthly)](https://packagist.org/packages/apache-solr-for-typo3/tika)
+[![PHP Version Require](http://poser.pugx.org/apache-solr-for-typo3/tika/require/php)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 
 A TYPO3 CMS extension that provides Apache Tika functionality including
 

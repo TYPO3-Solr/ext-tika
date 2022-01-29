@@ -116,7 +116,7 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
         if (!$this->configuration['logging']) {
             return;
         }
-        $this->logger->log(
+        $this->logger->/** @scrutinizer ignore-call */ log(
             LogLevel::DEBUG, // Previous value 0
             $message,
             $data

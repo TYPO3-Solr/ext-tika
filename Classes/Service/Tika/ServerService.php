@@ -20,6 +20,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use GuzzleHttp\Exception\BadResponseException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -69,6 +71,9 @@ class ServerService extends AbstractService
     /**
      * Service initialization
      *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     *
      * @noinspection PhpUnused
      */
     protected function initializeService(): void
@@ -113,9 +118,7 @@ class ServerService extends AbstractService
         $command = '-jar ' . escapeshellarg($tikaJar);
         $command .= ' -p ' . escapeshellarg($this->configuration['tikaServerPort']);
 
-        $command = escapeshellcmd($command);
-
-        return $command;
+        return escapeshellcmd($command);
     }
 
     /**
@@ -138,6 +141,9 @@ class ServerService extends AbstractService
     public function stopServer(): void
     {
         $pid = $this->getServerPid();
+        if (null === $pid) {
+            return;
+        }
 
         $process = $this->getProcess();
         $process->setPid($pid);
@@ -236,6 +242,7 @@ class ServerService extends AbstractService
      *
      * @return string Tika server version string
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     public function getTikaVersion(): string
     {
@@ -254,6 +261,7 @@ class ServerService extends AbstractService
      * @param RequestInterface $request
      * @return string Tika output
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     protected function queryTika(RequestInterface $request): string
     {
@@ -292,6 +300,7 @@ class ServerService extends AbstractService
      * @param FileInterface $file
      * @return string
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     public function extractText(FileInterface $file): string
     {
@@ -321,11 +330,12 @@ class ServerService extends AbstractService
     }
 
     /**
-     * Takes a file reference and extracts its meta data.
+     * Takes a file reference and extracts its meta-data.
      *
      * @param FileInterface $file
      * @return array
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     public function extractMetaData(FileInterface $file): array
     {
@@ -361,6 +371,7 @@ class ServerService extends AbstractService
      * @param FileInterface $file
      * @return string
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     public function detectLanguageFromFile(FileInterface $file): string
     {
@@ -394,6 +405,7 @@ class ServerService extends AbstractService
      * @param string $input
      * @return string
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     public function detectLanguageFromString(string $input): string
     {
@@ -413,6 +425,7 @@ class ServerService extends AbstractService
      *
      * @return array
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     public function getSupportedMimeTypes(): array
     {
@@ -430,10 +443,11 @@ class ServerService extends AbstractService
      *
      * @return string
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     protected function getMimeTypeJsonFromTikaServer(): string
     {
-        $request = $this->createRequestForEndpoint('/mime-types', 'GET')
+        $request = $this->createRequestForEndpoint('/mime-types')
             ->withAddedHeader('Content-Type', 'application/octet-stream')
             ->withAddedHeader('Accept', 'application/json')
             ->withAddedHeader('Connection', 'close')
@@ -447,6 +461,7 @@ class ServerService extends AbstractService
      *
      * @return array
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     protected function buildSupportedMimeTypes(): array
     {
