@@ -26,6 +26,7 @@ use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Util;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -48,7 +49,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
     protected array $tikaConfiguration = [];
 
     /**
-     * @var AppService|ServerService|SolrCellService
+     * @var AbstractService|AppService|ServerService|SolrCellService
      */
     protected $tikaService;
 
@@ -162,12 +163,12 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     public function stopServerAction(): ResponseInterface
     {
-        $this->tikaService->/** @scrutinizer ignore-call */stopServer();
+        $this->tikaService->/** @scrutinizer ignore-call */ stopServer();
 
         // give it some time to stop
         sleep(2);
 
-        if (!$this->tikaService->isServerRunning()) {
+        if (!$this->tikaService->/** @scrutinizer ignore-call */ isServerRunning()) {
             $this->addFlashMessage(
                 'Tika server stopped.',
                 FlashMessage::OK
@@ -182,6 +183,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      *
      * @return string Tika server version string
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     protected function getTikaServerVersion(): string
     {
@@ -195,7 +197,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     protected function isTikaServerRunning(): bool
     {
-        return $this->tikaService->isServerRunning();
+        return $this->tikaService->/** @scrutinizer ignore-call */ isServerRunning();
     }
 
     /**

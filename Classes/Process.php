@@ -221,12 +221,6 @@ class Process
         $command = 'kill ' . $this->pid;
         exec($command);
 
-        if ($this->isRunning() == false) {
-            $stopped = true;
-        } else {
-            $stopped = false;
-        }
-
-        return $stopped;
+        return !$this->isRunning();
     }
 }

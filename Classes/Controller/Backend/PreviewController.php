@@ -23,6 +23,7 @@ use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 use TYPO3\CMS\Core\Http\HtmlResponse;
@@ -42,7 +43,7 @@ class PreviewController
      * @return string|Response
      * @throws ClientExceptionInterface
      */
-    public function previewAction(ServerRequestInterface $request)
+    public function previewAction(ServerRequestInterface $request): ResponseInterface
     {
         $response = new HtmlResponse('');
         if (!$this->getIsAdmin()) {
@@ -55,11 +56,20 @@ class PreviewController
         $file = $this->getFileResourceFactory()->getFileObjectFromCombinedIdentifier($identifier);
 
         $tikaService = $this->getConfiguredTikaService();
-        $metadata = $tikaService->extractMetaData($file);
-        $content = $tikaService->extractText($file);
+        $metadata = $tikaService->extractMetaData(
+            /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+            $file
+        );
+        $content = $tikaService->extractText(
+            /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+            $file
+        );
 
         try {
-            $language = $tikaService->detectLanguageFromFile($file);
+            $language = $tikaService->detectLanguageFromFile(
+                /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+                $file
+            );
         } catch (Throwable $e) {
             $language = 'not detectable';
         }

@@ -100,9 +100,8 @@ class Preview extends AbstractProvider
     {
         $this->initDisabledItems();
         $localItems = $this->prepareItems($this->itemsConfiguration);
-        $items = $items + $localItems;
         //passes array of items to the next item provider
-        return $items;
+        return $items + $localItems;
     }
 
     /**

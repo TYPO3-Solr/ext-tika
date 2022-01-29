@@ -61,13 +61,13 @@ class AppService extends AbstractService
      */
     public function getTikaVersion(): string
     {
-        $tikaCommand = CommandUtility::getCommand('java')
+        $tikaCommand = /** @scrutinizer ignore-type */ CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8' // forces UTF8 output
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -V';
 
-        return shell_exec($tikaCommand);
+        return shell_exec($tikaCommand) ?: '';
     }
 
     /**
@@ -80,7 +80,7 @@ class AppService extends AbstractService
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
         $tikaCommand = ShellUtility::getLanguagePrefix()
-            . CommandUtility::getCommand('java')
+            . /** @scrutinizer ignore-type */  CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8' // forces UTF8 output
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
@@ -111,7 +111,7 @@ class AppService extends AbstractService
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
         $tikaCommand = ShellUtility::getLanguagePrefix()
-            . CommandUtility::getCommand('java')
+            . /** @scrutinizer ignore-type */ CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
@@ -177,14 +177,14 @@ class AppService extends AbstractService
     protected function detectLanguageFromLocalFile(string $localFilePath): string
     {
         $tikaCommand = ShellUtility::getLanguagePrefix()
-            . CommandUtility::getCommand('java')
+            . /** @scrutinizer ignore-type */ CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -l'
             . ' ' . ShellUtility::escapeShellArgument($localFilePath);
 
-        $language = trim(shell_exec($tikaCommand));
+        $language = trim(shell_exec($tikaCommand) ?: '');
 
         $this->log(
             'Language Detection using local Tika',
@@ -315,12 +315,12 @@ class AppService extends AbstractService
     protected function getMimeTypeOutputFromTikaJar(): string
     {
         $tikaCommand = ShellUtility::getLanguagePrefix()
-            . CommandUtility::getCommand('java')
+            . /** @scrutinizer ignore-type */ CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' --list-supported-types';
 
-        return trim(shell_exec($tikaCommand));
+        return trim(shell_exec($tikaCommand) ?: '');
     }
 }
