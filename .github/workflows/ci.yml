@@ -10,7 +10,6 @@ on:
 
 env:
   CI_BUILD_DIRECTORY: '/home/runner/work/ext-tika/ext-tika/.Build'
-  TIKA_VERSION: '1.24.1'
   TIKA_PATH: '/home/runner/work/ext-tika/ext-tika/.Build/data-tika-binaries'
   EXT_SOLR_VERSION: 'dev-release-11.5.x'
 
@@ -68,6 +67,13 @@ jobs:
             && sudo chown $USER ${{ env.CI_BUILD_DIRECTORY }}/data-{mysql,tika-binaries} \
             && sudo chown 8983:8983 ${{ env.CI_BUILD_DIRECTORY }}/data-solr
       -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.PHP }}
+          coverage: xdebug
+          tools: composer:v2
+      -
         name: 'Start Docker: Solr, Tika, MySQL'
         run: |
           docker run --name "MySQL-CI" -v ${{ env.CI_BUILD_DIRECTORY }}/data-mysql:/var/lib/mysql -p 3306:3306 \
@@ -77,19 +83,13 @@ jobs:
           sudo chmod g+w "$SOLR_VOLUME_PATH"
           docker volume create --name "$LOCAL_VOLUME_NAME" --opt type=none --opt device="$SOLR_VOLUME_PATH" --opt o=bind
           docker run --rm --name="$SOLR_CONTAINER_NAME" -d -p 127.0.0.1:8983:8983 -v "$LOCAL_VOLUME_NAME":"/var/solr" "typo3solr/ext-solr:$SOLR_IMAGE_TAG"
-          docker run -d -p 9998:9998 apache/tika:$TIKA_VERSION"-full"
+          docker run -d -p 9998:9998 apache/tika:$(composer tika:version)"-full"
           docker ps
-      -
-        name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.PHP }}
-          coverage: xdebug
-          tools: composer:v2
       -
         name: CI-Bootstrap
         run: |
-          ./Build/Test/bootstrap.sh --skip-solr-install --skip-tika-server-install
+          composer info
+          ./Build/Test/bootstrap.sh
           echo "Current Size of EXT:tika build Artefacts: " \
             && sudo du -sh "${{ env.CI_BUILD_DIRECTORY }}"
       -

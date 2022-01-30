@@ -51,8 +51,11 @@ build_failure_conditions:
 
 build:
   environment:
-    # We want to test with the smallest supported by TYPO3 PHP version
-    php: 7.4
+    # We want to test with the smallest supported TYPO3 PHP version
+    php:
+      version: 7.4.27
+      pecl_extensions:
+        - zip
   nodes:
     analysis:
       tests:

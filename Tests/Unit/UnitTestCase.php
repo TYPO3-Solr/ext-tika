@@ -35,7 +35,7 @@ class UnitTestCase extends TYPO3TestingFrameworkUnitTestCase
      */
     protected function getConfiguration(): array
     {
-        $tikaVersion = getenv('TIKA_VERSION') ?: '1.24.1';
+        $tikaVersion = getenv('TIKA_VERSION') ?: '1.27';
         $tikaPath = getenv('TIKA_PATH') ?: '/opt/tika';
         $envVarNamePrefix = 'TESTING_TIKA_';
 

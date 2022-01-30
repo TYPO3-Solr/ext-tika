@@ -19,7 +19,7 @@
 set -e
 
 test -n "$TIKA_PATH" || TIKA_PATH="/opt/tika"
-test -n "$TIKA_VERSION" || TIKA_VERSION="1.24.1"
+test -n "$TIKA_VERSION" || TIKA_VERSION="1.27"
 
 start() {
 	if [ -f ${TIKA_PATH}/tika_pid ]

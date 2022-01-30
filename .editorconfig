@@ -39,6 +39,10 @@ indent_style = tab
 [package.json]
 indent_size = 2
 
+# composer.json (Reason: git history in composer.json)
+[composer.json]
+indent_size = 2
+
 # TypoScript
 [*.{typoscript,tsconfig}]
 indent_size = 2
