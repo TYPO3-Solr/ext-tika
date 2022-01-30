@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class SolrCellService extends AbstractService
 {
-
     /**
      * Solr connection
      *
@@ -50,7 +49,7 @@ class SolrCellService extends AbstractService
 
         $readNode = [
             'host' => $this->configuration['solrHost'],
-            'port' => $this->configuration['solrPort'],
+            'port' => (int)$this->configuration['solrPort'],
             'path' => $this->configuration['solrPath'],
             'scheme' => $this->configuration['solrScheme'],
         ];
