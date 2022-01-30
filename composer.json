@@ -2,11 +2,9 @@
   "name": "apache-solr-for-typo3/tika",
   "type": "typo3-cms-extension",
   "description": "Apache Tika for TYPO3",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "license": "GPL-3.0-or-later",
   "keywords": ["typo3", "cms", "tika", "meta data", "language", "text", "extraction"],
-  "homepage": "http://www.typo3-solr.com",
+  "homepage": "https://www.typo3-solr.com",
   "authors": [
     {
       "name": "Ingo Renner",
@@ -15,28 +13,34 @@
     }
   ],
   "support": {
-    "email": "typo3-project-solr@lists.typo3.org",
-    "issues": "https://github.com/TYPO3-Solr/ext-tika/issues",
+    "email": "solr-eb-support@dkd.de",
+    "issues": "https://github.com/TYPO3-Solr/ext-solr/issues",
+    "forum": "https://talk.typo3.org",
+    "slack": "https://typo3.slack.com/app_redirect?channel=C02FF05Q4",
     "source": "https://github.com/TYPO3-Solr/ext-tika"
   },
   "replace": {
     "typo3-ter/tika": "self.version"
   },
   "require": {
+    "php": "^7.4 || ^8.0",
     "ext-json": "*",
     "ext-pdo": "*",
-
-    "typo3/cms-core": "^10.4.10",
-    "typo3/cms-backend": "*",
-    "typo3/cms-extbase": "*",
-    "typo3/cms-reports": "*",
-    "typo3/cms-filemetadata": "*"
+    "typo3/cms-backend": "^11.5",
+    "typo3/cms-core": "11.5.x-dev",
+    "typo3/cms-extbase": "^11.5",
+    "typo3/cms-filemetadata": "^11.5",
+    "typo3/cms-fluid": "^11.5",
+    "typo3/cms-reports": "^11.5"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.5.6 || ^8",
-    "nimut/testing-framework": "^5.0.0",
-    "apache-solr-for-typo3/solr": "dev-release-11.1.x",
-    "psr/log": "*"
+    "psr/log": "*",
+    "phpunit/phpunit": "^9.5",
+    "phpspec/prophecy-phpunit":"*",
+    "typo3/testing-framework": "^6.12",
+    "apache-solr-for-typo3/solr": "dev-release-11.5.x",
+    "typo3/coding-standards": ">=0.5.0",
+    "typo3/tailor": "^1.4"
   },
   "suggest": {
     "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr."
@@ -48,29 +52,54 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "ApacheSolrForTypo3\\Tika\\Tests\\": "Tests/",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+      "ApacheSolrForTypo3\\Tika\\Tests\\": "Tests/"
     }
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "config": {
+    "allow-plugins": true,
     "optimize-autoloader": true,
     "vendor-dir": ".Build/vendor",
     "bin-dir": ".Build/bin"
+  },
+  "scripts-descriptions": {
+    "tika:download": "Download Tika binaries/\".jar\" files. App and Server files.",
+    "tika:download:app": "Download Tika app binariy/\".jar\" file only.",
+    "tika:download:help": "Prints help from download script.",
+    "tika:download:server": "Download Tika server binariy/\".jar\" file only.",
+    "tika:version": "Print required Apache Tika version."
   },
   "scripts": {
     "post-autoload-dump": [
       "mkdir -p .Build/Web/typo3conf/ext/",
       "[ -L .Build/Web/typo3conf/ext/tika ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/tika"
-    ]
+    ],
+    "tika:download": [ "CALLED_VIA_COMPOSER=1 REQUIRED_TIKA_VERSION=$($COMPOSER_BINARY tika:version) ./Build/Helpers/download_tika_binaries.sh"],
+    "tika:download:app": [ "@tika:download -a" ],
+    "tika:download:help": [ "@tika:download -h" ],
+    "tika:download:server": [ "@tika:download -s" ],
+    "tika:version": [ "@composer config extra.TYPO3-Solr.Tika" ],
+    "_comment": "CI scripts",
+    "tests:setup": [ "@composer install --prefer-source" ],
+    "tests:setup:t3dev": [
+      "@composer config minimum-stability dev",
+      "@composer req --prefer-source --update-with-all-dependencies typo3/cms-core:11.5.x-dev"
+    ],
+    "tests:unit": [ "phpunit --colors -c Build/Test/UnitTests.xml --bootstrap=Build/Test/UnitTestsBootstrap.php" ],
+    "tests:integration": [ "phpunit --colors -c Build/Test/IntegrationTests.xml --bootstrap=Build/Test/IntegrationTestsBootstrap.php" ]
   },
   "extra": {
     "branch-alias": {
-      "dev-main": "11.0.x-dev"
+      "dev-release-11.0.x": "11.0.x-dev"
     },
     "typo3/cms": {
       "extension-key": "tika",
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/Web"
+    },
+    "TYPO3-Solr": {
+      "Tika": "1.27"
     }
   }
 }

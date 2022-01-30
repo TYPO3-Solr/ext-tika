@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 // Prevent Script from beeing called directly
-defined('TYPO3_MODE') || die();
+defined('TYPO3') || die();
 
 if (empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'])) {
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'] = [];
@@ -12,7 +15,8 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions']
 );
 
-$metaDataExtractorRegistry = \TYPO3\CMS\Core\Resource\Index\ExtractorRegistry::getInstance();
+/* @var \TYPO3\CMS\Core\Resource\Index\ExtractorRegistry$metaDataExtractorRegistry */
+$metaDataExtractorRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\Index\ExtractorRegistry::class);
 $metaDataExtractorRegistry->registerExtractionService(\ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor::class);
 
 $extConf = \ApacheSolrForTypo3\Tika\Util::getTikaExtensionConfiguration();
@@ -21,7 +25,8 @@ if ($extConf['extractor'] !== 'solr') {
 }
 unset($extConf);
 
-$textExtractorRegistry = \TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorRegistry::getInstance();
+/* @var \TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorRegistry $textExtractorRegistry */
+$textExtractorRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorRegistry::class);
 $textExtractorRegistry->registerTextExtractor(\ApacheSolrForTypo3\Tika\Service\Extractor\TextExtractor::class);
 
 // Add Context Menu and JS

@@ -4,7 +4,7 @@
 
 ---
 conf.py:
-  copyright: 2009-2021
+  copyright: 2009-2022
   project: Apache Tika for TYPO3
   version: 11.0.0
   release: 11.0.0

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Report;
 
 /*
@@ -23,11 +26,13 @@ use Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Solarium\QueryType\Extract\Query;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Utility\CommandUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * Provides a status report about whether Tika is properly configured
@@ -44,11 +49,13 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @var array
      */
-    protected $tikaConfiguration = [];
+    protected array $tikaConfiguration = [];
 
     /**
      * Constructor, reads the extension's configuration
      * @param array|null $extensionConfiguration
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public function __construct(array $extensionConfiguration = null)
     {
@@ -57,10 +64,9 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Checks whether Tika is properly configured
+     * @return array
      *
-     * TODO Check whether EXT:tika is installed AFTER EXT:solr
      * @throws Exception
-     * @noinspection PhpUnused
      */
     public function getStatus()
     {
@@ -91,11 +97,11 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * Creates a configuration OK status.
      *
      * @return Status
-     * @noinspection PhpIncompatibleReturnTypeInspection
      */
-    protected function getOkStatus()
+    protected function getOkStatus(): Status
     {
-        return GeneralUtility::makeInstance(Status::class,
+        return GeneralUtility::makeInstance(
+            Status::class,
             'Apache Tika',
             'Configuration OK'
         );
@@ -104,19 +110,21 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
     /**
      * Creates a system status report status checking whether Java is installed.
      *
-     * @param integer $severity
+     * @param int $severity
      * @return Status
      */
-    protected function getJavaInstalledStatus($severity = Status::ERROR)
+    protected function getJavaInstalledStatus(int $severity = Status::ERROR): Status
     {
         /* @var Status $status */
-        $status = GeneralUtility::makeInstance(Status::class,
+        $status = GeneralUtility::makeInstance(
+            Status::class,
             'Apache Tika',
             'Java OK'
         );
 
         if (!$this->isJavaInstalled()) {
-            $status = GeneralUtility::makeInstance(Status::class,
+            $status = GeneralUtility::makeInstance(
+                Status::class,
                 'Apache Tika',
                 'Java Not Found',
                 '<p>Please install Java.</p>',
@@ -132,11 +140,12 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @return Status
      */
-    protected function getAppConfigurationStatus()
+    protected function getAppConfigurationStatus(): Status
     {
         $status = $this->getOkStatus();
         if (!$this->isFilePresent($this->tikaConfiguration['tikaPath'])) {
-            $status = GeneralUtility::makeInstance(Status::class,
+            $status = GeneralUtility::makeInstance(
+                Status::class,
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not find Tika app jar.</p>',
@@ -153,13 +162,14 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @return Status
      * @throws Exception
      */
-    protected function getServerConfigurationStatus()
+    protected function getServerConfigurationStatus(): Status
     {
         $status = $this->getOkStatus();
 
         $tikaServer = $this->getTikaServiceFromTikaConfiguration();
         if (!$tikaServer->isAvailable()) {
-            $status = GeneralUtility::makeInstance(Status::class,
+            $status = GeneralUtility::makeInstance(
+                Status::class,
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not connect to Tika server.</p>',
@@ -175,7 +185,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @return Status
      */
-    protected function getSolrCellConfigurationStatus()
+    protected function getSolrCellConfigurationStatus(): Status
     {
         $status = $this->getOkStatus();
 
@@ -190,7 +200,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
             $query->setFile(ExtensionManagementUtility::extPath('tika', 'ext_emconf.php'));
             $query->addParam('extractFormat', 'text');
 
-            list($extractedContent, $extractedMetadata) = $solr->getWriteService()->extractByQuery($query);
+            [$extractedContent, $extractedMetadata] = $solr->getWriteService()->extractByQuery($query);
 
             if (!is_null($extractedContent) && !empty($extractedMetadata)) {
                 $solrCellConfigurationOk = true;
@@ -207,7 +217,8 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
         }
 
         if (!$solrCellConfigurationOk) {
-            $status = GeneralUtility::makeInstance(Status::class,
+            $status = GeneralUtility::makeInstance(
+                Status::class,
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not extract file contents with Solr Cell.</p>',
@@ -221,18 +232,18 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
     /**
      * @return SolrConnection
      */
-    protected function getSolrConnectionFromTikaConfiguration()
+    protected function getSolrConnectionFromTikaConfiguration(): SolrConnection
     {
         $solrConfig = [
             'host' => $this->tikaConfiguration['solrHost'],
             'port' => $this->tikaConfiguration['solrPort'],
             'path' => $this->tikaConfiguration['solrPath'],
-            'scheme' => $this->tikaConfiguration['solrScheme']
+            'scheme' => $this->tikaConfiguration['solrScheme'],
         ];
 
         $config = [
             'read' => $solrConfig,
-            'write' => $solrConfig
+            'write' => $solrConfig,
         ];
         return GeneralUtility::makeInstance(ConnectionManager::class)->getConnectionFromConfiguration($config);
     }
@@ -241,7 +252,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @return ServerService
      * @noinspection PhpIncompatibleReturnTypeInspection
      */
-    protected function getTikaServiceFromTikaConfiguration()
+    protected function getTikaServiceFromTikaConfiguration(): ServerService
     {
         return GeneralUtility::makeInstance(
             ServerService::class,
@@ -254,7 +265,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      *
      * @return bool
      */
-    protected function isJavaInstalled()
+    protected function isJavaInstalled(): bool
     {
         return CommandUtility::checkCommand('java');
     }
@@ -265,7 +276,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @param string $fileName
      * @return bool
      */
-    protected function isFilePresent($fileName)
+    protected function isFilePresent(string $fileName): bool
     {
         return is_file(FileUtility::getAbsoluteFilePath($fileName));
     }
@@ -277,13 +288,13 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @param string $extKey extension key
      * @param array $data data
      */
-    protected function writeDevLog(string $message, string $extKey, array $data = [])
+    protected function writeDevLog(string $message, string $extKey, array $data = []): void
     {
-        $this->logger->debug(
+        $this->logger->/** @scrutinizer ignore-call */ debug(
             $message,
             [
                 'extension' => $extKey,
-                'data' => $data
+                'data' => $data,
             ]
         );
     }

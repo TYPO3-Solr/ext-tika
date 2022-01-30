@@ -1,32 +1,26 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Util;
 use InvalidArgumentException;
-use RuntimeException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -41,14 +35,13 @@ class ServiceFactory
      * Creates an instance of a Tika service
      *
      * @param string $tikaServiceType Tika Service type, one of jar, server, or solr (or tika for BC, same as jar)
-     * @param array $configuration EXT:tika EM configuration (initialized by this factory, parameter exists for tests)
+     * @param array|null $configuration EXT:tika EM configuration (initialized by this factory, parameter exists for tests)
      * @return AppService|ServerService|SolrCellService
      *
-     * @throws InvalidArgumentException for unknown Tika service type
-     * @throws RuntimeException if configuration cannot be initialized
-     * @noinspection PhpIncompatibleReturnTypeInspection
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public static function getTika($tikaServiceType, array $configuration = null)
+    public static function getTika(string $tikaServiceType, array $configuration = null)
     {
         if (empty($configuration)) {
             $configuration = Util::getTikaExtensionConfiguration();
