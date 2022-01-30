@@ -9,17 +9,22 @@ We are happy to announce version 11.0.0 of EXT:tika.
 New in this Release
 -------------------
 
-- [TASK] Prepare releases for TYPO3 11 LTS `910681d <https://github.com/TYPO3-Solr/ext-solr/commit/910681d>`_
-- [TASK] Fix issues recognized by scrutinizer `e10a03d <https://github.com/TYPO3-Solr/ext-solr/commit/e10a03d>`_
-- [FEATURE] Allow definition of additional Java command options `060b8ae <https://github.com/TYPO3-Solr/ext-solr/commit/060b8ae>`_
-- [BUGFIX] Handle custom java command options for server module as well `841c332 <https://github.com/TYPO3-Solr/ext-solr/commit/841c332>`_
-- [TASK] Let php-cs-fixer fix some CGL `9a5ba47 <https://github.com/TYPO3-Solr/ext-solr/commit/9a5ba47>`_
-- [TASK] Move ext icon `4af9838 <https://github.com/TYPO3-Solr/ext-solr/commit/4af9838>`_
-- [BUGFIX] Force variable as string `5e60539 <https://github.com/TYPO3-Solr/ext-solr/commit/5e60539>`_
-- [TASK] Allow installation of 11.5 `695c60b <https://github.com/TYPO3-Solr/ext-solr/commit/695c60b>`_
-- [BUGFIX] Use correct controller code `aa625b8 <https://github.com/TYPO3-Solr/ext-solr/commit/aa625b8>`_
-- [TASK] update ci pipeline `915344f <https://github.com/TYPO3-Solr/ext-solr/commit/915344f>`_
-- [TASK] TYPO3 11 LTS and PHP 8.1 compatibility `e0edd3c <https://github.com/TYPO3-Solr/ext-solr/commit/e0edd3c>`_
+- [TASK] Prepare releases for TYPO3 11 LTS `910681d <https://github.com/TYPO3-Solr/ext-tika/commit/910681d>`_
+- [TASK] Fix issues recognized by scrutinizer `24aa731 <https://github.com/TYPO3-Solr/ext-tika/commit/24aa731>`_
+- [FEATURE] Allow definition of additional Java command options `2420888 <https://github.com/TYPO3-Solr/ext-tika/commit/2420888>`_
+- [BUGFIX] Handle custom java command options for server module as well `1ec312e <https://github.com/TYPO3-Solr/ext-tika/commit/1ec312e>`_
+- [TASK] Let php-cs-fixer fix some CGL `38ca19b <https://github.com/TYPO3-Solr/ext-tika/commit/38ca19b>`_
+- [TASK] Move ext icon `4cffbd7 <https://github.com/TYPO3-Solr/ext-tika/commit/4cffbd7>`_
+- [BUGFIX] Force variable as string `f763ebb <https://github.com/TYPO3-Solr/ext-tika/commit/f763ebb>`_
+- [TASK] Allow installation of 11.5 `897b12c <https://github.com/TYPO3-Solr/ext-tika/commit/897b12c>`_
+- [BUGFIX] Use correct controller code `5c8976c <https://github.com/TYPO3-Solr/ext-tika/commit/5c8976c>`_
+- [TASK] update ci pipeline `eaad00e <https://github.com/TYPO3-Solr/ext-tika/commit/eaad00e>`_
+- [TASK] TYPO3 11 LTS and PHP 8.1 compatibility `ed160cd <https://github.com/TYPO3-Solr/ext-tika/commit/ed160cd>`_
+- [TASK] Fix scrutinizer issues on release-11.0.x `d0d9439 <https://github.com/TYPO3-Solr/ext-tika/commit/d0d9439>`_
+- [TASK] Update Apache TIKA to v1.27 on release-11.0.x `24f2929 <https://github.com/TYPO3-Solr/ext-tika/commit/24f2929>`_
+
+git rev-list --reverse --no-commit-header --format="format:- %s `%h <https://github.com/TYPO3-Solr/ext-tika/commit/%h>`_" 910681daf3fb812cb7447d89ac85c6841a8495d5^..HEAD
+
 
 
 Contributors

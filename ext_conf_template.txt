@@ -42,8 +42,8 @@ solrScheme = http
 # cat=solr//20; type=string; label=Host
 solrHost = localhost
 
-# cat=solr//30; type=string; label=Port
-solrPort = 8080
+# cat=solr//30; type=int; label=Port
+solrPort = 8983
 
 # cat=solr//40; type=string; label=Path: Path to a Solr core
 solrPath = /solr/
