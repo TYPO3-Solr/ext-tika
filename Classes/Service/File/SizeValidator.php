@@ -1,42 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\File;
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Util;
 use TYPO3\CMS\Core\Resource\FileInterface;
 
-/***************************************************************
- *  Copyright notice
- *
- *  (c) 2017 Timo Hund <timo.hund@dkd.de>
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
-
 /**
  * Class SizeValidator
+ *
+ * @author Timo Hund <timo.hund@dkd.de>
  */
-class SizeValidator {
+class SizeValidator
+{
 
     /**
      * @var array
      */
-    protected $configuration;
+    protected array $configuration;
 
     /**
      * Constructor
@@ -51,7 +46,8 @@ class SizeValidator {
      * @param FileInterface $file
      * @return bool
      */
-    public function isBelowLimit(FileInterface $file) {
+    public function isBelowLimit(FileInterface $file)
+    {
         return $file->getSize() < $this->getFileSizeLimit();
     }
 
@@ -75,8 +71,8 @@ class SizeValidator {
      * @param mixed $defaultValue
      * @return mixed
      */
-    protected function getConfigurationOrDefaultValue($key, $defaultValue)
+    protected function getConfigurationOrDefaultValue(string $key, $defaultValue)
     {
-        return isset($this->configuration[$key]) ? $this->configuration[$key] : $defaultValue;
+        return $this->configuration[$key] ?? $defaultValue;
     }
 }

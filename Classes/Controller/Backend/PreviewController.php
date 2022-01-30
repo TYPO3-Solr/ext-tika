@@ -1,32 +1,50 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Controller\Backend;
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
-use Exception;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Exception\InvalidExtensionNameException;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Class PreviewController
- * @package ApacheSolrForTypo3\Tika\Controller\Backend
  */
-class PreviewController {
+class PreviewController
+{
 
     /**
      * @param ServerRequestInterface $request
      * @return string|Response
-     * @throws Exception
+     * @throws ClientExceptionInterface
+     * @throws Throwable
      */
-    public function previewAction(ServerRequestInterface $request)
+    public function previewAction(ServerRequestInterface $request): ResponseInterface
     {
         $response = new HtmlResponse('');
         if (!$this->getIsAdmin()) {
@@ -39,12 +57,21 @@ class PreviewController {
         $file = $this->getFileResourceFactory()->getFileObjectFromCombinedIdentifier($identifier);
 
         $tikaService = $this->getConfiguredTikaService();
-        $metadata = $tikaService->extractMetaData($file);
-        $content = $tikaService->extractText($file);
+        $metadata = $tikaService->extractMetaData(
+            /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+            $file
+        );
+        $content = $tikaService->extractText(
+            /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+            $file
+        );
 
         try {
-            $language = $tikaService->detectLanguageFromFile($file);
-        } catch (Exception $e) {
+            $language = $tikaService->detectLanguageFromFile(
+                /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+                $file
+            );
+        } catch (Throwable $e) {
             $language = 'not detectable';
         }
 
@@ -54,7 +81,7 @@ class PreviewController {
         $view->assign('content', $content);
         $view->assign('language', $language);
 
-        $response->getBody()->write($view->render());
+        $response->getBody()->write($view->render() ?? '');
 
         return $response;
     }
@@ -78,7 +105,6 @@ class PreviewController {
 
     /**
      * @return StandaloneView
-     * @throws InvalidExtensionNameException
      */
     protected function getInitializedPreviewView(): StandaloneView
     {
@@ -91,10 +117,10 @@ class PreviewController {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    protected function getIsAdmin()
+    protected function getIsAdmin(): bool
     {
-        return (bool)$GLOBALS['BE_USER']->isAdmin();
+        return !empty($GLOBALS['BE_USER']) && $GLOBALS['BE_USER']->isAdmin();
     }
 }

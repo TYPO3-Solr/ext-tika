@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures;
 
 /*
@@ -21,7 +24,7 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 /**
  * Class ServerServiceFixture
  *
- * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
+ * @author Ingo Renner <ingo@typo3.org>
  */
 class ServerServiceFixture extends ServerService
 {
@@ -31,7 +34,7 @@ class ServerServiceFixture extends ServerService
      *
      * @var string
      */
-    protected $recordedEndpoint = '';
+    protected string $recordedEndpoint = '';
 
     /**
      * @return string

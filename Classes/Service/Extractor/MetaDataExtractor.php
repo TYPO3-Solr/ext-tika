@@ -1,58 +1,55 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2010-2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
-use Exception;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Psr\Http\Client\ClientExceptionInterface;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * A service to extract meta data from files using Apache Tika
+ * A service to extract meta-data from files using Apache Tika
  *
  * @author Ingo Renner <ingo@typo3.org>
  */
 class MetaDataExtractor extends AbstractExtractor
 {
     /**
-     * @var integer
+     * @var int
      */
-    protected $priority = 100;
-
+    protected int $priority = 100;
 
     /**
      * Checks if the given file can be processed by this Extractor
      *
      * @param File $file
-     * @return boolean
-     * @throws Exception
+     * @return bool
+     * @throws ClientExceptionInterface
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public function canProcess(File $file)
+    public function canProcess(File $file): bool
     {
         $tikaService = $this->getExtractor();
         $mimeTypes = $tikaService->getSupportedMimeTypes();
@@ -71,7 +68,7 @@ class MetaDataExtractor extends AbstractExtractor
      * @param array $mimeTypes
      * @return array
      */
-    protected function mergeAllowedMimeTypes($mimeTypes)
+    protected function mergeAllowedMimeTypes(array $mimeTypes): array
     {
         if (empty($this->configuration['excludeMimeTypes'])) {
             return $mimeTypes;
@@ -84,20 +81,24 @@ class MetaDataExtractor extends AbstractExtractor
 
     /**
      * @return AppService|ServerService|SolrCellService
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    protected function getExtractor() {
+    protected function getExtractor()
+    {
         return ServiceFactory::getTika($this->configuration['extractor']);
     }
 
     /**
-     * Extracts meta data from a file using Apache Tika
+     * Extracts meta-data from a file using Apache Tika
      *
      * @param File $file
      * @param array $previousExtractedData Already extracted/existing data
      * @return array
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
-    public function extractMetaData(File $file, array $previousExtractedData = []) {
+    public function extractMetaData(File $file, array $previousExtractedData = []): array
+    {
         $extractedMetaData = $this->getExtractedMetaDataFromTikaService($file);
         return $this->normalizeMetaData($extractedMetaData);
     }
@@ -105,23 +106,25 @@ class MetaDataExtractor extends AbstractExtractor
     /**
      * Creates an instance of the service and returns the result from "extractMetaData".
      *
-     * @param File $file
+     * @param FileInterface $file
      * @return array
-     * @throws Exception
+     * @throws ClientExceptionInterface
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    protected function getExtractedMetaDataFromTikaService($file)
+    protected function getExtractedMetaDataFromTikaService(FileInterface $file): array
     {
         $tikaService = $this->getExtractor();
         return $tikaService->extractMetaData($file);
     }
 
     /**
-     * Normalizes the names / keys of the meta data found.
+     * Normalizes the names / keys of the meta-data found.
      *
-     * @param array $metaData An array of raw meta data from a file
-     * @return array An array with cleaned meta data keys
+     * @param array $metaData An array of raw meta-data from a file
+     * @return array An array with cleaned meta-data keys
      */
-    protected function normalizeMetaData(array $metaData)
+    protected function normalizeMetaData(array $metaData): array
     {
         $metaDataCleaned = [];
 
@@ -153,14 +156,14 @@ class MetaDataExtractor extends AbstractExtractor
                     $metaDataCleaned['height'] = $value;
                     break;
                 case 'Exif Image Height':
-                    list($height) = explode(' ', $value, 2);
+                    [$height] = explode(' ', $value, 2);
                     $metaDataCleaned['height'] = $height;
                     break;
                 case 'width':
                     $metaDataCleaned['width'] = $value;
                     break;
                 case 'Exif Image Width':
-                    list($width) = explode(' ', $value, 2);
+                    [$width] = explode(' ', $value, 2);
                     $metaDataCleaned['width'] = $width;
                     break;
                 case 'Color space':
@@ -217,19 +220,17 @@ class MetaDataExtractor extends AbstractExtractor
 
     /**
      * Converts a date string into timestamp
-     * exiftags: 2002:09:07 15:29:52
+     * exif-tags: 2002:09:07 15:29:52
      *
      * @param string $date An exif date string
-     * @return integer Unix timestamp
+     * @return int Unix timestamp
      */
-    protected function exifDateToTimestamp($date)
+    protected function exifDateToTimestamp(string $date): int
     {
-        if (is_string($date)) {
-            if (($timestamp = strtotime($date)) === -1) {
-                $date = 0;
-            } else {
-                $date = $timestamp;
-            }
+        if (($timestamp = strtotime($date)) === -1) {
+            $date = 0;
+        } else {
+            $date = $timestamp;
         }
 
         return $date;

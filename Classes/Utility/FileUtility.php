@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Utility;
 
 /**
@@ -25,12 +28,12 @@ class FileUtility
      * @param string $path
      * @return string
      */
-    public static function getAbsoluteFilePath($path) {
-        if (substr($path, 0, 1) === "/") {
+    public static function getAbsoluteFilePath(string $path): string
+    {
+        if (substr($path, 0, 1) === '/') {
             // if the path start with a "/" we thread it as absolute
             return $path;
-        } else {
-            return GeneralUtility::getFileAbsFileName($path);
         }
+        return GeneralUtility::getFileAbsFileName($path);
     }
 }

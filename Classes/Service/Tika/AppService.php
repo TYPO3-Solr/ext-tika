@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 /*
@@ -31,14 +34,12 @@ class AppService extends AbstractService
     /**
     * @var array
     */
-    protected static $supportedMimeTypes = [];
+    protected static array $supportedMimeTypes = [];
 
     /**
      * Service initialization
-     *
-     * @return void
      */
-    protected function initializeService()
+    protected function initializeService(): void
     {
         if (!is_file(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
         ) {
@@ -58,15 +59,15 @@ class AppService extends AbstractService
      *
      * @return string Tika app version string
      */
-    public function getTikaVersion()
+    public function getTikaVersion(): string
     {
-        $tikaCommand = CommandUtility::getCommand('java')
+        $tikaCommand = /** @scrutinizer ignore-type */ CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8' // forces UTF8 output
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -V';
 
-        return shell_exec($tikaCommand);
+        return shell_exec($tikaCommand) ?: '';
     }
 
     /**
@@ -75,11 +76,11 @@ class AppService extends AbstractService
      * @param FileInterface $file
      * @return string
      */
-    public function extractText(FileInterface $file)
+    public function extractText(FileInterface $file): string
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
         $tikaCommand = ShellUtility::getLanguagePrefix()
-            . CommandUtility::getCommand('java')
+            . /** @scrutinizer ignore-type */  CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8' // forces UTF8 output
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
@@ -93,24 +94,24 @@ class AppService extends AbstractService
             [
                 'file' => $file,
                 'tika command' => $tikaCommand,
-                'shell output' => $extractedText
+                'shell output' => $extractedText,
             ]
         );
 
-        return $extractedText;
+        return (string)$extractedText;
     }
 
     /**
-     * Takes a file reference and extracts its meta data.
+     * Takes a file reference and extracts its meta-data.
      *
      * @param FileInterface $file
      * @return array
      */
-    public function extractMetaData(FileInterface $file)
+    public function extractMetaData(FileInterface $file): array
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
         $tikaCommand = ShellUtility::getLanguagePrefix()
-            . CommandUtility::getCommand('java')
+            . /** @scrutinizer ignore-type */ CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
@@ -127,7 +128,7 @@ class AppService extends AbstractService
                 'file' => $file,
                 'tika command' => $tikaCommand,
                 'shell output' => $shellOutput,
-                'meta data' => $metaData
+                'meta data' => $metaData,
             ]
         );
 
@@ -140,7 +141,7 @@ class AppService extends AbstractService
      * @param FileInterface $file
      * @return string Language ISO code
      */
-    public function detectLanguageFromFile(FileInterface $file)
+    public function detectLanguageFromFile(FileInterface $file): string
     {
         $localTempFilePath = $file->getForLocalProcessing(false);
 
@@ -153,7 +154,7 @@ class AppService extends AbstractService
      * @param string $input
      * @return string Language ISO code
      */
-    public function detectLanguageFromString($input)
+    public function detectLanguageFromString(string $input): string
     {
         $tempFilePath = GeneralUtility::tempnam('Tx_Tika_AppService_DetectLanguage');
         file_put_contents($tempFilePath, $input);
@@ -173,24 +174,24 @@ class AppService extends AbstractService
      * @param string $localFilePath Path to a local file
      * @return string The file content's language
      */
-    protected function detectLanguageFromLocalFile($localFilePath)
+    protected function detectLanguageFromLocalFile(string $localFilePath): string
     {
         $tikaCommand = ShellUtility::getLanguagePrefix()
-            . CommandUtility::getCommand('java')
+            . /** @scrutinizer ignore-type */ CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' -l'
             . ' ' . ShellUtility::escapeShellArgument($localFilePath);
 
-        $language = trim(shell_exec($tikaCommand));
+        $language = trim(shell_exec($tikaCommand) ?: '');
 
         $this->log(
             'Language Detection using local Tika',
             [
                 'file' => $localFilePath,
                 'tika command' => $tikaCommand,
-                'shell output' => $language
+                'shell output' => $language,
             ]
         );
 
@@ -200,9 +201,9 @@ class AppService extends AbstractService
     /**
      * @return array
      */
-    public function getSupportedMimeTypes()
+    public function getSupportedMimeTypes(): array
     {
-        if(is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
+        if (is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
             return self::$supportedMimeTypes;
         }
 
@@ -214,7 +215,7 @@ class AppService extends AbstractService
     /**
      * @return array
      */
-    public function buildSupportedMimeTypes()
+    public function buildSupportedMimeTypes(): array
     {
         $mimeTypeOutput = $this->getMimeTypeOutputFromTikaJar();
         $coreTypes = [];
@@ -224,15 +225,14 @@ class AppService extends AbstractService
         preg_match_all('/^[\s]*alias:[\s]*.*/im', $mimeTypeOutput, $aliasTypes);
 
         $supportedTypes = $coreTypes[0];
-        foreach($aliasTypes[0] as $aliasType) {
-            $supportedTypes[] = trim(str_replace('alias:','', $aliasType));
+        foreach ($aliasTypes[0] as $aliasType) {
+            $supportedTypes[] = trim(str_replace('alias:', '', $aliasType));
         }
 
         $supportedTypes = array_filter($supportedTypes);
         asort($supportedTypes);
         return $supportedTypes;
     }
-
 
     /**
      * Takes shell output from exec() and turns it into an array of key => value
@@ -241,12 +241,12 @@ class AppService extends AbstractService
      * @param array $shellOutput An array containing shell output from exec() with one line per entry
      * @return array Key => value pairs
      */
-    protected function shellOutputToArray(array $shellOutput)
+    protected function shellOutputToArray(array $shellOutput): array
     {
         $metaData = [];
 
         foreach ($shellOutput as $line) {
-            list($key, $value) = explode(':', $line, 2);
+            [$key, $value] = explode(':', $line, 2);
             $value = trim($value);
 
             if (in_array($key, [
@@ -256,11 +256,11 @@ class AppService extends AbstractService
                 'tiff',
                 'xmp',
                 'xmpTPg',
-                'xmpDM'
+                'xmpDM',
             ])) {
                 // Dublin Core metadata and co
                 $keyPrefix = $key;
-                list($key, $value) = explode(':', $value, 2);
+                [$key, $value] = explode(':', $value, 2);
 
                 $key = $keyPrefix . ':' . $key;
                 $value = trim($value);
@@ -292,9 +292,9 @@ class AppService extends AbstractService
     /**
      * The app is available when the jar can be opened
      *
-     * @return boolean
+     * @return bool
      */
-    public function isAvailable()
+    public function isAvailable(): bool
     {
         $tikaFileExists = is_file(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']));
         if (!$tikaFileExists) {
@@ -315,12 +315,12 @@ class AppService extends AbstractService
     protected function getMimeTypeOutputFromTikaJar(): string
     {
         $tikaCommand = ShellUtility::getLanguagePrefix()
-            . CommandUtility::getCommand('java')
+            . /** @scrutinizer ignore-type */ CommandUtility::getCommand('java')
             . ' -Dfile.encoding=UTF8'
             . $this->getAdditionalCommandOptions()
             . ' -jar ' . escapeshellarg(FileUtility::getAbsoluteFilePath($this->configuration['tikaPath']))
             . ' --list-supported-types';
 
-        return trim(shell_exec($tikaCommand));
+        return trim(shell_exec($tikaCommand) ?: '');
     }
 }

@@ -1,47 +1,38 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 Ingo Renner <ingo@typo3.org>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use TYPO3\CMS\Core\Resource\FileInterface;
-
 
 /**
  * A common interface for the different ways of accessing Tika, e.g. app,
  * server, and Solr Cell.
  *
- * @package ApacheSolrForTypo3\Tika\Service
+ * @author Ingo Renner <ingo@typo3.org>
  */
 interface ServiceInterface
 {
-
     /**
      * Gets the Tika version
      *
      * @return string
      */
-    public function getTikaVersion();
+    public function getTikaVersion(): string;
 
     /**
      * Takes a file reference and extracts the text from it.
@@ -49,15 +40,15 @@ interface ServiceInterface
      * @param FileInterface $file
      * @return string
      */
-    public function extractText(FileInterface $file);
+    public function extractText(FileInterface $file): string;
 
     /**
-     * Takes a file reference and extracts its meta data.
+     * Takes a file reference and extracts its meta-data.
      *
      * @param FileInterface $file
      * @return array
      */
-    public function extractMetaData(FileInterface $file);
+    public function extractMetaData(FileInterface $file): array;
 
     /**
      * Takes a file reference and detects its content's language.
@@ -65,7 +56,7 @@ interface ServiceInterface
      * @param FileInterface $file
      * @return string Language ISO code
      */
-    public function detectLanguageFromFile(FileInterface $file);
+    public function detectLanguageFromFile(FileInterface $file): string;
 
     /**
      * Takes a string as input and detects its language.
@@ -73,18 +64,17 @@ interface ServiceInterface
      * @param string $input
      * @return string Language ISO code
      */
-    public function detectLanguageFromString($input);
+    public function detectLanguageFromString(string $input): string;
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getSupportedMimeTypes();
+    public function getSupportedMimeTypes(): array;
 
     /**
      * Public method to check the availability of this service.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isAvailable();
-
+    public function isAvailable(): bool;
 }

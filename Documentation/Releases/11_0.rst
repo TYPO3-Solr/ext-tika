@@ -2,26 +2,104 @@
 Apache Solr for TYPO3 - Tika Addon version 11.0.0 released
 ==========================================================
 
-**Important**:
-This version contains CVE-2021-44228 fixes for users, who starting
-the Tika Server-daemons within TYPO3 BE or using Tika app modes.
-All users using dedicated Tika server or Apache Solr Tika cell connections do not benefit from the update
-and should harden the Solr Servers and/or Tika Servers with official CVE-2021-44228 patches manually.
+We are happy to announce version 11.0.0 of EXT:tika.
 
-Manual action required for Tika App or enabled Tika Server module
+**Important**: This version is compatible with 11 LTS only.
 
-Please note that the release does not automatically include security measures against CVE-2021-44228. Rather, it is
-now possible to specify additional parameters that can be passed when the java binary is executed.
-The parameters can be set using the extension configuration javaCommandOptions.
-Example:
+New in this Release
+-------------------
 
-.. code-block::
+- [TASK] Prepare releases for TYPO3 11 LTS `910681d <https://github.com/TYPO3-Solr/ext-solr/commit/910681d>`_
+- [TASK] Fix issues recognized by scrutinizer `e10a03d <https://github.com/TYPO3-Solr/ext-solr/commit/e10a03d>`_
+- [FEATURE] Allow definition of additional Java command options `060b8ae <https://github.com/TYPO3-Solr/ext-solr/commit/060b8ae>`_
+- [BUGFIX] Handle custom java command options for server module as well `841c332 <https://github.com/TYPO3-Solr/ext-solr/commit/841c332>`_
+- [TASK] Let php-cs-fixer fix some CGL `9a5ba47 <https://github.com/TYPO3-Solr/ext-solr/commit/9a5ba47>`_
+- [TASK] Move ext icon `4af9838 <https://github.com/TYPO3-Solr/ext-solr/commit/4af9838>`_
+- [BUGFIX] Force variable as string `5e60539 <https://github.com/TYPO3-Solr/ext-solr/commit/5e60539>`_
+- [TASK] Allow installation of 11.5 `695c60b <https://github.com/TYPO3-Solr/ext-solr/commit/695c60b>`_
+- [BUGFIX] Use correct controller code `aa625b8 <https://github.com/TYPO3-Solr/ext-solr/commit/aa625b8>`_
+- [TASK] update ci pipeline `915344f <https://github.com/TYPO3-Solr/ext-solr/commit/915344f>`_
+- [TASK] TYPO3 11 LTS and PHP 8.1 compatibility `e0edd3c <https://github.com/TYPO3-Solr/ext-solr/commit/e0edd3c>`_
 
-   # LocalConfiguration.php
-   return [
-       'EXTENSIONS' => [
-           'tika' => [
-               'javaCommandOptions' => '-Dlog4j2.formatMsgNoLookups=true',
-           ],
-       ],
-   ];
+
+Contributors
+------------
+
+- Elias Häußler
+- Georg Ringer
+- Rafael Kähm
+- Roman Schilter
+
+Thanks to everyone who helped in creating this release!
+
+Also a big thanks to our partners that have joined the EB2021 program:
+
+- +Pluswerk AG
+- 711media websolutions GmbH
+- Abt Sportsline GmbH
+- ACO Severin Ahlmann GmbH & Co. KG
+- AVM Computersysteme Vertriebs GmbH
+- cosmoblonde GmbH
+- creativ clicks GmbH
+- cron IT GmbH
+- CS2 AG
+- CW Media & Systems
+- Earlybird GmbH & Co KG
+- FLOWSITE GmbH
+- form4 GmbH & Co. KG
+- Getdesigned GmbH
+- Granpasso Digital Strategy GmbH
+- Ikanos GmbH
+- internezzo ag
+- Intersim AG
+- Ion2s GmbH
+- Leitgab Gernot
+- mellowmessage GmbH
+- Moselwal Digitalagentur UG (haftungsbeschränkt)
+- network.publishing Möller-Westbunk GmbH
+- OST Ostschweizer Fachhochschule
+- Plan.Net Suisse AG
+- Provitex GmbH
+- punkt.de GmbH
+- queo GmbH
+- Rechnungshof
+- Schoene neue kinder GmbH
+- SIT GmbH
+- SIZ GmbH
+- Stämpfli AG
+- Triplesense Reply Frankfurt
+- TWT reality bytes GmbH
+- visol digitale Dienstleistungen GmbH
+- Web Commerce GmbH
+- webconsulting business services gmbh
+- webschuppen GmbH
+- Webstobe GmbH
+- Webtech AG
+- wow! solution
+- XIMA MEDIA GmbH
+- Bundesanstalt Statistik Österreich
+- ECOS TECHNOLOGY GMBH
+- Fachhochschule Erfurt
+- Hochschule Furtwangen - IMZ Online-Services
+- Hochschule Niederrhein University of Applied Sciences
+- l'Autorité des marchés financiers
+- La Financière agricole du Québec
+- LfdA - Labor für digitale Angelegenheiten GmbH
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+- Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+- Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+- Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+- Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us in 2021 by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/
+
+or call:
+
++49 (0)69 - 2475218 0

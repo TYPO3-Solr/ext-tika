@@ -1,139 +1,93 @@
 #!/usr/bin/env bash
 
-SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
-EXTENSION_ROOTPATH="$SCRIPTPATH/../../"
-TIKA_SERVER_SOURCE="https://archive.apache.org/dist/tika/"
+if [[ -n ${BASH_SOURCE[0]} ]]; then
+  # shellcheck disable=SC2164
+  ABSOLUTE_SCRIPT_PATH=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+else
+  # shellcheck disable=SC2164
+  ABSOLUTE_SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+fi
+EXTENSION_ROOT_PATH="${ABSOLUTE_SCRIPT_PATH}/../../"
 
-#
-# Run this script once to set up a dev/test environment for this extension
-# Afterwards simply running cibuild.sh will execute the tests
-#
+DEFAULT_TYPO3_DATABASE_HOST="localhost"
+DEFAULT_TYPO3_DATABASE_NAME="test"
+DEFAULT_TYPO3_DATABASE_USERNAME="root"
+DEFAULT_TYPO3_DATABASE_PASSWORD="supersecret"
+DEFAULT_TIKA_PATH="${EXTENSION_ROOT_PATH}.Build/bin/"
+
+if [[ $* == *--use-defaults* ]]; then
+  export TYPO3_DATABASE_HOST="${DEFAULT_TYPO3_DATABASE_HOST}"
+  export TYPO3_DATABASE_NAME="${DEFAULT_TYPO3_DATABASE_NAME}"
+  export TYPO3_DATABASE_USERNAME="${DEFAULT_TYPO3_DATABASE_USERNAME}"
+  export TYPO3_DATABASE_PASSWORD="${DEFAULT_TYPO3_DATABASE_PASSWORD}"
+  export TIKA_PATH="${DEFAULT_TIKA_PATH}"
+fi
 
 if [[ $* == *--local* ]]; then
-    echo -n "Choose a TYPO3 Version (e.g. dev-master, ^10.4.20): "
-    read typo3Version
-    export TYPO3_VERSION=$typo3Version
+  echo -n "Choose a database hostname: [defaults: ${DEFAULT_TYPO3_DATABASE_HOST}] : "
+  read -r typo3DbHost
+  if [[ -z "${typo3DbHost}" ]]; then typo3DbHost="${DEFAULT_TYPO3_DATABASE_HOST}"; fi
+  export TYPO3_DATABASE_HOST=${typo3DbHost}
 
-    echo -n "Choose a EXT:solr Version (e.g. dev-master, dev-release-11.1.x): "
-    read extSolrVersion
-    export EXT_SOLR_VERSION=$extSolrVersion
+  echo -n "Choose a database name: [defaults: ${DEFAULT_TYPO3_DATABASE_NAME}] : "
+  read -r typo3DbName
+  if [[ -z "${typo3DbName}" ]]; then typo3DbName=${DEFAULT_TYPO3_DATABASE_NAME}; fi
+  export TYPO3_DATABASE_NAME="${typo3DbName}"
 
-    echo -n "Choose a tika Version (e.g. 1.24.1): "
-    read tikaVersion
-    export TIKA_VERSION=$tikaVersion
+  echo -n "Choose a database user: [defaults: ${DEFAULT_TYPO3_DATABASE_USERNAME}] : "
+  read -r typo3DbUser
+  if [ -z "${typo3DbUser}" ]; then typo3DbUser="${DEFAULT_TYPO3_DATABASE_USERNAME}"; fi
+  export TYPO3_DATABASE_USERNAME=$typo3DbUser
 
-    echo -n "Choose a database hostname: "
-    read typo3DbHost
-    export TYPO3_DATABASE_HOST=$typo3DbHost
+  echo -n "Choose a database password: [defaults: ${DEFAULT_TYPO3_DATABASE_PASSWORD}] : "
+  read -r typo3DbPassword
+  if [ -z "${typo3DbPassword}" ]; then typo3DbPassword="${DEFAULT_TYPO3_DATABASE_PASSWORD}"; fi
+  export TYPO3_DATABASE_PASSWORD="${typo3DbPassword}"
 
-    echo -n "Choose a database name: "
-    read typo3DbName
-    export TYPO3_DATABASE_NAME=$typo3DbName
-
-    echo -n "Choose a database user: "
-    read typo3DbUser
-    export TYPO3_DATABASE_USERNAME=$typo3DbUser
-
-    echo -n "Choose a database password: "
-    read typo3DbPassword
-    export TYPO3_DATABASE_PASSWORD=$typo3DbPassword
-fi
-
-test -n "$TIKA_PATH" || TIKA_PATH="$HOME/bin"
-
-
-if [ -z $TIKA_VERSION ]; then
-	echo "Must set env var TIKA_VERSION"
-	exit 1
-fi
-
-if [ -z $TYPO3_VERSION ]; then
-	echo "Must set env var TYPO3_VERSION"
-	exit 1
-fi
-
-wget --version > /dev/null 2>&1
-if [ $? -ne "0" ]; then
-	echo "Couldn't find wget."
-	exit 1
+  echo -n "Choose a path for Apache Tika binary/.jar files: [defaults: ${DEFAULT_TIKA_PATH}] : "
+    read -r tikaPath
+    if [ -z "${tikaPath}" ]; then tikaPath=${DEFAULT_TIKA_PATH}; fi
+    export TIKA_PATH="${tikaPath}"
 fi
 
 # download Tika if not present
-if [ ! -d "$TIKA_PATH" ]; then
-	mkdir -p "$TIKA_PATH"
+if [[ ! -d "${TIKA_PATH}" ]]; then
+	mkdir -p "${TIKA_PATH}"
 fi
-
-if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
-	wget "${TIKA_SERVER_SOURCE}tika-app-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-app-$TIKA_VERSION.jar"
-	if [ ! -f "$TIKA_PATH/tika-app-$TIKA_VERSION.jar" ]; then
-		echo "Could not download tika-app-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}"
-		exit 1
-	fi
-	echo "Download of tika-app-$TIKA_VERSION.jar successful"
-else
-	echo "Cached $TIKA_PATH/tika-app-$TIKA_VERSION.jar present"
-fi
-
-if [[ $* != *--skip-tika-server-install* ]]; then
-    if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
-    	wget "${TIKA_SERVER_SOURCE}tika-server-$TIKA_VERSION.jar" -O "$TIKA_PATH/tika-server-$TIKA_VERSION.jar"
-    	if [ ! -f "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" ]; then
-    		echo "Could not download tika-server-$TIKA_VERSION.jar from ${TIKA_SERVER_SOURCE}"
-    		exit 1
-    	fi
-    	echo "Download of tika-server-$TIKA_VERSION.jar successful"
-    else
-    	echo "Cached $TIKA_PATH/tika-server-$TIKA_VERSION.jar present"
-    fi
-
-    # stop Tika server if one is still running
-    if [ -f ./tika_pid ]; then
-    	TIKA_PID=cat ./tika_pid
-    	echo "Stopping Tika ($TIKA_PID)"
-    	kill $TIKA_PID
-    fi
-
-    # start tika server
-    echo "Starting Apache Tika"
-    TIKA_PID=`nohup java -jar "$TIKA_PATH/tika-server-$TIKA_VERSION.jar" > /dev/null 2>&1 & echo $!`
-    echo $TIKA_PID > tika_pid
-    echo "Tika pid: $TIKA_PID"
+if [[ ! -f "${TIKA_PATH}/tika-app-$(composer tika:version).jar" ]] && ! composer tika:download -- -D "${TIKA_PATH}" -C -a; then
+  echo "Could not download Tika app jar file required for tests."
+  exit 1
 fi
 
 echo "PWD: $(pwd)"
 
-export TYPO3_PATH_PACKAGES="${EXTENSION_ROOTPATH}.Build/vendor/"
-export TYPO3_PATH_WEB="${EXTENSION_ROOTPATH}.Build/Web/"
+export TYPO3_PATH_PACKAGES="${EXTENSION_ROOT_PATH}.Build/vendor/"
+export TYPO3_PATH_WEB="${EXTENSION_ROOT_PATH}.Build/Web/"
+mkdir -p "${TYPO3_PATH_WEB}"/uploads "$TYPO3_PATH_WEB"/typo3temp
 
-echo "Using extension path $EXTENSION_ROOTPATH"
+echo "Using extension path $EXTENSION_ROOT_PATH"
 echo "Using package path $TYPO3_PATH_PACKAGES"
 echo "Using web path $TYPO3_PATH_WEB"
 
-if [[ $TYPO3_VERSION = *"dev"* ]]; then
-    composer config minimum-stability dev
+# shellcheck disable=SC2034
+export COMPOSER_NO_INTERACTION=1
+# Install build tools
+echo "Install build tools: "
+if ! composer global require \
+  sclable/xml-lint \
+  scrutinizer/ocular
+then
+  echo "The build tools(sclable/xml-lint, scrutinizer/ocular) could not be installed. Please fix this issue."
+  exit 1
 fi
 
-if [[ $TYPO3_VERSION = *"master"* ]]; then
-    TYPO3_MASTER_DEPENDENCIES='nimut/testing-framework:dev-master'
+SETUP_VARIANT=""
+if [[ "${TYPO3_VERSION}" = *"dev"* ]]; then
+  SETUP_VARIANT=":t3dev"
 fi
 
-composer require --dev --update-with-dependencies --prefer-source \
-  typo3/cms-core:"$TYPO3_VERSION" \
-  typo3/cms-backend:"$TYPO3_VERSION" \
-  typo3/cms-fluid:"$TYPO3_VERSION" \
-  typo3/cms-frontend:"$TYPO3_VERSION" \
-  typo3/cms-extbase:"$TYPO3_VERSION" \
-  typo3/cms-reports:"$TYPO3_VERSION" \
-  typo3/cms-scheduler:"$TYPO3_VERSION" \
-  apache-solr-for-typo3/solr:"$EXT_SOLR_VERSION" \
-  typo3/cms-tstemplate:"$TYPO3_VERSION" $TYPO3_MASTER_DEPENDENCIES
-
-export TYPO3_PATH_WEB=$PWD/.Build/Web
-
-mkdir -p $TYPO3_PATH_WEB/uploads $TYPO3_PATH_WEB/typo3temp
-
-# Setup Solr using install script
-if [[ $* != *--skip-solr-install* ]]; then
-    chmod u+x ${TYPO3_PATH_WEB}/typo3conf/ext/solr/Resources/Private/Install/install-solr.sh
-    ${TYPO3_PATH_WEB}/typo3conf/ext/solr/Resources/Private/Install/install-solr.sh -d "$HOME/solr" -t
+if ! composer "tests:setup${SETUP_VARIANT}"; then
+  echo "The test environment could not be installed by composer as expected. Please fix this issue."
+  exit 1
 fi
+
