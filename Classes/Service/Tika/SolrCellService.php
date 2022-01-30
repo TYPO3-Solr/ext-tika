@@ -49,7 +49,7 @@ class SolrCellService extends AbstractService
 
         $readNode = [
             'host' => $this->configuration['solrHost'],
-            'port' => $this->configuration['solrPort'],
+            'port' => (int)$this->configuration['solrPort'],
             'path' => $this->configuration['solrPath'],
             'scheme' => $this->configuration['solrScheme'],
         ];
