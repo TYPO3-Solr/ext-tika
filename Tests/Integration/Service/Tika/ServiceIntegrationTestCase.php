@@ -258,11 +258,11 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      *
      * @param array $configuration
      * @return string
-     * @see \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml()
+     * @see {@link \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml()}
      */
     protected function convertConfigurationArrayToFlexformXml(
         array $configuration
-    ) {
+    ): string {
         $flexformArray = [
             'data' => [
                 'sDEF' => [
@@ -281,9 +281,9 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      *
      * @return array
      */
-    protected function getConfiguration()
+    protected function getConfiguration(): array
     {
-        $tikaVersion = getenv('TIKA_VERSION') ?: '1.24.1';
+        $tikaVersion = getenv('TIKA_VERSION') ?: '1.27';
         $tikaPath = getenv('TIKA_PATH') ?: '/opt/tika';
 
         $envVarNamePrefix = 'TESTING_TIKA_';

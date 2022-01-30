@@ -42,6 +42,7 @@ class PreviewController
      * @param ServerRequestInterface $request
      * @return string|Response
      * @throws ClientExceptionInterface
+     * @throws Throwable
      */
     public function previewAction(ServerRequestInterface $request): ResponseInterface
     {
@@ -80,7 +81,7 @@ class PreviewController
         $view->assign('content', $content);
         $view->assign('language', $language);
 
-        $response->getBody()->write($view->render());
+        $response->getBody()->write($view->render() ?? '');
 
         return $response;
     }
