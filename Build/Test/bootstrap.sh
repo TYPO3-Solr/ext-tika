@@ -81,12 +81,7 @@ then
   exit 1
 fi
 
-SETUP_VARIANT=""
-if [[ "${TYPO3_VERSION}" = *"dev"* ]]; then
-  SETUP_VARIANT=":t3dev"
-fi
-
-if ! composer "tests:setup${SETUP_VARIANT}"; then
+if ! composer "tests:setup"; then
   echo "The test environment could not be installed by composer as expected. Please fix this issue."
   exit 1
 fi
