@@ -283,7 +283,8 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected function getConfiguration(): array
     {
-        $tikaVersion = getenv('TIKA_VERSION') ?: '1.27';
+        $tikaComposerManifest = json_decode(file_get_contents(GeneralUtility::getFileAbsFileName('EXT:tika/composer.json')));
+        $tikaVersion = $tikaComposerManifest['extra']['TYPO3-Solr']['Tika'];
         $tikaPath = getenv('TIKA_PATH') ?: '/opt/tika';
 
         $envVarNamePrefix = 'TESTING_TIKA_';

@@ -29,40 +29,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase as TYPO3TestingFrameworkUnitTe
 class UnitTestCase extends TYPO3TestingFrameworkUnitTestCase
 {
     /**
-     * Creates configuration to be used fo tests
-     *
-     * @return array
-     */
-    protected function getConfiguration(): array
-    {
-        $tikaVersion = getenv('TIKA_VERSION') ?: '1.27';
-        $tikaPath = getenv('TIKA_PATH') ?: '/opt/tika';
-        $envVarNamePrefix = 'TESTING_TIKA_';
-
-        return [
-            'extractor' => '',
-            'logging' => 0,
-
-            'tikaPath' => "$tikaPath/tika-app-$tikaVersion.jar",
-
-            'tikaServerPath' => "$tikaPath/tika-server-$tikaVersion.jar",
-            'tikaServerScheme' => getenv($envVarNamePrefix . 'SERVER_SCHEME') ?: 'http',
-            'tikaServerHost' => getenv($envVarNamePrefix . 'SERVER_HOST') ?: 'localhost',
-            'tikaServerPort' => getenv($envVarNamePrefix . 'SERVER_PORT') ?: '9998',
-
-            'solrScheme' => getenv('TESTING_SOLR_SCHEME') ?: 'http',
-            'solrHost' => getenv('TESTING_SOLR_HOST') ?: 'localhost',
-            /*
-             * TODO: The port number differs that is in use for the integration test
-             *       This needs to be checked
-             * @see \ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\ServiceIntegrationTestCase::getConfiguration
-             */
-            'solrPort' => getenv('TESTING_SOLR_PORT') ?: 8080,
-            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/',
-        ];
-    }
-
-    /**
      * Returns a mocked class where all functionality is mocked, just to fullfill the required data type
      * and to fake custom behaviour.
      *

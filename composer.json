@@ -68,19 +68,20 @@
     "tika:download:app": "Download Tika app binariy/\".jar\" file only.",
     "tika:download:help": "Prints help from download script.",
     "tika:download:server": "Download Tika server binariy/\".jar\" file only.",
-    "tika:version": "Print required Apache Tika version."
+    "tika:req:tika": "Print required Apache Tika version."
   },
   "scripts": {
     "post-autoload-dump": [
       "mkdir -p .Build/Web/typo3conf/ext/",
       "[ -L .Build/Web/typo3conf/ext/tika ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/tika"
     ],
-    "tika:download": [ "CALLED_VIA_COMPOSER=1 REQUIRED_TIKA_VERSION=$($COMPOSER_BINARY tika:version) ./Build/Helpers/download_tika_binaries.sh"],
+    "tika:download": [ "CALLED_VIA_COMPOSER=1 REQUIRED_TIKA_VERSION=$($COMPOSER_BINARY tika:req:tika) ./Build/Helpers/download_tika_binaries.sh"],
     "tika:download:app": [ "@tika:download -a" ],
     "tika:download:help": [ "@tika:download -h" ],
     "tika:download:server": [ "@tika:download -s" ],
-    "tika:version": [ "@composer config extra.TYPO3-Solr.Tika" ],
-    "_comment": "CI scripts",
+    "tika:req:tika": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Tika" ],
+    "tika:req:solr": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Solr" ],
+		"_comment": "CI scripts",
     "tests:setup": [ "@composer install --prefer-source" ],
     "tests:setup:t3dev": [
       "@composer config minimum-stability dev",
@@ -99,7 +100,12 @@
       "web-dir": ".Build/Web"
     },
     "TYPO3-Solr": {
-      "Tika": "1.27"
+      "ext-tika": {
+        "require": {
+          "Tika": "1.27",
+          "Solr": "8.11.1"
+        }
+      }
     }
   }
 }

@@ -54,7 +54,7 @@ fi
 if [[ ! -d "${TIKA_PATH}" ]]; then
 	mkdir -p "${TIKA_PATH}"
 fi
-if [[ ! -f "${TIKA_PATH}/tika-app-$(composer tika:version).jar" ]] && ! composer tika:download -- -D "${TIKA_PATH}" -C -a; then
+if [[ ! -f "${TIKA_PATH}/tika-app-$(composer tika:req:tika).jar" ]] && ! composer tika:download -- -D "${TIKA_PATH}" -C -a; then
   echo "Could not download Tika app jar file required for tests."
   exit 1
 fi
