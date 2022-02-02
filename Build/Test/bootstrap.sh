@@ -54,7 +54,7 @@ fi
 if [[ ! -d "${TIKA_PATH}" ]]; then
 	mkdir -p "${TIKA_PATH}"
 fi
-if [[ ! -f "${TIKA_PATH}/tika-app-$(composer tika:version).jar" ]] && ! composer tika:download -- -D "${TIKA_PATH}" -C -a; then
+if [[ ! -f "${TIKA_PATH}/tika-app-$(composer tika:req:tika).jar" ]] && ! composer tika:download -- -D "${TIKA_PATH}" -C -a; then
   echo "Could not download Tika app jar file required for tests."
   exit 1
 fi
@@ -81,12 +81,7 @@ then
   exit 1
 fi
 
-SETUP_VARIANT=""
-if [[ "${TYPO3_VERSION}" = *"dev"* ]]; then
-  SETUP_VARIANT=":t3dev"
-fi
-
-if ! composer "tests:setup${SETUP_VARIANT}"; then
+if ! composer "tests:setup"; then
   echo "The test environment could not be installed by composer as expected. Please fix this issue."
   exit 1
 fi

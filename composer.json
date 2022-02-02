@@ -27,7 +27,7 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "typo3/cms-backend": "^11.5",
-    "typo3/cms-core": "11.5.x-dev",
+    "typo3/cms-core": "^11.5",
     "typo3/cms-extbase": "^11.5",
     "typo3/cms-filemetadata": "^11.5",
     "typo3/cms-fluid": "^11.5",
@@ -68,23 +68,28 @@
     "tika:download:app": "Download Tika app binariy/\".jar\" file only.",
     "tika:download:help": "Prints help from download script.",
     "tika:download:server": "Download Tika server binariy/\".jar\" file only.",
-    "tika:version": "Print required Apache Tika version."
+    "tika:req:tika": "Print required Apache Tika version."
   },
   "scripts": {
     "post-autoload-dump": [
       "mkdir -p .Build/Web/typo3conf/ext/",
       "[ -L .Build/Web/typo3conf/ext/tika ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/tika"
     ],
-    "tika:download": [ "CALLED_VIA_COMPOSER=1 REQUIRED_TIKA_VERSION=$($COMPOSER_BINARY tika:version) ./Build/Helpers/download_tika_binaries.sh"],
+    "tika:download": [ "CALLED_VIA_COMPOSER=1 REQUIRED_TIKA_VERSION=$($COMPOSER_BINARY tika:req:tika) ./Build/Helpers/download_tika_binaries.sh"],
     "tika:download:app": [ "@tika:download -a" ],
     "tika:download:help": [ "@tika:download -h" ],
     "tika:download:server": [ "@tika:download -s" ],
-    "tika:version": [ "@composer config extra.TYPO3-Solr.Tika" ],
-    "_comment": "CI scripts",
-    "tests:setup": [ "@composer install --prefer-source" ],
-    "tests:setup:t3dev": [
-      "@composer config minimum-stability dev",
-      "@composer req --prefer-source --update-with-all-dependencies typo3/cms-core:11.5.x-dev"
+    "tika:req:tika": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Tika" ],
+    "tika:req:solr": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Solr" ],
+		"_comment": "CI scripts",
+    "tests:env": [
+      "if [ -z ${TYPO3_VERSION+x} ]; then >&2 echo \"Can not proceed, because env var TYPO3_VERSION is not set\"; exit 1; else echo \"Setup test environment for TYPO3 ${TYPO3_VERSION}\"; fi",
+      "if [ \"${TYPO3_VERSION#*dev}\" != \"dev\" ]; then $COMPOSER_BINARY config minimum-stability dev; fi"
+    ],
+    "tests:setup": [
+      "@tests:env",
+      "@composer req --prefer-source --update-with-all-dependencies typo3/cms-core:${TYPO3_VERSION}",
+      "echo \"Retoring composer.json to initial state:\" && git checkout composer.json"
     ],
     "tests:unit": [ "phpunit --colors -c Build/Test/UnitTests.xml --bootstrap=Build/Test/UnitTestsBootstrap.php" ],
     "tests:integration": [ "phpunit --colors -c Build/Test/IntegrationTests.xml --bootstrap=Build/Test/IntegrationTestsBootstrap.php" ]
@@ -99,7 +104,12 @@
       "web-dir": ".Build/Web"
     },
     "TYPO3-Solr": {
-      "Tika": "1.27"
+      "ext-tika": {
+        "require": {
+          "Tika": "1.27",
+          "Solr": "8.11.1"
+        }
+      }
     }
   }
 }
