@@ -19,6 +19,10 @@ Releases
     :titlesonly:
     :glob:
 
+    11_0.rst
+    10_0.rst
+    6_0.rst
+    5_0.rst
     4_0.rst
     3_1.rst
     3_0.rst
