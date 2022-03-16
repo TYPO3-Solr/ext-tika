@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /** @noinspection PhpUndefinedVariableInspection */
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Apache Tika for TYPO3',
