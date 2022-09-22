@@ -7,7 +7,8 @@ filter:
     - 'Classes/*'
   dependency_paths:
     - ".Build/vendor"
-
+    - '.Build/Web/typo3/sysext'
+    - '.Build/Web/typo3conf/ext/solr'
 tools:
   php_cpd:
     enabled: true
