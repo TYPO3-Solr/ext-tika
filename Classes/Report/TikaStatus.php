@@ -236,7 +236,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
     {
         $solrConfig = [
             'host' => $this->tikaConfiguration['solrHost'],
-            'port' => $this->tikaConfiguration['solrPort'],
+            'port' => (int)$this->tikaConfiguration['solrPort'],
             'path' => $this->tikaConfiguration['solrPath'],
             'scheme' => $this->tikaConfiguration['solrScheme'],
         ];
