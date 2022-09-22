@@ -141,7 +141,7 @@ class ServerService extends AbstractService
     public function stopServer(): void
     {
         $pid = $this->getServerPid();
-        if (null === $pid) {
+        if ($pid === null) {
             return;
         }
 

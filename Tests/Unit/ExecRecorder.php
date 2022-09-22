@@ -34,7 +34,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit;
  */
 class ExecRecorder
 {
-
     /**
      * Allows to capture exec() parameters
      *

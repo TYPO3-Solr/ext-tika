@@ -103,7 +103,7 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
 
         // Early return if no additional command options are configured
         // or configuration does not match required pattern (only -D parameter is supported)
-        if ('' === $commandOptions || !preg_match_all(self::JAVA_COMMAND_OPTIONS_REGEX, $commandOptions, $matches)) {
+        if ($commandOptions === '' || !preg_match_all(self::JAVA_COMMAND_OPTIONS_REGEX, $commandOptions, $matches)) {
             return '';
         }
 

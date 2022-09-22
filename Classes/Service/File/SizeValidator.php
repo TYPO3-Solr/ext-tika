@@ -27,7 +27,6 @@ use TYPO3\CMS\Core\Resource\FileInterface;
  */
 class SizeValidator
 {
-
     /**
      * @var array
      */

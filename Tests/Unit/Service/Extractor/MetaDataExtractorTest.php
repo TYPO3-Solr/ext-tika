@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Resource\File;
  */
 class MetaDataExtractorTest extends UnitTestCase
 {
-
     /**
      * Returns a faked extractor response of a jpeg image.
      *
