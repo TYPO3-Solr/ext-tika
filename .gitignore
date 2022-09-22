@@ -13,3 +13,4 @@ vendor
 composer.lock
 .Build
 tika_pid
+*.cache

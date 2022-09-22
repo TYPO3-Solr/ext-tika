@@ -28,7 +28,6 @@ use TYPO3\CMS\Core\Resource\FileInterface;
  */
 class ServerServiceFixture extends ServerService
 {
-
     /**
      * The endpoint to be used
      *
