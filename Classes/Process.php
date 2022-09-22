@@ -23,7 +23,6 @@ namespace ApacheSolrForTypo3\Tika;
  */
 class Process
 {
-
     /**
      * Process ID
      *

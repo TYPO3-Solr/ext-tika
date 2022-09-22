@@ -26,7 +26,6 @@ use ApacheSolrForTypo3\Tika\Process;
  */
 class ProcessTest extends UnitTestCase
 {
-
     /**
      * @test
      */

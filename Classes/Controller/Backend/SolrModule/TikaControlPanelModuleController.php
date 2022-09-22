@@ -40,7 +40,6 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
  */
 class TikaControlPanelModuleController extends AbstractModuleController
 {
-
     /**
      * Tika configuration
      *
