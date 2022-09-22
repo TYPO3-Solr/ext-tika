@@ -28,7 +28,6 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
  */
 class AbstractServiceTest extends UnitTestCase
 {
-
     /**
      * @test
      */

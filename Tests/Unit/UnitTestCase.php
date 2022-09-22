@@ -59,7 +59,7 @@ class UnitTestCase extends TYPO3TestingFrameworkUnitTestCase
      */
     protected function getRuntimeDirectory(): string
     {
-        $rc = new ReflectionClass(get_class($this));
+        $rc = new ReflectionClass(static::class);
         return dirname($rc->getFileName());
     }
 }

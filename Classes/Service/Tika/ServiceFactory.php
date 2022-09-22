@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ServiceFactory
 {
-
     /**
      * Creates an instance of a Tika service
      *

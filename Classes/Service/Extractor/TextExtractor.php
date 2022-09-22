@@ -34,7 +34,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class TextExtractor implements TextExtractorInterface
 {
-
     /**
      * @var array
      */
