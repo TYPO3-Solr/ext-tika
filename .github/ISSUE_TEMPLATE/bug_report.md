@@ -31,7 +31,7 @@ If applicable, add screenshots to help explain your problem.
  - TYPO3 Version: [e.g. 11.5.6]
  - Browser: [e.g. chrome, safari]
  - EXT:solr Version: [e.g. 11.5.1]
- - EXT:tika Version: [e.g. 11.0.0]
+ - EXT:tika Version: [e.g. 11.0.1]
  - Used Apache Solr Version: [e.g. 8.11.1]
  - PHP Version: [e.g. 7.4.0]
  - MySQL Version: [e.g. 8.0.0]

@@ -18,7 +18,7 @@ Apache Tika for TYPO3
 		tika
 
 	:Version:
-		11.0.0
+		11.0.1
 
 	:Language:
 		en
@@ -30,7 +30,7 @@ Apache Tika for TYPO3
 		apache, tika, meta, data, DAM, files, FAL, solr, server, language, content, detection, extraction
 
 	:Copyright:
-		2009-2015
+		since 2009
 
 	:Author:
 		Ingo Renner
