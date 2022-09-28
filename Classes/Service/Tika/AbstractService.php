@@ -110,7 +110,7 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
         // Combine matched command options with escaped argument value
         $commandOptionsString = '';
         foreach (array_combine($matches['property'], $matches['value']) as $property => $unescapedValue) {
-            $escapedValue = CommandUtility::escapeShellArgument(trim($unescapedValue, '"\''));
+            $escapedValue = CommandUtility::escapeShellArgument(trim($unescapedValue ?? '', '"\''));
             $commandOptionsString .= sprintf(' -D%s=%s', $property, $escapedValue);
         }
 
