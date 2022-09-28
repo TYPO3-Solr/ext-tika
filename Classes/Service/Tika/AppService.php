@@ -235,10 +235,10 @@ class AppService extends AbstractService
     }
 
     /**
-     * Takes shell output from exec() and turns it into an array of key => value
+     * Takes the shell output from exec() and turns it into an array of key => value
      * pairs.
      *
-     * @param array $shellOutput An array containing shell output from exec() with one line per entry
+     * @param array $shellOutput An array containing the shell output from exec() with one line per entry
      * @return array Key => value pairs
      */
     protected function shellOutputToArray(array $shellOutput): array
@@ -247,7 +247,7 @@ class AppService extends AbstractService
 
         foreach ($shellOutput as $line) {
             [$key, $value] = explode(':', $line, 2);
-            $value = trim($value);
+            $value = trim($value ?? '');
 
             if (in_array($key, [
                 'dc',
@@ -263,7 +263,7 @@ class AppService extends AbstractService
                 [$key, $value] = explode(':', $value, 2);
 
                 $key = $keyPrefix . ':' . $key;
-                $value = trim($value);
+                $value = trim($value ?? '');
             }
 
             if (array_key_exists($key, $metaData)) {
