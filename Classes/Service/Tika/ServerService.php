@@ -27,7 +27,6 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LogLevel;
-use function str_starts_with;
 use Throwable;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Stream;
@@ -36,6 +35,8 @@ use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use function str_starts_with;
 
 /**
  * A Tika service implementation using the tika-server.jar

@@ -17,7 +17,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  * The TYPO3 project - inspiring people to share!
  */
 
-use function getenv;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -35,6 +34,8 @@ use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+
+use function getenv;
 
 /**
  * Base class for EXT:tika tests
