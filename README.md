@@ -36,7 +36,7 @@ To run the test suite locally, please use our DDEV docker environment https://gi
 * Please refer to [version matrix](https://raw.githubusercontent.com/TYPO3-Solr/ext-solr/master/Documentation/Appendix/VersionMatrix.rst) for proper combination of branches
 
 ```shell
-ddev enable tika
+ddev solr:enable tika
 ddev tests-unit-tika
 ddev tests-integration-tika
 ```
