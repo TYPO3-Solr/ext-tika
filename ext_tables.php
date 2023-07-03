@@ -32,7 +32,7 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
 
     if ($isSolrModuleEnabled) {
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-            'ApacheSolrForTypo3.tika',
+            'Tika',
             'searchbackend',
             'TikaControlPanel',
             'bottom',
