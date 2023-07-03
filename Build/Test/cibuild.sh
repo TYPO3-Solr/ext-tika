@@ -28,6 +28,7 @@ else
 fi
 echo -e "\n\n"
 
+export PHP_CS_FIXER_IGNORE_ENV=1
 echo "Check compliance against TYPO3 Coding Standards"
 if ! .Build/bin/php-cs-fixer --version > /dev/null 2>&1
 then
