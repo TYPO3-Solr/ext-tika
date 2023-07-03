@@ -88,7 +88,9 @@
     ],
     "tests:setup": [
       "@tests:env",
-      "@composer req --prefer-source --update-with-all-dependencies typo3/cms-core:${TYPO3_VERSION}",
+      "@composer req --update-with-all-dependencies typo3/cms-core:${TYPO3_VERSION}",
+      "@composer reinstall --prefer-source typo3/cms-core apache-solr-for-typo3/solr",
+      "@composer dump-autoload",
       "echo \"Retoring composer.json to initial state:\" && git checkout composer.json"
     ],
     "tests:unit": [ "phpunit --colors -c Build/Test/UnitTests.xml --bootstrap=Build/Test/UnitTestsBootstrap.php" ],

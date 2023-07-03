@@ -52,11 +52,11 @@ jobs:
       # End: Workaround for issue with actions/checkout@v2 wrong PR commit checkout
       -
         name: Cache Apache Tika Binaries
-        id: tika-bineries
+        id: tika-binaries
         uses: actions/cache@v2
         with:
           path: $TIKA_PATH
-          key: tika-bineries
+          key: tika-binaries
 
       -
         name: Mount RAMFS
@@ -71,7 +71,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.PHP }}
-          coverage: xdebug
+          coverage: pcov
           tools: composer:v2
       -
         name: 'Start Docker: Solr, Tika, MySQL'
