@@ -13,7 +13,7 @@ $EM_CONF[$_EXTKEY] = [
     'clearCacheOnLoad' => true,
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.4-11.5.99',
+            'typo3' => '11.5.4-12.4.99',
             'filemetadata' => '',
         ],
         'conflicts' => [],
@@ -26,5 +26,5 @@ $EM_CONF[$_EXTKEY] = [
             'ApacheSolrForTypo3\\Tika\\' => 'Classes/',
         ],
     ],
-    '_md5_values_when_last_written' => '',
+    '_md5_values_when_last_written' => ''
 ];
