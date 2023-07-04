@@ -47,6 +47,6 @@ class IsStringViewHelper extends AbstractConditionViewHelper
      */
     protected static function evaluateCondition($arguments = null)
     {
-        return isset($arguments['value']) && is_string($arguments['value']);
+        return is_string($arguments['value'] ?? null);
     }
 }
