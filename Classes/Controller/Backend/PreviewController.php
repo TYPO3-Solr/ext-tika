@@ -109,7 +109,6 @@ class PreviewController
     {
         /** @var $view StandaloneView */
         $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->getRequest()->setControllerExtensionName('tika');
         $templatePathAndFile = 'EXT:tika/Resources/Private/Templates/Backend/Preview.html';
         $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templatePathAndFile));
         return $view;

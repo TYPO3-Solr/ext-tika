@@ -18,6 +18,7 @@ namespace ApacheSolrForTypo3\Tika\ContextMenu;
  */
 
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
@@ -85,7 +86,10 @@ class Preview extends AbstractProvider
      */
     protected function getAdditionalAttributes(string $itemName): array
     {
-        return ['data-callback-module' => 'TYPO3/CMS/Tika/ContextMenuActions'];
+        return [
+            'data-callback-module' => 'TYPO3/CMS/Tika/ContextMenuActions',
+            'data-action-url' => htmlspecialchars((string)GeneralUtility::makeInstance(UriBuilder::class)->buildUriFromRoute('tika_preview')),
+        ];
     }
 
     /**
