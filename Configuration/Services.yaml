@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: false
+
+  ApacheSolrForTypo3\Tika\:
+    resource: '../Classes/*'
+
+  # Reports: Status
+  ApacheSolrForTypo3\Tika\Report\:
+    resource: '../Classes/Report/*'
+    autoconfigure: true

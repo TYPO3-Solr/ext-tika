@@ -62,13 +62,19 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
         $this->tikaConfiguration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
     }
 
+    public function getLabel(): string
+    {
+      return 'Tika';
+    }
+
+
     /**
      * Checks whether Tika is properly configured
      * @return array
      *
      * @throws Exception
      */
-    public function getStatus()
+    public function getStatus(): array
     {
         $checks = [];
 
