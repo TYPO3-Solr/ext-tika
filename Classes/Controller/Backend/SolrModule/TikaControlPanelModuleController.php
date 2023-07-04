@@ -16,7 +16,7 @@ namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use ApacheSolrForTypo3\Solr\Controller\Backend\Search\AbstractModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
@@ -149,7 +149,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         if ($this->tikaService->/** @scrutinizer ignore-call */isServerRunning()) {
             $this->addFlashMessage(
                 'Tika server started.',
-                FlashMessage::OK
+                AbstractMessage::OK
             );
         }
 
@@ -170,7 +170,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         if (!$this->tikaService->/** @scrutinizer ignore-call */ isServerRunning()) {
             $this->addFlashMessage(
                 'Tika server stopped.',
-                FlashMessage::OK
+                AbstractMessage::OK
             );
         }
 
@@ -270,13 +270,13 @@ class TikaControlPanelModuleController extends AbstractModuleController
             $this->addFlashMessage(
                 'Tika host contacted at: ' . $this->tikaService->/** @scrutinizer ignore-call */getTikaServerUrl(),
                 'Your Apache Tika server has been contacted.',
-                FlashMessage::OK
+                AbstractMessage::OK
             );
         } else {
             $this->addFlashMessage(
                 'Could not connect to Tika at: ' . $this->tikaService->/** @scrutinizer ignore-call */getTikaServerUrl(),
                 'Unable to contact Apache Tika server.',
-                FlashMessage::ERROR
+                AbstractMessage::ERROR
             );
         }
     }
