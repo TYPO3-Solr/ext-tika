@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-// Prevent Script from beeing called directly
-defined('TYPO3') || die();
-
 if (empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'])) {
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'] = [];
 }
@@ -29,8 +26,5 @@ unset($extConf);
 $textExtractorRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\TextExtraction\TextExtractorRegistry::class);
 $textExtractorRegistry->registerTextExtractor(\ApacheSolrForTypo3\Tika\Service\Extractor\TextExtractor::class);
 
-// Add Context Menu and JS
-if (TYPO3_MODE == 'BE') {
-    $GLOBALS['TYPO3_CONF_VARS']['BE']['ContextMenu']['ItemProviders'][1505197586] = \ApacheSolrForTypo3\Tika\ContextMenu\Preview::class;
-}
+$GLOBALS['TYPO3_CONF_VARS']['BE']['ContextMenu']['ItemProviders'][1505197586] = \ApacheSolrForTypo3\Tika\ContextMenu\Preview::class;
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/backend.php']['constructPostProcess'][] = \ApacheSolrForTypo3\Tika\Hooks\BackendControllerHook::class . '->addJavaScript';
