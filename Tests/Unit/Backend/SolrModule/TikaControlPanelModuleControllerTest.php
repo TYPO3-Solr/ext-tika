@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -16,6 +14,8 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
 
 use ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule\TikaControlPanelModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;

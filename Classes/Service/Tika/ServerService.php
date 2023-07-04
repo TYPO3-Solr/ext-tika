@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ApacheSolrForTypo3\Tika\Service\Tika;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -16,6 +14,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
@@ -281,8 +281,8 @@ class ServerService extends AbstractService
         } catch (Throwable $exception) {
             $message = $exception->getMessage();
             if (
-                strpos($message, 'Connection refused') === false &&
-                strpos($message, 'HTTP request failed') === false
+                !str_contains($message, 'Connection refused')   &&
+                !str_contains($message, 'HTTP request failed')
             ) {
                 // If the server is simply not available it would say Connection refused
                 // since that is not the case something else went wrong

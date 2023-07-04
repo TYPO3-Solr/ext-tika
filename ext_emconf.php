@@ -26,5 +26,5 @@ $EM_CONF[$_EXTKEY] = [
             'ApacheSolrForTypo3\\Tika\\' => 'Classes/',
         ],
     ],
-    '_md5_values_when_last_written' => ''
+    '_md5_values_when_last_written' => '',
 ];

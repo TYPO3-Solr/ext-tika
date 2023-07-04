@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -16,7 +14,9 @@ namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
+
+namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
+
 use ApacheSolrForTypo3\Solr\Controller\Backend\Search\AbstractModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
@@ -29,7 +29,7 @@ use Psr\Http\Message\ResponseInterface;
 use Throwable;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Http\RedirectResponse;
-use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\View\ViewInterface;
 

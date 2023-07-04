@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -16,7 +14,9 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+
+namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
+
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -26,6 +26,7 @@ use RuntimeException;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Index\MetaDataRepository;
