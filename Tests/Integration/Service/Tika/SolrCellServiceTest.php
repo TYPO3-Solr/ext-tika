@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -16,6 +14,8 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;

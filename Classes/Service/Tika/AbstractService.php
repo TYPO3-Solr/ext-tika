@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ApacheSolrForTypo3\Tika\Service\Tika;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -17,6 +15,8 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
  * The TYPO3 project - inspiring people to share!
  */
 
+namespace ApacheSolrForTypo3\Tika\Service\Tika;
+
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -29,9 +29,8 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  */
 abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
 {
-    protected const JAVA_COMMAND_OPTIONS_REGEX = '/-D(?P<property>[\w.]+)=(?P<value>"[^"]+"|\'[^\']+\'|[^\\s\'"]+)/';
-
     use LoggerAwareTrait;
+    protected const JAVA_COMMAND_OPTIONS_REGEX = '/-D(?P<property>[\w.]+)=(?P<value>"[^"]+"|\'[^\']+\'|[^\\s\'"]+)/';
 
     /**
      * @var array

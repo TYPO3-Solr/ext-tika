@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ApacheSolrForTypo3\Tika\Report;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -16,6 +14,8 @@ namespace ApacheSolrForTypo3\Tika\Report;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace ApacheSolrForTypo3\Tika\Report;
 
 use ApacheSolrForTypo3\Solr\ConnectionManager;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
@@ -64,9 +64,8 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     public function getLabel(): string
     {
-      return 'Tika';
+        return 'Tika';
     }
-
 
     /**
      * Checks whether Tika is properly configured

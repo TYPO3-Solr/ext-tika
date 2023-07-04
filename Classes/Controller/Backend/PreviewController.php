@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ApacheSolrForTypo3\Tika\Controller\Backend;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -16,6 +14,8 @@ namespace ApacheSolrForTypo3\Tika\Controller\Backend;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace ApacheSolrForTypo3\Tika\Controller\Backend;
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;

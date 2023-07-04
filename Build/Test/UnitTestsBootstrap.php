@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use TYPO3\TestingFramework\Core\Testbase;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Core\Bootstrap;
-use TYPO3\CMS\Core\Configuration\ConfigurationManager;
-use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
 use TYPO3\CMS\Core\Cache\Backend\NullBackend;
+use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
+use TYPO3\CMS\Core\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Package\Cache\PackageCacheInterface;
-use TYPO3\CMS\Core\Package\UnitTestPackageManager;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Package\PackageManager;
+use TYPO3\CMS\Core\Package\UnitTestPackageManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Testbase;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 call_user_func(function () {
     $testbase = new Testbase();
 
-    // These if's are for core testing (package typo3/cms) only. cms-composer-installer does
+    // These ifs are for core testing (package typo3/cms) only. cms-composer-installer does
     // not create the autoload-include.php file that sets these env vars and sets composer
     // mode to true. testing-framework can not be used without composer anyway, so it is safe
     // to do this here. This way it does not matter if 'bin/phpunit' or 'vendor/phpunit/phpunit/phpunit'
