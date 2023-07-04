@@ -1,6 +1,7 @@
 *.cache
 .Build
 .DS_Store
+.php-cs-fixer.php
 /.buildpath
 /.idea/
 /.project
@@ -15,7 +16,3 @@ typo3temp
 uploads
 var
 vendor
-composer.lock
-.Build
-tika_pid
-*.cache

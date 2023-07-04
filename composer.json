@@ -71,8 +71,8 @@
   },
   "scripts": {
     "post-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
-      "[ -L .Build/Web/typo3conf/ext/tika ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/tika"
+      "mkdir -p .Build/vendor/apache-solr-for-typo3",
+      "[ -L .Build/vendor/apache-solr-for-typo3/tika ] || ln -snvf ../../../. .Build/vendor/apache-solr-for-typo3/tika"
     ],
     "tika:download": [ "CALLED_VIA_COMPOSER=1 REQUIRED_TIKA_VERSION=$($COMPOSER_BINARY tika:req:tika) ./Build/Helpers/download_tika_binaries.sh"],
     "tika:download:app": [ "@tika:download -a" ],
@@ -90,6 +90,8 @@
       "@composer req --update-with-all-dependencies typo3/cms-core:${TYPO3_VERSION}",
       "@composer reinstall --prefer-source typo3/cms-core apache-solr-for-typo3/solr",
       "@composer dump-autoload",
+      "cp .Build/vendor/apache-solr-for-typo3/solr/.php-cs-fixer.php .",
+      "@composer global require sclable/xml-lint scrutinizer/ocular",
       "echo \"Restoring composer.json to initial state:\" && git checkout composer.json"
     ],
     "tests:unit": [ "phpunit --colors -c Build/Test/UnitTests.xml --bootstrap=Build/Test/UnitTestsBootstrap.php" ],
