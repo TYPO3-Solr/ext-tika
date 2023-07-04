@@ -16,7 +16,7 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -135,7 +135,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 
         /** @noinspection PhpFullyQualifiedNameUsageInspection */
         $metaDataRepositoryConstructorArgs = [
-            GeneralUtility::makeInstance(\TYPO3\CMS\Core\EventDispatcher\EventDispatcher::class),
+            GeneralUtility::makeInstance(EventDispatcher::class),
         ];
 
         /* @var MetaDataRepository|MockObject $mockedMetaDataRepository */
