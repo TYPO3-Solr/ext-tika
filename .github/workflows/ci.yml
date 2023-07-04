@@ -2,18 +2,17 @@ name: build
 
 on:
   push:
-    branches: [ 'main', 'release-11.0.x', 'release-10.0.x' ]
+    branches: [ 'main', 'release-12.0.x', 'release-11.0.x', 'release-10.0.x' ]
     tags:
       - "**"
   pull_request:
-    branches: [ 'main', 'release-11.0.x', 'release-10.0.x' ]
+    branches: [ 'main', 'release-12.0.x', 'release-11.0.x', 'release-10.0.x' ]
 
 env:
   CI_BUILD_DIRECTORY: '/home/runner/work/ext-tika/ext-tika/.Build'
   TIKA_PATH: '/home/runner/work/ext-tika/ext-tika/.Build/data-tika-binaries'
-  EXT_SOLR_VERSION: 'dev-release-11.5.x'
 
-  SOLR_IMAGE_TAG: 'release-11.5.x'
+  SOLR_IMAGE_TAG: '12.0.x-dev'
   SOLR_CONTAINER_NAME: 'solrci-container'
   TESTING_SOLR_PORT: 8983
   SOLR_VOLUME_NAME: 'solrci-volume'
@@ -24,8 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        PHP: [ '7.4', '8.0', '8.1', '8.2' ]
-        TYPO3: [ '^11.5', '11.5.x-dev' ]
+        PHP: [ '8.1', '8.2', '8.3' ]
+        TYPO3: [ '^12.4', '12.4.x-dev' ]
     env:
       TYPO3_DATABASE_NAME: 'typo3_ci'
       TYPO3_DATABASE_HOST: '127.0.0.1'
@@ -143,7 +142,7 @@ jobs:
         name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 8.1
           extensions: intl, mbstring, json, zip, curl
           tools: composer:v2
       -
