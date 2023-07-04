@@ -1,36 +1,23 @@
-/**
- * Module: TYPO3/CMS/Tika/ContextMenuActions
- *
- * JavaScript to handle import/export actions from context menu
- * @exports TYPO3/CMS/Tika/ContextMenuActions
- */
-define(function () {
-  'use strict';
+import Modal from "@typo3/backend/modal.js";
+import $ from 'jquery';
 
-  /**
-   * @exports TYPO3/CMS/Tika/ContextMenuActions
-   */
-  const ContextMenuActions = {};
+class ContextMenuActions {
 
-  ContextMenuActions.tikaPreview = function (table, uid) {
+
+  tikaPreview = function (table, uid) {
     if (table === 'sys_file') {
 
-      require([
-        'jquery',
-        'TYPO3/CMS/Backend/Modal'
-      ], function ($, Modal) {
-
-        const configuration = {
-          title: 'Tika Preview',
-          content: top.TYPO3.settings.TikaPreview.moduleUrl + '&identifier=' + encodeURIComponent(uid).replace(/\*/g, '%2A'),
-          size: Modal.sizes.large,
-          type: Modal.types.ajax
-        };
-        Modal.advanced(configuration);
-      });
+      const configuration = {
+        title: 'Tika Preview',
+        content:  $(this).data('action-url') + '&identifier=' + encodeURIComponent(uid).replace(/\*/g, '%2A'),
+        size: Modal.sizes.large,
+        type: Modal.types.ajax
+      };
+      Modal.advanced(configuration);
     }
 
   };
 
-  return ContextMenuActions;
-});
+}
+
+export default new ContextMenuActions();

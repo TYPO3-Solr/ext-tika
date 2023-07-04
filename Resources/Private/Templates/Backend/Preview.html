@@ -4,8 +4,9 @@
 
     <div>
         <h4>Extracted content:</h4>
-        <pre style="height: 20em; width:100%; max-width: 1000px; overflow:scroll;">{content}</pre>
-
+        <f:if condition="{content}">
+            <pre style="height: 20em; width:100%; max-width: 1000px; overflow:scroll;">{content}</pre>
+        </f:if>
         <table class="table table-bordered table-striped">
             <thead>
             <tr>
