@@ -81,10 +81,10 @@
     "tika:download:server": [ "@tika:download -s" ],
     "tika:req:tika": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Tika" ],
     "tika:req:solr": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Solr" ],
-		"_comment": "CI scripts",
+    "_comment": "CI scripts",
     "tests:env": [
       "if [ -z ${TYPO3_VERSION+x} ]; then >&2 echo \"Can not proceed, because env var TYPO3_VERSION is not set\"; exit 1; else echo \"Setup test environment for TYPO3 ${TYPO3_VERSION}\"; fi",
-      "if [ \"${TYPO3_VERSION#*dev}\" != \"dev\" ]; then $COMPOSER_BINARY config minimum-stability dev; fi"
+      "if echo $TYPO3_VERSION | grep -q \"dev\"; then $COMPOSER_BINARY config minimum-stability dev; fi"
     ],
     "tests:setup": [
       "@tests:env",
