@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-// Prevent Script from beeing called directly
-defined('TYPO3') || die();
-
 // adding the Solr connection status to the status report
 $statusSection = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr') ? 'solr' : 'tika';
 
