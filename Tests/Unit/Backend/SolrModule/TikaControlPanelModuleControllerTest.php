@@ -31,20 +31,11 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
  */
 class TikaControlPanelModuleControllerTest extends UnitTestCase
 {
-    /**
-     * @var TikaControlPanelModuleController
-     */
-    protected $controller;
+    protected TikaControlPanelModuleController $controller;
 
-    /**
-     * @var ViewInterface
-     */
-    protected $viewMock;
+    protected ViewInterface $viewMock;
 
-    /**
-     * @var ModuleTemplate|MockObject
-     */
-    protected $moduleTemplateMock;
+    protected ModuleTemplate|MockObject $moduleTemplateMock;
 
     public function setUp(): void
     {
@@ -66,11 +57,12 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
      */
     public function canShowInformationFromStandaloneTikaServer(): void
     {
-        /* @var ServerService|MockObject $tikaServerService */
+        /** @var ServerService|MockObject $tikaServerService */
         $tikaServerService = $this->createMock(ServerService::class);
+        $tikaServerService->expects(self::atLeastOnce())->method('ping')->willReturn(true);
         $tikaServerService->expects(self::atLeastOnce())->method('isServerRunning')->willReturn(true);
         $tikaServerService->expects(self::atLeastOnce())->method('getServerPid')->willReturn(4711);
-        $tikaServerService->expects(self::atLeastOnce())->method('getTikaVersion')->willReturn('1.11');
+        $tikaServerService->expects(self::atLeastOnce())->method('getTikaVersionString')->willReturn('1.11');
 
         $this->controller->setTikaService($tikaServerService);
         $tikaConfiguration = [
@@ -84,6 +76,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
             [ 'extractor', ucfirst($tikaConfiguration['extractor']) ],
             [ 'server',
                 [
+                    'isConnected' => true,
                     'jarAvailable' => true,
                     'isRunning' => true,
                     'isControllable' => true,

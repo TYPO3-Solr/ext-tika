@@ -32,8 +32,6 @@ class SolrCellService extends AbstractService
 {
     /**
      * Solr connection
-     *
-     * @var SolrConnection
      */
     protected SolrConnection $solrConnection;
 
@@ -59,21 +57,14 @@ class SolrCellService extends AbstractService
 
     /**
      * Retrieves a configuration value or a default value when not available.
-     *
-     * @param string $key
-     * @param mixed $defaultValue
-     * @return mixed
      */
-    protected function getConfigurationOrDefaultValue(string $key, $defaultValue)
+    protected function getConfigurationOrDefaultValue(string $key, mixed $defaultValue): mixed
     {
         return $this->configuration[$key] ?? $defaultValue;
     }
 
     /**
      * Takes a file reference and extracts the text from it.
-     *
-     * @param FileInterface $file
-     * @return string
      */
     public function extractText(FileInterface $file): string
     {
@@ -99,9 +90,6 @@ class SolrCellService extends AbstractService
 
     /**
      * Takes a file reference and extracts its meta-data.
-     *
-     * @param FileInterface $file
-     * @return array
      */
     public function extractMetaData(FileInterface $file): array
     {
@@ -134,7 +122,6 @@ class SolrCellService extends AbstractService
     /**
      * Takes a file reference and detects its content's language.
      *
-     * @param FileInterface $file
      * @return string Language ISO code
      */
     public function detectLanguageFromFile(FileInterface $file): string
@@ -149,7 +136,6 @@ class SolrCellService extends AbstractService
     /**
      * Takes a string as input and detects its language.
      *
-     * @param string $input
      * @return string Language ISO code
      */
     public function detectLanguageFromString(string $input): string
@@ -157,7 +143,7 @@ class SolrCellService extends AbstractService
         // TODO check whether Solr supports text extraction now
         throw new UnsupportedOperationException(
             'The Tika Solr service does not support language detection',
-            1423457153
+            1423457154
         );
     }
 
@@ -199,8 +185,6 @@ class SolrCellService extends AbstractService
 
     /**
      * Since solr cell does not allow to query the supported mimetypes, we return a list of known supported mimetypes here.
-     *
-     * @return array
      */
     public function getSupportedMimeTypes(): array
     {
@@ -247,11 +231,19 @@ class SolrCellService extends AbstractService
 
     /**
      * The service is available when the solr server is reachable.
-     *
-     * @return bool
      */
     public function isAvailable(): bool
     {
         return $this->solrConnection->getWriteService()->ping();
+    }
+
+    public function ping(): bool
+    {
+        return $this->isAvailable();
+    }
+
+    public function getTikaServerUrl(): string
+    {
+        return (string)$this->solrConnection->getAdminService();
     }
 }

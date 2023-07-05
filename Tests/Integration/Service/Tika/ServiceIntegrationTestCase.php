@@ -19,7 +19,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
-use Prophecy\PhpUnit\ProphecyTrait;
 use ReflectionException;
 use ReflectionObject;
 use RuntimeException;
@@ -45,12 +44,7 @@ use function getenv;
  */
 abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var array
-     */
-    protected $configurationToUseInTestInstance = [
+    protected array $configurationToUseInTestInstance = [
         'SYS' =>  [
             'exceptionalErrors' =>  E_WARNING | E_RECOVERABLE_ERROR | E_DEPRECATED | E_USER_DEPRECATED,
         ],
@@ -61,48 +55,25 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected array $singletonInstances = [];
 
-    /**
-     * @var string
-     */
     protected string $testDocumentsPath;
 
-    /**
-     * @var string
-     */
     protected string $testLanguagesPath;
 
-    /**
-     * @var ResourceStorage
-     */
     protected ResourceStorage $documentsStorageMock;
 
-    /**
-     * @var ResourceStorage
-     */
     protected ResourceStorage $languagesStorageMock;
 
-    /**
-     * @var int
-     */
     protected int $documentsStorageUid = 9000;
 
-    /**
-     * @var int
-     */
     protected int $languagesStorageUid = 9001;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = [
+    protected array $testExtensionsToLoad = [
         'typo3conf/ext/solr',
         'typo3conf/ext/tika',
     ];
 
     /**
      * Avoid serialization of some properties containing objects
-     *
-     * @return array
      */
     public function __sleep()
     {
@@ -111,7 +82,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             $objectVars['documentsStorageMock'],
             $objectVars['languagesStorageMock']
         );
-        return $objectVars;
+        return array_keys($objectVars);
     }
 
     protected function setUp(): void
@@ -121,11 +92,11 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 
         // Disable xml2array cache used by ResourceFactory
         GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
-            'cache_hash' => [
+            'hash' => [
                 'frontend' => VariableFrontend::class,
                 'backend' => TransientMemoryBackend::class,
             ],
-            'cache_runtime' => [
+            'runtime' => [
                 'frontend' => VariableFrontend::class,
                 'backend' => TransientMemoryBackend::class,
             ],
@@ -134,12 +105,11 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $this->setUpDocumentsStorageMock();
         $this->setUpLanguagesStorageMock();
 
-        /** @noinspection PhpFullyQualifiedNameUsageInspection */
         $metaDataRepositoryConstructorArgs = [
             GeneralUtility::makeInstance(EventDispatcher::class),
         ];
 
-        /* @var MetaDataRepository|MockObject $mockedMetaDataRepository */
+        /** @var MetaDataRepository|MockObject $mockedMetaDataRepository */
         $mockedMetaDataRepository = $this->getMockBuilder(MetaDataRepository::class)
             ->setConstructorArgs($metaDataRepositoryConstructorArgs)
             ->getMock();
@@ -236,7 +206,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         array $driverConfiguration = [],
         array $mockedDriverMethods = []
     ): LocalDriver {
-        /* @var LocalDriver $driver */
+        /** @var LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
         $driver = $this->getAccessibleMock(
             LocalDriver::class,
@@ -260,7 +230,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      *
      * @param array $configuration
      * @return string
-     * @see {@link \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml()}
+     * @see {@link GeneralUtility::array2xml}
      */
     protected function convertConfigurationArrayToFlexformXml(
         array $configuration
@@ -320,7 +290,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         array $fileData,
         ResourceStorage $storage = null,
         array $metaData = []
-    ) {
+    ): File|MockObject {
         $fileMock = $this->getMockBuilder(File::class)
             ->setConstructorArgs([
                 $fileData,
@@ -359,7 +329,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      * @throws InvalidArgumentException
      * @throws RuntimeException
      */
-    protected function inject(object $target, string $name, $dependency)
+    protected function inject(object $target, string $name, mixed $dependency): void
     {
         if (!is_object($target)) {
             throw new InvalidArgumentException('Wrong type for argument $target, must be object.', 1476107338);
@@ -395,7 +365,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      * @return mixed
      * @throws ReflectionException
      */
-    protected function callInaccessibleMethod(object $object, string $name)
+    protected function callInaccessibleMethod(object $object, string $name): mixed
     {
         // Remove first two arguments ($object and $name)
         $arguments = func_get_args();

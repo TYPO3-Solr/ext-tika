@@ -84,7 +84,7 @@ class MetaDataExtractorTest extends UnitTestCase
             $fakedTikaExtractResponse
         );
 
-        $fileMock = $this->getDumbMock(File::class);
+        $fileMock = $this->createMock(File::class);
         $metaData = $metaDataExtractor->extractMetaData($fileMock);
 
         //@todo wrong data type should be int?
@@ -97,12 +97,12 @@ class MetaDataExtractorTest extends UnitTestCase
      */
     public function canProcessReturnsFalseForExeFile(): void
     {
-        $tikaAppServiceMock = $this->getDumbMock(AppService::class);
+        $tikaAppServiceMock = $this->createMock(AppService::class);
         $tikaAppServiceMock->expects(self::once())->method('getSupportedMimeTypes')->willReturn(
             ['application/vnd.sun.xml.writer']
         );
 
-        $exeFileMock = $this->getDumbMock(File::class);
+        $exeFileMock = $this->createMock(File::class);
         $exeFileMock->expects(self::any())->method('getMimeType')->willReturn('exe');
 
         $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)
@@ -117,12 +117,12 @@ class MetaDataExtractorTest extends UnitTestCase
      */
     public function canProcessReturnsTrueForSxwFile(): void
     {
-        $tikaAppServiceMock = $this->getDumbMock(AppService::class);
+        $tikaAppServiceMock = $this->createMock(AppService::class);
         $tikaAppServiceMock->expects(self::once())->method('getSupportedMimeTypes')->willReturn(
             ['application/vnd.sun.xml.writer']
         );
 
-        $exeFileMock = $this->getDumbMock(File::class);
+        $exeFileMock = $this->createMock(File::class);
         $exeFileMock->expects(self::any())->method('getMimeType')->willReturn('application/vnd.sun.xml.writer');
 
         $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)

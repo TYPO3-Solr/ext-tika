@@ -59,14 +59,9 @@ class ServerService extends AbstractService
 
     /**
      * Tika server URL
-     *
-     * @var Uri
      */
     protected Uri $tikaUri;
 
-    /**
-     * @var array
-     */
     protected static array $supportedMimeTypes = [];
 
     /**
@@ -97,9 +92,6 @@ class ServerService extends AbstractService
 
     /**
      * Initializes a Tika server process.
-     *
-     * @param string $arguments
-     * @return Process
      */
     protected function getProcess(string $arguments = ''): Process
     {
@@ -110,8 +102,6 @@ class ServerService extends AbstractService
 
     /**
      * Creates the command to start the Tika server.
-     *
-     * @return string
      */
     protected function getStartCommand(): string
     {
@@ -131,7 +121,7 @@ class ServerService extends AbstractService
         $process->start();
         $pid = $process->getPid();
 
-        /* @var Registry $registry */
+        /** @var Registry $registry */
         $registry = GeneralUtility::makeInstance(Registry::class);
         $registry->set('tx_tika', 'server.pid', $pid);
     }
@@ -151,7 +141,7 @@ class ServerService extends AbstractService
         $process->stop();
 
         // unset pid in registry
-        /* @var Registry $registry */
+        /** @var Registry $registry */
         $registry = GeneralUtility::makeInstance(Registry::class);
         $registry->remove('tx_tika', 'server.pid');
     }
@@ -165,7 +155,7 @@ class ServerService extends AbstractService
      */
     public function getServerPid(): ?int
     {
-        /* @var Registry $registry */
+        /** @var Registry $registry */
         $registry = GeneralUtility::makeInstance(Registry::class);
         $pid = $registry->get('tx_tika', 'server.pid');
 
@@ -183,8 +173,6 @@ class ServerService extends AbstractService
 
     /**
      * Check if the Tika server is running
-     *
-     * @return bool
      */
     public function isServerRunning(): bool
     {
@@ -203,15 +191,13 @@ class ServerService extends AbstractService
         try {
             $tikaPing = $this->queryTika($this->createRequestForEndpoint('/tika'));
             return str_starts_with($tikaPing, 'This is Tika Server');
-        } catch (Throwable $exception) {
+        } catch (Throwable) {
             return false;
         }
     }
 
     /**
      * The tika server is available when the server is pingable.
-     *
-     * @return bool
      */
     public function isAvailable(): bool
     {
@@ -220,8 +206,6 @@ class ServerService extends AbstractService
 
     /**
      * Constructs the Tika server URL.
-     *
-     * @return string Tika server URL
      */
     public function getTikaServerUrl(): string
     {
@@ -230,8 +214,6 @@ class ServerService extends AbstractService
 
     /**
      * Constructs the Tika server Uri.
-     *
-     * @return Uri Tika server Uri
      */
     public function getTikaServerUri(): Uri
     {
@@ -242,6 +224,7 @@ class ServerService extends AbstractService
      * Gets the Tika server version
      *
      * @return string Tika server version string
+     *
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -249,7 +232,7 @@ class ServerService extends AbstractService
     {
         $version = 'unknown';
 
-        if ($this->isServerRunning()) {
+        if ($this->isAvailable() || $this->isServerRunning()) {
             $version = $this->queryTika($this->createRequestForEndpoint('/version'));
         }
 
@@ -261,6 +244,7 @@ class ServerService extends AbstractService
      *
      * @param RequestInterface $request
      * @return string Tika output
+     *
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -298,8 +282,6 @@ class ServerService extends AbstractService
     /**
      * Takes a file reference and extracts the text from it.
      *
-     * @param FileInterface $file
-     * @return string
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -333,8 +315,6 @@ class ServerService extends AbstractService
     /**
      * Takes a file reference and extracts its meta-data.
      *
-     * @param FileInterface $file
-     * @return array
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -369,8 +349,6 @@ class ServerService extends AbstractService
     /**
      * Takes a file reference and detects its content's language.
      *
-     * @param FileInterface $file
-     * @return string
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -403,8 +381,6 @@ class ServerService extends AbstractService
     /**
      * Takes a string as input and detects its language.
      *
-     * @param string $input
-     * @return string
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -424,7 +400,6 @@ class ServerService extends AbstractService
     /**
      * List of supported mime types
      *
-     * @return array
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -442,7 +417,6 @@ class ServerService extends AbstractService
     /**
      * Returns the mime type from the tika server
      *
-     * @return string
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -460,7 +434,6 @@ class ServerService extends AbstractService
     /**
      * Build the list of supported mime types
      *
-     * @return array
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -498,10 +471,6 @@ class ServerService extends AbstractService
     /**
      * Creates a new request with given method and given endpoint
      * This method is a wrapper for createRequest()
-     *
-     * @param string $endpoint
-     * @param string $method
-     * @return RequestInterface
      */
     protected function createRequestForEndpoint(string $endpoint, string $method = 'GET'): RequestInterface
     {
@@ -510,14 +479,10 @@ class ServerService extends AbstractService
 
     /**
      * Creates a new request with given method and uri
-     *
-     * @param UriInterface $uri
-     * @param string $method
-     * @return RequestInterface
      */
     protected function createRequest(UriInterface $uri, string $method = 'GET'): RequestInterface
     {
-        /* @var RequestFactory $requestFactory */
+        /** @var RequestFactory $requestFactory */
         $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
         $request = $requestFactory->createRequest(
             $method,
@@ -528,9 +493,6 @@ class ServerService extends AbstractService
 
     /**
      * Creates a new URI with given endpoint
-     *
-     * @param string $endpoint
-     * @return Uri
      */
     protected function createEndpoint(string $endpoint): Uri
     {
@@ -540,9 +502,6 @@ class ServerService extends AbstractService
 
     /**
      * Convert a file into a stream
-     *
-     * @param FileInterface $file
-     * @return Stream
      */
     protected function convertFileIntoStream(FileInterface $file): Stream
     {
@@ -553,8 +512,6 @@ class ServerService extends AbstractService
 
     /**
      * Returns the user agent that should be used for the requests
-     *
-     * @return string
      */
     protected function getUserAgent(): string
     {
@@ -563,10 +520,6 @@ class ServerService extends AbstractService
 
     /**
      * Build the log information
-     *
-     * @param FileInterface $file
-     * @param string $response
-     * @return array
      */
     protected function getLogData(FileInterface $file, string $response): array
     {

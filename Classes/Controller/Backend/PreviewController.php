@@ -93,10 +93,6 @@ class PreviewController
         return ServiceFactory::getConfiguredTika();
     }
 
-    /**
-     * @return ResourceFactory
-     * @noinspection PhpIncompatibleReturnTypeInspection
-     */
     protected function getFileResourceFactory(): ResourceFactory
     {
         return GeneralUtility::makeInstance(ResourceFactory::class);

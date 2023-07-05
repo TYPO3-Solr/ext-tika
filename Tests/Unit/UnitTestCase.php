@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Tests\Unit;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase as TYPO3TestingFrameworkUnitTestCase;
 
@@ -29,23 +28,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase as TYPO3TestingFrameworkUnitTe
 class UnitTestCase extends TYPO3TestingFrameworkUnitTestCase
 {
     /**
-     * Returns a mocked class where all functionality is mocked, just to fullfill the required data type
-     * and to fake custom behaviour.
-     *
-     * @param string $className
-     * @return MockObject
-     */
-    protected function getDumbMock(string $className): MockObject
-    {
-        return $this->getMockBuilder($className)->disableOriginalConstructor()->getMock();
-    }
-
-    /**
      * Returns a path for a fixture.
-     *
-     * @param string $fixtureName
-     * @return string
-     * @throws string
      */
     protected function getFixturePath(string $fixtureName): string
     {
@@ -54,8 +37,6 @@ class UnitTestCase extends TYPO3TestingFrameworkUnitTestCase
 
     /**
      * Returns the directory on runtime.
-     *
-     * @return string
      */
     protected function getRuntimeDirectory(): string
     {
