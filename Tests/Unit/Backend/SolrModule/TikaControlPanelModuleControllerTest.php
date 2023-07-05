@@ -48,8 +48,8 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
 
     public function setUp(): void
     {
-        $this->viewMock = $this->getDumbMock(ViewInterface::class);
-        $this->moduleTemplateMock = $this->getDumbMock(ModuleTemplate::class);
+        $this->viewMock = $this->createMock(ViewInterface::class);
+        $this->moduleTemplateMock = $this->createMock(ModuleTemplate::class);
 
         $this->controller = $this->getMockBuilder(TikaControlPanelModuleController::class)
             ->disableOriginalConstructor()
@@ -67,7 +67,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
     public function canShowInformationFromStandaloneTikaServer(): void
     {
         /* @var ServerService|MockObject $tikaServerService */
-        $tikaServerService = $this->getDumbMock(ServerService::class);
+        $tikaServerService = $this->createMock(ServerService::class);
         $tikaServerService->expects(self::atLeastOnce())->method('isServerRunning')->willReturn(true);
         $tikaServerService->expects(self::atLeastOnce())->method('getServerPid')->willReturn(4711);
         $tikaServerService->expects(self::atLeastOnce())->method('getTikaVersion')->willReturn('1.11');
