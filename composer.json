@@ -34,12 +34,12 @@
     "typo3/cms-reports": "^v12.4.2"
   },
   "require-dev": {
-    "psr/log": "*",
-    "phpunit/phpunit": "^9.5",
-    "phpspec/prophecy-phpunit":"*",
-    "typo3/testing-framework": "^7.0.2",
     "apache-solr-for-typo3/solr": "dev-main",
-    "typo3/coding-standards": "~0.7.1"
+    "dg/bypass-finals": "^1.4",
+    "phpspec/prophecy-phpunit":"*",
+    "phpunit/phpunit": "^9.5",
+    "typo3/coding-standards": "~0.7.1",
+    "typo3/testing-framework": "^7.0.2"
   },
   "suggest": {
     "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr."
@@ -51,7 +51,9 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "ApacheSolrForTypo3\\Tika\\Tests\\": "Tests/"
+      "ApacheSolrForTypo3\\Solr\\Tests\\": ".Build/vendor/apache-solr-for-typo3/solr/Tests/",
+      "ApacheSolrForTypo3\\Tika\\Tests\\": "Tests/",
+      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms-core/Tests/"
     }
   },
   "minimum-stability": "dev",

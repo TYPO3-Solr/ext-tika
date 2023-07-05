@@ -60,7 +60,7 @@ class PreviewControllerTest extends UnitTestCase
         $controller->expects(self::once())->method('getConfiguredTikaService')->willReturn($serviceMock);
 
         $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
-        $request->expects(self::once())->method('getQueryParams')->willReturn(self::returnValue(['identifier' => '']));
+        $request->expects(self::once())->method('getQueryParams')->willReturn(['identifier' => '']);
         $controller->previewAction($request);
     }
 
