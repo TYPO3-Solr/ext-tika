@@ -20,10 +20,8 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
-use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
@@ -60,21 +58,26 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     {
         $expectedValue = 'extracted text element';
 
-        /* @var SolrWriteService|ObjectProphecy $solrWriter */
-        $solrWriter = $this->prophesize(SolrWriteService::class);
-        $solrWriter->extractByQuery(Argument::type(Query::class))
+        /** @var SolrWriteService|MockObject $solrWriter */
+        $solrWriter = $this->createMock(SolrWriteService::class);
+        $solrWriter
+            ->expects(self::atLeastOnce())
+            ->method('extractByQuery')
             ->willReturn([
                 $expectedValue,     // extracted text is index 0
                 'meta data element', // meta data is index 1
             ]);
 
-        /* @var SolrConnection|ObjectProphecy $connectionMock */
-        $connectionMock = $this->prophesize(SolrConnection::class);
-        $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
+        /** @var SolrConnection|MockObject $connectionMock */
+        $connectionMock = $this->createMock(SolrConnection::class);
+        $connectionMock
+            ->expects(self::atLeastOnce())
+            ->method('getWriteService')
+            ->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
         $service->setLogger(new NullLogger());
-        $this->inject($service, 'solrConnection', $connectionMock->reveal());
+        $this->inject($service, 'solrConnection', $connectionMock);
 
         $file = new File(
             [
@@ -93,16 +96,21 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
      */
     public function extractByQueryTextUsesSolariumExtractQuery(): void
     {
-        $solrWriter = $this->prophesize(SolrWriteService::class);
-        $solrWriter->extractByQuery(Argument::type(Query::class))->shouldBeCalled();
+        $solrWriter = $this->createMock(SolrWriteService::class);
+        $solrWriter
+            ->expects(self::atLeastOnce())
+            ->method('extractByQuery');
 
-        /* @var SolrConnection|ObjectProphecy $connectionMock */
-        $connectionMock = $this->prophesize(SolrConnection::class);
-        $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
+        /** @var SolrConnection|MockObject $connectionMock */
+        $connectionMock = $this->createMock(SolrConnection::class);
+        $connectionMock
+            ->expects(self::atLeastOnce())
+            ->method('getWriteService')
+            ->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
         $service->setLogger(new NullLogger());
-        $this->inject($service, 'solrConnection', $connectionMock->reveal());
+        $this->inject($service, 'solrConnection', $connectionMock);
 
         $file = new File(
             [
@@ -122,9 +130,10 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
      */
     public function extractMetaDataUsesSolariumExtractQuery(): void
     {
-        $solrWriter = $this->prophesize(SolrWriteService::class);
-        $solrWriter->extractByQuery(Argument::type(Query::class))
-            ->shouldBeCalled()
+        $solrWriter = $this->createMock(SolrWriteService::class);
+        $solrWriter
+            ->expects(self::atLeastOnce())
+            ->method('extractByQuery')
             ->willReturn(
                 [
                     'foo', // extracted text is index 0
@@ -132,13 +141,16 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                 ]
             );
 
-        /* @var SolrConnection|ObjectProphecy $connectionMock */
-        $connectionMock = $this->prophesize(SolrConnection::class);
-        $connectionMock->getWriteService()->shouldBeCalled()->willReturn($solrWriter);
+        /** @var SolrConnection|MockObject $connectionMock */
+        $connectionMock = $this->createMock(SolrConnection::class);
+        $connectionMock
+            ->expects(self::atLeastOnce())
+            ->method('getWriteService')
+            ->willReturn($solrWriter);
 
         $service = new SolrCellService($this->getConfiguration());
         $service->setLogger(new NullLogger());
-        $this->inject($service, 'solrConnection', $connectionMock->reveal());
+        $this->inject($service, 'solrConnection', $connectionMock);
 
         $file = new File(
             [

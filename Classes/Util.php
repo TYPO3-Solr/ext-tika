@@ -32,7 +32,6 @@ class Util
     /**
      * Returns extension configuration.
      *
-     * @return array
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */

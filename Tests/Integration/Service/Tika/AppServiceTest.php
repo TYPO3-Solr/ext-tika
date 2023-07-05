@@ -144,7 +144,8 @@ class AppServiceTest extends ServiceIntegrationTestCase
         /** @var $service AppService|MockObject */
         $service = $this->getMockBuilder(AppService::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getMimeTypeOutputFromTikaJar'])->getMock();
+            ->onlyMethods(['getMimeTypeOutputFromTikaJar'])
+            ->getMock();
         $service->expects(self::once())->method('getMimeTypeOutputFromTikaJar')->willReturn($fixtureContent);
 
         $supportedMimeTypes = $service->getSupportedMimeTypes();

@@ -22,12 +22,13 @@ use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Util;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
-use Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Solarium\QueryType\Extract\Query;
+use Throwable;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -46,14 +47,12 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * EXT:tika configuration.
-     *
-     * @var array
      */
     protected array $tikaConfiguration = [];
 
     /**
      * Constructor, reads the extension's configuration
-     * @param array|null $extensionConfiguration
+     *
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
@@ -69,9 +68,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Checks whether Tika is properly configured
-     * @return array
-     *
-     * @throws Exception
      */
     public function getStatus(): array
     {
@@ -81,13 +77,13 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
             case 'jar':
             case 'tika': // backwards compatibility only
                 // for the app java is required
-                $checks[] = $this->getJavaInstalledStatus(Status::ERROR);
+                $checks[] = $this->getJavaInstalledStatus();
                 $checks[] = $this->getAppConfigurationStatus();
 
                 break;
             case 'server':
                 // for the server only recommended since it could also run on another node
-                $checks[] = $this->getJavaInstalledStatus(Status::WARNING);
+                $checks[] = $this->getJavaInstalledStatus(ContextualFeedbackSeverity::WARNING);
                 $checks[] = $this->getServerConfigurationStatus();
                 break;
             case 'solr':
@@ -100,8 +96,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Creates a configuration OK status.
-     *
-     * @return Status
      */
     protected function getOkStatus(): Status
     {
@@ -114,13 +108,10 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Creates a system status report status checking whether Java is installed.
-     *
-     * @param int $severity
-     * @return Status
      */
-    protected function getJavaInstalledStatus(int $severity = Status::ERROR): Status
+    protected function getJavaInstalledStatus(ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::ERROR): Status
     {
-        /* @var Status $status */
+        /** @var Status $status */
         $status = GeneralUtility::makeInstance(
             Status::class,
             'Apache Tika',
@@ -142,8 +133,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Checks configuration for use with Tika app jar
-     *
-     * @return Status
      */
     protected function getAppConfigurationStatus(): Status
     {
@@ -154,7 +143,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not find Tika app jar.</p>',
-                Status::ERROR
+                ContextualFeedbackSeverity::ERROR
             );
         }
 
@@ -163,9 +152,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Checks configuration for use with Tika server jar
-     *
-     * @return Status
-     * @throws Exception
      */
     protected function getServerConfigurationStatus(): Status
     {
@@ -178,7 +164,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not connect to Tika server.</p>',
-                Status::ERROR
+                ContextualFeedbackSeverity::ERROR
             );
         }
 
@@ -187,8 +173,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Checks configuration for use with Solr
-     *
-     * @return Status
      */
     protected function getSolrCellConfigurationStatus(): Status
     {
@@ -210,7 +194,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
             if (!is_null($extractedContent) && !empty($extractedMetadata)) {
                 $solrCellConfigurationOk = true;
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->writeDevLog(
                 'Exception while trying to extract file content',
                 'tika',
@@ -227,16 +211,13 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not extract file contents with Solr Cell.</p>',
-                Status::ERROR
+                ContextualFeedbackSeverity::ERROR
             );
         }
 
         return $status;
     }
 
-    /**
-     * @return SolrConnection
-     */
     protected function getSolrConnectionFromTikaConfiguration(): SolrConnection
     {
         $solrConfig = [
@@ -253,10 +234,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
         return GeneralUtility::makeInstance(ConnectionManager::class)->getConnectionFromConfiguration($config);
     }
 
-    /**
-     * @return ServerService
-     * @noinspection PhpIncompatibleReturnTypeInspection
-     */
     protected function getTikaServiceFromTikaConfiguration(): ServerService
     {
         return GeneralUtility::makeInstance(
@@ -267,8 +244,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Checks if java is installed.
-     *
-     * @return bool
      */
     protected function isJavaInstalled(): bool
     {
@@ -277,9 +252,6 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Checks if a certain file name is present.
-     *
-     * @param string $fileName
-     * @return bool
      */
     protected function isFilePresent(string $fileName): bool
     {
@@ -288,14 +260,10 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
     /**
      * Wrapper for GeneralUtility::devLog, used during testing to mock logging.
-     *
-     * @param string $message message
-     * @param string $extKey extension key
-     * @param array $data data
      */
     protected function writeDevLog(string $message, string $extKey, array $data = []): void
     {
-        $this->logger->/** @scrutinizer ignore-call */ debug(
+        $this->logger->debug(
             $message,
             [
                 'extension' => $extKey,

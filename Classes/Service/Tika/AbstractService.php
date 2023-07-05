@@ -63,12 +63,12 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
      * @param int|string $severity Use constants from class LogLevel
      * @see LogLevel For supported log levels
      */
-    protected function log(string $message, array $data = [], $severity = LogLevel::DEBUG): void
+    protected function log(string $message, array $data = [], mixed $severity = LogLevel::DEBUG): void
     {
         if (empty($this->configuration['logging'])) {
             return;
         }
-        $this->logger->/** @scrutinizer ignore-call */ log(
+        $this->logger->log(
             $severity,
             $message,
             $data
@@ -115,4 +115,11 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
 
         return $commandOptionsString;
     }
+
+    public function getTikaVersionString(): string
+    {
+        return str_replace('Apache Tika', '', $this->getTikaVersion());
+    }
+
+    abstract public function getTikaVersion(): string;
 }

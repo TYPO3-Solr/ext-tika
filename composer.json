@@ -36,13 +36,13 @@
   "require-dev": {
     "apache-solr-for-typo3/solr": "dev-main",
     "dg/bypass-finals": "^1.4",
-    "phpspec/prophecy-phpunit":"*",
     "phpunit/phpunit": "^9.5",
     "typo3/coding-standards": "~0.7.1",
     "typo3/testing-framework": "^7.0.2"
   },
   "suggest": {
-    "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr."
+    "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr.",
+    "apache-solr-for-typo3/solrfal": "EXT:tika + EXT:solrfal make the files(TYPO3 FAL) indexable and searchable within EXT:solr."
   },
   "autoload": {
     "psr-4": {
@@ -114,7 +114,7 @@
     "TYPO3-Solr": {
       "ext-tika": {
         "require": {
-          "Tika": "1.27",
+          "Tika": "1.28",
           "Solr": "9.2.1"
         }
       }

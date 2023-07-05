@@ -30,14 +30,9 @@ class ServerServiceFixture extends ServerService
 {
     /**
      * The endpoint to be used
-     *
-     * @var string
      */
     protected string $recordedEndpoint = '';
 
-    /**
-     * @return string
-     */
     public function getRecordedEndpoint(): string
     {
         return $this->recordedEndpoint;
@@ -45,9 +40,6 @@ class ServerServiceFixture extends ServerService
 
     /**
      * Override endpoint method in order to validate the correct endpoint is in use
-     *
-     * @param string $endpoint
-     * @return Uri
      */
     protected function createEndpoint(string $endpoint): Uri
     {
@@ -55,11 +47,6 @@ class ServerServiceFixture extends ServerService
         return parent::createEndpoint($endpoint);
     }
 
-    /**
-     * @param FileInterface $file
-     * @param string $response
-     * @return array
-     */
     protected function getLogData(FileInterface $file, string $response): array
     {
         //overwrite to skip logging in unit test
