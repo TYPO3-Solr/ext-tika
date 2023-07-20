@@ -74,10 +74,9 @@ export COMPOSER_NO_INTERACTION=1
 # Install build tools
 echo "Install build tools: "
 if ! composer global require \
-  sclable/xml-lint \
-  scrutinizer/ocular
+  sclable/xml-lint
 then
-  echo "The build tools(sclable/xml-lint, scrutinizer/ocular) could not be installed. Please fix this issue."
+  echo "The build tools(sclable/xml-lint) could not be installed. Please fix this issue."
   exit 1
 fi
 

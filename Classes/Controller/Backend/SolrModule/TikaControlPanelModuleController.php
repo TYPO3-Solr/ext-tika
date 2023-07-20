@@ -19,7 +19,6 @@ namespace ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule;
 
 use ApacheSolrForTypo3\Solr\Controller\Backend\Search\AbstractModuleController;
 use ApacheSolrForTypo3\Solr\Domain\Site\Exception\UnexpectedTYPO3SiteInitializationException;
-use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
@@ -46,7 +45,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
 {
     protected array $tikaConfiguration = [];
 
-    protected AbstractService|AppService|ServerService|SolrCellService $tikaService;
+    protected ServerService|AppService|SolrCellService $tikaService;
 
     /**
      * Can be used in the test context to mock a {@link view}.
@@ -68,7 +67,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         $this->moduleTemplate = $moduleTemplate;
     }
 
-    public function setTikaService(AbstractService $tikaService): void
+    public function setTikaService(ServerService|AppService|SolrCellService $tikaService): void
     {
         $this->tikaService = $tikaService;
     }
@@ -80,8 +79,6 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      * @throws UnexpectedTYPO3SiteInitializationException
-     *
-     * @noinspection PhpUnused
      */
     protected function initializeAction(): void
     {
@@ -149,6 +146,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
 
     /**
      * Starts the Tika server
+     *
      * @noinspection PhpUnused
      */
     public function startServerAction(): ResponseInterface
@@ -169,6 +167,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
 
     /**
      * Stops the Tika server
+     *
      * @noinspection PhpUnused
      */
     public function stopServerAction(): ResponseInterface

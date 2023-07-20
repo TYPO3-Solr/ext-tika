@@ -206,8 +206,8 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         array $driverConfiguration = [],
         array $mockedDriverMethods = []
     ): LocalDriver {
-        /** @var LocalDriver $driver */
         $mockedDriverMethods[] = 'isPathValid';
+        /** @var LocalDriver|MockObject $driver */
         $driver = $this->getAccessibleMock(
             LocalDriver::class,
             $mockedDriverMethods,

@@ -1,0 +1,16 @@
+includes:
+  - %rootDir%/../phpstan-phpunit/extension.neon
+
+parameters:
+  level: 3
+  treatPhpDocTypesAsCertain: false
+
+  bootstrapFiles:
+    - %rootDir%/../../apache-solr-for-typo3/solr/Build/Test/phpstan-constants.php
+
+  paths:
+    - %currentWorkingDirectory%/Classes
+    - %currentWorkingDirectory%/Tests
+
+  ignoreErrors:
+  	- '#^Variable \$value on left side of \?\? always exists and is not nullable.#'

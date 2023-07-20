@@ -183,7 +183,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
             $solr = $this->getSolrConnectionFromTikaConfiguration();
 
             // try to extract text & meta data
-            /** @var $query Query */
+            /** @var Query $query */
             $query = GeneralUtility::makeInstance(Query::class);
             $query->setExtractOnly(true);
             $query->setFile(ExtensionManagementUtility::extPath('tika', 'ext_emconf.php'));

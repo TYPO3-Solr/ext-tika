@@ -93,11 +93,14 @@
       "@composer reinstall --prefer-source typo3/cms-core apache-solr-for-typo3/solr",
       "@composer dump-autoload",
       "cp .Build/vendor/apache-solr-for-typo3/solr/.php-cs-fixer.php .",
-      "@composer global require sclable/xml-lint scrutinizer/ocular",
+      "@composer global require sclable/xml-lint",
       "echo \"Restoring composer.json to initial state:\" && git checkout composer.json"
     ],
     "tests:unit": [ "phpunit --colors -c Build/Test/UnitTests.xml --bootstrap=Build/Test/UnitTestsBootstrap.php" ],
     "tests:integration": [ "phpunit --colors -c Build/Test/IntegrationTests.xml --bootstrap=Build/Test/IntegrationTestsBootstrap.php" ],
+    "tests:phpstan": [
+      "phpstan analyze -c Build/Test/phpstan.neon"
+    ],
     "t3:standards:fix": [
       "php-cs-fixer fix"
     ]

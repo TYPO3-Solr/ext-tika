@@ -75,7 +75,7 @@ class MetaDataExtractorTest extends UnitTestCase
     {
         $fakedTikaExtractResponse = $this->getFakedExtratorResponseForJGEPImage();
 
-        /** @var $metaDataExtractor MetaDataExtractor|MockObject */
+        /** @var MetaDataExtractor|MockObject $metaDataExtractor */
         $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)
             ->setConstructorArgs([[]])
             ->onlyMethods(['getExtractedMetaDataFromTikaService'])
