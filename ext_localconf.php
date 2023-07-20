@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use ApacheSolrForTypo3\Tika\Hooks\BackendControllerHook;
 use ApacheSolrForTypo3\Tika\Service\Extractor\LanguageDetector;
 use ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor;
 use ApacheSolrForTypo3\Tika\Service\Extractor\TextExtractor;
@@ -34,5 +33,3 @@ unset($extConf);
 /** @var TextExtractorRegistry $textExtractorRegistry */
 $textExtractorRegistry = GeneralUtility::makeInstance(TextExtractorRegistry::class);
 $textExtractorRegistry->registerTextExtractor(TextExtractor::class);
-
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/backend.php']['constructPostProcess'][] = BackendControllerHook::class . '->addJavaScript';
