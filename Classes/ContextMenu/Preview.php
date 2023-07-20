@@ -121,13 +121,10 @@ class Preview extends AbstractProvider
         if (in_array($itemName, $this->disabledItems, true)) {
             return false;
         }
-        switch ($itemName) {
-            case 'tika_preview':
-                $canRender = true;
-                break;
-            default:
-                $canRender = false;
-        }
+        $canRender = match ($itemName) {
+            'tika_preview' => true,
+            default => false,
+        };
         return $canRender;
     }
 }
