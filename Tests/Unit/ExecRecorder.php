@@ -18,10 +18,10 @@ declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Unit;
 
 // load the mocked functions into the namespaces which need them during tests
-// include() or require() cannot load into namespaces
+// include() or require() cannot load into namespaces,
 // so we use this little trick to achieve the effect
-eval('namespace ApacheSolrForTypo3\Tika { ?>' . file_get_contents(__DIR__ . '/ExecMockFunctions.php') . ' }');
-eval('namespace ApacheSolrForTypo3\Tika\Service\Tika { ?>' . file_get_contents(__DIR__ . '/ExecMockFunctions.php') . ' }');
+eval('namespace ApacheSolrForTypo3\Tika { ?>' . file_get_contents(__DIR__ . '/ExecMockFunctions.php.Hack') . ' }');
+eval('namespace ApacheSolrForTypo3\Tika\Service\Tika { ?>' . file_get_contents(__DIR__ . '/ExecMockFunctions.php.Hack') . ' }');
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -36,22 +36,16 @@ class ExecRecorder
 {
     /**
      * Allows to capture exec() parameters
-     *
-     * @var string
      */
     public static string $execCommand = '';
 
     /**
      * Output to return to exec() calls
-     *
-     * @var array
      */
     public static array $execOutput = [];
 
     /**
      * Indicator whether/how many times the exec() mock was called.
-     *
-     * @var int
      */
     public static int $execCalled = 0;
 
