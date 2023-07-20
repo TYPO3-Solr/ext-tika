@@ -30,7 +30,7 @@ class FileUtility
      */
     public static function getAbsoluteFilePath(string $path): string
     {
-        if (substr($path, 0, 1) === '/') {
+        if (str_starts_with($path, '/')) {
             // if the path start with a "/" we thread it as absolute
             return $path;
         }

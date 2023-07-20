@@ -46,20 +46,15 @@ class ServiceFactory
             $configuration = Util::getTikaExtensionConfiguration();
         }
 
-        switch ($tikaServiceType) {
-            case 'jar':
-            case 'tika': // backwards compatibility only
-                return GeneralUtility::makeInstance(AppService::class, $configuration);
-            case 'server':
-                return GeneralUtility::makeInstance(ServerService::class, $configuration);
-            case 'solr':
-                return GeneralUtility::makeInstance(SolrCellService::class, $configuration);
-            default:
-                throw new InvalidArgumentException(
-                    'Unknown Tika service type "' . $tikaServiceType . '". Must be one of jar, server, or solr.',
-                    1423035119
-                );
-        }
+        return match ($tikaServiceType) {
+            'jar', 'tika' => GeneralUtility::makeInstance(AppService::class, $configuration),
+            'server' => GeneralUtility::makeInstance(ServerService::class, $configuration),
+            'solr' => GeneralUtility::makeInstance(SolrCellService::class, $configuration),
+            default => throw new InvalidArgumentException(
+                'Unknown Tika service type "' . $tikaServiceType . '". Must be one of jar, server, or solr.',
+                1423035119
+            ),
+        };
     }
 
     /**
