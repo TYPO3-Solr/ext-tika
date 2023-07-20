@@ -98,11 +98,6 @@ jobs:
           echo "Current Size of EXT:tika build Artefacts: " \
             && sudo du -sh $CI_BUILD_DIRECTORY/ \
             && sudo du -sh $CI_BUILD_DIRECTORY/*
-      -
-        name: Upload code coverage to Scrutinizer
-        run: |
-          ocular code-coverage:upload --format=php-clover coverage.unit.clover
-          ocular code-coverage:upload --format=php-clover coverage.integration.clover
 
   publish:
     name: Publish new version to TER

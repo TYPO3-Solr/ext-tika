@@ -141,7 +141,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
     {
         $fixtureContent = file_get_contents(__DIR__ . '/Fixtures/mimeOut');
 
-        /** @var $service AppService|MockObject */
+        /** @var AppService|MockObject $service */
         $service = $this->getMockBuilder(AppService::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getMimeTypeOutputFromTikaJar'])

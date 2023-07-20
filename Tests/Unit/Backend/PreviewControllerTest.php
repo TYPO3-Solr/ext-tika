@@ -38,7 +38,7 @@ class PreviewControllerTest extends UnitTestCase
      */
     public function previewActionTriggersTikaServices(): void
     {
-        /** @var $controller PreviewController|MockObject */
+        /** @var PreviewController|MockObject $controller */
         $controller = $this->getMockBuilder(PreviewController::class)->onlyMethods([
             'getConfiguredTikaService',
             'getFileResourceFactory',
@@ -70,7 +70,7 @@ class PreviewControllerTest extends UnitTestCase
      */
     public function previewActionShowsErrorWhenNoAdmin(): void
     {
-        /** @var $controller PreviewController|MockObject */
+        /** @var PreviewController|MockObject $controller */
         $controller = $this->getMockBuilder(PreviewController::class)->onlyMethods([
             'getConfiguredTikaService',
             'getFileResourceFactory',

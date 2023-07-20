@@ -27,7 +27,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 use TYPO3\CMS\Core\Http\HtmlResponse;
-use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -38,8 +37,6 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 class PreviewController
 {
     /**
-     * @param ServerRequestInterface $request
-     * @return string|Response
      * @throws ClientExceptionInterface
      * @throws Throwable
      */
@@ -57,20 +54,20 @@ class PreviewController
 
         $tikaService = $this->getConfiguredTikaService();
         $metadata = $tikaService->extractMetaData(
-            /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+            /** not real static-analysis error, because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
             $file
         );
         $content = $tikaService->extractText(
-            /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+            /** not real static-analysis error, because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
             $file
         );
 
         try {
             $language = $tikaService->detectLanguageFromFile(
-                /** @scrutinizer ignore-type because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
+                /** not real static-analysis error, because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
                 $file
             );
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $language = 'not detectable';
         }
 
@@ -85,10 +82,7 @@ class PreviewController
         return $response;
     }
 
-    /**
-     * @return AppService|ServerService|SolrCellService
-     */
-    protected function getConfiguredTikaService(): AbstractService
+    protected function getConfiguredTikaService(): AbstractService|AppService|ServerService|SolrCellService
     {
         return ServiceFactory::getConfiguredTika();
     }
@@ -103,7 +97,7 @@ class PreviewController
      */
     protected function getInitializedPreviewView(): StandaloneView
     {
-        /** @var $view StandaloneView */
+        /** @var StandaloneView $view */
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $templatePathAndFile = 'EXT:tika/Resources/Private/Templates/Backend/Preview.html';
         $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templatePathAndFile));

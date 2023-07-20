@@ -22,6 +22,8 @@ use ApacheSolrForTypo3\Tika\Util;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Index\ExtractorInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -34,27 +36,18 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var array
-     */
     protected array $configuration;
 
     /**
      * Priority in handling extraction
-     *
-     * @var int
      */
     protected int $priority = 0;
 
-    /**
-     * @var SizeValidator
-     */
     protected SizeValidator $fileSizeValidator;
 
     /**
-     * Constructor
-     * @param array|null $extensionConfiguration
-     * @param SizeValidator|null $fileSizeValidator
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
     public function __construct(array $extensionConfiguration = null, SizeValidator $fileSizeValidator = null)
     {
@@ -67,8 +60,6 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
 
     /**
      * Returns an array of supported file types
-     *
-     * @return array
      */
     public function getFileTypeRestrictions(): array
     {
@@ -87,8 +78,6 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
 
     /**
      * Returns the data priority of the extraction Service.
-     *
-     * @return int
      */
     public function getPriority(): int
     {
@@ -97,8 +86,6 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
 
     /**
      * Returns the execution priority of the extraction Service
-     *
-     * @return int
      */
     public function getExecutionPriority(): int
     {
@@ -107,16 +94,13 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
 
     /**
      * Logs a message and optionally data to log file
-     *
-     * @param string $message Log message
-     * @param array $data Optional data
      */
     protected function log(string $message, array $data = []): void
     {
         if (!$this->configuration['logging']) {
             return;
         }
-        $this->logger->/** @scrutinizer ignore-call */ log(
+        $this->logger->log(
             LogLevel::DEBUG, // Previous value 0
             $message,
             $data

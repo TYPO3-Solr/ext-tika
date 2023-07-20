@@ -33,7 +33,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
 {
     protected TikaControlPanelModuleController $controller;
 
-    protected ViewInterface $viewMock;
+    protected ViewInterface|MockObject $viewMock;
 
     protected ModuleTemplate|MockObject $moduleTemplateMock;
 
