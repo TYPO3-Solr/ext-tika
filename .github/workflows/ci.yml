@@ -88,13 +88,13 @@ jobs:
         name: CI-Bootstrap
         run: |
           composer info
-          ./Build/Test/bootstrap.sh
+          composer tests:setup && composer tests:setup:global-require
           echo "Current Size of EXT:tika build Artefacts: " \
             && sudo du -sh "${{ env.CI_BUILD_DIRECTORY }}"
       -
         name: CI-Build
         run: |
-          ./Build/Test/cibuild.sh
+          ./.Build/vendor/apache-solr-for-typo3/solr/Build/Test/cibuild.sh
           echo "Current Size of EXT:tika build Artefacts: " \
             && sudo du -sh $CI_BUILD_DIRECTORY/ \
             && sudo du -sh $CI_BUILD_DIRECTORY/*
