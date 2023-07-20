@@ -24,9 +24,6 @@ use TYPO3\CMS\Core\Core\Environment;
  */
 class ShellUtility
 {
-    /**
-     * @return string
-     */
     public static function getLanguagePrefix(): string
     {
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']) && !Environment::isWindows()) {
@@ -37,15 +34,12 @@ class ShellUtility
 
     /**
      * Backwards compatibility to 6.x, is available in CommandUtility in 7.x
-     *
-     * @param string $argument
-     * @return string
      */
     public static function escapeShellArgument(string $argument): string
     {
         $isUTF8Filesystem = !empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']);
         if ($isUTF8Filesystem) {
-            $currentLocale = setlocale(LC_CTYPE, 0);
+            $currentLocale = setlocale(LC_CTYPE, '0');
             setlocale(
                 LC_CTYPE,
                 $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale']
