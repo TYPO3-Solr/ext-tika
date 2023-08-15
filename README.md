@@ -19,6 +19,19 @@ We're open for [contributions](#Contributions) !
 
 Please find further information regarding Apache Tika on the [project's homepage](http://tika.apache.org)
 
+---
+
+|                  | URL                                                             |
+|------------------|-----------------------------------------------------------------|
+| **Repository:**  | https://github.com/TYPO3-Solr/ext-tika                          |
+| **Read online:** | https://docs.typo3.org/p/apache-solr-for-typo3/tika/main/en-us/ |
+| **TER:**         | https://extensions.typo3.org/extension/tika                     |
+| **Homepage:**    | https://www.typo3-solr.com/                                     |
+| **Fund:**        | https://shop.dkd.de/Produkte/Apache-Solr-fuer-TYPO3/            |
+
+Powered by the TYPO3 community and <br><br>![dkd Internet Service GmbH](./Resources/Public/Images/dkd_logo.png)
+
+---
 
 ## Continuous Integration
 
@@ -28,15 +41,17 @@ To run the test suite locally, please use our DDEV docker environment https://gi
 
 **Note**:
   This requires a proper combination of branches:
-* solr-ddev-site on release-12.0.x branch
-    * packages/ext-solr on release-12.0.x
-    * packages/ext-tika on release-12.0.x
+* solr-ddev-site on release-12.0.x/main branch
+    * packages/ext-solr on release-12.0.x/main
+    * packages/ext-tika on release-12.0.x/main
 * Please refer to [version matrix](https://raw.githubusercontent.com/TYPO3-Solr/ext-solr/master/Documentation/Appendix/VersionMatrix.rst) for proper combination of branches
 
 ```shell
 ddev solr:enable tika
-ddev tests-unit-tika
-ddev tests-integration-tika
+ddev composer t3:standards:fix packages/ext-tika/
+ddev composer tests:tika:phpstan
+ddev composer tests:tika:unit
+ddev composer tests:tika:integration
 ```
 
 ## <a name="Contributions"></a>Contributions
