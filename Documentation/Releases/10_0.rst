@@ -161,7 +161,7 @@ There are many ways to get involved with Apache Solr for TYPO3:
 * Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
 * Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
 
-Support us in 2021 by becoming an EB partner:
+Support us by becoming an EB partner:
 
 http://www.typo3-solr.com/en/contact/
 

@@ -18,7 +18,7 @@ Apache Tika for TYPO3
 		tika
 
 	:Version:
-		11.0.1
+		12.0.0
 
 	:Language:
 		en

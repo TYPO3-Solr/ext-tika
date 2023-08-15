@@ -39,10 +39,6 @@ New in this Release
 - [TASK] Fix scrutinizer issues on release-11.0.x `d0d9439 <https://github.com/TYPO3-Solr/ext-tika/commit/d0d9439>`_
 - [TASK] Update Apache TIKA to v1.27 on release-11.0.x `24f2929 <https://github.com/TYPO3-Solr/ext-tika/commit/24f2929>`_
 
-git rev-list --reverse --no-commit-header --format="format:- %s `%h <https://github.com/TYPO3-Solr/ext-tika/commit/%h>`_" 910681daf3fb812cb7447d89ac85c6841a8495d5^..HEAD
-
-
-
 Contributors
 ------------
 
@@ -117,7 +113,7 @@ There are many ways to get involved with Apache Solr for TYPO3:
 - Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
 - Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
 
-Support us in 2021 by becoming an EB partner:
+Support us by becoming an EB partner:
 
 http://www.typo3-solr.com/en/contact/
 
