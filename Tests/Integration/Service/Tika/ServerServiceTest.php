@@ -375,7 +375,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
                 'name' => 'test-documents.zip',
             ]
         ));
-        $expectedTextFromPDF= 'Tika - Content Analysis Toolkit';
+        $expectedTextFromPDF = 'Tika - Content Analysis Toolkit';
 
         self::assertStringContainsString($expectedTextFromWord, $extractedText);
         self::assertStringContainsString($expectedTextFromPDF, $extractedText);
