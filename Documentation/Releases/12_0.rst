@@ -1,0 +1,84 @@
+==========================================================
+Apache Solr for TYPO3 - Tika Addon version 12.0.0 released
+==========================================================
+
+We are happy to announce version 12.0.0 of EXT:tika.
+
+**Important**: This version is compatible with 12 LTS only.
+
+New in this Release
+-------------------
+
+- [BUGFIX] Don't use minimum-stability dev on TYPO3 stable in build/CI `3e5c6c2 <https://github.com/TYPO3-Solr/ext-tika/commit/3e5c6c2>`_
+- [TASK] Automated cleanup via rector `0e5d0d7 <https://github.com/TYPO3-Solr/ext-tika/commit/0e5d0d7>`_
+- [TASK] Remove unneeded checks `187f261 <https://github.com/TYPO3-Solr/ext-tika/commit/187f261>`_
+- [TASK] Allow install of v12 `38d3a3d <https://github.com/TYPO3-Solr/ext-tika/commit/38d3a3d>`_
+- [TASK] Make status work `bdc3843 <https://github.com/TYPO3-Solr/ext-tika/commit/bdc3843>`_
+- [TASK] Migrate icon registration `0fe8b6d <https://github.com/TYPO3-Solr/ext-tika/commit/0fe8b6d>`_
+- [TASK] Simplify code in viewhelper `594ad42 <https://github.com/TYPO3-Solr/ext-tika/commit/594ad42>`_
+- [TASK] Enable autoconfigure by default `5677a79 <https://github.com/TYPO3-Solr/ext-tika/commit/5677a79>`_
+- [TASK] Make the preview work `488084f <https://github.com/TYPO3-Solr/ext-tika/commit/488084f>`_
+- [TASK] Make BE module work `4095fe5 <https://github.com/TYPO3-Solr/ext-tika/commit/4095fe5>`_
+- [TASK] Setup Github-Actions for TYPO3 12 LTS `59bc08c <https://github.com/TYPO3-Solr/ext-tika/commit/59bc08c>`_
+- [TASK] Sync Setup within composer.json with TYPO3 12 stack `ca4d7df <https://github.com/TYPO3-Solr/ext-tika/commit/ca4d7df>`_
+- [TASK] Apply TYPO3 coding standards from EXT:solr 12.0.x-dev `63f51d8 <https://github.com/TYPO3-Solr/ext-tika/commit/63f51d8>`_
+- [TASK] setup dg/bypass-finals PHPUnit extension to be able to mock finals `b3474a6 <https://github.com/TYPO3-Solr/ext-tika/commit/b3474a6>`_
+- [TASK] Fix Integration tests for TYPO3 12 `3830729 <https://github.com/TYPO3-Solr/ext-tika/commit/3830729>`_
+- [TASK] Remove unused item provider registration `8a26824 <https://github.com/TYPO3-Solr/ext-tika/commit/8a26824>`_
+- [TASK] Remove unused hook `9f8c1a0 <https://github.com/TYPO3-Solr/ext-tika/commit/9f8c1a0>`_
+- [TASK] Improve code by using PHP8 features `f16e4bd <https://github.com/TYPO3-Solr/ext-tika/commit/f16e4bd>`_
+- [TASK] Replace Scrutinizer analysis by PHPStan :: Level 3 `640d234 <https://github.com/TYPO3-Solr/ext-tika/commit/640d234>`_
+- [TASK] PHPStan fix up to :: Level 5 `2d9fabf <https://github.com/TYPO3-Solr/ext-tika/commit/2d9fabf>`_
+- [TASK] synchronize with EXT:solr* tests stack `5c04545 <https://github.com/TYPO3-Solr/ext-tika/commit/5c04545>`_
+- [FIX] PHP-linter:  Cannot redeclare exec() in ExecMockFunctions.php `3a4aae6 <https://github.com/TYPO3-Solr/ext-tika/commit/3a4aae6>`_
+- [BUGFIX] Fix old linter issues with php-cs-fixer v3.23.0+ `4eca0d7 <https://github.com/TYPO3-Solr/ext-tika/commit/4eca0d7>`_
+
+
+Contributors
+------------
+
+- Elias Häußler
+- Georg Ringer
+- Lars Tode
+- Markus Friedrich
+- Peter Kraume
+- Rafael Kähm
+- Thomas Hohn
+- @internezzo-prod
+
+Thanks to everyone who helped in creating this release!
+
+Also a big thanks to our partners that have joined the Apache Solr EB für TYPO3 12 LTS (Feature) program:
+
+- b13 GmbH
+- cron IT GmbH
+- FTI Germany
+- .hausformat
+- Hochschule Furtwangen
+- in2code GmbH
+- internezzo ag
+- Kassenärztliche Vereinigung Rheinland-Pfalz
+- KONVERTO AG
+- Lingner Consulting New Media GmbH
+- mehrwert intermediale kommunikation GmbH
+- plan2net GmbH
+- Stadtverwaltung Villingen-Schwenningen
+- unternehmen online GmbH Co. KG (UO)
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+- Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-solr)
+- Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-solr/)
+- Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-solr/pulls)
+- Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/
+
+or call:
+
++49 (0)69 - 2475218 0

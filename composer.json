@@ -141,7 +141,8 @@
       "ext-tika": {
         "require": {
           "Tika": "1.28",
-          "Solr": "9.2.1"
+          "Solr": "9.3.*",
+          "EXT:solr": "12.0.*"
         }
       }
     }
