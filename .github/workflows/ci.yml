@@ -81,8 +81,8 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=$TYPO3_DATABASE_PASSWORD \
             -d mysql:8.0 mysqld --default-authentication-plugin=mysql_native_password
           sudo chmod g+w "$SOLR_VOLUME_PATH"
-          docker volume create --name "$LOCAL_VOLUME_NAME" --opt type=none --opt device="$SOLR_VOLUME_PATH" --opt o=bind
-          docker run --rm --name="$SOLR_CONTAINER_NAME" -d -p 127.0.0.1:8983:8983 -v "$LOCAL_VOLUME_NAME":"/var/solr" "typo3solr/ext-solr:$SOLR_IMAGE_TAG"
+          docker volume create --name "$SOLR_VOLUME_NAME" --opt type=none --opt device="$SOLR_VOLUME_PATH" --opt o=bind
+          docker run --rm --name="$SOLR_CONTAINER_NAME" -d -p 127.0.0.1:8983:8983 -v "$SOLR_VOLUME_NAME":"/var/solr" "typo3solr/ext-solr:$SOLR_IMAGE_TAG"
           docker run -d -p 9998:9998 apache/tika:$(composer tika:req:tika)"-full"
           docker ps
       -
