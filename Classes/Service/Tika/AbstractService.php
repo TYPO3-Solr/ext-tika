@@ -51,9 +51,7 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
     /**
      * Service initialization
      */
-    protected function initializeService(): void
-    {
-    }
+    protected function initializeService(): void {}
 
     /**
      * Logs a message and optionally data to log file

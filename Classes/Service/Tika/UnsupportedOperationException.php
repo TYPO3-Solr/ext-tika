@@ -25,6 +25,4 @@ use RuntimeException;
  *
  * @author Ingo Renner <ingo@typo3.org>
  */
-class UnsupportedOperationException extends RuntimeException
-{
-}
+class UnsupportedOperationException extends RuntimeException {}
