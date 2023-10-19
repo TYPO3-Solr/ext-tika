@@ -45,5 +45,14 @@ solrHost = localhost
 # cat=solr//30; type=int; label=Port
 solrPort = 8983
 
-# cat=solr//40; type=string; label=Path: Path to a Solr core
-solrPath = /solr/
+# cat=solr//40; type=string; label=Path: URL path to Apache Solr server
+solrPath = /
+
+# cat=solr//50; type=string; label=Core name: Apache Solr core name
+solrCore = core_en
+
+# cat=solr//60; type=user[ApacheSolrForTypo3\Tika\Lowlevel\EventListener\BlindedSecrets->hideInExtConf]; label=User name: Username for authentication on Apache Solr
+solrUsername =
+
+# cat=solr//70; type=user[ApacheSolrForTypo3\Tika\Lowlevel\EventListener\BlindedSecrets->hideInExtConf]; label=Password: Password for authentication on Apache Solr
+solrPassword =

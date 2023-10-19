@@ -276,7 +276,8 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             'solrScheme' => getenv('TESTING_SOLR_SCHEME') ?: 'http',
             'solrHost' => getenv('TESTING_SOLR_HOST') ?: 'localhost',
             'solrPort' => getenv('TESTING_SOLR_PORT') ?: 8999,
-            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/solr/core_en',
+            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/',
+            'solrCore' => getenv('TESTING_SOLR_CORE') ?: 'core_en',
         ];
     }
 
