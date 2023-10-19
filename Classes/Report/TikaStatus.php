@@ -17,13 +17,11 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Report;
 
-use ApacheSolrForTypo3\Solr\ConnectionManager;
-use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
+use ApacheSolrForTypo3\Solr\System\Solr\ResponseAdapter;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Util;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use Solarium\QueryType\Extract\Query;
 use Throwable;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
@@ -40,11 +38,11 @@ use TYPO3\CMS\Reports\StatusProviderInterface;
  *
  * @author Ingo Renner <ingo@typo3.org>
  * @copyright (c) 2010-2015 Ingo Renner <ingo@typo3.org>
+ *
+ * @noinspection PhpUnused Used in Reports module
  */
-class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
+class TikaStatus implements StatusProviderInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * EXT:tika configuration.
      */
@@ -56,8 +54,9 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public function __construct(array $extensionConfiguration = null)
-    {
+    public function __construct(
+        array $extensionConfiguration = null,
+    ) {
         $this->tikaConfiguration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
     }
 
@@ -82,7 +81,7 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
 
                 break;
             case 'server':
-                // for the server only recommended since it could also run on another node
+                // for the server only recommended since it could also run on another endpoint
                 $checks[] = $this->getJavaInstalledStatus(ContextualFeedbackSeverity::WARNING);
                 $checks[] = $this->getServerConfigurationStatus();
                 break;
@@ -179,8 +178,12 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
         $status = $this->getOkStatus();
 
         $solrCellConfigurationOk = false;
+        $additionalErrorInfos = '';
         try {
-            $solr = $this->getSolrConnectionFromTikaConfiguration();
+            $solrConnection = GeneralUtility::makeInstance(
+                SolrCellService::class,
+                $this->tikaConfiguration,
+            )->getSolrConnection();
 
             // try to extract text & meta data
             /** @var Query $query */
@@ -189,49 +192,59 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
             $query->setFile(ExtensionManagementUtility::extPath('tika', 'ext_emconf.php'));
             $query->addParam('extractFormat', 'text');
 
-            [$extractedContent, $extractedMetadata] = $solr->getWriteService()->extractByQuery($query);
+            /** @var ResponseAdapter $response */
+            [$extractedContent, $extractedMetadata, $response] = $solrConnection->getWriteService()->extractByQuery($query);
 
             if (!is_null($extractedContent) && !empty($extractedMetadata)) {
                 $solrCellConfigurationOk = true;
+            } elseif ($response instanceof ResponseAdapter) {
+                $additionalErrorInfos = /* @lang HTML */
+                "
+                <table class='table table-condensed table-hover table-striped'>
+                    <tbody>
+                        <tr class='warning'>
+                            <th>Status:</th><td>{$response->getHttpStatus()} {$response->getHttpStatusMessage()}</td>
+                        </tr>
+                        <tr class='warning'>
+                            <th>Response body:</th>
+                            <td>{$response->getRawResponse()}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                ";
             }
         } catch (Throwable $e) {
-            $this->writeDevLog(
-                'Exception while trying to extract file content',
-                'tika',
-                [
-                    'configuration' => $this->tikaConfiguration,
-                    'exception' => $e,
-                ]
-            );
+            $additionalErrorInfos = /* @lang HTML */
+                "
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h3 class='panel-title'>
+                            <a href='#panel-reports-status-tika-solr-cell' data-bs-toggle='collapse' class='collapsed' aria-expanded='false'>
+                                Exception: \"{$e->getMessage()}\" with code {$e->getCode()} in {$e->getFile()} line {$e->getLine()}
+                            </a>
+                        </h3>
+                    </div>
+
+                    <div id='panel-reports-status-tika-solr-cell' class='panel-collapse collapse'>
+                        <div class='panel-body'>
+                            {$e->getTraceAsString()}
+                        </div>
+                    </div>
+                </div>
+                ";
         }
 
         if (!$solrCellConfigurationOk) {
             $status = GeneralUtility::makeInstance(
                 Status::class,
                 'Apache Tika',
-                'Configuration Incomplete',
-                '<p>Could not extract file contents with Solr Cell.</p>',
+                'Configuration incomplete or wrong',
+                $additionalErrorInfos,
                 ContextualFeedbackSeverity::ERROR
             );
         }
 
         return $status;
-    }
-
-    protected function getSolrConnectionFromTikaConfiguration(): SolrConnection
-    {
-        $solrConfig = [
-            'host' => $this->tikaConfiguration['solrHost'],
-            'port' => (int)$this->tikaConfiguration['solrPort'],
-            'path' => $this->tikaConfiguration['solrPath'],
-            'scheme' => $this->tikaConfiguration['solrScheme'],
-        ];
-
-        $config = [
-            'read' => $solrConfig,
-            'write' => $solrConfig,
-        ];
-        return GeneralUtility::makeInstance(ConnectionManager::class)->getConnectionFromConfiguration($config);
     }
 
     protected function getTikaServiceFromTikaConfiguration(): ServerService
@@ -256,19 +269,5 @@ class TikaStatus implements StatusProviderInterface, LoggerAwareInterface
     protected function isFilePresent(string $fileName): bool
     {
         return is_file(FileUtility::getAbsoluteFilePath($fileName));
-    }
-
-    /**
-     * Wrapper for GeneralUtility::devLog, used during testing to mock logging.
-     */
-    protected function writeDevLog(string $message, string $extKey, array $data = []): void
-    {
-        $this->logger->debug(
-            $message,
-            [
-                'extension' => $extKey,
-                'data' => $data,
-            ]
-        );
     }
 }
