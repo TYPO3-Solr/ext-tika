@@ -1,12 +1,6 @@
+..  include:: /Includes.rst.txt
+..  index:: Releases
 .. _releases:
-
-.. raw:: latex
-
-    \newpage
-
-.. raw:: pdf
-
-   PageBreak
 
 ********
 Releases

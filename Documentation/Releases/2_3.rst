@@ -1,6 +1,10 @@
-=========================================================
-Apache Solr for TYPO3 - Tika Addon version 2.3.0 released
-=========================================================
+..  include:: /Includes.rst.txt
+..  index:: Releases
+..  _releases-tika-2_3:
+
+=============
+Release 2.3.0
+=============
 
 We are happy to announce version 2.3.0 of EXT:tika.
 This is compatibility release for TYPO3 CMS LTS 8.
@@ -95,7 +99,7 @@ There are many ways to get involved with Apache Solr for TYPO3:
 
 Support us in 2017 by becoming an EB partner:
 
-http://www.typo3-solr.com/en/contact/ 
+http://www.typo3-solr.com/en/contact/
 
 or call:
 

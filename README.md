@@ -29,7 +29,7 @@ Please find further information regarding Apache Tika on the [project's homepage
 | **Homepage:**    | https://www.typo3-solr.com/                                     |
 | **Fund:**        | https://shop.dkd.de/Produkte/Apache-Solr-fuer-TYPO3/            |
 
-Powered by the TYPO3 community and <br><br>![dkd Internet Service GmbH](./Resources/Public/Images/dkd_logo.png)
+Powered by the TYPO3 community and <br><br>![dkd Internet Service GmbH](./Documentation/Images/dkdLogo.png)
 
 ---
 

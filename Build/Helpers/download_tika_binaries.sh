@@ -12,9 +12,9 @@ Help()
     cat <<-EOF
 
 Usage:
-  $(basename ${COMPOSER_BINARY}) tika:download
-  $(basename ${COMPOSER_BINARY}) tika:download [--] [<flags>]
-  $(basename ${COMPOSER_BINARY}) tika:download [--] [<flags>] [<option> <parameter>]
+  $(basename "${COMPOSER_BINARY}") tika:download
+  $(basename "${COMPOSER_BINARY}") tika:download [--] [<flags>]
+  $(basename "${COMPOSER_BINARY}") tika:download [--] [<flags>] [<option> <parameter>]
 
 Options:
  --tika-version  <tika-version>   Specific TIKA version. Default: ${REQUIRED_TIKA_VERSION}
@@ -27,10 +27,10 @@ Flags:
                                     Note: imports Apaches TIKA public keys
 
 Examples:
-  $(basename ${COMPOSER_BINARY}) tika:download -- -D /tmp/tika-jars
-  $(basename ${COMPOSER_BINARY}) tika:download -- -D /tmp/tika-jars
-  $(basename ${COMPOSER_BINARY}) tika:download -- -D /tmp/tika-jars -C -a
-  $(basename ${COMPOSER_BINARY}) tika:download -- -D /tmp/tika-jars -C -a --tika-version 1.24.1
+  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars
+  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars
+  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars -C -a
+  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars -C -a --tika-version 1.24.1
 
 EOF
     exit
