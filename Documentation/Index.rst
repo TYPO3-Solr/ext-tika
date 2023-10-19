@@ -1,10 +1,4 @@
-.. ====================
-.. FOR YOUR INFORMATION
-.. --------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. include:: Includes.txt
-
+..  include:: /Includes.rst.txt
 
 .. _start:
 
@@ -12,45 +6,29 @@
 Apache Tika for TYPO3
 =====================
 
-.. only:: html
+:Extension key:
+    tika
 
-	:Classification:
-		tika
+:Package name:
+    apache-solr-for-typo3/tika
 
-	:Version:
-		12.0.0
+:Version:
+    |release|
 
-	:Language:
-		en
+:Language:
+    en
 
-	:Description:
-		Apache Tika for TYPO3
+:Author:
+    Ingo Renner, Markus Friedrich, Rafael Kähm, Timo Hund & Contributors
 
-	:Keywords:
-		apache, tika, meta, data, DAM, files, FAL, solr, server, language, content, detection, extraction
+:License:
+   This document is published under the
+   `Open Publication License <https://www.opencontent.org/openpub/>`__.
 
-	:Copyright:
-		since 2009
+:Rendered:
+    |today|
 
-	:Author:
-		Ingo Renner
-
-	:Email:
-		ingo@typo3.org
-
-	:License:
-		This document is published under the Open Content License
-		available from http://www.opencontent.org/opl.shtml
-
-	:Rendered:
-		|today|
-
-	The content of this document is related to TYPO3,
-	a GNU/GPL CMS/Framework available from `typo3.org <http://typo3.org/>`_.
-
-
-What does it do?
-================
+----
 
 Apache Tika is a toolkit for detecting and extracting metadata and structured
 text content from various documents using existing parser libraries.
@@ -64,81 +42,41 @@ mail box mbox format, and many more.
 
 Apache Tika for TYPO3 provides three services to retrieve information from files:
 
+----
+
 * Text extraction
 * Language detection of file contents
 * Meta data extraction
 
 All three services can be used with FAL.
 
-It is recommended to use Apache Tika version 1.11 or higher.
-
-
-Configuration
-=============
-
-All the settings for the extension can be made through the TYPO3 Extension Manager.
-Simply select what service you would like to use, either *Tika App*, *Tika Server*
-or *Solr Server*.
-Depending on that, configure the necessary settings for your service on the
-according settings tab.
-
-When done, check the TYPO3 system status report to validate your settings.
-
-
-Configuration of Tika App
-=========================
-
-General information about how to configure the Tika App can be found in the
-`official documentation <https://tika.apache.org/1.16/configuring.html>`_
-
-In case you want to exclude certain mime types from beeing processed by Tika,
-you can do the following:
-
-Create the file :file:`/etc/tika/tika-config.xml` with this content:
-
-.. code-block:: xml
-
-   <?xml version="1.0" encoding="UTF-8"?>
-   <properties>
-     <parsers>
-       <parser class="org.apache.tika.parser.DefaultParser">
-         <mime-exclude>application/zip</mime-exclude>
-       </parser>
-       <parser class="org.apache.tika.parser.EmptyParser">
-         <mime>application/zip</mime>
-       </parser>
-     </parsers>
-   </properties>
-
-This tells Tika to exclude zip files from DefaultParser and use EmptyParser instead,
-who does basically nothing.
-
-Then add one line to :file:`/etc/security/pam_env.con`:
-
-.. code-block:: bash
-
-   TIKA_CONFIG     DEFAULT="/etc/tika/tika-config.xml"
-
-This sets a global environment variable where Tika shold look for more configuration.
-
+It is recommended to use Apache Tika version 1.28 or higher.
 
 Getting Help
 ============
 
-First check the TYPO3 system status report for any errors reported by the extension.
-You will find them as reported from Apache Tika. The extension checks whether you
-have Java installed when using the Tika app or Tika server. It will also check
-your configuration, whether the configured paths for Tika app and Tika server are
-available and whether Tika Server and Solr server can be reached depending on what
-you're using.
 
-If you run into any issues with setting up EXT:tika don't hesitate to ask for help on the
-`TYPO3 Solr Slack channel <https://typo3.slack.com/messages/ext-solr/>`_
+.. tip::
 
+     If you run into any issues with setting up EXT:tika don't hesitate to ask for help on the `TYPO3 Solr Slack channel <https://typo3.slack.com/messages/ext-solr/>`_
 
-.. toctree::
-   :maxdepth: 3
-   :titlesonly:
-   :glob:
+----
 
-   Releases/Index
+**Table of Contents:**
+
+..  toctree::
+    :maxdepth: 2
+    :titlesonly:
+
+    Introduction/Index
+    Configuration/Index
+    Editor/Index
+    Releases/Index
+
+..  Meta Menu
+
+..  toctree::
+    :hidden:
+
+    Sitemap
+    genindex

@@ -68,10 +68,25 @@
     "bin-dir": ".Build/bin"
   },
   "scripts-descriptions": {
+    "t3:docs:build": "Renders the docs. Note: Can not run inside docker container, because uses TYPO3 dockrun_t3rd",
+    "t3:docs:build:prod": "Same as t3:docs:build, but places the rendered docs in Resources/Public/Documentation and symlinks them to EXT:tika/Documentation.HTML",
+    "t3:docs:clean": "Deletes all rendered docs created by t3:docs:build or t3:docs:build:prod.",
+    "t3:standards:fix": "Fixes a possible TYPO3 coding standards errors.",
+
+    "tests:env":  "Checks the requierements in environment for tests.",
+    "tests:integration": "Runs integration tests",
+    "tests:lint-xml": "Lints the XML/XLF files. Depends on global installed sclable/xml-lint. See tests:setup:global-require",
+    "tests:phpstan": "Runs PHPStan analys",
+    "tests:restore-git": "[Internal script], which is used after tests:setup to restore the composer.json.",
+    "tests:setup": "Installs composer dependencies, requiered for tests.",
+    "tests:setup:global-require": "Installs global composer dependencies. Those are moved to global, to avoid collisions and downgrades on libs.",
+    "tests:unit": "Runs unit tests",
+
     "tika:download": "Download Tika binaries/\".jar\" files. App and Server files.",
     "tika:download:app": "Download Tika app binariy/\".jar\" file only.",
     "tika:download:help": "Prints help from download script.",
     "tika:download:server": "Download Tika server binariy/\".jar\" file only.",
+    "tika:req:solr": "Print required Apache Solr version.",
     "tika:req:tika": "Print required Apache Tika version."
   },
   "scripts": {
@@ -95,7 +110,7 @@
     "tika:download:server": [ "@tika:download -s" ],
     "tika:req:tika": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Tika" ],
     "tika:req:solr": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Solr" ],
-    "_comment": "CI scripts",
+
     "tests:restore-git": "echo \"Retore composer.json to initial state:\" && git checkout composer.json",
     "tests:env": [
       "if [ -z ${TYPO3_VERSION+x} ]; then >&2 echo \"Can not proceed, because env var TYPO3_VERSION is not set\"; exit 1; else echo \"Setup test environment for TYPO3 ${TYPO3_VERSION}\"; fi",
@@ -107,6 +122,7 @@
       "@composer global require sclable/xml-lint --ignore-platform-reqs"
     ],
     "tests:setup": [
+      "# @todo: Abort if composer.json has not staged/commited changes on composer.json, to avoid losing necessery changes.",
       "@tests:env",
       "@composer req --update-with-all-dependencies typo3/cms-core:${TYPO3_VERSION}",
       "@composer req --dev --update-with-all-dependencies apache-solr-for-typo3/solr:dev-main",
@@ -141,7 +157,7 @@
     "TYPO3-Solr": {
       "ext-tika": {
         "require": {
-          "Tika": "1.28",
+          "Tika": "1.28.5",
           "Solr": "9.3.*",
           "EXT:solr": "12.0.*"
         }
