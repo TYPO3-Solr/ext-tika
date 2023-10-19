@@ -39,4 +39,17 @@ class Util
     {
         return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('tika');
     }
+
+    public static function convertEnvVarStringToValue(string $value): string
+    {
+        if (preg_match('/%env\(([a-zA-Z0-9_]+)\)%/', $value, $matches) === 0) {
+            return $value;
+        }
+        $resolved = getenv($matches[1]);
+        if (is_string($resolved) && !empty($resolved)) {
+            return $resolved;
+        }
+
+        return $value;
+    }
 }

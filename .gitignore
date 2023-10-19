@@ -6,7 +6,9 @@
 /.idea/
 /.project
 /.settings/
+/Resources/Public/Documentation/
 composer.lock
+Documentation.HTML
 index.php
 tika_pid
 typo3

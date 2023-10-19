@@ -18,7 +18,9 @@ declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use ApacheSolrForTypo3\Solr\ConnectionManager;
+use ApacheSolrForTypo3\Solr\Exception\InvalidConnectionException;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
+use ApacheSolrForTypo3\Tika\Util;
 use Solarium\QueryType\Extract\Query;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -37,6 +39,8 @@ class SolrCellService extends AbstractService
 
     /**
      * Service initialization
+     *
+     * @throws InvalidConnectionException
      */
     protected function initializeService(): void
     {
@@ -45,14 +49,26 @@ class SolrCellService extends AbstractService
         /** @var ConnectionManager $connectionManager */
         $connectionManager =  GeneralUtility::makeInstance(ConnectionManager::class);
 
-        $readNode = [
-            'host' => $this->configuration['solrHost'],
-            'port' => (int)$this->configuration['solrPort'],
-            'path' => $this->configuration['solrPath'],
-            'scheme' => $this->configuration['solrScheme'],
+        $readEndpoint = [
+            'scheme' => Util::convertEnvVarStringToValue((string)$this->configuration['solrScheme']),
+            'host' => Util::convertEnvVarStringToValue((string)$this->configuration['solrHost']),
+            'port' => (int)(Util::convertEnvVarStringToValue((string)$this->configuration['solrPort'])),
+            'path' => Util::convertEnvVarStringToValue((string)$this->configuration['solrPath']),
+            'core' => Util::convertEnvVarStringToValue((string)$this->configuration['solrCore']),
         ];
-        $writeNode = $readNode;
-        $this->solrConnection = $connectionManager->getSolrConnectionForNodes($readNode, $writeNode);
+        if (!empty(trim($this->configuration['solrUsername'] ?? ''))
+            && !empty(trim($this->configuration['solrPassword'] ?? ''))
+        ) {
+            $readEndpoint['username'] = Util::convertEnvVarStringToValue($this->configuration['solrUsername']);
+            $readEndpoint['password'] = Util::convertEnvVarStringToValue($this->configuration['solrPassword']);
+        }
+        $writeEndpoint = $readEndpoint;
+        $this->solrConnection = $connectionManager->getSolrConnectionForEndpoints($readEndpoint, $writeEndpoint);
+    }
+
+    public function getSolrConnection(): SolrConnection
+    {
+        return $this->solrConnection;
     }
 
     /**
