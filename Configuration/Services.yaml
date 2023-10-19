@@ -12,3 +12,9 @@ services:
     public: true
     autowire: true
     tags: ['backend.controller']
+
+  ApacheSolrForTypo3\Tika\Lowlevel\EventListener\BlindedSecrets:
+    tags:
+      - name: event.listener
+        identifier: 'tika/blind-secrets-for-tika'
+        event: 'TYPO3\CMS\Lowlevel\Event\ModifyBlindedConfigurationOptionsEvent'
