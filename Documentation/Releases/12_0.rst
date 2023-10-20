@@ -2,6 +2,52 @@
 ..  index:: Releases
 ..  _releases-tika-12_0:
 
+
+==============
+Release 12.0.1
+==============
+
+This release is relevant for Apache Solr Cell/server users only. To be able to use Apache Solr server as extractor.
+
+Important for Solr Cell users
+-----------------------------
+
+- !!![BUGFIX] SolrCell broken due of EXT:solr BC change on connection conf `cdd7134 on @2023-10-19 <https://github.com/TYPO3-Solr/ext-tika/commit/cdd7134>`_ (thanks to Rafael Kähm)
+
+EXT:solr 12.0.0 requires separate configurations for
+:php:`path` + :php:`core` and :php:`username` + :php:`password`.
+All this settings must be given separately now.
+The :php:`path` setting is handled the same way as in EXT:solr also:
+
+     Must not contain "/solr/"! Unless you have an additional "solr" segment in your path like "http://localhost:8983/solr/solr/core_en".
+
+
+.. tip::
+
+       All settings of Solr accept the :php:`%env(<SOME_SOLR_ENV_VAR>)%` syntax like on site-config now.
+
+       If the settings for :php:`solrUsername` or :php:`solrPassword` do not contain the :php:`%env(<SOME_SOLR_ENV_VAR>)%`,
+       then they are blinded, to avoid the accidental release of secrets and credentials via TYPO3 backend configuration Tools like:
+
+       * Extension Settings module
+       * Configuration module
+
+
+..  figure:: /Images/BE_Settings_ExtensionConfiguration_Solr.png
+    :class: with-shadow
+    :alt: Extension configuration for EXT:tika - Solr Cell configuration
+
+    Extension configuration for EXT:tika - Solr Cell configuration
+
+All other changes
+~~~~~~~~~~~~~~~~~
+
+- [TASK] Fix PHP-CS for single_line_empty_body rule `73e17bb on @2023-09-22 <https://github.com/TYPO3-Solr/ext-tika/commit/73e17bb>`_ (thanks to Rafael Kähm)
+- [BUGFIX] Actions replace LOCAL_VOLUME_NAME with SOLR_VOLUME_NAME `86ce68a on @2023-09-22 <https://github.com/TYPO3-Solr/ext-tika/commit/86ce68a>`_ (thanks to Rafael Kähm)
+- [BUGFIX] Remove debug logging from Reports and print the troubles directly `1a2a8ec on @2023-10-19 <https://github.com/TYPO3-Solr/ext-tika/commit/1a2a8ec>`_ (thanks to Rafael Kähm)
+- [FEATURE] Blind the Solr Cell crendetials in TYPO3 configuration tools `6618965 on @2023-10-19 <https://github.com/TYPO3-Solr/ext-tika/commit/6618965>`_ (thanks to Rafael Kähm)
+- [DOC] reafactor the docs `c899cf8 on @2023-10-19 <https://github.com/TYPO3-Solr/ext-tika/commit/c899cf8>`_ (thanks to Rafael Kähm)
+
 ==============
 Release 12.0.0
 ==============

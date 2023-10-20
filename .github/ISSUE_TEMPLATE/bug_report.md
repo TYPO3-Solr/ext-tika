@@ -28,10 +28,10 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Used versions (please complete the following information):**
- - TYPO3 Version: [e.g. 12.0.0]
+ - TYPO3 Version: [e.g. 12.4.7]
  - Browser: [e.g. chrome, safari]
- - EXT:solr Version: [e.g. 12.0.0]
- - EXT:tika Version: [e.g. 12.0.0]
+ - EXT:solr Version: [e.g. 12.0.x]
+ - EXT:tika Version: [e.g. 12.0.1]
  - Used Apache Solr Version: [e.g. 9.3.0]
  - PHP Version: [e.g. 8.1.0]
  - MySQL Version: [e.g. 8.0.0]
