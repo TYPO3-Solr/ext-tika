@@ -23,7 +23,7 @@
     "typo3-ter/tika": "self.version"
   },
   "require": {
-    "php": ">=7.4 <=8.2.99",
+    "php": ">=7.4 <=8.3.99",
     "ext-json": "*",
     "ext-pdo": "*",
     "typo3/cms-backend": "^11.5",
