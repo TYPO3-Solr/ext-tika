@@ -18,6 +18,9 @@ excludeMimeTypes =
 # cat=general//50; type=string; label=File size limit when a file should be processed (configured in MB)
 fileSizeLimit = 500
 
+# cat=general//60; type=boolean; label=Enable meta data extraction: Registers MetaDataExtractor, including LanguageDetector, if available.
+registerMetaDataExtractor = 1
+
 #  cat=jar//10; type=string; label=Tika App Jar Path: The absolute path to your Apache Tika app jar file (tika-app-x.x.jar)
 tikaPath =
 

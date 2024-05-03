@@ -20,14 +20,18 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions']
 );
 
-/** @var ExtractorRegistry $metaDataExtractorRegistry */
-$metaDataExtractorRegistry = GeneralUtility::makeInstance(ExtractorRegistry::class);
-$metaDataExtractorRegistry->registerExtractionService(MetaDataExtractor::class);
-
 $extConf = Util::getTikaExtensionConfiguration();
-if ($extConf['extractor'] !== 'solr') {
-    $metaDataExtractorRegistry->registerExtractionService(LanguageDetector::class);
+$registerMetaDataExtractorConf = $extConf['registerMetaDataExtractor'] ?? 1;
+if ($registerMetaDataExtractorConf == 1) {
+    /** @var ExtractorRegistry $metaDataExtractorRegistry */
+    $metaDataExtractorRegistry = GeneralUtility::makeInstance(ExtractorRegistry::class);
+    $metaDataExtractorRegistry->registerExtractionService(MetaDataExtractor::class);
+
+    if ($extConf['extractor'] !== 'solr') {
+        $metaDataExtractorRegistry->registerExtractionService(LanguageDetector::class);
+    }
 }
+
 unset($extConf);
 
 /** @var TextExtractorRegistry $textExtractorRegistry */
