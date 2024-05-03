@@ -6,6 +6,8 @@
 Release 3.1.2
 =============
 
+..  include:: ../HintAboutOutdatedChangelog.rst.txt
+
 We are happy to announce version 3.1.2 of EXT:tika.
 
 New in this Release

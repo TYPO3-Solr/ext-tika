@@ -6,6 +6,8 @@
 Release 2.4.0
 =============
 
+..  include:: ../HintAboutOutdatedChangelog.rst.txt
+
 We are happy to announce version 2.4.0 of EXT:tika.
 This is the release for TYPO3 CMS LTS 8.
 

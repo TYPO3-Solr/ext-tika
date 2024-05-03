@@ -26,7 +26,6 @@ Open Extension settings for EXT:tika **General** tab and choose **"Solr Server"*
 ..  figure:: /Images/BE_Settings_ExtensionConfiguration_General.png
     :class: with-shadow
     :alt: Extension configuration for EXT:tika - Choosing Solr Server extractor in General tab
-    :width: 60%
 
     Extension configuration for EXT:tika - Choosing Solr Server extractor in General tab
 

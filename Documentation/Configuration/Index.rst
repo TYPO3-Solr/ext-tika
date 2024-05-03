@@ -11,7 +11,6 @@ All the settings for the extension can be made through the TYPO3 Extension Confi
 ..  figure:: /Images/BE_Settings_ExtensionConfiguration_General.png
     :class: with-shadow
     :alt: Extension configuration for EXT:tika
-    :width: 60%
 
 
 Extractor
