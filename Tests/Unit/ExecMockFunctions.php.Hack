@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpRedeclarationStdlibFunctionInspection */
 
 /**
  * Don't define strict_types on this place because of inclusion in {@link ExecRecorder}
@@ -27,6 +27,7 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
 
 /**
  * exec() mock to capture invocation parameters for the actual \exec() function
+ * @noinspection PhpUnusedParameterInspection
  */
 function exec(string $command, array &$output = null, int &$result_code = null): string|false
 {

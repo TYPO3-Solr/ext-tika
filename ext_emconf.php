@@ -10,7 +10,6 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Ingo Renner, Timo Hund, Markus Friedrich, Rafael Kähm',
     'author_email' => 'solr-eb-support@dkd.de',
     'author_company' => 'dkd Internet Service GmbH',
-    'clearCacheOnLoad' => true,
     'constraints' => [
         'depends' => [
             'typo3' => '12.4.2-12.4.99',
@@ -26,5 +25,4 @@ $EM_CONF[$_EXTKEY] = [
             'ApacheSolrForTypo3\\Tika\\' => 'Classes/',
         ],
     ],
-    '_md5_values_when_last_written' => '',
 ];

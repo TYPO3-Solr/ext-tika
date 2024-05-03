@@ -35,13 +35,13 @@
   },
   "require-dev": {
     "apache-solr-for-typo3/solr": "dev-main",
-    "dg/bypass-finals": "^1.4",
+    "dg/bypass-finals": "^1.6",
     "phpstan/phpstan": "^1.10",
     "phpstan/phpstan-phpunit": "^1.3",
-    "phpunit/phpunit": "^9.5",
+    "phpunit/phpunit": "^10.1",
     "typo3/cms-lowlevel": "*",
     "typo3/coding-standards": "~0.7.1",
-    "typo3/testing-framework": "^7.0.2"
+    "typo3/testing-framework": "^8.0"
   },
   "suggest": {
     "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr.",
@@ -65,7 +65,12 @@
     "allow-plugins": true,
     "optimize-autoloader": true,
     "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin"
+    "bin-dir": ".Build/bin",
+    "preferred-install": {
+      "apache-solr-for-typo3/solr": "source",
+      "typo3/cms-core": "source",
+      "*": "dist"
+    }
   },
   "scripts-descriptions": {
     "t3:docs:build": "Renders the docs. Note: Can not run inside docker container, because uses TYPO3 dockrun_t3rd",
@@ -126,14 +131,12 @@
       "@tests:env",
       "@composer req --update-with-all-dependencies typo3/cms-core:${TYPO3_VERSION}",
       "@composer req --dev --update-with-all-dependencies apache-solr-for-typo3/solr:dev-main",
-      "@composer reinstall --prefer-source typo3/cms-core apache-solr-for-typo3/solr",
-      "@composer dump-autoload",
       "cp .Build/vendor/apache-solr-for-typo3/solr/.php-cs-fixer.php .",
       "@tests:restore-git",
       "if [ ! -f \"${TIKA_PATH}/tika-app-$($COMPOSER_BINARY tika:req:tika).jar\" ]; then $COMPOSER_BINARY tika:download -- -D \"${TIKA_PATH}\" -C -a; fi"
     ],
-    "tests:unit": [ "phpunit --colors -c Build/Test/UnitTests.xml --bootstrap=Build/Test/UnitTestsBootstrap.php" ],
-    "tests:integration": [ "phpunit --colors -c Build/Test/IntegrationTests.xml --bootstrap=Build/Test/IntegrationTestsBootstrap.php" ],
+    "tests:unit": [ "phpunit --colors -c Build/Test/UnitTests.xml" ],
+    "tests:integration": [ "phpunit --colors -c Build/Test/IntegrationTests.xml" ],
     "tests:phpstan": [
       "phpstan analyze -c Build/Test/phpstan.neon"
     ],

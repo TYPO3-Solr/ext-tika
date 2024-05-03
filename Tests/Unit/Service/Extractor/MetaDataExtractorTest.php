@@ -20,7 +20,12 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Extractor;
 use ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Exception as MockObjectException;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Client\ClientExceptionInterface;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Resource\File;
 
 /**
@@ -35,7 +40,7 @@ class MetaDataExtractorTest extends UnitTestCase
      *
      * @return array
      */
-    protected function getFakedExtratorResponseForJGEPImage()
+    protected function getFakedExtratorResponseForJGEPImage(): array
     {
         return [
             'Comments' => 'Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.',
@@ -69,8 +74,10 @@ class MetaDataExtractorTest extends UnitTestCase
     }
 
     /**
-     * @test
+     * @throws ClientExceptionInterface
+     * @throws MockObjectException
      */
+    #[Test]
     public function extractMetaDataReturnsNormalizedMetaData(): void
     {
         $fakedTikaExtractResponse = $this->getFakedExtratorResponseForJGEPImage();
@@ -93,8 +100,12 @@ class MetaDataExtractorTest extends UnitTestCase
     }
 
     /**
-     * @test
+     * @throws MockObjectException
+     * @throws ClientExceptionInterface
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
+    #[Test]
     public function canProcessReturnsFalseForExeFile(): void
     {
         $tikaAppServiceMock = $this->createMock(AppService::class);
@@ -113,8 +124,12 @@ class MetaDataExtractorTest extends UnitTestCase
     }
 
     /**
-     * @test
+     * @throws ClientExceptionInterface
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws MockObjectException
      */
+    #[Test]
     public function canProcessReturnsTrueForSxwFile(): void
     {
         $tikaAppServiceMock = $this->createMock(AppService::class);
