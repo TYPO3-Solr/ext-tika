@@ -1,3 +1,23 @@
+..  include:: /Includes.rst.txt
+..  index:: Releases
+.. _releases-11-0:
+
+=============
+Releases 11.0
+=============
+
+Release 11.0.2
+==============
+
+We are happy to release version 11.0.2 of EXT:tika.
+
+New in this Release
+-------------------
+
+- [BUGFIX] Actions replace LOCAL_VOLUME_NAME with SOLR_VOLUME_NAME `6e474bd <https://github.com/TYPO3-Solr/ext-tika/commit/6e474bd>`_
+- [TASK] Raise PHP restriction to 8.3.99 on release-11.0.x `998fff8 <https://github.com/TYPO3-Solr/ext-tika/commit/998fff8>`_
+
+
 ==========================================================
 Apache Solr for TYPO3 - Tika Addon version 11.0.1 released
 ==========================================================

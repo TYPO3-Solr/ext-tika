@@ -1,6 +1,13 @@
-==========================================================
-Apache Solr for TYPO3 - Tika Addon version 6.0.2 released
-==========================================================
+..  include:: /Includes.rst.txt
+..  index:: Releases
+.. .. _releases-archive-6-0::
+
+============
+Releases 6.0
+============
+
+Release 6.0.2
+=============
 
 **Important**:
 This version contains CVE-2021-44228 fixes for users, who starting
@@ -26,9 +33,8 @@ Example:
        ],
    ];
 
-==========================================================
-Apache Solr for TYPO3 - Tika Addon version 6.0.1 released
-==========================================================
+Release 6.0.1
+=============
 
 **Important**:
 This version contains CVE-2021-44228 fixes for users, who starting
@@ -36,9 +42,8 @@ the Tika Server-daemons within TYPO3 BE or using Tika app modes.
 All users using dedicated Tika server or Apache Solr Tika cell connections do not benefit from the update
 and should harden the Solr Servers and/or Tika Servers with official CVE-2021-44228 patches manually.
 
-=========================================================
-Apache Solr for TYPO3 - Tika Addon version 6.0.0 released
-=========================================================
+Release 6.0.0
+=============
 
 We are happy to announce version 6.0.0 of EXT:tika.
 

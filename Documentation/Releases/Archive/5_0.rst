@@ -1,6 +1,13 @@
-=========================================================
-Apache Solr for TYPO3 - Tika Addon version 5.0.1 released
-=========================================================
+..  include:: /Includes.rst.txt
+..  index:: Releases
+.. .. _releases-archive-5-0::
+
+============
+Releases 5.0
+============
+
+Release 5.0.1
+=============
 
 We are happy to announce version 5.0.1 of EXT:tika.
 
@@ -18,9 +25,8 @@ Thanks
 
 * Rostyslav Matviyiv
 
-=========================================================
-Apache Solr for TYPO3 - Tika Addon version 5.0.0 released
-=========================================================
+Release 5.0.0
+=============
 
 We are happy to announce version 5.0.0 of EXT:tika.
 
