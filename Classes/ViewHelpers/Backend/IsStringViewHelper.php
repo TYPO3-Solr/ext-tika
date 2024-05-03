@@ -31,7 +31,7 @@ class IsStringViewHelper extends AbstractConditionViewHelper
      *
      * @noinspection PhpUnused
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('value', 'mixed', 'Value to be verified.', true);

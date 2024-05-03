@@ -12,7 +12,7 @@ $EM_CONF[$_EXTKEY] = [
     'author_company' => 'dkd Internet Service GmbH',
     'constraints' => [
         'depends' => [
-            'typo3' => '12.4.2-12.4.99',
+            'typo3' => '12.4.3-12.4.99',
             'filemetadata' => '',
         ],
         'conflicts' => [],
