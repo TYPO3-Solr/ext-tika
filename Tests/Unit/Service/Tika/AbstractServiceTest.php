@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
 
 use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
+use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -19,7 +20,7 @@ use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
  * The TYPO3 project - inspiring people to share!
  */
 
-use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Class AbstractServiceTest
@@ -28,9 +29,7 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
  */
 class AbstractServiceTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function constructorCallsInitializeService(): void
     {
         $service = $this->getMockBuilder(AbstractService::class)

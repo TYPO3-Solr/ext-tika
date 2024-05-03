@@ -32,13 +32,13 @@ class UnitTestCase extends TYPO3TestingFrameworkUnitTestCase
      */
     protected function getFixturePath(string $fixtureName): string
     {
-        return $this->getRuntimeDirectory() . '/Fixtures/' . $fixtureName;
+        return self::getRuntimeDirectory() . '/Fixtures/' . $fixtureName;
     }
 
     /**
      * Returns the directory on runtime.
      */
-    protected function getRuntimeDirectory(): string
+    protected static function getRuntimeDirectory(): string
     {
         $rc = new ReflectionClass(static::class);
         return dirname($rc->getFileName());

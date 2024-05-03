@@ -72,6 +72,11 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         'typo3conf/ext/tika',
     ];
 
+    protected array $coreExtensionsToLoad = [
+        'typo3/cms-scheduler',
+        'typo3/cms-filemetadata',
+    ];
+
     /**
      * Avoid serialization of some properties containing objects
      */
@@ -91,7 +96,9 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $this->singletonInstances = GeneralUtility::getSingletonInstances();
 
         // Disable xml2array cache used by ResourceFactory
-        GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
+        /** @var CacheManager $cacheManager */
+        $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
+        $cacheManager->setCacheConfigurations([
             'hash' => [
                 'frontend' => VariableFrontend::class,
                 'backend' => TransientMemoryBackend::class,

@@ -20,11 +20,16 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend;
 use ApacheSolrForTypo3\Tika\Controller\Backend\PreviewController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Exception as MockObjectException;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Class PreviewControllerTest
@@ -34,17 +39,23 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 class PreviewControllerTest extends UnitTestCase
 {
     /**
-     * @test
+     * @throws Throwable
+     * @throws MockObjectException
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function previewActionTriggersTikaServices(): void
     {
         /** @var PreviewController|MockObject $controller */
-        $controller = $this->getMockBuilder(PreviewController::class)->onlyMethods([
-            'getConfiguredTikaService',
-            'getFileResourceFactory',
-            'getInitializedPreviewView',
-            'getIsAdmin',
-        ])->getMock();
+        $controller = $this->getMockBuilder(PreviewController::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'getConfiguredTikaService',
+                'getFileResourceFactory',
+                'getInitializedPreviewView',
+                'getIsAdmin',
+            ])
+            ->getMock();
 
         $fileMock = $this->createMock(FileInterface::class);
         $fileResourceFactoryMock = $this->createMock(ResourceFactory::class);
@@ -59,24 +70,29 @@ class PreviewControllerTest extends UnitTestCase
 
         $controller->expects(self::once())->method('getIsAdmin')->willReturn(true);
         $controller->expects(self::once())->method('getConfiguredTikaService')->willReturn($serviceMock);
+        $controller->expects(self::once())->method('getInitializedPreviewView')->willReturn($this->createMock(StandaloneView::class));
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::once())->method('getQueryParams')->willReturn(['identifier' => '']);
+
         $controller->previewAction($request);
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws MockObjectException
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function previewActionShowsErrorWhenNoAdmin(): void
     {
         /** @var PreviewController|MockObject $controller */
-        $controller = $this->getMockBuilder(PreviewController::class)->onlyMethods([
-            'getConfiguredTikaService',
-            'getFileResourceFactory',
-            'getInitializedPreviewView',
-            'getIsAdmin',
-        ])->getMock();
+        $controller = $this->getMockBuilder(PreviewController::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'getIsAdmin',
+            ])
+            ->getMock();
         $controller->expects(self::once())->method('getIsAdmin')->willReturn(false);
 
         $request = $this->createMock(ServerRequestInterface::class);

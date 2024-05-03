@@ -20,8 +20,13 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures\ServerServiceFixture;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Exception as MockObjectException;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\NullLogger;
+use Throwable;
 use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -33,6 +38,35 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ServerServiceTest extends ServiceIntegrationTestCase
 {
+    /**
+     * @return ServerService
+     * @throws MockObjectException
+     */
+    public function getServerServiceTestable(): ServerService
+    {
+        $this->getRegistryMockObject()
+            ->expects(self::atLeastOnce())
+            ->method('get')
+            ->with('tx_tika', 'server.pid')
+            ->willReturn('');
+
+        /** @var Process|MockObject $processMock */
+        $processMock = $this->createMock(Process::class);
+        $processMock
+            ->expects(self::atLeastOnce())
+            ->method('findPid')
+            ->willReturn(1000);
+        GeneralUtility::addInstance(Process::class, $processMock);
+
+        $service = new ServerService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
+        return $service;
+    }
+
+    /**
+     * @throws MockObjectException
+     * @noinspection PhpUnusedParameterInspection
+     */
     protected function getRegistryMockObject(array $onlyMethods = ['get', 'set', 'remove']): Registry|MockObject
     {
         /** @var Registry|MockObject $registryMock */
@@ -42,8 +76,9 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function startServerStoresPidInRegistry(): void
     {
         $this->getRegistryMockObject()
@@ -73,8 +108,9 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function stopServerRemovesPidFromRegistry(): void
     {
         $registryMock = $this->getRegistryMockObject();
@@ -109,8 +145,9 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function getServerPidGetsPidFromRegistry(): void
     {
         $this->getRegistryMockObject()
@@ -126,34 +163,21 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function getServerPidFallsBackToProcess(): void
     {
-        $this->getRegistryMockObject()
-            ->expects(self::atLeastOnce())
-            ->method('get')
-            ->with('tx_tika', 'server.pid')
-            ->willReturn('');
-
-        /** @var Process|MockObject $processMock */
-        $processMock = $this->createMock(Process::class);
-        $processMock
-            ->expects(self::atLeastOnce())
-            ->method('findPid')
-            ->willReturn(1000);
-        GeneralUtility::addInstance(Process::class, $processMock);
-
-        $service = new ServerService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
+        $service = $this->getServerServiceTestable();
         $pid = $service->getServerPid();
 
         self::assertEquals(1000, $pid);
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function isServerRunningReturnsTrueForRunningServerFromRegistry(): void
     {
         $this->getRegistryMockObject()
@@ -168,32 +192,19 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function isServerRunningReturnsTrueForRunningServerFromProcess(): void
     {
-        $this->getRegistryMockObject()
-            ->expects(self::atLeastOnce())
-            ->method('get')
-            ->with('tx_tika', 'server.pid')
-            ->willReturn('');
-
-        /** @var Process|MockObject $processMock */
-        $processMock = $this->createMock(Process::class);
-        $processMock
-            ->expects(self::atLeastOnce())
-            ->method('findPid')
-            ->willReturn(1000);
-        GeneralUtility::addInstance(Process::class, $processMock);
-
-        $service = new ServerService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
+        $service = $this->getServerServiceTestable();
         self::assertTrue($service->isServerRunning());
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function isServerRunningReturnsFalseForStoppedServer(): void
     {
         $this->getRegistryMockObject()
@@ -215,9 +226,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         self::assertFalse($service->isServerRunning());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getTikaUrlBuildsUrlFromConfiguration(): void
     {
         $tikaExtensionConfiguration = $this->getConfiguration();
@@ -236,8 +245,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function extractTextQueriesTikaEndpoint(): void
     {
         $service = new ServerServiceFixture($this->getConfiguration());
@@ -248,8 +259,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function extractMetaDataQueriesMetaEndpoint(): void
     {
         $service = new ServerServiceFixture($this->getConfiguration());
@@ -260,8 +273,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function detectLanguageFromFileQueriesLanguageStreamEndpoint(): void
     {
         $service = new ServerServiceFixture($this->getConfiguration());
@@ -275,8 +290,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function detectLanguageFromStringQueriesLanguageStringEndpoint(): void
     {
         $service = new ServerServiceFixture($this->getConfiguration());
@@ -304,8 +321,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function extractsMetaDataFromDocFile(): void
     {
         $service = new ServerService($this->getTikaServerConfiguration());
@@ -327,8 +346,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function extractsMetaDataFromMp3File(): void
     {
         $service = new ServerService($this->getTikaServerConfiguration());
@@ -347,8 +368,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function extractsTextFromDocFile(): void
     {
         $service = new ServerService($this->getTikaServerConfiguration());
@@ -361,8 +384,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function extractsTextFromZipFile(): void
     {
         $service = new ServerService($this->getTikaServerConfiguration());
@@ -386,7 +411,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
      *
      * @return array
      */
-    public function languageFileDataProvider(): array
+    public static function languageFileDataProvider(): array
     {
         return [
             'danish' => ['da'],
@@ -406,9 +431,11 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
-     * @dataProvider languageFileDataProvider
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
+    #[DataProvider('languageFileDataProvider')]
     public function detectsLanguageFromFile($language): void
     {
         $service = new ServerService($this->getTikaServerConfiguration());
@@ -428,9 +455,11 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
-     * @dataProvider languageFileDataProvider
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
+    #[DataProvider('languageFileDataProvider')]
     public function detectsLanguageFromString($language): void
     {
         $service = new ServerService($this->getTikaServerConfiguration());
@@ -445,8 +474,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws Throwable
+     * @throws ClientExceptionInterface
      */
+    #[Test]
     public function canGetMimeTypesFromServerAndParseThem(): void
     {
         $service = new ServerService($this->getTikaServerConfiguration());
@@ -456,9 +487,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         self::assertContains('application/vnd.openxmlformats-officedocument.wordprocessingml.document', $mimeTypes, 'Server did not indicate to support docx documents');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canPing(): void
     {
         $service = new ServerService($this->getTikaServerConfiguration());

@@ -22,9 +22,12 @@ use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -35,9 +38,28 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ServiceFactoryTest extends ServiceIntegrationTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        /** @var CacheManager $cacheManager */
+        $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
+        $cacheManager->setCacheConfigurations([
+            'cache_hash' => [
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class,
+            ],
+            'cache_runtime' => [
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class,
+            ],
+        ]);
+    }
+
     /**
-     * @test
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
+    #[Test]
     public function getTikaReturnsAppServiceForJarExtractor(): void
     {
         $extractor = ServiceFactory::getTika('jar', $this->getConfiguration());
@@ -45,8 +67,10 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
+    #[Test]
     public function getTikaReturnsAppServiceForTikaExtractor(): void
     {
         $extractor = ServiceFactory::getTika('tika', $this->getConfiguration());
@@ -54,8 +78,10 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
+    #[Test]
     public function getTikaReturnsServerServiceForServerExtractor(): void
     {
         $extractor = ServiceFactory::getTika('server', $this->getConfiguration());
@@ -63,8 +89,10 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
+    #[Test]
     public function getTikaReturnsSolrCellServiceForSolrExtractor(): void
     {
         if (!ExtensionManagementUtility::isLoaded('solr')) {
@@ -77,26 +105,13 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
+    #[Test]
     public function getTikaThrowsExceptionForInvalidExtractor(): void
     {
         $this->expectException(InvalidArgumentException::class);
         ServiceFactory::getTika('foo', $this->getConfiguration());
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        GeneralUtility::makeInstance(CacheManager::class)->setCacheConfigurations([
-            'cache_hash' => [
-                'frontend' => VariableFrontend::class,
-                'backend' => TransientMemoryBackend::class,
-            ],
-            'cache_runtime' => [
-                'frontend' => VariableFrontend::class,
-                'backend' => TransientMemoryBackend::class,
-            ],
-        ]);
     }
 }

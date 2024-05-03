@@ -20,7 +20,11 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit\Backend\SolrModule;
 use ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule\TikaControlPanelModuleController;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Exception as MockObjectException;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Client\ClientExceptionInterface as HttpClientExceptionInterface;
+use Throwable;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3Fluid\Fluid\View\ViewInterface;
 
@@ -37,31 +41,53 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
 
     protected ModuleTemplate|MockObject $moduleTemplateMock;
 
+    /**
+     * @throws MockObjectException
+     */
     public function setUp(): void
     {
         $this->viewMock = $this->createMock(ViewInterface::class);
+        /** @noinspection PhpUnitInvalidMockingEntityInspection See: dg/bypass-finals */
         $this->moduleTemplateMock = $this->createMock(ModuleTemplate::class);
 
-        $this->controller = $this->getMockBuilder(TikaControlPanelModuleController::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['addFlashMessage', 'getModuleTemplateResponse'])
-            ->getMock();
+        $this->controller = $this->createPartialMock(
+            TikaControlPanelModuleController::class,
+            [
+                'getFlashMessageQueue',
+                'getModuleTemplateResponse',
+            ]
+        );
         $this->controller->overwriteModuleTemplate($this->moduleTemplateMock);
         $this->controller->overwriteView($this->viewMock);
+        parent::setUp();
     }
 
     /**
      * Can the controller render the information from the tika server service.
      *
-     * @test
+     * @throws HttpClientExceptionInterface
+     * @throws Throwable
      */
+    #[Test]
     public function canShowInformationFromStandaloneTikaServer(): void
     {
         /** @var ServerService|MockObject $tikaServerService */
-        $tikaServerService = $this->createMock(ServerService::class);
+        $tikaServerService = $this->getMockBuilder(ServerService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'getServerPid',
+                'getTikaServerUri',
+                'getTikaServerUrl',
+                'getTikaVersion',
+                'getTikaVersionString',
+                'isServerRunning',
+                'ping',
+            ])
+            ->getMock();
         $tikaServerService->expects(self::atLeastOnce())->method('ping')->willReturn(true);
         $tikaServerService->expects(self::atLeastOnce())->method('isServerRunning')->willReturn(true);
         $tikaServerService->expects(self::atLeastOnce())->method('getServerPid')->willReturn(4711);
+        $tikaServerService->expects(self::atLeastOnce())->method('getTikaVersion')->willReturn('1.11');
         $tikaServerService->expects(self::atLeastOnce())->method('getTikaVersionString')->willReturn('1.11');
 
         $this->controller->setTikaService($tikaServerService);
@@ -70,21 +96,24 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
             'tikaServerPath' => $this->getFixturePath('fake-server-jar.jar'),
         ];
         $this->controller->setTikaConfiguration($tikaConfiguration);
+        $matcher = self::any();
 
-        $this->viewMock->expects(self::any())->method('assign')->withConsecutive(
-            [ 'configuration', $tikaConfiguration ],
-            [ 'extractor', ucfirst($tikaConfiguration['extractor']) ],
-            [ 'server',
-                [
-                    'isConnected' => true,
-                    'jarAvailable' => true,
-                    'isRunning' => true,
-                    'isControllable' => true,
-                    'pid' => 4711,
-                    'version' => '1.11',
+        $this->viewMock->expects($matcher)->method('assign')->willReturnCallback(function () use ($matcher, $tikaConfiguration) {
+            return match ($matcher->numberOfInvocations()) {
+                1 => [ 'configuration', $tikaConfiguration ],
+                2 => [ 'extractor', ucfirst($tikaConfiguration['extractor']) ],
+                3 => [ 'server',
+                    [
+                        'isConnected' => true,
+                        'jarAvailable' => true,
+                        'isRunning' => true,
+                        'isControllable' => true,
+                        'pid' => 4711,
+                        'version' => '1.11',
+                    ],
                 ],
-            ]
-        );
+            };
+        });
 
         $this->controller->indexAction();
     }

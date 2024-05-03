@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Tests\Unit;
 
 use ApacheSolrForTypo3\Tika\Process;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Test case for class \ApacheSolrForTypo3\Tika\Process
@@ -26,9 +27,13 @@ use ApacheSolrForTypo3\Tika\Process;
  */
 class ProcessTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    protected function setUp(): void
+    {
+        ExecRecorder::reset();
+        parent::setUp();
+    }
+
+    #[Test]
     public function constructorSetsExecutableAndArguments(): void
     {
         $process = new Process('foo', '-bar');
@@ -37,9 +42,7 @@ class ProcessTest extends UnitTestCase
         self::assertEquals('-bar', $process->getArguments());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function findPidUsesExecutableBasename(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
@@ -52,9 +55,7 @@ class ProcessTest extends UnitTestCase
         self::assertStringNotContainsString('/usr/bin', ExecRecorder::$execCommand);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isRunningUsesPid(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
@@ -67,9 +68,7 @@ class ProcessTest extends UnitTestCase
         self::assertStringContainsString('1337', ExecRecorder::$execCommand);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isRunningReturnsTrueForRunningProcess(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
@@ -81,9 +80,7 @@ class ProcessTest extends UnitTestCase
         self::assertTrue($running);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isRunningReturnsFalseForStoppedProcess(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
@@ -93,9 +90,7 @@ class ProcessTest extends UnitTestCase
         self::assertFalse($running);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function startStartsProcess(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
@@ -111,9 +106,7 @@ class ProcessTest extends UnitTestCase
         self::assertTrue($running);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function stopStopsProcess(): void
     {
         $process = new Process('/usr/bin/foo', '-bar');
@@ -130,10 +123,5 @@ class ProcessTest extends UnitTestCase
 
         $running = $process->isRunning();
         self::assertFalse($running);
-    }
-
-    protected function setUp(): void
-    {
-        ExecRecorder::reset();
     }
 }

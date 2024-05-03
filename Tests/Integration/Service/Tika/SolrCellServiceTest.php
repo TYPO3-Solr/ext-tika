@@ -20,6 +20,8 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 use ApacheSolrForTypo3\Solr\System\Solr\Service\SolrWriteService;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Exception as MockObjectException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use TYPO3\CMS\Core\Resource\File;
@@ -41,9 +43,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function newInstancesAreInitializedWithASolrConnection(): void
     {
         $service = new SolrCellService($this->getConfiguration());
@@ -52,8 +52,9 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function extractByQueryTextReturnsTextElementFromResponse(): void
     {
         $expectedValue = 'extracted text element';
@@ -68,17 +69,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                 'meta data element', // meta data is index 1
             ]);
 
-        /** @var SolrConnection|MockObject $connectionMock */
-        $connectionMock = $this->createMock(SolrConnection::class);
-        $connectionMock
-            ->expects(self::atLeastOnce())
-            ->method('getWriteService')
-            ->willReturn($solrWriter);
-
-        $service = new SolrCellService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-        $this->inject($service, 'solrConnection', $connectionMock);
-
+        $service = $this->createSolrCellServiceTestable($solrWriter);
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
@@ -92,8 +83,9 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     }
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function extractByQueryTextUsesSolariumExtractQuery(): void
     {
         $solrWriter = $this->createMock(SolrWriteService::class);
@@ -101,17 +93,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
             ->expects(self::atLeastOnce())
             ->method('extractByQuery');
 
-        /** @var SolrConnection|MockObject $connectionMock */
-        $connectionMock = $this->createMock(SolrConnection::class);
-        $connectionMock
-            ->expects(self::atLeastOnce())
-            ->method('getWriteService')
-            ->willReturn($solrWriter);
-
-        $service = new SolrCellService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-        $this->inject($service, 'solrConnection', $connectionMock);
-
+        $service = $this->createSolrCellServiceTestable($solrWriter);
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
@@ -126,8 +108,9 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
     //TODO test return value, conversion of response to array
 
     /**
-     * @test
+     * @throws MockObjectException
      */
+    #[Test]
     public function extractMetaDataUsesSolariumExtractQuery(): void
     {
         $solrWriter = $this->createMock(SolrWriteService::class);
@@ -140,18 +123,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                     ['bar'], // meta data is index 1
                 ]
             );
-
-        /** @var SolrConnection|MockObject $connectionMock */
-        $connectionMock = $this->createMock(SolrConnection::class);
-        $connectionMock
-            ->expects(self::atLeastOnce())
-            ->method('getWriteService')
-            ->willReturn($solrWriter);
-
-        $service = new SolrCellService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-        $this->inject($service, 'solrConnection', $connectionMock);
-
+        $service = $this->createSolrCellServiceTestable($solrWriter);
         $file = new File(
             [
                 'identifier' => 'testWORD.doc',
@@ -163,9 +135,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $service->extractMetaData($file);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function extractsMetaDataFromMp3File(): void
     {
         $service = new SolrCellService($this->getConfiguration());
@@ -180,5 +150,23 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
         $metaData = $service->extractMetaData($mockedFile);
         self::assertEquals('audio/mpeg', $metaData['Content-Type']);
         self::assertEquals('Test Title', $metaData['title']);
+    }
+
+    /**
+     * @throws MockObjectException
+     */
+    protected function createSolrCellServiceTestable(SolrWriteService|MockObject $solrWriter): SolrCellService
+    {
+        /** @var SolrConnection|MockObject $connectionMock */
+        $connectionMock = $this->createMock(SolrConnection::class);
+        $connectionMock
+            ->expects(self::atLeastOnce())
+            ->method('getWriteService')
+            ->willReturn($solrWriter);
+
+        $service = new SolrCellService($this->getConfiguration());
+        $service->setLogger(new NullLogger());
+        $this->inject($service, 'solrConnection', $connectionMock);
+        return $service;
     }
 }
