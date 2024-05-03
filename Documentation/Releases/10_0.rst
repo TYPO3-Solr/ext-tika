@@ -1,6 +1,13 @@
-==========================================================
-Apache Solr for TYPO3 - Tika Addon version 10.0.2 released
-==========================================================
+..  include:: /Includes.rst.txt
+..  index:: Releases
+.. _releases-10-0:
+
+=============
+Releases 10.0
+=============
+
+Release 10.0.2
+==============
 
 **Important**:
 This version contains CVE-2021-44228 fixes for users, who starting

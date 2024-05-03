@@ -6,8 +6,8 @@
 conf.py:
   copyright: since 2009
   project: Apache Tika for TYPO3
-  version: 11.0.1
-  release: 11.0.1
+  version: 11.0.2
+  release: 11.0.2
   latex_documents:
   - - Index
     - tika.tex

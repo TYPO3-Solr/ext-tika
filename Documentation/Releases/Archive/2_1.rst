@@ -1,0 +1,12 @@
+..  include:: /Includes.rst.txt
+..  index:: Releases
+.. .. _releases-archive-2-1::
+
+============
+Releases 2.1
+============
+
+Release 2.1.0
+=============
+
+In this release we provide compatibility changes that are needed to use EXT:tika with EXT:solr 4.0.0 and PHP 7.0
