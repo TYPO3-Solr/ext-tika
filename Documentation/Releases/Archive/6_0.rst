@@ -6,6 +6,8 @@
 Release 6.0.2
 =============
 
+..  include:: ../HintAboutOutdatedChangelog.rst.txt
+
 **Important**:
 This version contains CVE-2021-44228 fixes for users, who starting
 the Tika Server-daemons within TYPO3 BE or using Tika app modes.

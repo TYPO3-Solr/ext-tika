@@ -6,6 +6,8 @@
 Release 11.0.1
 ==============
 
+..  include:: HintAboutOutdatedChangelog.rst.txt
+
 This release is relevant for Apache Solr Cell/server users only.
 To be able to use Apache Solr server as extractor, the EXT:solr v11.5.1+ is required as well.
 
