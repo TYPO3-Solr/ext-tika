@@ -85,7 +85,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
             ->expects(self::atLeastOnce())
             ->method('set')
             ->with('tx_tika', 'server.pid', 1000)
-            ->willReturnCallback(function ($namespace, $key, $value) {
+            ->willReturnCallback(function($namespace, $key, $value) {
                 self::assertIsInt($value);
                 self::assertEquals(1000, $value);
             });

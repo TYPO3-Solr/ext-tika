@@ -98,7 +98,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
         $this->controller->setTikaConfiguration($tikaConfiguration);
         $matcher = self::any();
 
-        $this->viewMock->expects($matcher)->method('assign')->willReturnCallback(function () use ($matcher, $tikaConfiguration) {
+        $this->viewMock->expects($matcher)->method('assign')->willReturnCallback(function() use ($matcher, $tikaConfiguration) {
             return match ($matcher->numberOfInvocations()) {
                 1 => [ 'configuration', $tikaConfiguration ],
                 2 => [ 'extractor', ucfirst($tikaConfiguration['extractor']) ],
