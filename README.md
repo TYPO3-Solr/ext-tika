@@ -1,11 +1,11 @@
 # Apache Tika for TYPO3
 
-[![Build Status](https://github.com/TYPO3-Solr/ext-tika/actions/workflows/ci.yml/badge.svg?branch=release-12.0.x)](https://github.com/TYPO3-Solr/ext-tika/actions?query=branch:release-12.0.x)
+[![Build Status](https://github.com/TYPO3-Solr/ext-tika/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TYPO3-Solr/ext-tika/actions?query=branch:main)
 [![Latest Stable Version](https://poser.pugx.org/apache-solr-for-typo3/tika/v/stable)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![License](https://poser.pugx.org/apache-solr-for-typo3/tika/license)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![Total Downloads](http://poser.pugx.org/apache-solr-for-typo3/tika/downloads)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![Monthly Downloads](https://poser.pugx.org/apache-solr-for-typo3/tika/d/monthly)](https://packagist.org/packages/apache-solr-for-typo3/tika)
-[![TYPO3 12](https://img.shields.io/badge/TYPO3-12-orange.svg?style=flat-square)](https://get.typo3.org/version/12)
+[![TYPO3 13](https://img.shields.io/badge/TYPO3-13-orange.svg?style=flat-square)](https://get.typo3.org/version/13)
 
 A TYPO3 CMS extension that provides Apache Tika functionality including
 
@@ -41,9 +41,9 @@ To run the test suite locally, please use our DDEV docker environment https://gi
 
 **Note**:
   This requires a proper combination of branches:
-* solr-ddev-site on release-12.0.x/main branch
-    * packages/ext-solr on release-12.0.x/main
-    * packages/ext-tika on release-12.0.x/main
+* solr-ddev-site on main branch
+    * packages/ext-solr on main
+    * packages/ext-tika on main
 * Please refer to [version matrix](https://raw.githubusercontent.com/TYPO3-Solr/ext-solr/main/Documentation/Appendix/VersionMatrix.rst) for proper combination of branches
 
 ```shell
