@@ -12,7 +12,7 @@ env:
   CI_BUILD_DIRECTORY: '/home/runner/work/ext-tika/ext-tika/.Build'
   TIKA_PATH: '/home/runner/work/ext-tika/ext-tika/.Build/data-tika-binaries'
 
-  SOLR_IMAGE_TAG: '12.0.x-dev'
+  SOLR_IMAGE_TAG: '13.0.x-dev'
   SOLR_CONTAINER_NAME: 'solrci-container'
   TESTING_SOLR_PORT: 8983
   SOLR_VOLUME_NAME: 'solrci-volume'
@@ -35,8 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        PHP: [ '8.1', '8.2', '8.3' ]
-        TYPO3: [ '^12.4', '12.4.x-dev' ]
+        PHP: [ '8.2', '8.3' ]
+        TYPO3: [ 'dev-main' ]
     env:
       TYPO3_DATABASE_NAME: 'typo3_ci'
       TYPO3_DATABASE_HOST: '127.0.0.1'
