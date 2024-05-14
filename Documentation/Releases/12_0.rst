@@ -2,7 +2,18 @@
 ..  index:: Releases
 ..  _releases-tika-12_0:
 
+==============
+Release 12.0.2
+==============
 
+This is maintenance release for TYPO3 12.
+
+- [DOCS] Fix repository URL in documentation `6cbc6f2 <https://github.com/TYPO3-Solr/ext-tika/commit/6cbc6f2>`_ (thanks to @eliashaeussler)
+- [TASK] Upgrade to PHPUnit:10.1 and typo3/testing-framework 8.0+ `04716c0 <https://github.com/TYPO3-Solr/ext-tika/commit/04716c0>`_ (thanks to @dkd-kaehm)
+- [FEATURE] add config option for MetaDataExtractor `8b10fd7 <https://github.com/TYPO3-Solr/ext-tika/commit/8b10fd7>`_ (thanks to @hvomlehn-sds)
+- [TASK] Add tests for documentation `c9e18ca <https://github.com/TYPO3-Solr/ext-tika/commit/c9e18ca>`_ (thanks to @dkd-kaehm)
+- [TASK] Set min. TYPO3  version to 12.4.3 `4a9e209 <https://github.com/TYPO3-Solr/ext-tika/commit/4a9e209>`_ (thanks to @dkd-kaehm)
+- [DOCS] Fix repository URL in releases documentation `3f3250e <https://github.com/TYPO3-Solr/ext-tika/commit/3f3250e>`_ (thanks to @dkd-kaehm)
 ==============
 Release 12.0.1
 ==============
@@ -89,6 +100,7 @@ Contributors
 
 - Elias Häußler
 - Georg Ringer
+- Hendrik vom Lehn
 - Lars Tode
 - Markus Friedrich
 - Peter Kraume
