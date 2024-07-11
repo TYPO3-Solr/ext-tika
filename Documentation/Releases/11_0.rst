@@ -2,11 +2,14 @@
 ..  index:: Releases
 ..  _releases-tika-11_0:
 
-==============
-Release 11.0.1
-==============
+=============
+Releases 11.0
+=============
 
 ..  include:: HintAboutOutdatedChangelog.rst.txt
+
+Release 11.0.1
+==============
 
 This release is relevant for Apache Solr Cell/server users only.
 To be able to use Apache Solr server as extractor, the EXT:solr v11.5.1+ is required as well.
@@ -20,7 +23,6 @@ Bugfixes:
 - [TASK] Remove strict_type from ext_emconf to be able to publish in TER `94803dc <https://github.com/TYPO3-Solr/ext-tika/commit/94803dc>`_
 
 
-==============
 Release 11.0.0
 ==============
 
