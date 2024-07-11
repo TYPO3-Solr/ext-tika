@@ -22,8 +22,6 @@ use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Test case for class \ApacheSolrForTypo3\Tika\Process
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class ProcessTest extends UnitTestCase
 {

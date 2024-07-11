@@ -33,13 +33,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ServerServiceTest
- *
- * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 class ServerServiceTest extends ServiceIntegrationTestCase
 {
     /**
-     * @return ServerService
      * @throws MockObjectException
      */
     public function getServerServiceTestable(): ServerService
@@ -408,8 +405,6 @@ class ServerServiceTest extends ServiceIntegrationTestCase
 
     /**
      * Data provider fro detectsLanguageFromFile
-     *
-     * @return array
      */
     public static function languageFileDataProvider(): array
     {

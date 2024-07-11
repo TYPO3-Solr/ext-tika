@@ -33,8 +33,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class AppServiceTest
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class ServiceFactoryTest extends ServiceIntegrationTestCase
 {

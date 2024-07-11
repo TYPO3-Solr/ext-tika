@@ -21,6 +21,7 @@ use ApacheSolrForTypo3\Tika\Service\File\SizeValidator;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Util;
 use Psr\Http\Client\ClientExceptionInterface;
+use Throwable;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Resource\FileInterface;
@@ -29,21 +30,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * A service to extract text from files using Apache Tika
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class TextExtractor implements TextExtractorInterface
 {
-    /**
-     * @var array
-     */
     protected array $configuration;
 
     /**
      * Supported file types (by extension)
      * @TODO query Tika for supported extensions
-     *
-     * @var array
      */
     protected array $supportedFileTypes = [
         'doc',
@@ -65,13 +59,13 @@ class TextExtractor implements TextExtractorInterface
         'zip',
     ];
 
-    /**
-     * @var SizeValidator
-     */
-    private $fileSizeValidator;
+    private SizeValidator $fileSizeValidator;
 
     /**
      * Constructor
+     *
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public function __construct()
     {
@@ -81,9 +75,6 @@ class TextExtractor implements TextExtractorInterface
 
     /**
      * Checks if the given file can be processed by this Extractor
-     *
-     * @param FileInterface $file
-     * @return bool
      */
     public function canExtractText(FileInterface $file): bool
     {
@@ -96,11 +87,13 @@ class TextExtractor implements TextExtractorInterface
     /**
      * Extracts text from a file using Apache Tika
      *
-     * @param FileInterface $file
-     * @return string Text extracted from the input file
+     * @param FileInterface $file File to extract text from
+     * @return string The extracted text from the input file
+     *
      * @throws ClientExceptionInterface
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws Throwable
      */
     public function extractText(FileInterface $file): string
     {

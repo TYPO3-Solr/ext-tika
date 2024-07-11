@@ -22,38 +22,28 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 /**
  * A common interface for the different ways of accessing Tika, e.g. app,
  * server, and Solr Cell.
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 interface ServiceInterface
 {
     /**
      * Gets the Tika version
-     *
-     * @return string
      */
     public function getTikaVersion(): string;
 
     /**
      * Takes a file reference and extracts the text from it.
-     *
-     * @param FileInterface $file
-     * @return string
      */
     public function extractText(FileInterface $file): string;
 
     /**
      * Takes a file reference and extracts its meta-data.
-     *
-     * @param FileInterface $file
-     * @return array
      */
     public function extractMetaData(FileInterface $file): array;
 
     /**
      * Takes a file reference and detects its content's language.
      *
-     * @param FileInterface $file
+     * @param FileInterface $file File to detect language from
      * @return string Language ISO code
      */
     public function detectLanguageFromFile(FileInterface $file): string;
@@ -61,20 +51,15 @@ interface ServiceInterface
     /**
      * Takes a string as input and detects its language.
      *
-     * @param string $input
+     * @param string $input String to detect language from
      * @return string Language ISO code
      */
     public function detectLanguageFromString(string $input): string;
 
-    /**
-     * @return array
-     */
     public function getSupportedMimeTypes(): array;
 
     /**
      * Public method to check the availability of this service.
-     *
-     * @return bool
      */
     public function isAvailable(): bool;
 }

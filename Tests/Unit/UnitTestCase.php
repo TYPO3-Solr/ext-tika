@@ -22,8 +22,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase as TYPO3TestingFrameworkUnitTe
 
 /**
  * Testcase to check if the status check returns the expected results.
- *
- * @author Timo Hund <timo.hund@dkd.de>
  */
 class UnitTestCase extends TYPO3TestingFrameworkUnitTestCase
 {

@@ -40,14 +40,9 @@ use function str_starts_with;
 
 /**
  * A Tika service implementation using the tika-server.jar
- *
- * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 class ServerService extends AbstractService
 {
-    /**
-     * @var ClientInterface
-     */
     protected ClientInterface $psr7Client;
 
     /**
@@ -242,7 +237,6 @@ class ServerService extends AbstractService
     /**
      * Query a Tika server endpoint
      *
-     * @param RequestInterface $request
      * @return string Tika output
      *
      * @throws ClientExceptionInterface

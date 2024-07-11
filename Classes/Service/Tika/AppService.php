@@ -26,14 +26,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * A Tika service implementation using the tika-app.jar
- *
- * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 class AppService extends AbstractService
 {
-    /**
-    * @var array
-    */
     protected static array $supportedMimeTypes = [];
 
     /**
@@ -72,9 +67,6 @@ class AppService extends AbstractService
 
     /**
      * Takes a file reference and extracts the text from it.
-     *
-     * @param FileInterface $file
-     * @return string
      */
     public function extractText(FileInterface $file): string
     {
@@ -103,9 +95,6 @@ class AppService extends AbstractService
 
     /**
      * Takes a file reference and extracts its meta-data.
-     *
-     * @param FileInterface $file
-     * @return array
      */
     public function extractMetaData(FileInterface $file): array
     {
@@ -138,7 +127,7 @@ class AppService extends AbstractService
     /**
      * Takes a file reference and detects its content's language.
      *
-     * @param FileInterface $file
+     * @param FileInterface $file File to detect language from
      * @return string Language ISO code
      */
     public function detectLanguageFromFile(FileInterface $file): string
@@ -151,7 +140,7 @@ class AppService extends AbstractService
     /**
      * Takes a string as input and detects its language.
      *
-     * @param string $input
+     * @param string $input String to detect language from
      * @return string Language ISO code
      */
     public function detectLanguageFromString(string $input): string
@@ -198,9 +187,6 @@ class AppService extends AbstractService
         return $language;
     }
 
-    /**
-     * @return array
-     */
     public function getSupportedMimeTypes(): array
     {
         if (is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
@@ -212,9 +198,6 @@ class AppService extends AbstractService
         return self::$supportedMimeTypes;
     }
 
-    /**
-     * @return array
-     */
     public function buildSupportedMimeTypes(): array
     {
         $mimeTypeOutput = $this->getMimeTypeOutputFromTikaJar();
@@ -291,8 +274,6 @@ class AppService extends AbstractService
 
     /**
      * The app is available when the jar can be opened
-     *
-     * @return bool
      */
     public function isAvailable(): bool
     {
@@ -309,9 +290,6 @@ class AppService extends AbstractService
         return true;
     }
 
-    /**
-     * @return string
-     */
     protected function getMimeTypeOutputFromTikaJar(): string
     {
         $tikaCommand = ShellUtility::getLanguagePrefix()

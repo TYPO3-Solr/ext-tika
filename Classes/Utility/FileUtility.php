@@ -24,10 +24,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class FileUtility
 {
-    /**
-     * @param string $path
-     * @return string
-     */
     public static function getAbsoluteFilePath(string $path): string
     {
         if (str_starts_with($path, '/')) {
