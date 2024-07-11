@@ -24,23 +24,16 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 
 /**
  * Abstract Tika service implementing shared methods
- *
- * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
     protected const JAVA_COMMAND_OPTIONS_REGEX = '/-D(?P<property>[\w.]+)=(?P<value>"[^"]+"|\'[^\']+\'|[^\\s\'"]+)/';
 
-    /**
-     * @var array
-     */
     protected array $configuration;
 
     /**
      * Constructor
-     *
-     * @param array $configuration
      */
     public function __construct(array $configuration)
     {
@@ -73,9 +66,6 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
         );
     }
 
-    /**
-     * @return array
-     */
     public function getSupportedMimeTypes(): array
     {
         return [];

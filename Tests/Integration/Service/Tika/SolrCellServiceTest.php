@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 /**
  * Class AppServiceTest
  *
- * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  *
  * @todo: Move duplicated code in methods.
  */

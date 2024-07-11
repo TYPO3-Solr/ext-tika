@@ -33,8 +33,6 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Class PreviewControllerTest
- *
- * @author Timo Hund <timo.hund@dkd.de>
  */
 class PreviewControllerTest extends UnitTestCase
 {

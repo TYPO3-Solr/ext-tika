@@ -27,8 +27,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * A Tika service implementation using a Solr server
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class SolrCellService extends AbstractService
 {

@@ -29,8 +29,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Unit;
 
 /**
  * Class ExecRecorder, holds exec() results
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class ExecRecorder
 {

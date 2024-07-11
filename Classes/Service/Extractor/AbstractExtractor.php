@@ -29,8 +29,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class AbstractExtractor
- *
- * @copyright (c) 2015 Ingo Renner <ingo@typo3.org>
  */
 abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInterface
 {

@@ -25,8 +25,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Provides a Tika service depending on the extension's configuration
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class ServiceFactory
 {
@@ -35,13 +33,14 @@ class ServiceFactory
      *
      * @param string $tikaServiceType Tika Service type, one of jar, server, or solr (or tika for BC, same as jar)
      * @param array|null $configuration EXT:tika EM configuration (initialized by this factory, parameter exists for tests)
-     * @return AppService|ServerService|SolrCellService
      *
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public static function getTika(string $tikaServiceType, array $configuration = null)
-    {
+    public static function getTika(
+        string $tikaServiceType,
+        array $configuration = null,
+    ): ServerService|AppService|SolrCellService {
         if (empty($configuration)) {
             $configuration = Util::getTikaExtensionConfiguration();
         }
@@ -60,9 +59,10 @@ class ServiceFactory
     /**
      * Creates a tika service instance from the extension configuration.
      *
-     * @return AppService|ServerService|SolrCellService
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public static function getConfiguredTika(): AbstractService
+    public static function getConfiguredTika(): ServerService|AppService|SolrCellService
     {
         $tikaConfiguration = Util::getTikaExtensionConfiguration();
         return static::getTika($tikaConfiguration['extractor'], Util::getTikaExtensionConfiguration());

@@ -26,6 +26,8 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -82,6 +84,10 @@ class PreviewController
         return $response;
     }
 
+    /**
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     */
     protected function getConfiguredTikaService(): AbstractService|AppService|ServerService|SolrCellService
     {
         return ServiceFactory::getConfiguredTika();
@@ -92,9 +98,6 @@ class PreviewController
         return GeneralUtility::makeInstance(ResourceFactory::class);
     }
 
-    /**
-     * @return StandaloneView
-     */
     protected function getInitializedPreviewView(): StandaloneView
     {
         /** @var StandaloneView $view */
@@ -104,9 +107,6 @@ class PreviewController
         return $view;
     }
 
-    /**
-     * @return bool
-     */
     protected function getIsAdmin(): bool
     {
         return !empty($GLOBALS['BE_USER']) && $GLOBALS['BE_USER']->isAdmin();

@@ -19,37 +19,24 @@ namespace ApacheSolrForTypo3\Tika;
 
 /**
  * Run, check, and stop external processes. Linux only.
- * @author Ingo Renner <ingo@typo3.org>
  */
 class Process
 {
     /**
      * Process ID
-     *
-     * @var int|null
      */
     protected ?int $pid = null;
 
     /**
      * Executable running the command
-     *
-     * @var string
      */
     protected string $executable;
 
     /**
      * Executable arguments
-     *
-     * @var string
      */
     protected string $arguments;
 
-    /**
-     * Constructor
-     *
-     * @param string $executable
-     * @param string $arguments
-     */
     public function __construct(string $executable, string $arguments = '')
     {
         $this->executable = $executable;
@@ -58,8 +45,6 @@ class Process
 
     /**
      * Arguments getter
-     *
-     * @return string
      */
     public function getArguments(): string
     {
@@ -68,8 +53,6 @@ class Process
 
     /**
      * Arguments setter
-     *
-     * @param string $arguments
      */
     public function setArguments(string $arguments): void
     {
@@ -78,8 +61,6 @@ class Process
 
     /**
      * Gets the process executable
-     *
-     * @return string
      */
     public function getExecutable(): string
     {
@@ -98,8 +79,6 @@ class Process
 
     /**
      * Sets the process ID
-     *
-     * @param int $pid
      */
     public function setPid(int $pid): void
     {
@@ -136,9 +115,6 @@ class Process
     /**
      * Escapes 'ps' command output to match what we expect to get as arguments
      * when executing a command.
-     *
-     * @param string $command
-     * @return string
      */
     protected function escapePsOutputCommand(string $command): string
     {
@@ -212,8 +188,6 @@ class Process
 
     /**
      * Stops the process
-     *
-     * @return bool
      */
     public function stop(): bool
     {

@@ -22,6 +22,7 @@ use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Psr\Http\Client\ClientExceptionInterface;
+use Throwable;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Resource\File;
@@ -30,24 +31,18 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * A service to extract meta-data from files using Apache Tika
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class MetaDataExtractor extends AbstractExtractor
 {
-    /**
-     * @var int
-     */
     protected int $priority = 100;
 
     /**
      * Checks if the given file can be processed by this Extractor
      *
-     * @param File $file
-     * @return bool
      * @throws ClientExceptionInterface
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws Throwable
      */
     public function canProcess(File $file): bool
     {
@@ -64,9 +59,6 @@ class MetaDataExtractor extends AbstractExtractor
     /**
      * Method to return a filtered $mimeTypes list - excludes the ones defined in
      * $this->configuration['excludeMimeTypes']
-     *
-     * @param array $mimeTypes
-     * @return array
      */
     protected function mergeAllowedMimeTypes(array $mimeTypes): array
     {
@@ -80,11 +72,10 @@ class MetaDataExtractor extends AbstractExtractor
     }
 
     /**
-     * @return AppService|ServerService|SolrCellService
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    protected function getExtractor()
+    protected function getExtractor(): AppService|ServerService|SolrCellService
     {
         return ServiceFactory::getTika($this->configuration['extractor']);
     }
@@ -92,10 +83,13 @@ class MetaDataExtractor extends AbstractExtractor
     /**
      * Extracts meta-data from a file using Apache Tika
      *
-     * @param File $file
+     * @param File $file File to extract meta-data from
      * @param array $previousExtractedData Already extracted/existing data
-     * @return array
+     *
      * @throws ClientExceptionInterface
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws Throwable
      */
     public function extractMetaData(File $file, array $previousExtractedData = []): array
     {
@@ -106,11 +100,10 @@ class MetaDataExtractor extends AbstractExtractor
     /**
      * Creates an instance of the service and returns the result from "extractMetaData".
      *
-     * @param FileInterface $file
-     * @return array
      * @throws ClientExceptionInterface
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws Throwable
      */
     protected function getExtractedMetaDataFromTikaService(FileInterface $file): array
     {

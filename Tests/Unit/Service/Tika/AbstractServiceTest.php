@@ -24,8 +24,6 @@ use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Class AbstractServiceTest
- *
- * @autor Ingo Renner <ingo@typo3.org>
  */
 class AbstractServiceTest extends UnitTestCase
 {

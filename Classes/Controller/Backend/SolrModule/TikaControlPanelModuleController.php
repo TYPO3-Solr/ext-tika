@@ -68,6 +68,8 @@ class TikaControlPanelModuleController extends AbstractModuleController
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      * @throws UnexpectedTYPO3SiteInitializationException
+     *
+     * @noinspection PhpUnused called in {@link \TYPO3\CMS\Extbase\Mvc\Controller\ActionController::processRequest()}
      */
     protected function initializeAction(): void
     {

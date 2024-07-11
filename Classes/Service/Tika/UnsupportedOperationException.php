@@ -22,7 +22,5 @@ use RuntimeException;
 /**
  * Exception thrown by Tika service implementations if they don't support a
  * particular feature, f.e. Solr Cell does not support language detection.
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class UnsupportedOperationException extends RuntimeException {}

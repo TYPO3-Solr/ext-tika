@@ -23,8 +23,6 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 
 /**
  * Class ServerServiceFixture
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class ServerServiceFixture extends ServerService
 {

@@ -30,15 +30,11 @@ use TYPO3\CMS\Core\Resource\File;
 
 /**
  * Class MetaDataExtractorTest
- *
- * @author Timo Hund <timo.hund@dkd.de>
  */
 class MetaDataExtractorTest extends UnitTestCase
 {
     /**
      * Returns a faked extractor response of a jpeg image.
-     *
-     * @return array
      */
     protected function getFakedExtratorResponseForJGEPImage(): array
     {

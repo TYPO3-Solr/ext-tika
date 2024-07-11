@@ -19,14 +19,13 @@ namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use Psr\Http\Client\ClientExceptionInterface;
+use Throwable;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Resource\File;
 
 /**
  * A service to detect a text's language using Apache Tika
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 class LanguageDetector extends AbstractExtractor
 {
@@ -49,16 +48,10 @@ class LanguageDetector extends AbstractExtractor
         'xlsx',
     ];
 
-    /**
-     * @var int
-     */
     protected int $priority = 98;
 
     /**
      * Checks if the given file can be processed by this Extractor
-     *
-     * @param File $file
-     * @return bool
      */
     public function canProcess(File $file): bool
     {
@@ -69,15 +62,16 @@ class LanguageDetector extends AbstractExtractor
     }
 
     /**
-     * Extracts meta data from a file using Apache Tika
+     * Extracts meta-data from a file using Apache Tika
      *
-     * @param File $file
+     * @param File $file File to extract meta-data from
      * @param array $previousExtractedData Already extracted/existing data
-     * @return array
+     * @return array{language: string} The meta-data array with language
      *
      * @throws ClientExceptionInterface
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws Throwable
      */
     public function extractMetaData(
         File $file,

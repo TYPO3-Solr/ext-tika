@@ -39,8 +39,6 @@ use function getenv;
 
 /**
  * Base class for EXT:tika tests
- *
- * @author Ingo Renner <ingo@typo3.org>
  */
 abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 {
@@ -204,10 +202,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 
     /**
      * Creates a driver fixture object.
-     *
-     * @param array $driverConfiguration
-     * @param array $mockedDriverMethods
-     * @return LocalDriver
      */
     protected function createDriverFixture(
         array $driverConfiguration = [],
@@ -235,8 +229,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
     /**
      * Converts a simple configuration array into a FlexForm data structure serialized as XML
      *
-     * @param array $configuration
-     * @return string
      * @see {@link GeneralUtility::array2xml}
      */
     protected function convertConfigurationArrayToFlexformXml(
@@ -257,8 +249,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 
     /**
      * Creates configuration to be used fo tests
-     *
-     * @return array
      */
     protected function getConfiguration(): array
     {
@@ -288,12 +278,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @param array $fileData
-     * @param ResourceStorage|null $storage
-     * @param array $metaData
-     * @return MockObject|File
-     */
     protected function getMockedFileInstance(
         array $fileData,
         ResourceStorage $storage = null,
@@ -370,7 +354,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      *
      * @param object $object The object to be invoked
      * @param string $name the name of the method to call
-     * @return mixed
      * @throws ReflectionException
      */
     protected function callInaccessibleMethod(object $object, string $name): mixed

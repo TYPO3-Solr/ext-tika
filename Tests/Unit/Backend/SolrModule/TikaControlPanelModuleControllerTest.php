@@ -29,8 +29,6 @@ use TYPO3\CMS\Backend\Template\ModuleTemplate;
 
 /**
  * Class
- *
- * @author Timo Hund <timo.hund@dkd.de>
  */
 class TikaControlPanelModuleControllerTest extends UnitTestCase
 {

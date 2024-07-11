@@ -28,7 +28,6 @@ use TYPO3\CMS\Core\Resource\File;
 /**
  * Test case for class AppService
  *
- * @author Ingo Renner <ingo@typo3.org>
  *
  * @todo: Move all *Parameter() methods to Unit, to speedup the tests.
  */

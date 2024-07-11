@@ -18,34 +18,29 @@ declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\File;
 
 use ApacheSolrForTypo3\Tika\Util;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Resource\FileInterface;
 
 /**
  * Class SizeValidator
- *
- * @author Timo Hund <timo.hund@dkd.de>
  */
 class SizeValidator
 {
-    /**
-     * @var array
-     */
     protected array $configuration;
 
     /**
      * Constructor
-     * @param array|null $extensionConfiguration
+     *
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public function __construct(array $extensionConfiguration = null)
     {
         $this->configuration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
     }
 
-    /**
-     * @param FileInterface $file
-     * @return bool
-     */
-    public function isBelowLimit(FileInterface $file)
+    public function isBelowLimit(FileInterface $file): bool
     {
         return $file->getSize() < $this->getFileSizeLimit();
     }
@@ -54,10 +49,8 @@ class SizeValidator
      * Retrieves the size limit in byte when a text extraction on a file is done.
      *
      * Default value is 500MB.
-     *
-     * @return int
      */
-    protected function getFileSizeLimit()
+    protected function getFileSizeLimit(): int
     {
         // default is 500 MB
         $bytesPerMegaByte = 1048576;
@@ -65,13 +58,10 @@ class SizeValidator
         return $textExtractMegaBytes * $bytesPerMegaByte;
     }
 
-    /**
-     * @param string $key
-     * @param mixed $defaultValue
-     * @return mixed
-     */
-    protected function getConfigurationOrDefaultValue(string $key, $defaultValue)
-    {
+    protected function getConfigurationOrDefaultValue(
+        string $key,
+        mixed $defaultValue,
+    ): mixed {
         return $this->configuration[$key] ?? $defaultValue;
     }
 }

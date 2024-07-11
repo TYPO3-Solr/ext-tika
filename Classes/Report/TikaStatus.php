@@ -36,8 +36,6 @@ use TYPO3\CMS\Reports\StatusProviderInterface;
 /**
  * Provides a status report about whether Tika is properly configured
  *
- * @author Ingo Renner <ingo@typo3.org>
- * @copyright (c) 2010-2015 Ingo Renner <ingo@typo3.org>
  *
  * @noinspection PhpUnused Used in Reports module
  */
