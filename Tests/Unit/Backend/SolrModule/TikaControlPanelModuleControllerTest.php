@@ -26,7 +26,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Client\ClientExceptionInterface as HttpClientExceptionInterface;
 use Throwable;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
-use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * Class
@@ -37,8 +36,6 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
 {
     protected TikaControlPanelModuleController $controller;
 
-    protected ViewInterface|MockObject $viewMock;
-
     protected ModuleTemplate|MockObject $moduleTemplateMock;
 
     /**
@@ -46,7 +43,6 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
      */
     public function setUp(): void
     {
-        $this->viewMock = $this->createMock(ViewInterface::class);
         /** @noinspection PhpUnitInvalidMockingEntityInspection See: dg/bypass-finals */
         $this->moduleTemplateMock = $this->createMock(ModuleTemplate::class);
 
@@ -54,11 +50,9 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
             TikaControlPanelModuleController::class,
             [
                 'getFlashMessageQueue',
-                'getModuleTemplateResponse',
             ]
         );
         $this->controller->overwriteModuleTemplate($this->moduleTemplateMock);
-        $this->controller->overwriteView($this->viewMock);
         parent::setUp();
     }
 
@@ -98,22 +92,28 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
         $this->controller->setTikaConfiguration($tikaConfiguration);
         $matcher = self::any();
 
-        $this->viewMock->expects($matcher)->method('assign')->willReturnCallback(function () use ($matcher, $tikaConfiguration) {
-            return match ($matcher->numberOfInvocations()) {
-                1 => [ 'configuration', $tikaConfiguration ],
-                2 => [ 'extractor', ucfirst($tikaConfiguration['extractor']) ],
-                3 => [ 'server',
-                    [
-                        'isConnected' => true,
-                        'jarAvailable' => true,
-                        'isRunning' => true,
-                        'isControllable' => true,
-                        'pid' => 4711,
-                        'version' => '1.11',
-                    ],
-                ],
-            };
-        });
+        $this->moduleTemplateMock
+            ->expects($matcher)
+            ->method('assign')
+            ->willReturnCallback(
+                function () use ($matcher, $tikaConfiguration) {
+                    match ($matcher->numberOfInvocations()) {
+                        1 => [ 'configuration', $tikaConfiguration ],
+                        2 => [ 'extractor', ucfirst($tikaConfiguration['extractor']) ],
+                        3 => [ 'server',
+                            [
+                                'isConnected' => true,
+                                'jarAvailable' => true,
+                                'isRunning' => true,
+                                'isControllable' => true,
+                                'pid' => 4711,
+                                'version' => '1.11',
+                            ],
+                        ],
+                    };
+                    return $this->moduleTemplateMock;
+                }
+            );
 
         $this->controller->indexAction();
     }

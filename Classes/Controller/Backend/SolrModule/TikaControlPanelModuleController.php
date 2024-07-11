@@ -34,28 +34,17 @@ use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExis
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * Tika Control Panel
  *
- * @author Ingo Renner <ingo@typo3.org>
+ * @deprecated Will be removed in EXT:tika 13, See: https://github.com/TYPO3-Solr/ext-tika/issues/135
  */
 class TikaControlPanelModuleController extends AbstractModuleController
 {
     protected array $tikaConfiguration = [];
 
     protected ServerService|AppService|SolrCellService $tikaService;
-
-    /**
-     * Can be used in the test context to mock a {@link view}.
-     *
-     * Purpose: PhpUnit
-     */
-    public function overwriteView(ViewInterface $view): void
-    {
-        $this->view = $view;
-    }
 
     /**
      * Can be used in the test context to mock a {@link moduleTemplate}.
@@ -101,15 +90,15 @@ class TikaControlPanelModuleController extends AbstractModuleController
      */
     public function indexAction(): ResponseInterface
     {
-        $this->view->assign('configuration', $this->tikaConfiguration);
-        $this->view->assign(
+        $this->moduleTemplate->assign('configuration', $this->tikaConfiguration);
+        $this->moduleTemplate->assign(
             'extractor',
             ucfirst($this->tikaConfiguration['extractor'] ?? '')
         );
 
         switch ($this->tikaConfiguration['extractor']) {
             case 'server':
-                $this->view->assign(
+                $this->moduleTemplate->assign(
                     'server',
                     [
                         'isConnected' => $this->isConnectedToTikaServer(),
@@ -122,7 +111,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
                 );
                 break;
             case 'solr':
-                $this->view->assign(
+                $this->moduleTemplate->assign(
                     'solr',
                     [
                         'isConnected' => $this->isConnectedToTikaServer(),
@@ -131,7 +120,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
                 );
                 break;
             case 'jar':
-                $this->view->assign(
+                $this->moduleTemplate->assign(
                     'jar',
                     [
                         'version' => $this->getTikaServerVersion(),
@@ -141,7 +130,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
             default:
         }
 
-        return $this->getModuleTemplateResponse();
+        return $this->moduleTemplate->renderResponse('Index');
     }
 
     /**

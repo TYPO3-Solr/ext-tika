@@ -17,7 +17,7 @@ $EM_CONF[$_EXTKEY] = [
         ],
         'conflicts' => [],
         'suggests' => [
-            'solr' => '12.0.0-',
+            'solr' => '12.0.4-',
         ],
     ],
     'autoload' => [
