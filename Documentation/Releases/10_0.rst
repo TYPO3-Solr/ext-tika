@@ -2,11 +2,14 @@
 ..  index:: Releases
 ..  _releases-tika-10_0:
 
-==============
-Release 10.0.2
-==============
+=============
+Releases 10.0
+=============
 
 ..  include:: HintAboutOutdatedChangelog.rst.txt
+
+Release 10.0.2
+==============
 
 **Important**:
 This version contains CVE-2021-44228 fixes for users, who starting
@@ -32,7 +35,7 @@ Example:
        ],
    ];
 
-==============
+
 Release 10.0.1
 ==============
 
@@ -42,7 +45,7 @@ the Tika Server-daemons within TYPO3 BE or using Tika app modes.
 All users using dedicated Tika server or Apache Solr Tika cell connections do not benefit from the update
 and should harden the Solr Servers and/or Tika Servers with official CVE-2021-44228 patches manually.
 
-==============
+
 Release 10.0.0
 ==============
 
