@@ -32,7 +32,7 @@ If applicable, add screenshots to help explain your problem.
  - Browser: [e.g. chrome, safari]
  - EXT:solr Version: [e.g. 13.0.x]
  - EXT:tika Version: [e.g. 13.0.2]
- - Used Apache Solr Version: [e.g. 9.6.0]
+ - Used Apache Solr Version: [e.g. 9.7.0]
  - PHP Version: [e.g. 8.2.0]
  - MySQL Version: [e.g. 8.0.0]
 
