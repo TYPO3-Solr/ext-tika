@@ -2,30 +2,41 @@
 ..  index:: Releases
 ..  _releases-tika-13_0:
 
-==============
-Release 13.0.0
-==============
+=============
+Releases 13.0
+=============
 
 We are happy to announce version 13.0.0 of EXT:tika.
 
 **Important**: This version is compatible with 13 LTS only.
 
-New in this Release
--------------------
+Release 13.0.0-alpha-1
+======================
 
-- TBD
+This is a first alpha release for upcoming TYPO3 13 LTS
 
+All changes:
+------------
+
+*   [TASK] Prepare main branch for TYPO3 13 by @dkd-kaehm
+*   [TASK] Update to typo3/coding-standards v0.8.0 by @dkd-friedrich
+*   [TASK] Update PHPUnit and testing framework by @dkd-friedrich
+*   [TASK] Update dependencies for TYPO3 13.0.x by @dkd-friedrich
 
 Contributors
 ------------
 
-- TBD
+*   Markus Friedrich
+*   Rafael Kähm
 
 Thanks to everyone who helped in creating this release!
 
-Also a big thanks to our partners that have joined the Apache Solr EB für TYPO3 12 LTS (Feature) program:
+Also a big thanks to our partners that have joined the Apache Solr EB für TYPO3 13 LTS (Feature) program:
 
-- TBD
+*   b13 GmbH
+*   Berlin-Brandenburgische Akademie der Wissenschaften
+*   in2code GmbH
+*   mehrwert intermediale kommunikation GmbH
 
 How to Get Involved
 -------------------

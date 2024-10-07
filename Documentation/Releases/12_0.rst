@@ -2,7 +2,10 @@
 ..  index:: Releases
 ..  _releases-tika-12_0:
 
-==============
+=============
+Releases 13.0
+=============
+
 Release 12.0.2
 ==============
 
@@ -14,7 +17,7 @@ This is maintenance release for TYPO3 12.
 - [TASK] Add tests for documentation `c9e18ca <https://github.com/TYPO3-Solr/ext-tika/commit/c9e18ca>`_ (thanks to @dkd-kaehm)
 - [TASK] Set min. TYPO3  version to 12.4.3 `4a9e209 <https://github.com/TYPO3-Solr/ext-tika/commit/4a9e209>`_ (thanks to @dkd-kaehm)
 - [DOCS] Fix repository URL in releases documentation `3f3250e <https://github.com/TYPO3-Solr/ext-tika/commit/3f3250e>`_ (thanks to @dkd-kaehm)
-==============
+
 Release 12.0.1
 ==============
 
@@ -59,7 +62,6 @@ All other changes
 - [FEATURE] Blind the Solr Cell crendetials in TYPO3 configuration tools `6618965 on @2023-10-19 <https://github.com/TYPO3-Solr/ext-tika/commit/6618965>`_ (thanks to Rafael Kähm)
 - [DOC] reafactor the docs `c899cf8 on @2023-10-19 <https://github.com/TYPO3-Solr/ext-tika/commit/c899cf8>`_ (thanks to Rafael Kähm)
 
-==============
 Release 12.0.0
 ==============
 
