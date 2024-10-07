@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Tests\Unit\Service\Tika;
 
-use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 
 /*
@@ -23,17 +22,19 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\UnitTestCase;
 use PHPUnit\Framework\Attributes\Test;
 
 /**
- * Class AbstractServiceTest
+ * Base test class AbstractServiceTestBase
  */
-class AbstractServiceTest extends UnitTestCase
+abstract class AbstractServiceTestBase extends UnitTestCase
 {
+    protected string $serviceClass = '';
+
     #[Test]
     public function constructorCallsInitializeService(): void
     {
-        $service = $this->getMockBuilder(AbstractService::class)
+        $service = $this->getMockBuilder($this->serviceClass)
             ->onlyMethods(['initializeService'])
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $service->expects(self::once())
             ->method('initializeService');
