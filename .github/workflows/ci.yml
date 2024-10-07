@@ -100,7 +100,7 @@ jobs:
         name: CI-Bootstrap
         run: |
           composer info
-          composer tests:setup && composer tests:setup:global-require
+          composer tests:setup
           echo "Current Size of EXT:tika build Artefacts: " \
             && sudo du -sh "${{ env.CI_BUILD_DIRECTORY }}"
       -
@@ -149,7 +149,7 @@ jobs:
         name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 8.2
           extensions: intl, mbstring, json, zip, curl
           tools: composer:v2
       -

@@ -35,9 +35,10 @@
   "require-dev": {
     "apache-solr-for-typo3/solr": "13.0.x-dev",
     "dg/bypass-finals": "^1.6",
-    "phpstan/phpstan": "^1.10",
-    "phpstan/phpstan-phpunit": "^1.3",
+    "phpstan/phpstan": "^1.12",
+    "phpstan/phpstan-phpunit": "^1.4",
     "phpunit/phpunit": "^11.4",
+    "sclable/xml-lint": "^0.8.0",
     "typo3/cms-lowlevel": "*",
     "typo3/coding-standards": "v0.8.0",
     "typo3/testing-framework": "dev-main#47bf0daab24b4210221f46a1fde59b9c3e245e39 as 9.0"
@@ -77,13 +78,12 @@
     "t3:docs:clean": "Deletes all rendered docs created by t3:docs:build or t3:docs:build:prod.",
     "t3:standards:fix": "Fixes a possible TYPO3 coding standards errors.",
 
-    "tests:env":  "Checks the requierements in environment for tests.",
+    "tests:env":  "Checks the requirements in environment for tests.",
     "tests:integration": "Runs integration tests",
-    "tests:lint-xml": "Lints the XML/XLF files. Depends on global installed sclable/xml-lint. See tests:setup:global-require",
+    "tests:lint-xml": "Lints the XML/XLF files.",
     "tests:phpstan": "Runs PHPStan analys",
     "tests:restore-git": "[Internal script], which is used after tests:setup to restore the composer.json.",
-    "tests:setup": "Installs composer dependencies, requiered for tests.",
-    "tests:setup:global-require": "Installs global composer dependencies. Those are moved to global, to avoid collisions and downgrades on libs.",
+    "tests:setup": "Installs composer dependencies, required for tests.",
     "tests:unit": "Runs unit tests",
 
     "tika:download": "Download Tika binaries/\".jar\" files. App and Server files.",
@@ -121,10 +121,6 @@
       "if [ -z ${TIKA_PATH+x} ]; then echo \"Can not proceed, because env var TIKA_PATH is not set\"; exit 1; fi",
       "if echo $TYPO3_VERSION | grep -q \"dev\"; then $COMPOSER_BINARY config minimum-stability dev; fi"
     ],
-    "tests:setup:global-require": [
-      "echo \"Install global composer dependencies.\"",
-      "@composer global require sclable/xml-lint --ignore-platform-reqs"
-    ],
     "tests:setup": [
       "# @todo: Abort if composer.json has not staged/commited changes on composer.json, to avoid losing necessery changes.",
       "@tests:env",
@@ -143,7 +139,7 @@
     ],
     "tests:lint-xml": [
       "echo \"Run XML Lint\"",
-      "if ! $($COMPOSER_BINARY config home)/vendor/bin/xmllint Resources/Private/Language/ --pattern='*.xlf' --exclude=.Build/*; then echo \"Some XML files are not valid\" && echo \"Please fix the files listed above\" && export EXIT_CODE=4; else echo \"No syntax errors! Great job!\"; fi"
+      "if ! xmllint Resources/Private/Language/ --pattern='*.xlf' --exclude=.Build/*; then echo \"Some XML files are not valid\" && echo \"Please fix the files listed above\" && export EXIT_CODE=4; else echo \"No syntax errors! Great job!\"; fi"
     ]
   },
   "extra": {
@@ -159,7 +155,7 @@
       "ext-tika": {
         "require": {
           "Tika": "1.28.5",
-          "Solr": "9.5.*",
+          "Solr": "9.7.*",
           "EXT:solr": "13.0.*"
         }
       }

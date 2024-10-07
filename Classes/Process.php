@@ -102,7 +102,7 @@ class Process
         exec($ps, $output);
 
         foreach ($output as $line) {
-            [$pid, $command] = explode(' ', trim($line ?? ''), 2);
+            [$pid, $command] = explode(' ', trim($line), 2);
             $command = $this->escapePsOutputCommand($command);
             if ($command == $processCommand) {
                 return (int)$pid;
