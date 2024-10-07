@@ -76,10 +76,12 @@
     "t3:docs:build": "Renders the docs. Note: Can not run inside docker container, because uses TYPO3 dockrun_t3rd",
     "t3:docs:build:prod": "Same as t3:docs:build, but places the rendered docs in Resources/Public/Documentation and symlinks them to EXT:tika/Documentation.HTML",
     "t3:docs:clean": "Deletes all rendered docs created by t3:docs:build or t3:docs:build:prod.",
+    "t3:standards:check": "Checks for TYPO3 coding standards errors.",
     "t3:standards:fix": "Fixes a possible TYPO3 coding standards errors.",
 
     "tests:env":  "Checks the requirements in environment for tests.",
     "tests:integration": "Runs integration tests",
+    "tests:lint-php": "Lints the PHP files.",
     "tests:lint-xml": "Lints the XML/XLF files.",
     "tests:phpstan": "Runs PHPStan analys",
     "tests:restore-git": "[Internal script], which is used after tests:setup to restore the composer.json.",
@@ -134,8 +136,14 @@
     "tests:phpstan": [
       "phpstan analyze -c Build/Test/phpstan.neon"
     ],
+    "t3:standards:check": [
+      "php-cs-fixer check --diff"
+    ],
     "t3:standards:fix": [
       "php-cs-fixer fix"
+    ],
+    "tests:lint-php": [
+      "if ! find . -name \\*.php ! -path \"./.Build/*\" 2>/dev/null | parallel --gnu php -d display_errors=stderr -l {} > /dev/null; then echo \"There are syntax errors, please check and fix them.\" && export EXIT_CODE=1; else echo \"No syntax errors! Great job!\"; fi"
     ],
     "tests:lint-xml": [
       "echo \"Run XML Lint\"",

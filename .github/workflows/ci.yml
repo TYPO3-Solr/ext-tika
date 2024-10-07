@@ -38,10 +38,10 @@ jobs:
         PHP: [ '8.2', '8.3' ]
         TYPO3: [ 'dev-main' ]
     env:
-      TYPO3_DATABASE_NAME: 'typo3_ci'
-      TYPO3_DATABASE_HOST: '127.0.0.1'
-      TYPO3_DATABASE_USERNAME: 'root'
-      TYPO3_DATABASE_PASSWORD: 'root'
+      typo3DatabaseName: 'typo3_ci'
+      typo3DatabaseHost: '127.0.0.1'
+      typo3DatabaseUsername: 'root'
+      typo3DatabasePassword: 'root'
       TYPO3_VERSION: ${{ matrix.TYPO3 }}
 
     name: TYPO3 ${{ matrix.TYPO3 }} on PHP ${{ matrix.PHP }}
@@ -88,8 +88,8 @@ jobs:
         name: 'Start Docker: Solr, Tika, MySQL'
         run: |
           docker run --name "MySQL-CI" -v ${{ env.CI_BUILD_DIRECTORY }}/data-mysql:/var/lib/mysql -p 3306:3306 \
-            -e MYSQL_DATABASE=$TYPO3_DATABASE_NAME \
-            -e MYSQL_ROOT_PASSWORD=$TYPO3_DATABASE_PASSWORD \
+            -e MYSQL_DATABASE=$typo3DatabaseName \
+            -e MYSQL_ROOT_PASSWORD=$typo3DatabasePassword \
             -d mysql:8.0 mysqld --default-authentication-plugin=mysql_native_password
           sudo chmod g+w "$SOLR_VOLUME_PATH"
           docker volume create --name "$SOLR_VOLUME_NAME" --opt type=none --opt device="$SOLR_VOLUME_PATH" --opt o=bind
@@ -98,18 +98,49 @@ jobs:
           docker ps
       -
         name: CI-Bootstrap
+        id: 'bootstrap'
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           composer info
           composer tests:setup
           echo "Current Size of EXT:tika build Artefacts: " \
             && sudo du -sh "${{ env.CI_BUILD_DIRECTORY }}"
       -
-        name: CI-Build
+        name: 'PHP Lint'
+        id: 'php-lint'
+        if: ${{ always() }}
         run: |
-          ./.Build/vendor/apache-solr-for-typo3/solr/Build/Test/cibuild.sh
-          echo "Current Size of EXT:tika build Artefacts: " \
-            && sudo du -sh $CI_BUILD_DIRECTORY/ \
-            && sudo du -sh $CI_BUILD_DIRECTORY/*
+          composer tests:lint-php
+      -
+        name: 'Coding standards'
+        id: 'coding-standards'
+        if: ${{ always() }}
+        run: |
+          composer t3:standards:check
+      -
+        name: 'XML Lint'
+        id: 'xml-lint'
+        if: ${{ always() }}
+        run: |
+          composer tests:lint-xml
+      - name: 'PHPStan'
+        id: 'phpstan'
+        if: ${{ always() }}
+        run: |
+          composer tests:phpstan
+      -
+        name: 'Unit tests'
+        id: 'unit-tests'
+        if: ${{ always() }}
+        run: |
+          composer tests:unit
+      -
+        name: 'Integration tests'
+        id: 'integration-tests'
+        if: ${{ always() }}
+        run: |
+          composer tests:integration
 
   publish:
     name: Publish new version to TER
