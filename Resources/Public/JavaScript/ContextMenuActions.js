@@ -4,12 +4,12 @@ import $ from 'jquery';
 class ContextMenuActions {
 
 
-  tikaPreview = function (table, uid) {
+  tikaPreview = function (table, uid, dataAttributes) {
     if (table === 'sys_file') {
 
       const configuration = {
         title: 'Tika Preview',
-        content:  $(this).data('action-url') + '&identifier=' + encodeURIComponent(uid).replace(/\*/g, '%2A'),
+        content:  dataAttributes.actionUrl + '&identifier=' + encodeURIComponent(uid).replace(/\*/g, '%2A'),
         size: Modal.sizes.large,
         type: Modal.types.ajax
       };
