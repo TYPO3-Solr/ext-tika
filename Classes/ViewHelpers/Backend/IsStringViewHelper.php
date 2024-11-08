@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\ViewHelpers\Backend;
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
@@ -37,15 +38,7 @@ class IsStringViewHelper extends AbstractConditionViewHelper
         $this->registerArgument('value', 'mixed', 'Value to be verified.', true);
     }
 
-    /**
-     * This method decides if the condition is true or false
-     *
-     * @param array $arguments ViewHelper arguments to evaluate the condition for this ViewHelper.
-     *
-     * @noinspection PhpMissingReturnTypeInspection
-     * @noinspection PhpUnused
-     */
-    protected static function evaluateCondition($arguments = null)
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
         return is_string($arguments['value'] ?? null);
     }
