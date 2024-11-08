@@ -36,7 +36,7 @@ jobs:
     strategy:
       matrix:
         PHP: [ '8.2', '8.3' ]
-        TYPO3: [ 'dev-main' ]
+        TYPO3: [ '^13.4', '13.4.x-dev' ]
     env:
       typo3DatabaseName: 'typo3_ci'
       typo3DatabaseHost: '127.0.0.1'
