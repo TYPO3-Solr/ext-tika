@@ -19,6 +19,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use ApacheSolrForTypo3\Solr\ConnectionManager;
 use ApacheSolrForTypo3\Solr\Exception\InvalidConnectionException;
+use ApacheSolrForTypo3\Solr\System\Configuration\TypoScriptConfiguration;
 use ApacheSolrForTypo3\Solr\System\Solr\SolrConnection;
 use ApacheSolrForTypo3\Tika\Util;
 use Solarium\QueryType\Extract\Query;
@@ -61,7 +62,11 @@ class SolrCellService extends AbstractService
             $readEndpoint['password'] = Util::convertEnvVarStringToValue($this->configuration['solrPassword']);
         }
         $writeEndpoint = $readEndpoint;
-        $this->solrConnection = $connectionManager->getSolrConnectionForEndpoints($readEndpoint, $writeEndpoint);
+        $this->solrConnection = $connectionManager->getSolrConnectionForEndpoints(
+            $readEndpoint,
+            $writeEndpoint,
+            new TypoScriptConfiguration([]),
+        );
     }
 
     public function getSolrConnection(): SolrConnection
@@ -71,6 +76,8 @@ class SolrCellService extends AbstractService
 
     /**
      * Retrieves a configuration value or a default value when not available.
+     *
+     * @noinspection PhpUnused
      */
     protected function getConfigurationOrDefaultValue(string $key, mixed $defaultValue): mixed
     {
