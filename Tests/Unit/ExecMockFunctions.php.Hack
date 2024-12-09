@@ -29,8 +29,11 @@ use ApacheSolrForTypo3\Tika\Tests\Unit\ExecRecorder;
  * exec() mock to capture invocation parameters for the actual \exec() function
  * @noinspection PhpUnusedParameterInspection
  */
-function exec(string $command, array &$output = null, int &$result_code = null): string|false
-{
+function exec(
+    string $command,
+    ?array &$output = null,
+    ?int &$result_code = null,
+): string|false {
     $output = array_key_exists(ExecRecorder::$execCalled, ExecRecorder::$execOutput) ? ExecRecorder::$execOutput[ExecRecorder::$execCalled] : '';
     ExecRecorder::$execCalled++;
     ExecRecorder::$execCommand = $command;
