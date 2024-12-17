@@ -103,7 +103,7 @@ jobs:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           composer info
-          composer tests:setup
+          composer tests:setup && composer tests:setup:global-require
           echo "Current Size of EXT:tika build Artefacts: " \
             && sudo du -sh "${{ env.CI_BUILD_DIRECTORY }}"
       -
