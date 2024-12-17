@@ -6,7 +6,7 @@ parameters:
   treatPhpDocTypesAsCertain: false
 
   bootstrapFiles:
-    - %rootDir%/../../apache-solr-for-typo3/solr/Build/Test/phpstan-constants.php
+    - %env.COMPOSER_VENDOR_DIR%/apache-solr-for-typo3/solr/Build/Test/phpstan-constants.php
 
   paths:
     - %currentWorkingDirectory%/Classes
