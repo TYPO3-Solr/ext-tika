@@ -38,7 +38,6 @@
     "phpstan/phpstan": "^1.12",
     "phpstan/phpstan-phpunit": "^1.4",
     "phpunit/phpunit": "^11.4",
-    "sclable/xml-lint": "^0.8.0",
     "typo3/cms-lowlevel": "*",
     "typo3/coding-standards": "v0.8.0",
     "typo3/testing-framework": "^9.0.1"
@@ -123,6 +122,10 @@
       "if [ -z ${TIKA_PATH+x} ]; then echo \"Can not proceed, because env var TIKA_PATH is not set\"; exit 1; fi",
       "if echo $TYPO3_VERSION | grep -q \"dev\"; then $COMPOSER_BINARY config minimum-stability dev; fi"
     ],
+    "tests:setup:global-require": [
+      "echo \"Install global composer dependencies.\"",
+      "@composer global require sclable/xml-lint --ignore-platform-reqs"
+    ],
     "tests:setup": [
       "# @todo: Abort if composer.json has not staged/commited changes on composer.json, to avoid losing necessery changes.",
       "@tests:env",
@@ -147,7 +150,7 @@
     ],
     "tests:lint-xml": [
       "echo \"Run XML Lint\"",
-      "if ! xmllint Resources/Private/Language/ --pattern='*.xlf' --exclude=.Build/*; then echo \"Some XML files are not valid\" && echo \"Please fix the files listed above\" && export EXIT_CODE=4; else echo \"No syntax errors! Great job!\"; fi"
+      "if ! $($COMPOSER_BINARY config home)/vendor/bin/xmllint Resources/Private/Language/ --pattern='*.xlf' --exclude=.Build/*; then echo \"Some XML files are not valid\" && echo \"Please fix the files listed above\" && export EXIT_CODE=4; else echo \"No syntax errors! Great job!\"; fi"
     ]
   },
   "extra": {
