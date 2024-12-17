@@ -109,24 +109,24 @@ jobs:
       -
         name: 'PHP Lint'
         id: 'php-lint'
-        if: ${{ always() }}
+        if: ${{ matrix.PHP == '8.2' }}
         run: |
           composer tests:lint-php
       -
         name: 'Coding standards'
         id: 'coding-standards'
-        if: ${{ always() }}
+        if: ${{ matrix.PHP == '8.2' }}
         run: |
           composer t3:standards:check
       -
         name: 'XML Lint'
         id: 'xml-lint'
-        if: ${{ always() }}
+        if: ${{ matrix.PHP == '8.2' }}
         run: |
           composer tests:lint-xml
       - name: 'PHPStan'
         id: 'phpstan'
-        if: ${{ always() }}
+        if: ${{ matrix.PHP == '8.2' }}
         run: |
           composer tests:phpstan
       -
