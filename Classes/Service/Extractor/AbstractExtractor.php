@@ -47,7 +47,7 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
      * @throws ExtensionConfigurationPathDoesNotExistException
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
-    public function __construct(array $extensionConfiguration = null, SizeValidator $fileSizeValidator = null)
+    public function __construct(?array $extensionConfiguration = null, ?SizeValidator $fileSizeValidator = null)
     {
         $this->configuration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
         $this->fileSizeValidator = $fileSizeValidator ?? GeneralUtility::makeInstance(

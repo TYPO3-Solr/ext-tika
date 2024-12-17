@@ -280,7 +280,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
 
     protected function getMockedFileInstance(
         array $fileData,
-        ResourceStorage $storage = null,
+        ?ResourceStorage $storage = null,
         array $metaData = []
     ): File|MockObject {
         $fileMock = $this->getMockBuilder(File::class)

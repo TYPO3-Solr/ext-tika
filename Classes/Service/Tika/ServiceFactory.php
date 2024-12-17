@@ -39,7 +39,7 @@ class ServiceFactory
      */
     public static function getTika(
         string $tikaServiceType,
-        array $configuration = null,
+        ?array $configuration = null,
     ): ServerService|AppService|SolrCellService {
         if (empty($configuration)) {
             $configuration = Util::getTikaExtensionConfiguration();
