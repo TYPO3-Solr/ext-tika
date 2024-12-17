@@ -35,7 +35,7 @@ class SizeValidator
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public function __construct(array $extensionConfiguration = null)
+    public function __construct(?array $extensionConfiguration = null)
     {
         $this->configuration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
     }

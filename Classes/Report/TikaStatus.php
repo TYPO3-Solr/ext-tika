@@ -53,7 +53,7 @@ class TikaStatus implements StatusProviderInterface
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public function __construct(
-        array $extensionConfiguration = null,
+        ?array $extensionConfiguration = null,
     ) {
         $this->tikaConfiguration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
     }
