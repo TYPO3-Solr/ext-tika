@@ -1,9 +1,8 @@
-..  include:: /Includes.rst.txt
 ..  index:: Releases
 ..  _releases-tika-12_0:
 
 =============
-Releases 13.0
+Releases 12.0
 =============
 
 Release 12.0.2
