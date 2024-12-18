@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides
+	xmlns="https://www.phpdoc.org/guides"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://www.phpdoc.org/guides ../vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+	links-are-relative="true"
+>
+  <extension
+	  class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+	  interlink-shortcode="apache-solr-for-typo3/tika"
+	  project-home="https://www.typo3-solr.com"
+	  project-contact="info@dkd.de"
+	  project-repository="https://github.com/TYPO3-Solr/ext-tika"
+	  project-issues="https://github.com/TYPO3-Solr/ext-tika/issues"
+	  project-discussions="https://typo3.slack.com/archives/C02FF05Q4"
+	  edit-on-github-branch="release-12.0.x"
+	  edit-on-github="TYPO3-Solr/ext-tika"
+	  typo3-core-preferred="12.4"
+  />
+  <project
+	  title="Apache Tika for TYPO3"
+	  release="12.0"
+	  version="12.0"
+	  copyright="since 2009 by dkd &amp; contributors"
+  />
+</guides>
