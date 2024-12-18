@@ -19,8 +19,8 @@
   />
   <project
 	  title="Apache Tika for TYPO3"
-	  release="13.0.0-alpha-1"
-	  version="13.0.0"
+	  release="13.0"
+	  version="13.0"
 	  copyright="since 2009 by dkd &amp; contributors"
   />
 </guides>

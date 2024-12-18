@@ -5,33 +5,32 @@
 Releases 13.0
 =============
 
-We are happy to announce version 13.0.0 of EXT:tika.
-
-**Important**: This version is compatible with 13 LTS only.
-
-All changes since alpha-1:
---------------------------
-
-
-
-Release 13.0.0-alpha-1
-======================
-
-This is a first alpha release for upcoming TYPO3 13 LTS
+We are happy to announce new major version 13.0 of EXT:tika for TYPO3 13 LTS.
 
 All changes:
 ------------
 
-*   [TASK] Prepare main branch for TYPO3 13 by @dkd-kaehm
-*   [TASK] Update to typo3/coding-standards v0.8.0 by @dkd-friedrich
-*   [TASK] Update PHPUnit and testing framework by @dkd-friedrich
-*   [TASK] Update dependencies for TYPO3 13.0.x by @dkd-friedrich
+- [TASK] Prepare main branch for TYPO3 13 by Rafael Kähm `(5a6aad1) <https://github.com/TYPO3-Solr/ext-tika/commit/5a6aad1>`_
+- [TASK] Update to typo3/coding-standards v0.8.0 by Markus Friedrich `(4db9ed9) <https://github.com/TYPO3-Solr/ext-tika/commit/4db9ed9>`_
+- [TASK] Update PHPUnit and testing framework by Markus Friedrich `(e38da56) <https://github.com/TYPO3-Solr/ext-tika/commit/e38da56>`_
+- [TASK] Update dependencies for TYPO3 13.0.x by Markus Friedrich `(3a7fe80) <https://github.com/TYPO3-Solr/ext-tika/commit/3a7fe80>`_
+- [TASK] Replace cibuild.sh by Markus Friedrich `(53bba67) <https://github.com/TYPO3-Solr/ext-tika/commit/53bba67>`_
+- [RELEASE] 13.0.0-alpha-1 by Markus Friedrich `(009e383) <https://github.com/TYPO3-Solr/ext-tika/commit/009e383>`_
+- [FIX] Set composer dependencies properly by Rafael Kähm `(9fcfa46) <https://github.com/TYPO3-Solr/ext-tika/commit/9fcfa46>`_
+- [FIX] TIKA-Preview does not work on TYPO3 13.4+ by Rafael Kähm `(3efbdc2) <https://github.com/TYPO3-Solr/ext-tika/commit/3efbdc2>`_
+- [TASK] Sync with EXT:solr dev-main by Rafael Kähm `(bb41a6f) <https://github.com/TYPO3-Solr/ext-tika/commit/bb41a6f>`_
+- [TASK] Simplify EXT:solr tests stack by Rafael Kähm `(a0571ad) <https://github.com/TYPO3-Solr/ext-tika/commit/a0571ad>`_
+- [TASK] Extract sclable/xml-lint to global by Rafael Kähm `(09b5f10) <https://github.com/TYPO3-Solr/ext-tika/commit/09b5f10>`_
+- [TASK] run static analysis checks on TYPO3 majors min. PHP vers. by Rafael Kähm `(0f88385) <https://github.com/TYPO3-Solr/ext-tika/commit/0f88385>`_
+- [TASK] Remove Implicitly nullable parameter declarations deprecated by Thomas Hohn `(d6687e0) <https://github.com/TYPO3-Solr/ext-tika/commit/d6687e0>`_
+- [DOCS] Migrate Documentation to the new rendering by Rafael Kähm `(70f3191) <https://github.com/TYPO3-Solr/ext-tika/commit/70f3191>`_
 
 Contributors
 ------------
 
 *   Markus Friedrich
 *   Rafael Kähm
+*   Thomas Hohn
 
 Thanks to everyone who helped in creating this release!
 
