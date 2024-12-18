@@ -1,5 +1,3 @@
-..  include:: /Includes.rst.txt
-
 .. _start:
 
 =====================
@@ -79,4 +77,3 @@ Getting Help
     :hidden:
 
     Sitemap
-    genindex
