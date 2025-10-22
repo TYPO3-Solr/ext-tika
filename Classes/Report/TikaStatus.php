@@ -196,8 +196,8 @@ class TikaStatus implements StatusProviderInterface
             if (!is_null($extractedContent) && !empty($extractedMetadata)) {
                 $solrCellConfigurationOk = true;
             } elseif ($response instanceof ResponseAdapter) {
-                $additionalErrorInfos = /* @lang HTML */
-                "
+                $additionalErrorInfos /* @lang HTML */
+                = "
                 <table class='table table-condensed table-hover table-striped'>
                     <tbody>
                         <tr class='warning'>
@@ -212,8 +212,8 @@ class TikaStatus implements StatusProviderInterface
                 ";
             }
         } catch (Throwable $e) {
-            $additionalErrorInfos = /* @lang HTML */
-                "
+            $additionalErrorInfos /* @lang HTML */
+                = "
                 <div class='panel panel-default'>
                     <div class='panel-heading'>
                         <h3 class='panel-title'>
