@@ -259,8 +259,8 @@ class ServerService extends AbstractService
         } catch (Throwable $exception) {
             $message = $exception->getMessage();
             if (
-                !str_contains($message, 'Connection refused')   &&
-                !str_contains($message, 'HTTP request failed')
+                !str_contains($message, 'Connection refused')
+                && !str_contains($message, 'HTTP request failed')
             ) {
                 // If the server is simply not available it would say Connection refused
                 // since that is not the case something else went wrong
