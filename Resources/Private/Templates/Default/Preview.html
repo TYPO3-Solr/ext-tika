@@ -1,0 +1,53 @@
+<div xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+     xmlns:tika="http://typo3.org/ns/ApacheSolrForTypo3/Tika/ViewHelpers/Backend"
+     f:schemaLocation="https://fluidtypo3.org/schemas/fluid-master.xsd">
+
+    <div>
+        <h4>Extracted content:</h4>
+        <f:if condition="{content}">
+            <pre style="height: 20em; width:100%; max-width: 1000px; overflow:scroll;">{content}</pre>
+        </f:if>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>Detected Language:</th>
+                <td>{language}</td>
+            </tr>
+            <f:render section="Rows" arguments="{tableRows: metadata}"/>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<f:section name="Rows">
+    <f:for each="{tableRows}" key="tableRowFiledName" as="tableRowValue" >
+        <tr>
+            <th scope="row">{tableRowFiledName}</th>
+            <tika:isString value="{tableRowValue}">
+                <f:then>
+                    <td>{tableRowValue}</td>
+                </f:then>
+                <f:else>
+                    <td>
+                        <f:render section="SubTable" arguments="{tableRows: tableRowValue}"/>
+                    </td>
+                </f:else>
+            </tika:isString>
+        </tr>
+    </f:for>
+</f:section>
+
+<f:section name="SubTable">
+    <table class="table table-condensed table-hover table-striped table-bordered">
+        <thead><tr><th>Key</th> <th>Value</th></tr></thead>
+        <tbody>
+        <f:render section="Rows" arguments="{tableRows: tableRows}"/>
+        </tbody>
+    </table>
+</f:section>

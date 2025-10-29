@@ -1,0 +1,71 @@
+
+<div xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+	xmlns:solr="http://typo3.org/ns/ApacheSolrForTypo3/Solr/ViewHelpers"
+	f:schemaLocation="https://fluidtypo3.org/schemas/fluid-master.xsd">
+	<f:render partial="FlashMessages" />
+
+	<f:be.infobox title="Caution" state="1">
+		This module is still experimental and is supposed to work with Tika Server only for now.
+	</f:be.infobox>
+
+	<p>
+		Tika Mode:
+		<f:switch expression="{configuration.extractor}">
+			<f:case value="server">Tika Server</f:case>
+			<f:case value="jar">Tika App {jar.version}</f:case>
+			<f:case value="solr">Solr Server</f:case>
+		</f:switch>
+	</p>
+
+	<f:if condition="{configuration.extractor} != 'solr'">
+		<p>
+		Tika App Jar: {configuration.tikaPath}
+		</p>
+		<p>
+		Tika Server Jar: {configuration.tikaServerPath}
+		</p>
+	</f:if>
+
+	<f:if condition="{configuration.extractor} == 'server'">
+		<!-- // TODO use partial -->
+		<p>
+		Tika Server status (PID): {f:if(condition: '{server.pid} > 0', then: 'running (pid: {server.pid})', else: 'server pid not found')}
+		</p>
+		<p>
+		Tika Server status (ping): {f:if(condition: '{server.isRunning}', then: 'running', else: 'stopped')}
+		</p>
+
+
+		<f:if condition="{server.isRunning}">
+			<f:then>
+				<p>
+				Tika is running.<br />
+				Version: {server.version}<br />
+
+				<f:if condition="{server.isControllable}">
+					Tika can be controlled. PID: {server.pid}
+					<f:form action="stopServer" method="POST">
+						<f:form.submit class="btn btn-sm btn-default" value="Stop Tika Server"/>
+					</f:form>
+				</f:if>
+				</p>
+			</f:then>
+			<f:else>
+				<p>
+				Tika is stopped.
+
+				<f:if condition="{server.isControllable}">
+					Tika can be controlled.
+					<f:form action="startServer" method="POST">
+						<f:form.submit class="btn btn-sm btn-default" value="Start Tika Server"/>
+					</f:form>
+				</f:if>
+				</p>
+			</f:else>
+		</f:if>
+
+	</f:if>
+
+
+
+</div>
