@@ -83,7 +83,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $objectVars = get_object_vars($this);
         unset(
             $objectVars['documentsStorageMock'],
-            $objectVars['languagesStorageMock']
+            $objectVars['languagesStorageMock'],
         );
         return array_keys($objectVars);
     }
@@ -158,7 +158,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $this->documentsStorageMock
             ->expects(self::any())->method('getUid')
             ->willReturn(
-                $this->documentsStorageUid
+                $this->documentsStorageUid,
             );
     }
 
@@ -205,19 +205,19 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected function createDriverFixture(
         array $driverConfiguration = [],
-        array $mockedDriverMethods = []
+        array $mockedDriverMethods = [],
     ): LocalDriver {
         $mockedDriverMethods[] = 'isPathValid';
         /** @var LocalDriver|MockObject $driver */
         $driver = $this->getAccessibleMock(
             LocalDriver::class,
             $mockedDriverMethods,
-            [$driverConfiguration]
+            [$driverConfiguration],
         );
         $driver->expects(self::any())
             ->method('isPathValid')
             ->willReturn(
-                true
+                true,
             );
 
         $driver->setStorageUid($this->documentsStorageUid);
@@ -232,7 +232,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      * @see {@link GeneralUtility::array2xml}
      */
     protected function convertConfigurationArrayToFlexformXml(
-        array $configuration
+        array $configuration,
     ): string {
         $flexformArray = [
             'data' => [
@@ -342,7 +342,7 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         } else {
             throw new RuntimeException(
                 'Could not inject ' . $name . ' into object of type ' . get_class($target),
-                1476107339
+                1476107339,
             );
         }
     }

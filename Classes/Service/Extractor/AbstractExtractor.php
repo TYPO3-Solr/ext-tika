@@ -54,7 +54,7 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
         $this->configuration = $extensionConfiguration ?? Util::getTikaExtensionConfiguration();
         $this->fileSizeValidator = $fileSizeValidator ?? GeneralUtility::makeInstance(
             SizeValidator::class,
-            $this->configuration
+            $this->configuration,
         );
     }
 
@@ -103,7 +103,7 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
         $this->logger->log(
             LogLevel::DEBUG, // Previous value 0
             $message,
-            $data
+            $data,
         );
     }
 }

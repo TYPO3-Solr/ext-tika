@@ -95,7 +95,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         $this->moduleTemplate->assign('configuration', $this->tikaConfiguration);
         $this->moduleTemplate->assign(
             'extractor',
-            ucfirst($this->tikaConfiguration['extractor'] ?? '')
+            ucfirst($this->tikaConfiguration['extractor'] ?? ''),
         );
 
         switch ($this->tikaConfiguration['extractor']) {
@@ -109,7 +109,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
                         'isControllable' => $this->isTikaServerControllable(),
                         'pid' => $this->getTikaServerPid(),
                         'version' => $this->getTikaServerVersion(),
-                    ]
+                    ],
                 );
                 break;
             case 'solr':
@@ -118,7 +118,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
                     [
                         'isConnected' => $this->isConnectedToTikaServer(),
                         'version' => $this->getTikaServerVersion(),
-                    ]
+                    ],
                 );
                 break;
             case 'jar':
@@ -126,7 +126,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
                     'jar',
                     [
                         'version' => $this->getTikaServerVersion(),
-                    ]
+                    ],
                 );
                 break;
             default:
@@ -235,7 +235,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
             . ',' . ini_get('suhosin.executor.func.blacklist');
         $disabledFunctions = GeneralUtility::trimExplode(
             ',',
-            $disabledFunctions
+            $disabledFunctions,
         );
         if (in_array('exec', $disabledFunctions)) {
             return false;
@@ -278,7 +278,7 @@ class TikaControlPanelModuleController extends AbstractModuleController
         $this->addFlashMessage(
             'Could not connect to Tika at: ' . $this->tikaService->getTikaServerUrl(),
             'Unable to contact Apache Tika server.',
-            ContextualFeedbackSeverity::ERROR
+            ContextualFeedbackSeverity::ERROR,
         );
         return false;
     }

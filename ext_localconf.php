@@ -17,7 +17,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'
     [
         'Local',
     ],
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions']
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tika']['extractor']['driverRestrictions'],
 );
 
 $extConf = Util::getTikaExtensionConfiguration();

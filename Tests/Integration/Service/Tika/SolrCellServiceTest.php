@@ -74,7 +74,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc',
             ],
-            $this->documentsStorageMock
+            $this->documentsStorageMock,
         );
 
         $actualValue = $service->extractText($file);
@@ -98,7 +98,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc',
             ],
-            $this->documentsStorageMock
+            $this->documentsStorageMock,
         );
 
         $service->extractText($file);
@@ -120,7 +120,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                 [
                     'foo', // extracted text is index 0
                     ['bar'], // meta data is index 1
-                ]
+                ],
             );
         $service = $this->createSolrCellServiceTestable($solrWriter);
         $file = new File(
@@ -128,7 +128,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc',
             ],
-            $this->documentsStorageMock
+            $this->documentsStorageMock,
         );
 
         $service->extractMetaData($file);
@@ -143,7 +143,7 @@ class SolrCellServiceTest extends ServiceIntegrationTestCase
             [
                 'identifier' => 'testMP3.mp3',
                 'name' => 'testMP3.mp3',
-            ]
+            ],
         );
         self::assertTrue(in_array($mockedFile->getMimeType(), $service->getSupportedMimeTypes()));
         $metaData = $service->extractMetaData($mockedFile);

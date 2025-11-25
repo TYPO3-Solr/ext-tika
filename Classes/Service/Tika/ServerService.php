@@ -251,7 +251,7 @@ class ServerService extends AbstractService
                 throw new BadResponseException(
                     'Invalid status code ' . $response->getStatusCode(),
                     $request,
-                    $response
+                    $response,
                 );
             }
 
@@ -294,12 +294,12 @@ class ServerService extends AbstractService
             $this->log(
                 'Text Extraction using Tika Server failed',
                 $this->getLogData($file, $response),
-                LogLevel::ERROR
+                LogLevel::ERROR,
             );
         } else {
             $this->log(
                 'Text Extraction using Tika Server',
-                $this->getLogData($file, $response)
+                $this->getLogData($file, $response),
             );
         }
 
@@ -328,14 +328,14 @@ class ServerService extends AbstractService
             $this->log(
                 'Meta Data Extraction using Tika Server failed',
                 $this->getLogData($file, $rawResponse),
-                LogLevel::ERROR
+                LogLevel::ERROR,
             );
             return [];
         }
 
         $this->log(
             'Meta Data Extraction using Tika Server',
-            $this->getLogData($file, $rawResponse)
+            $this->getLogData($file, $rawResponse),
         );
         return $response;
     }
@@ -360,12 +360,12 @@ class ServerService extends AbstractService
             $this->log(
                 'Language Detection using Tika Server failed',
                 $this->getLogData($file, $response),
-                LogLevel::ERROR
+                LogLevel::ERROR,
             );
         } else {
             $this->log(
                 'Language Detection using Tika Server',
-                $this->getLogData($file, $response)
+                $this->getLogData($file, $response),
             );
         }
 
@@ -480,7 +480,7 @@ class ServerService extends AbstractService
         $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
         $request = $requestFactory->createRequest(
             $method,
-            $uri
+            $uri,
         );
         return $request->withAddedHeader('User-Agent', $this->getUserAgent());
     }

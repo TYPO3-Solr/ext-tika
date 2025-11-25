@@ -40,7 +40,7 @@ class AppService extends AbstractService
         ) {
             throw new RuntimeException(
                 'Invalid path or filename for Tika application jar: ' . $this->configuration['tikaPath'],
-                1266864929
+                1266864929,
             );
         }
 
@@ -87,7 +87,7 @@ class AppService extends AbstractService
                 'file' => $file,
                 'tika command' => $tikaCommand,
                 'shell output' => $extractedText,
-            ]
+            ],
         );
 
         return (string)$extractedText;
@@ -118,7 +118,7 @@ class AppService extends AbstractService
                 'tika command' => $tikaCommand,
                 'shell output' => $shellOutput,
                 'meta data' => $metaData,
-            ]
+            ],
         );
 
         return $metaData;
@@ -181,7 +181,7 @@ class AppService extends AbstractService
                 'file' => $localFilePath,
                 'tika command' => $tikaCommand,
                 'shell output' => $language,
-            ]
+            ],
         );
 
         return $language;

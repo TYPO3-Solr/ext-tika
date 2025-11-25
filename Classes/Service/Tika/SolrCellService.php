@@ -150,7 +150,7 @@ class SolrCellService extends AbstractService
         // TODO check whether Solr supports text extraction now
         throw new UnsupportedOperationException(
             'The Tika Solr service does not support language detection',
-            1423457153
+            1423457153,
         );
     }
 
@@ -164,7 +164,7 @@ class SolrCellService extends AbstractService
         // TODO check whether Solr supports text extraction now
         throw new UnsupportedOperationException(
             'The Tika Solr service does not support language detection',
-            1423457154
+            1423457154,
         );
     }
 

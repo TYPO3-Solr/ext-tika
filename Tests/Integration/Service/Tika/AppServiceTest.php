@@ -57,7 +57,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc',
             ],
-            $this->documentsStorageMock
+            $this->documentsStorageMock,
         );
 
         $service = new AppService($this->getConfiguration());
@@ -76,7 +76,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc',
             ],
-            $this->documentsStorageMock
+            $this->documentsStorageMock,
         );
 
         $service = new AppService($this->getConfiguration());
@@ -94,7 +94,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc',
             ],
-            $this->documentsStorageMock
+            $this->documentsStorageMock,
         );
 
         $service = new AppService($this->getConfiguration());
@@ -136,7 +136,7 @@ class AppServiceTest extends ServiceIntegrationTestCase
             AppService::class,
             [
                 'getMimeTypeOutputFromTikaJar',
-            ]
+            ],
         );
         $service->expects(self::once())->method('getMimeTypeOutputFromTikaJar')->willReturn($fixtureContent);
 

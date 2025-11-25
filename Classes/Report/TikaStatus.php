@@ -99,7 +99,7 @@ class TikaStatus implements StatusProviderInterface
         return GeneralUtility::makeInstance(
             Status::class,
             'Apache Tika',
-            'Configuration OK'
+            'Configuration OK',
         );
     }
 
@@ -112,7 +112,7 @@ class TikaStatus implements StatusProviderInterface
         $status = GeneralUtility::makeInstance(
             Status::class,
             'Apache Tika',
-            'Java OK'
+            'Java OK',
         );
 
         if (!$this->isJavaInstalled()) {
@@ -121,7 +121,7 @@ class TikaStatus implements StatusProviderInterface
                 'Apache Tika',
                 'Java Not Found',
                 '<p>Please install Java.</p>',
-                $severity
+                $severity,
             );
         }
 
@@ -140,7 +140,7 @@ class TikaStatus implements StatusProviderInterface
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not find Tika app jar.</p>',
-                ContextualFeedbackSeverity::ERROR
+                ContextualFeedbackSeverity::ERROR,
             );
         }
 
@@ -161,7 +161,7 @@ class TikaStatus implements StatusProviderInterface
                 'Apache Tika',
                 'Configuration Incomplete',
                 '<p>Could not connect to Tika server.</p>',
-                ContextualFeedbackSeverity::ERROR
+                ContextualFeedbackSeverity::ERROR,
             );
         }
 
@@ -238,7 +238,7 @@ class TikaStatus implements StatusProviderInterface
                 'Apache Tika',
                 'Configuration incomplete or wrong',
                 $additionalErrorInfos,
-                ContextualFeedbackSeverity::ERROR
+                ContextualFeedbackSeverity::ERROR,
             );
         }
 
@@ -249,7 +249,7 @@ class TikaStatus implements StatusProviderInterface
     {
         return GeneralUtility::makeInstance(
             ServerService::class,
-            $this->tikaConfiguration
+            $this->tikaConfiguration,
         );
     }
 
