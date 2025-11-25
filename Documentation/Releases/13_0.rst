@@ -5,6 +5,26 @@
 Releases 13.0
 =============
 
+Release 13.0.1
+==============
+
+This is maintenance release for TYPO3 13
+
+.. note::
+
+      If you use the mata-data extractor with Solr 9.10.0+, it does not extract the data properly.
+      See: https://github.com/TYPO3-Solr/ext-tika/issues/250
+      Please use the Tika Server or App instead. Or stay by Apache Solr 9.9.0.
+
+
+All changes:
+------------
+
+- [DOCS] Apache Solr 9.10.0 CELL does not extract metadata from binaries properly by Rafael Kähm in `tbd <https://github.com/TYPO3-Solr/ext-tika/commit/tbd>`_
+
+Release 13.0.0
+==============
+
 We are happy to announce new major version 13.0 of EXT:tika for TYPO3 13 LTS.
 
 All changes:
