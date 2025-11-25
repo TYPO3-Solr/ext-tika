@@ -5,6 +5,24 @@
 Releases 12.0
 =============
 
+Release 12.0.4
+==============
+
+This is maintenance release for TYPO3 12 allowing PHP 8.4.
+
+.. note::
+
+      If you use the mata-data extractor with Solr 9.10.0+, it does not extract the data properly.
+      See: https://github.com/TYPO3-Solr/ext-tika/issues/250
+      Please use the Tika Server or App instead. Or stay by Apache Solr 9.9.0.
+
+## What's Changed
+- [TASK] Simplify EXT:solr tests stack by Rafael Kähm in `0e09fe1 <https://github.com/TYPO3-Solr/ext-tika/commit/0e09fe1>`_
+- [TASK] Remove Implicitly nullable parameter declarations deprecated by Thomas Hohn in `fc31751 <https://github.com/TYPO3-Solr/ext-tika/commit/fc31751>`_
+- [DOCS] Migrate Documentation to the new rendering by Rafael Kähm in `763fa1d <https://github.com/TYPO3-Solr/ext-tika/commit/763fa1d>`_
+- [BUGFIX] Fix CS issues by Rafael Kähm in `b173e41 <https://github.com/TYPO3-Solr/ext-tika/commit/b173e41>`_
+- [DOCS] Apache Solr 9.10.0 CELL does not extract metadata from binaries properly by Rafael Kähm in `9144c12 <https://github.com/TYPO3-Solr/ext-tika/commit/9144c12>`_
+
 
 Release 12.0.3
 ==============
