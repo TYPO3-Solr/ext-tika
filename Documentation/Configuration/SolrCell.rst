@@ -5,6 +5,12 @@
 Configuration of Solr Cell
 ==========================
 
+.. note::
+
+      If you use the mata-data extractor with Solr 9.10.0+, it does not extract the data properly.
+      See: https://github.com/TYPO3-Solr/ext-tika/issues/250
+      Please use the Tika Server or App instead. Or stay by Apache Solr 9.9.0.
+
 Requirements
 ------------
 
