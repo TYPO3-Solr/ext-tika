@@ -62,7 +62,7 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
         $this->logger->log(
             $severity,
             $message,
-            $data
+            $data,
         );
     }
 

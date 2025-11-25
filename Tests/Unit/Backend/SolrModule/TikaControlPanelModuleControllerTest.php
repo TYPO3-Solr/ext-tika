@@ -48,7 +48,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
             TikaControlPanelModuleController::class,
             [
                 'getFlashMessageQueue',
-            ]
+            ],
         );
         $this->controller->overwriteModuleTemplate($this->moduleTemplateMock);
         parent::setUp();
@@ -110,7 +110,7 @@ class TikaControlPanelModuleControllerTest extends UnitTestCase
                         ],
                     };
                     return $this->moduleTemplateMock;
-                }
+                },
             );
 
         $this->controller->indexAction();

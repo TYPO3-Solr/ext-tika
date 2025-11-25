@@ -236,7 +236,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
                 $tikaExtensionConfiguration['tikaServerScheme'],
                 $tikaExtensionConfiguration['tikaServerHost'],
                 $tikaExtensionConfiguration['tikaServerPort'],
-            ]
+            ],
         );
         self::assertEquals($expectedTikaAuthority, $service->getTikaServerUrl());
     }
@@ -282,7 +282,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
 
         self::assertEquals(
             '/language/stream',
-            $service->getRecordedEndpoint()
+            $service->getRecordedEndpoint(),
         );
     }
 
@@ -299,7 +299,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
 
         self::assertEquals(
             '/language/string',
-            $service->getRecordedEndpoint()
+            $service->getRecordedEndpoint(),
         );
     }
     /**
@@ -355,7 +355,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
             [
                 'identifier' => 'testMP3.mp3',
                 'name' => 'testMP3.mp3',
-            ]
+            ],
         );
 
         $metaData = $service->extractMetaData($fileMock);
@@ -395,7 +395,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
             [
                 'identifier' => 'test-documents.zip',
                 'name' => 'test-documents.zip',
-            ]
+            ],
         ));
         $expectedTextFromPDF = 'Tika - Content Analysis Toolkit';
 
@@ -442,8 +442,8 @@ class ServerServiceTest extends ServiceIntegrationTestCase
                     'identifier' => $language . '.test',
                     'name' => $language . '.test',
                 ],
-                $this->languagesStorageMock
-            )
+                $this->languagesStorageMock,
+            ),
         );
 
         self::assertSame($language, $detectedLanguage);
@@ -498,7 +498,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
             [
                 'identifier' => 'testWORD.doc',
                 'name' => 'testWORD.doc',
-            ]
+            ],
         );
     }
 }

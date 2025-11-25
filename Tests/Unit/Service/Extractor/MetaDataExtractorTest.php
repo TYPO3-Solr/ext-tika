@@ -84,7 +84,7 @@ class MetaDataExtractorTest extends UnitTestCase
             ->onlyMethods(['getExtractedMetaDataFromTikaService'])
             ->getMock();
         $metaDataExtractor->expects(self::once())->method('getExtractedMetaDataFromTikaService')->willReturn(
-            $fakedTikaExtractResponse
+            $fakedTikaExtractResponse,
         );
 
         $fileMock = $this->createMock(File::class);
@@ -106,7 +106,7 @@ class MetaDataExtractorTest extends UnitTestCase
     {
         $tikaAppServiceMock = $this->createMock(AppService::class);
         $tikaAppServiceMock->expects(self::once())->method('getSupportedMimeTypes')->willReturn(
-            ['application/vnd.sun.xml.writer']
+            ['application/vnd.sun.xml.writer'],
         );
 
         $exeFileMock = $this->createMock(File::class);
@@ -130,7 +130,7 @@ class MetaDataExtractorTest extends UnitTestCase
     {
         $tikaAppServiceMock = $this->createMock(AppService::class);
         $tikaAppServiceMock->expects(self::once())->method('getSupportedMimeTypes')->willReturn(
-            ['application/vnd.sun.xml.writer']
+            ['application/vnd.sun.xml.writer'],
         );
 
         $exeFileMock = $this->createMock(File::class);

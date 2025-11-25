@@ -51,7 +51,7 @@ class ServiceFactory
             'solr' => GeneralUtility::makeInstance(SolrCellService::class, $configuration),
             default => throw new InvalidArgumentException(
                 'Unknown Tika service type "' . $tikaServiceType . '". Must be one of jar, server, or solr.',
-                1423035119
+                1423035119,
             ),
         };
     }

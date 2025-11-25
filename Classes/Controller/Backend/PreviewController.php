@@ -57,17 +57,17 @@ class PreviewController
         $tikaService = $this->getConfiguredTikaService();
         $metadata = $tikaService->extractMetaData(
             /** not real static-analysis error, because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
-            $file
+            $file,
         );
         $content = $tikaService->extractText(
             /** not real static-analysis error, because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
-            $file
+            $file,
         );
 
         try {
             $language = $tikaService->detectLanguageFromFile(
                 /** not real static-analysis error, because checked in {@link \ApacheSolrForTypo3\Tika\ContextMenu\Preview::canHandle()} */
-                $file
+                $file,
             );
         } catch (Throwable) {
             $language = 'not detectable';

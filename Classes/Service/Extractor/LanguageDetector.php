@@ -75,7 +75,7 @@ class LanguageDetector extends AbstractExtractor
      */
     public function extractMetaData(
         File $file,
-        array $previousExtractedData = []
+        array $previousExtractedData = [],
     ): array {
         $metaData = [];
 

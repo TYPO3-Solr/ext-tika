@@ -42,7 +42,7 @@ class ShellUtility
             $currentLocale = setlocale(LC_CTYPE, '0');
             setlocale(
                 LC_CTYPE,
-                $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale']
+                $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'],
             );
         }
 
