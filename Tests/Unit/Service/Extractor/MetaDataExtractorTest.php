@@ -136,8 +136,9 @@ class MetaDataExtractorTest extends UnitTestCase
         $exeFileMock = $this->createMock(File::class);
         $exeFileMock->expects(self::any())->method('getMimeType')->willReturn('application/vnd.sun.xml.writer');
 
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['skipSecurityChecks'] = true;
         $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)
-            ->setConstructorArgs([[]])
+            ->setConstructorArgs([null])
             ->onlyMethods(['getExtractor'])->getMock();
         $metaDataExtractor->expects(self::once())->method('getExtractor')->willReturn($tikaAppServiceMock);
         self::assertTrue($metaDataExtractor->canProcess($exeFileMock));

@@ -17,10 +17,6 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
-use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
-use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
-use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
-use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Psr\Http\Client\ClientExceptionInterface;
 use Throwable;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
@@ -38,22 +34,22 @@ class MetaDataExtractor extends AbstractExtractor
 
     /**
      * Checks if the given file can be processed by this Extractor
-     *
-     * @throws ClientExceptionInterface
-     * @throws ExtensionConfigurationExtensionNotConfiguredException
-     * @throws ExtensionConfigurationPathDoesNotExistException
-     * @throws Throwable
      */
     public function canProcess(File $file): bool
     {
-        $tikaService = $this->getExtractor();
-        $mimeTypes = $tikaService->getSupportedMimeTypes();
-        $allowedMimeTypes = $this->mergeAllowedMimeTypes($mimeTypes);
+        try {
+            $tikaService = $this->getExtractor();
+            $mimeTypes = $tikaService->getSupportedMimeTypes();
+            $allowedMimeTypes = $this->mergeAllowedMimeTypes($mimeTypes);
 
-        $isAllowedMimetype = in_array($file->getMimeType(), $allowedMimeTypes);
-        $isSizeBelowLimit = $this->fileSizeValidator->isBelowLimit($file);
-
-        return $isAllowedMimetype && $isSizeBelowLimit;
+            $isAllowedMimetype = in_array($file->getMimeType(), $allowedMimeTypes);
+            $isSizeBelowLimit = $this->fileSizeValidator->isBelowLimit($file);
+            $canProcess = $isAllowedMimetype && $isSizeBelowLimit
+                && (($this->configuration['skipSecurityChecks'] ?? false) || $tikaService->isSecure());
+        } catch (Throwable) {
+            return false;
+        }
+        return $canProcess;
     }
 
     /**
@@ -69,15 +65,6 @@ class MetaDataExtractor extends AbstractExtractor
         $allowedMimeTypes = GeneralUtility::trimExplode(',', $this->configuration['excludeMimeTypes']);
 
         return array_diff($mimeTypes, $allowedMimeTypes);
-    }
-
-    /**
-     * @throws ExtensionConfigurationExtensionNotConfiguredException
-     * @throws ExtensionConfigurationPathDoesNotExistException
-     */
-    protected function getExtractor(): AppService|ServerService|SolrCellService
-    {
-        return ServiceFactory::getTika($this->configuration['extractor']);
     }
 
     /**
@@ -133,13 +120,9 @@ class MetaDataExtractor extends AbstractExtractor
             // clean / add values under alternative names
             switch ($key) {
                 case 'dc:title':
-                case 'title':
                     $metaDataCleaned['title'] = $value;
                     break;
                 case 'dc:creator':
-                case 'meta:author':
-                case 'Author':
-                case 'creator':
                     $metaDataCleaned['creator'] = $value;
                     break;
                 case 'dc:publisher':
@@ -166,7 +149,6 @@ class MetaDataExtractor extends AbstractExtractor
                     break;
                 case 'Image Description':
                 case 'Jpeg Comment':
-                case 'subject':
                 case 'dc:description':
                     $metaDataCleaned['description'] = $value;
                     break;
@@ -175,15 +157,12 @@ class MetaDataExtractor extends AbstractExtractor
                     break;
                 case 'dc:subject':
                 case 'meta:keyword':
-                case 'Keywords':
                     $metaDataCleaned['keywords'] = $value;
                     break;
                 case 'Copyright Notice':
                     $metaDataCleaned['note'] = $value;
                     break;
                 case 'dcterms:created':
-                case 'meta:creation-date':
-                case 'Creation-Date':
                     $metaDataCleaned['content_creation_date'] = strtotime($value);
                     break;
                 case 'Date/Time Original':
@@ -191,15 +170,13 @@ class MetaDataExtractor extends AbstractExtractor
                     break;
                 case 'dcterms:modified':
                 case 'meta:save-date':
-                case 'Last-Save-Date':
-                case 'Last-Modified':
                     $metaDataCleaned['content_modification_date'] = strtotime($value);
                     break;
                 case 'xmpTPg:NPages':
-                case 'Page-Count':
+                case 'meta:page-count':
                     $metaDataCleaned['pages'] = $value;
                     break;
-                case 'Application-Name':
+                case 'extended-properties:Application':
                 case 'xmp:CreatorTool':
                     $metaDataCleaned['creator_tool'] = $value;
                     break;

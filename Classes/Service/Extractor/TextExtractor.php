@@ -78,10 +78,16 @@ class TextExtractor implements TextExtractorInterface
      */
     public function canExtractText(FileInterface $file): bool
     {
-        $isSupportedFileExtension = in_array($file->getExtension(), $this->supportedFileTypes);
-        $isSizeBelowLimit = $this->fileSizeValidator->isBelowLimit($file);
-
-        return $isSizeBelowLimit && $isSupportedFileExtension;
+        try {
+            $isSupportedFileExtension = in_array($file->getExtension(), $this->supportedFileTypes);
+            $isSizeBelowLimit = $this->fileSizeValidator->isBelowLimit($file);
+            $tikaService = ServiceFactory::getTika($this->configuration['extractor']);
+            $canProcess = $isSizeBelowLimit && $isSupportedFileExtension
+                && (($this->configuration['skipSecurityChecks'] ?? false) || $tikaService->isSecure());
+        } catch (Throwable) {
+            return false;
+        }
+        return $canProcess;
     }
 
     /**
@@ -97,7 +103,7 @@ class TextExtractor implements TextExtractorInterface
      */
     public function extractText(FileInterface $file): string
     {
-        $tika = ServiceFactory::getTika($this->configuration['extractor']);
-        return $tika->extractText($file);
+        $tikaService = ServiceFactory::getTika($this->configuration['extractor']);
+        return $tikaService->extractText($file);
     }
 }

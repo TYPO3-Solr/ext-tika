@@ -1,0 +1,68 @@
+..  index:: Releases
+..  _releases-tika-13_1:
+
+=============
+Releases 13.1
+=============
+
+Release 13.0.1
+==============
+
+This is maintenance release for TYPO3 13 including Apache Tika 3.2.3+ support
+
+.. note::
+
+      All Apache Tika prior v 3.2.2 and Solr prior 9.10.1 are vulnerable
+      against `CVE-2025-66516 / CVE-2025-54988 <https://solr.apache.org/security.html#cve-2025-66516-apache-solr-extraction-module-vulnerable-to-xxe-attacks-via-xfa-content-in-pdfs>`_
+      please update the applications or apply fixes manually and set
+      :php:`$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['skipSecurityChecks'] = true` on your own risk.
+      EXT:tika will silently stop work on insecure versions.
+
+
+All changes:
+------------
+
+- TBD
+
+Release 13.1.0
+==============
+
+We are happy to announce new major version 13.1 of EXT:tika for TYPO3 13 LTS.
+
+All changes:
+------------
+
+- TBD
+
+Contributors
+------------
+
+*   Markus Friedrich
+*   Rafael Kähm
+
+Thanks to everyone who helped in creating this release!
+
+Also a big thanks to our partners that have joined the Apache Solr EB für TYPO3 13 LTS (Feature) program:
+
+*   b13 GmbH
+*   Berlin-Brandenburgische Akademie der Wissenschaften
+*   in2code GmbH
+*   mehrwert intermediale kommunikation GmbH
+
+How to Get Involved
+-------------------
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+- Submit bug reports and feature requests on [GitHub](https://github.com/TYPO3-Solr/ext-tika)
+- Ask or help or answer questions in our [Slack channel](https://typo3.slack.com/messages/ext-tika/)
+- Provide patches through Pull Request or review and comment on existing [Pull Requests](https://github.com/TYPO3-Solr/ext-tika/pulls)
+- Go to [www.typo3-solr.com](http://www.typo3-solr.com) or call [dkd](http://www.dkd.de) to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us by becoming an EB partner:
+
+http://www.typo3-solr.com/en/contact/
+
+or call:
+
++49 (0)69 - 2475218 0
