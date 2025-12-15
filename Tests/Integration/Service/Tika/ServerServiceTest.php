@@ -330,16 +330,16 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         $metaData = $service->extractMetaData($this->getMockedFileInstanceForTestWordDotDocFile());
 
         self::assertEquals('application/msword', $metaData['Content-Type']);
-        self::assertEquals('Microsoft Office Word', $metaData['Application-Name']);
-        self::assertEquals('Keith Bennett', $metaData['Author']);
-        self::assertEquals('', $metaData['Company']);
-        self::assertEquals('2010-11-12T16:22:00Z', $metaData['Creation-Date']);
-        self::assertEquals('Nick Burch', $metaData['Last-Author']);
-        self::assertEquals('2010-11-12T16:22:00Z', $metaData['Last-Save-Date']);
-        self::assertEquals('2', $metaData['Page-Count']);
-        self::assertEquals('2', $metaData['Revision-Number']);
-        self::assertEquals('Normal.dotm', $metaData['Template']);
-        self::assertEquals('Sample Word Document', $metaData['title']);
+        self::assertEquals('Microsoft Office Word', $metaData['extended-properties:Application']);
+        self::assertEquals('Keith Bennett', $metaData['dc:creator']);
+        self::assertEmpty($metaData['extended-properties:Company'] ?? '');
+        self::assertEquals('2010-11-12T16:22:00Z', $metaData['dcterms:created']);
+        self::assertEquals('Nick Burch', $metaData['meta:last-author']);
+        self::assertEquals('2010-11-12T16:22:00Z', $metaData['dcterms:modified']);
+        self::assertEquals('2', $metaData['meta:page-count']);
+        self::assertEquals('2', $metaData['cp:revision']);
+        self::assertEquals('Normal.dotm', $metaData['extended-properties:Template']);
+        self::assertEquals('Sample Word Document', $metaData['dc:title']);
     }
 
     /**
@@ -361,7 +361,7 @@ class ServerServiceTest extends ServiceIntegrationTestCase
         $metaData = $service->extractMetaData($fileMock);
 
         self::assertEquals('audio/mpeg', $metaData['Content-Type']);
-        self::assertEquals('Test Title', $metaData['title']);
+        self::assertEquals('Test Title', $metaData['dc:title']);
     }
 
     /**

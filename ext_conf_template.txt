@@ -6,7 +6,10 @@
 # cat=general//10; type=options[Tika App=jar,Tika Server=server,Solr Server=solr]; label=Extractor: Choose a service to use for extraction.
 extractor = server
 
-# cat=general//20; type=boolean; label=Enable Logging
+# cat=general//20; type=boolean; label=Skip Security Checks
+skipSecurityChecks = 0
+
+# cat=general//21; type=boolean; label=Enable Logging
 logging = 0
 
 # cat=general//30; type=boolean; label=Show Tika Backend Module: Enables a Tika module within the Solr backend module (experimental, only works with Tika server)

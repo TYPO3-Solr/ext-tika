@@ -62,4 +62,6 @@ interface ServiceInterface
      * Public method to check the availability of this service.
      */
     public function isAvailable(): bool;
+
+    public function isSecure(): bool;
 }

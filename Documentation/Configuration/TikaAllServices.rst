@@ -6,7 +6,7 @@ Configuring Tika Services
 =========================
 
 **General information about how to configure the Tika Services can be found in the**
-`official Tika documentation <https://tika.apache.org/1.28/configuring.html>`_
+`official Tika documentation <https://tika.apache.org/3.2.3/configuring.html>`_
 
 .. tip::
 
@@ -39,7 +39,7 @@ Apply tika-config.xml
 
 .. tip::
 
-        `Tika docs "Using a Tika Configuration XML file" <https://tika.apache.org/1.28/configuring.html#Using_a_Tika_Configuration_XML_file>`_
+        `Tika docs "Using a Tika Configuration XML file" <https://tika.apache.org/3.2.3/configuring.html#Using_a_Tika_Configuration_XML_file>`_
         provides information how to apply the tika-config.xml file, however pan_env can make the things simpler.
 
         Adding following line to :file:`/etc/security/pam_env.con`, makes the TIKA_CONFIG env variable global on host.

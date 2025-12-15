@@ -106,8 +106,110 @@ abstract class AbstractService implements ServiceInterface, LoggerAwareInterface
 
     public function getTikaVersionString(): string
     {
-        return str_replace('Apache Tika', '', $this->getTikaVersion());
+        $versionString = str_replace('Apache Tika', '', $this->getTikaVersion());
+        $versionString = str_replace('Apache Solr', '', $versionString);
+        return trim($versionString);
     }
 
     abstract public function getTikaVersion(): string;
+
+    protected function applyBackwardCompatibility(array $metaData): array
+    {
+        $metaData['Company'] ??= '';
+        $metaData['extended-properties:Company'] ??= '';
+
+        foreach ($metaData as $key => $value) {
+            if (empty($value)) {
+                continue;
+            }
+
+            // add values under alternative names
+            switch ($key) {
+                case 'cp:revision':
+                    $metaData['Revision-Number'] ??= $value;
+                    break;
+                case 'dc:creator':
+                    $metaData['Author'] ??= $value;
+                    $metaData['meta:author'] ??= $value;
+                    break;
+
+                case 'dc:description':
+                case 'dc:subject':
+                case 'meta:keyword':
+                    $metaData['dc:subject'] ??= $value;
+                    $metaData['meta:keyword'] ??= $value;
+                    $metaData['Keywords'] ??= $value;
+                    $metaData['cp:subject'] ??= $value;
+                    $metaData['subject'] ??= $value;
+                    $metaData['dc:description'] ??= $value;
+                    break;
+                case 'meta:page-count':
+                case 'xmpTPg:NPages':
+                    $metaData['meta:page-count'] ??= $value;
+                    $metaData['Page-Count'] ??= $value;
+                    $metaData['xmpTPg:NPages'] ??= $value;
+                    break;
+                case 'dc:identifier':
+                    $metaData['identifier'] ??= $value;
+                    break;
+                case 'dc:title':
+                    $metaData['title'] ??= $value;
+                    break;
+                case 'dc:publisher':
+                    $metaData['publisher'] ??= $value;
+                    break;
+                case 'dcterms:created':
+                case 'meta:creation-date':
+                    $metaData['Creation-Date'] ??= $value;
+                    $metaData['meta:creation-date'] ??= $value;
+                    $metaData['date'] ??= $value;
+                    break;
+                case 'dcterms:modified':
+                    $metaData['Last-Save-Date'] ??= $value;
+                    $metaData['Last-Modified'] ??= $value;
+                    $metaData['modified'] ??= $value;
+                    break;
+                case 'extended-properties:Application':
+                    $metaData['Application-Name'] ??= $value;
+                    break;
+                case 'extended-properties:Company':
+                    $metaData['Company'] = $metaData['Company'] ?: $value;
+                    break;
+                case 'extended-properties:Template':
+                    $metaData['Template'] ??= $value;
+                    break;
+                case 'extended-properties:TotalTime':
+                    $metaData['Edit-Time'] ??= $value;
+                    break;
+                case 'meta:last-author':
+                    $metaData['Last-Author'] ??= $value;
+                    break;
+                case 'meta:character-count':
+                    $metaData['Character Count'] ??= $value;
+                    $metaData['Character-Count'] ??= $value;
+                    break;
+                case 'meta:save-date':
+                    $metaData['Last-Save-Date'] ??= $value;
+                    break;
+                case 'meta:word-count':
+                    $metaData['Word-Count'] ??= $value;
+                    break;
+                case 'w:Comments':
+                    $metaData['w:comments'] ??= $value;
+                    break;
+                default:
+                    // ignore
+            }
+        }
+
+        return $metaData;
+    }
+
+    public function isSecure(): bool
+    {
+        if (version_compare($this->getTikaVersionString(), '3.2.2', '<')) {
+            return false;
+        }
+        return true;
+    }
 }

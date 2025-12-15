@@ -48,7 +48,7 @@ Apache Tika for TYPO3 provides three services to retrieve information from files
 
 All three services can be used with FAL.
 
-It is recommended to use Apache Tika version 1.28 or higher.
+It is recommended to use Apache Tika version 3.2 or higher.
 
 Getting Help
 ============
