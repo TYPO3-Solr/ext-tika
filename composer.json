@@ -33,7 +33,7 @@
     "typo3/cms-reports": "*"
   },
   "require-dev": {
-    "apache-solr-for-typo3/solr": "13.0.x-dev",
+    "apache-solr-for-typo3/solr": "dev-main",
     "dg/bypass-finals": "^1.6",
     "phpstan/phpstan": "^1.12",
     "phpstan/phpstan-phpunit": "^1.4",
@@ -155,7 +155,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-main": "13.0.x-dev"
+      "dev-main": "13.1.x-dev"
     },
     "typo3/cms": {
       "extension-key": "tika",
@@ -165,9 +165,9 @@
     "TYPO3-Solr": {
       "ext-tika": {
         "require": {
-          "Tika": "1.28.5",
-          "Solr": "9.7.*",
-          "EXT:solr": "13.0.*"
+          "Tika": "3.2.3",
+          "Solr": "9.10.*",
+          "EXT:solr": "13.1.*"
         }
       }
     }
