@@ -21,16 +21,14 @@ Options:
  -D              <directory>      Directory to save the binaries in. Default: working directory
 
 Flags:
- -a, -A, --app-only               Download Tika app only
- -s, -S, --server-only            Download Tika server only
  -c, -C, --check-signature        Signature Verification
                                     Note: imports Apaches TIKA public keys
 
 Examples:
   $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars
   $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars
-  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars -C -a
-  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars -C -a --tika-version 3.2.3
+  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars -C
+  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars --check-signature --tika-version 3.2.3
 
 EOF
     exit
@@ -49,8 +47,6 @@ Options:
  -d, -D, --dir     <directory>   Directory to save the binaries in. Default: working directory
 
 Flags:
- -a, -A, --app-only              Download app only
- -s, -S, --server-only           Download server only
  -c, -C, --check-signature       Signature Verification
                                   Note: imports Apaches TIKA public keys
 
@@ -60,15 +56,11 @@ EOF
 # Default values
 TIKA_PATH="$(pwd -P)"
 TIKA_VERSION="${REQUIRED_TIKA_VERSION}"
-APP_ONLY=0
-SERVER_ONLY=0
 
 LONG_OPTS_LIST=(
   "version:"
   "tika-version:"
   "dir:"
-  "app-only"
-  "server-only"
   "check-signature"
   "help"
 )
@@ -76,7 +68,7 @@ LONG_OPTS_LIST=(
 #echo "$(printf "%s," "${LONG_OPTS_LIST[@]}")"
 #exit
 
-SHORT_OPTS_LIST=":v:V:d:D:aAsScCh"
+SHORT_OPTS_LIST=":v:V:d:D:cCh"
 
 opts=$(getopt \
   --longoptions "$(printf "%s," "${LONG_OPTS_LIST[@]}")" \
@@ -108,26 +100,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     --dir)
       TIKA_PATH=$2; shift 2
-      ;;
-
-    -a)
-      APP_ONLY=1; shift 1
-      ;;
-    -A)
-      APP_ONLY=1; shift 1
-      ;;
-    --app-only)
-      APP_ONLY=1; shift 1
-      ;;
-
-    -s)
-      SERVER_ONLY=1; shift 1
-      ;;
-    -S)
-      SERVER_ONLY=1; shift 1
-      ;;
-    --server-only)
-      SERVER_ONLY=1; shift 1
       ;;
 
     -c)
@@ -246,24 +218,9 @@ if [[ "${CHECK_SIGNATURE}" -eq 1 ]]; then
 fi
 
 EXIT_CODE=0
-if [[ "${APP_ONLY}" -eq 0 ]] && [[ "${SERVER_ONLY}" -eq 0 ]]; then
-  echo "Will download app and server: proceed..."
-  downloadTika "app"
-  EXIT_CODE=$((EXIT_CODE+$?))
-  downloadTika "server-standard"
-  EXIT_CODE=$((EXIT_CODE+$?))
-fi
 
-if [[ "${APP_ONLY}" -eq 1 ]]; then
-  echo "Will download app only: proceed..."
-  downloadTika "app"
-  EXIT_CODE=$((EXIT_CODE+$?))
-fi
-
-if [[ "${SERVER_ONLY}" -eq 1 ]]; then
-  echo "Will download server only: proceed..."
-  downloadTika "server-standard"
-  EXIT_CODE=$((EXIT_CODE+$?))
-fi
+echo "Will download app: proceed..."
+downloadTika "app"
+EXIT_CODE=$((EXIT_CODE+$?))
 
 exit ${EXIT_CODE}

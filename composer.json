@@ -33,7 +33,7 @@
     "typo3/cms-reports": "*"
   },
   "require-dev": {
-    "apache-solr-for-typo3/solr": "dev-main",
+    "apache-solr-for-typo3/solr": "13.1.x-dev",
     "dg/bypass-finals": "^1.6",
     "phpstan/phpstan": "^1.12",
     "phpstan/phpstan-phpunit": "^1.4",
@@ -87,10 +87,8 @@
     "tests:setup": "Installs composer dependencies, required for tests.",
     "tests:unit": "Runs unit tests",
 
-    "tika:download": "Download Tika binaries/\".jar\" files. App and Server files.",
-    "tika:download:app": "Download Tika app binariy/\".jar\" file only.",
+    "tika:download": "Download Tika app binariy/\".jar\" file.",
     "tika:download:help": "Prints help from download script.",
-    "tika:download:server": "Download Tika server binariy/\".jar\" file only.",
     "tika:req:solr": "Print required Apache Solr version.",
     "tika:req:tika": "Print required Apache Tika version."
   },
@@ -110,9 +108,7 @@
       "rm -Rf Documentation-GENERATED-temp/ $(readlink -f Documentation.HTML) Documentation.HTML"
     ],
     "tika:download": [ "CALLED_VIA_COMPOSER=1 REQUIRED_TIKA_VERSION=$($COMPOSER_BINARY tika:req:tika) ./Build/Helpers/download_tika_binaries.sh"],
-    "tika:download:app": [ "@tika:download -a" ],
     "tika:download:help": [ "@tika:download -h" ],
-    "tika:download:server": [ "@tika:download -s" ],
     "tika:req:tika": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Tika" ],
     "tika:req:solr": [ "@composer config extra.TYPO3-Solr.ext-tika.require.Solr" ],
 
