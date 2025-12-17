@@ -6,13 +6,6 @@ services:
   ApacheSolrForTypo3\Tika\:
     resource: '../Classes/*'
 
-  backend_controller:
-    namespace: ApacheSolrForTypo3\Tika\Controller\Backend\SolrModule\
-    resource: '../Classes/Controller/Backend/SolrModule/*'
-    public: true
-    autowire: true
-    tags: ['backend.controller']
-
   ApacheSolrForTypo3\Tika\Lowlevel\EventListener\BlindedSecrets:
     tags:
       - name: event.listener

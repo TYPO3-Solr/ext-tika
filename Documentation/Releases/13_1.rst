@@ -5,10 +5,11 @@
 Releases 13.1
 =============
 
-Release 13.0.1
+Release 13.0.0
 ==============
 
-This is maintenance release for TYPO3 13 including Apache Tika 3.2.3+ support
+We are happy to announce new major version 13.1 of EXT:tika for TYPO3 13 LTS.
+This is security release  including support Apache Tika v. 3.2.3+ and Solr v. 9.10.1+
 
 .. note::
 
@@ -18,21 +19,10 @@ This is maintenance release for TYPO3 13 including Apache Tika 3.2.3+ support
       :php:`$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['skipSecurityChecks'] = true` on your own risk.
       EXT:tika will silently stop work on insecure versions.
 
-
 All changes:
 ------------
 
-- TBD
-
-Release 13.1.0
-==============
-
-We are happy to announce new major version 13.1 of EXT:tika for TYPO3 13 LTS.
-
-All changes:
-------------
-
-- TBD
+- !!! [TASK] Remove Tika Server BE Module by Rafael Kähm `5c20be053 <https://github.com/TYPO3-Solr/ext-tika/commit/5c20be053>`_
 
 Contributors
 ------------
@@ -44,10 +34,45 @@ Thanks to everyone who helped in creating this release!
 
 Also a big thanks to our partners that have joined the Apache Solr EB für TYPO3 13 LTS (Feature) program:
 
-*   b13 GmbH
+*   +Pluswerk AG
+*   .hausformat
+*   711media websolutions GmbH
+*   Amt der Oö Landesregierung
+*   Autorité des marchés financiers
 *   Berlin-Brandenburgische Akademie der Wissenschaften
+*   Bestellung EB13 SOS Software GmbH für Telekom
+*   CS2 AG
+*   F7 Media GmbH
+*   Fachhochschule Erfurt
+*   Getdesigned GmbH
+*   Groupe Toumoro inc
+*   KONVERTO AG
+*   Kassenärztliche Vereinigung Rheinland-Pfalz
+*   Kreis Euskirchen
+*   LOUIS INTERNET GmbH
+*   Leuchtfeuer Digital Marketing GmbH
+*   LfdA - Labor für digitale Angelegenheiten GmbH
+*   MOSAIQ GmbH
+*   Marketing Factory Digital GmbH
+*   ProPotsdam GmbH
+*   SITE'NGO
+*   Snowflake Productions GmbH
+*   Stämpfli AG
+*   THE BRETTINGHAMS GmbH
+*   b13 GmbH
+*   clickstorm GmbH
+*   cron IT GmbH
+*   graphodata GmbH
+*   i-kiu motion
 *   in2code GmbH
+*   internezzo ag
+*   jweiland.net e.K.
 *   mehrwert intermediale kommunikation GmbH
+*   network.publishing Möller-Westbunk GmbH
+*   plan2net GmbH
+*   queo GmbH
+*   visol digitale Dienstleistungen GmbH
+*   werkraum Digitalmanufaktur GmbH
 
 How to Get Involved
 -------------------
