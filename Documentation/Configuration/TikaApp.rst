@@ -27,9 +27,9 @@ Following command will download and verify the integrity of :file:`tika-app-<req
 
 .. code-block:: bash
 
-   composer --working-dir="$(composer config vendor-dir)/apache-solr-for-typo3/tika" tika:download:app -- -C -D /opt/tika
+   composer --working-dir="$(composer config vendor-dir)/apache-solr-for-typo3/tika" tika:download -- -C -D /opt/tika
    # or alternatively, change into the EXT:tika directory and run
-   # composer tika:download:app -- -C -D /opt/tika
+   # composer tika:download -- -C -D /opt/tika
 
 
 Setup EXT:tika for Tika App

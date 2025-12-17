@@ -5,7 +5,7 @@
 Releases 13.1
 =============
 
-Release 13.0.0
+Release 13.1.0
 ==============
 
 We are happy to announce new major version 13.1 of EXT:tika for TYPO3 13 LTS.
@@ -18,6 +18,43 @@ This is security release  including support Apache Tika v. 3.2.3+ and Solr v. 9.
       please update the applications or apply fixes manually and set
       :php:`$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['skipSecurityChecks'] = true` on your own risk.
       EXT:tika will silently stop work on insecure versions.
+
+
+!!! [FEATURE] Support Apache Tika 3.2.3+ and Solr 9.10.1+ versions only
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This change addresses the CVE-2025-66516 and updates the Tika Server/App to v. 3.2.3+.
+Due of CVE-2025-66516 / CVE-2025-54988, we are droping support for Tika <3.2.2 and Apache Solr <9.10.1.
+See the note on top.
+
+
+!!! [TASK] Remove Tika Server BE Module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This change removes deprecated and not recommended BE module
+for stopping and starting apache Tika Server.
+
+Please use proper approach for that, consult your Dev-Ops, use Hosted-Solr or Docker.
+
+
+!!! [TASK] Remove possibility to download the Tika server binary
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is the follow up of CVE-2025-66516 / CVE-2025-54988 task,
+removing possibility to download the Tika server jar file.
+The binary of server file is not required anymore within EXT:tika,
+due of removement of Tika Server administration Module in TYPO3.
+Please use proper DevOps operational style for running Apache Tika server.
+
+### Impact:
+
+Following commands and/or options do not exist anymore:
+
+*   :shell:`composer tika:download:app`
+*   :shell:`composer tika:download:server`
+*   :shell:`-a, -A, --app-only`
+*   :shell:`-s, -S, --server-only`
+
 
 All changes:
 ------------

@@ -46,13 +46,13 @@ Open Extension settings for EXT:tika **General** tab and choose **"Tika Server"*
     Extension configuration for EXT:tika - Choosing Server extractor in General tab
 
 
-After that open the **Server** tab and paste the connection infos/datas according fields.
+After that open the **Server** tab and paste the connection infos/data according fields.
 
 
 ..  figure:: /Images/BE_Settings_ExtensionConfiguration_Server.png
     :class: with-shadow
-    :alt: Extension configuration for EXT:tika - Provide the connection infos/datas for Tika Server
+    :alt: Extension configuration for EXT:tika - Provide the connection infos/data for Tika Server
 
-    Extension configuration for EXT:tika - Provide the connection infos/datas for Tika Server
+    Extension configuration for EXT:tika - Provide the connection infos/data for Tika Server
 
 See :ref:`Check if it works <configuration-tika-check>` for test instructions.
