@@ -9,7 +9,7 @@ Release 12.1.0
 ==============
 
 We are happy to announce new major version 12.1 of EXT:tika for TYPO3 13 LTS.
-This is security release  including support Apache Tika v. 3.2.3+ and Solr v. 9.10.1+
+This is security release including support Apache Tika v. 3.2.3+ and Solr v. 9.10.1+
 
 .. note::
 
@@ -19,10 +19,19 @@ This is security release  including support Apache Tika v. 3.2.3+ and Solr v. 9.
       :php:`$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['skipSecurityChecks'] = true` on your own risk.
       EXT:tika will silently stop work on insecure versions.
 
-New in this Release
--------------------
+!!! [FEATURE] Support Apache Tika 3.2.3+ and Solr 9.10.1+ versions only
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- TBD
+This change addresses the CVE-2025-66516 and updates the Tika Server/App to v. 3.2.3+.
+Due of CVE-2025-66516 / CVE-2025-54988, we are droping support for Tika <3.2.2 and Apache Solr <9.10.1.
+See the note on top.
+
+
+All changes since 12.0.4:
+-------------------------
+
+- [TASK] Prepare release-12.1.x branch `b5e49af <https://github.com/TYPO3-Solr/ext-tika/commit/b5e49af>`_
+- !!! [FEATURE] Support Apache Tika 3.2.3+ and Solr 9.10.1+ versions only `5699d65 <https://github.com/TYPO3-Solr/ext-tika/commit/5699d65>`_
 
 
 Contributors
