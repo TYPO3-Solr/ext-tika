@@ -7,9 +7,12 @@ Configuration of Solr Cell
 
 .. note::
 
-      If you use the mata-data extractor with Solr 9.10.0+, it does not extract the data properly.
-      See: https://github.com/TYPO3-Solr/ext-tika/issues/250
-      Please use the Tika Server or App instead. Or stay by Apache Solr 9.9.0.
+      All Apache Solr versions prior v. 9.10.1 are vulnerable
+      against `CVE-2025-66516 / CVE-2025-54988 <https://solr.apache.org/security.html#cve-2025-66516-apache-solr-extraction-module-vulnerable-to-xxe-attacks-via-xfa-content-in-pdfs>`_
+      please update or apply the proposed mitigation in solrconfig.xml
+      and set :php:`$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['skipSecurityChecks'] = true` on EXT:tika v 13.1.0+
+      if you can not update the Apache Solr server.
+
 
 Requirements
 ------------

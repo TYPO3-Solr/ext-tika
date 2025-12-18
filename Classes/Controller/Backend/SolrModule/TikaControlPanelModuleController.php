@@ -235,7 +235,8 @@ class TikaControlPanelModuleController extends AbstractModuleController
             . ',' . ini_get('suhosin.executor.func.blacklist');
         $disabledFunctions = GeneralUtility::trimExplode(
             ',',
-            $disabledFunctions
+            $disabledFunctions,
+            true,
         );
         if (in_array('exec', $disabledFunctions)) {
             return false;

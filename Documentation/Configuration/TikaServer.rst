@@ -1,12 +1,19 @@
 ..  index:: Configuration
 ..  _configuration-tika-server:
 
+.. note::
+
+      All Apache Tika Server versions prior v. 3.2.2 are vulnerable
+      against `CVE-2025-54988 <https://nvd.nist.gov/vuln/detail/CVE-2025-54988>`_
+      please update the Tika server.
 
 Configuration of Tika Server
 ============================
 
 Requirements
 ------------
+
+Tika Server v3.2.2+ is required.
 
 * Running and configured Apache Tika service.
   For example `the docker container <https://hub.docker.com/r/apache/tika>`_

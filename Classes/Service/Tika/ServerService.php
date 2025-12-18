@@ -69,15 +69,14 @@ class ServerService extends AbstractService
      */
     protected function initializeService(): void
     {
+        /** @noinspection PhpInternalEntityUsedInspection */
         $this->psr7Client = GeneralUtility::getContainer()->get(ClientInterface::class);
 
         // Fallback default configuration is with http protocol
-        $this->tikaUri = new Uri('http://' . $this->configuration['tikaServerHost']);
-
-        // Overwrite configuration of tikaServerScheme is configured
-        if (!empty($this->configuration['tikaServerScheme'])) {
-            $this->tikaUri = $this->tikaUri->withScheme($this->configuration['tikaServerScheme']);
-        }
+        $this->tikaUri = new Uri(
+            ($this->configuration['tikaServerScheme'] ?? 'http')
+            . '://' . $this->configuration['tikaServerHost'],
+        );
 
         // Only append tikaServerPort if configured
         if (!empty($this->configuration['tikaServerPort'])) {
@@ -337,7 +336,7 @@ class ServerService extends AbstractService
             'Meta Data Extraction using Tika Server',
             $this->getLogData($file, $rawResponse)
         );
-        return $response;
+        return $this->applyBackwardCompatibility($response);
     }
 
     /**

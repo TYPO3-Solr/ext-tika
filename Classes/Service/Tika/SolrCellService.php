@@ -130,7 +130,7 @@ class SolrCellService extends AbstractService
             'meta data' => $metaData,
         ]);
 
-        return $metaData;
+        return $this->applyBackwardCompatibility($metaData);
     }
 
     /**
@@ -179,7 +179,13 @@ class SolrCellService extends AbstractService
             $fieldName = $dataArray;
             $fieldValue = $metaDataResponse[$dataName + 1] ?? [''];
 
-            $cleanedData[$fieldName] = $fieldValue[0];
+            // Solr Cell Tika response has some values as arrays.
+            // Some of them are identical. If not identical, then superiors are much precise.
+            if (isset($fieldValue[1])) {
+                $cleanedData[$fieldName] = implode(', ', array_unique($fieldValue));
+            } else {
+                $cleanedData[$fieldName] = $fieldValue[0];
+            }
         }
 
         return $cleanedData;
@@ -259,5 +265,13 @@ class SolrCellService extends AbstractService
     public function getTikaServerUrl(): string
     {
         return (string)$this->solrConnection->getAdminService();
+    }
+
+    public function isSecure(): bool
+    {
+        if (version_compare($this->getTikaVersionString(), '9.10.1', '<')) {
+            return false;
+        }
+        return true;
     }
 }

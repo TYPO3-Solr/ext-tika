@@ -18,6 +18,10 @@ declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
 use ApacheSolrForTypo3\Tika\Service\File\SizeValidator;
+use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
+use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Util;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -103,5 +107,14 @@ abstract class AbstractExtractor implements ExtractorInterface, LoggerAwareInter
             $message,
             $data
         );
+    }
+
+    /**
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     */
+    protected function getExtractor(): AppService|ServerService|SolrCellService
+    {
+        return ServiceFactory::getTika($this->configuration['extractor']);
     }
 }
