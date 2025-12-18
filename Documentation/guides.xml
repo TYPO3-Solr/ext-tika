@@ -13,14 +13,14 @@
 	  project-repository="https://github.com/TYPO3-Solr/ext-tika"
 	  project-issues="https://github.com/TYPO3-Solr/ext-tika/issues"
 	  project-discussions="https://typo3.slack.com/archives/C02FF05Q4"
-	  edit-on-github-branch="release-12.0.x"
+	  edit-on-github-branch="release-12.1.x"
 	  edit-on-github="TYPO3-Solr/ext-tika"
 	  typo3-core-preferred="12.4"
   />
   <project
 	  title="Apache Tika for TYPO3"
-	  release="12.0.4"
-	  version="12.0"
+	  release="12.1.0"
+	  version="12.1"
 	  copyright="since 2009 by dkd &amp; contributors"
   />
 </guides>
