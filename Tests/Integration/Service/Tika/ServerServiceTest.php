@@ -17,212 +17,21 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 
-use ApacheSolrForTypo3\Tika\Process;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika\Fixtures\ServerServiceFixture;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\MockObject\Exception as MockObjectException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\NullLogger;
 use Throwable;
-use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ServerServiceTest
  */
 class ServerServiceTest extends ServiceIntegrationTestCase
 {
-    /**
-     * @throws MockObjectException
-     */
-    public function getServerServiceTestable(): ServerService
-    {
-        $this->getRegistryMockObject()
-            ->expects(self::atLeastOnce())
-            ->method('get')
-            ->with('tx_tika', 'server.pid')
-            ->willReturn('');
-
-        /** @var Process|MockObject $processMock */
-        $processMock = $this->createMock(Process::class);
-        $processMock
-            ->expects(self::atLeastOnce())
-            ->method('findPid')
-            ->willReturn(1000);
-        GeneralUtility::addInstance(Process::class, $processMock);
-
-        $service = new ServerService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-        return $service;
-    }
-
-    /**
-     * @throws MockObjectException
-     * @noinspection PhpUnusedParameterInspection
-     */
-    protected function getRegistryMockObject(array $onlyMethods = ['get', 'set', 'remove']): Registry|MockObject
-    {
-        /** @var Registry|MockObject $registryMock */
-        $registryMock = $this->createMock(Registry::class);
-        GeneralUtility::setSingletonInstance(Registry::class, $registryMock);
-        return $registryMock;
-    }
-
-    /**
-     * @throws MockObjectException
-     */
-    #[Test]
-    public function startServerStoresPidInRegistry(): void
-    {
-        $this->getRegistryMockObject()
-            ->expects(self::atLeastOnce())
-            ->method('set')
-            ->with('tx_tika', 'server.pid', 1000)
-            ->willReturnCallback(function ($namespace, $key, $value) {
-                self::assertIsInt($value);
-                self::assertEquals(1000, $value);
-            });
-
-        /** @var Process|MockObject $processMock */
-        $processMock = $this->createMock(Process::class);
-        $processMock
-            ->expects(self::atLeastOnce())
-            ->method('start');
-        $processMock
-            ->expects(self::any())
-            ->method('getPid')
-            ->willReturn(1000);
-        GeneralUtility::addInstance(Process::class, $processMock);
-
-        // execute
-        $service = new ServerService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-        $service->startServer();
-    }
-
-    /**
-     * @throws MockObjectException
-     */
-    #[Test]
-    public function stopServerRemovesPidFromRegistry(): void
-    {
-        $registryMock = $this->getRegistryMockObject();
-        $registryMock
-            ->expects(self::atLeastOnce())
-            ->method('get')
-            ->with('tx_tika', 'server.pid')
-            ->willReturn(1000);
-        $registryMock
-            ->expects(self::atLeastOnce())
-            ->method('remove')
-            ->with('tx_tika', 'server.pid');
-
-        /** @var Process|MockObject $processMock */
-        $processMock = $this->getMockBuilder(Process::class)
-            ->setConstructorArgs([''])
-            ->onlyMethods(['setPid', 'stop'])
-            ->getMock();
-        $processMock
-            ->expects(self::atLeastOnce())
-            ->method('setPid')
-            ->with(1000);
-        $processMock
-            ->expects(self::atLeastOnce())
-            ->method('stop');
-        GeneralUtility::addInstance(Process::class, $processMock);
-
-        // execute
-        $service = new ServerService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-        $service->stopServer();
-    }
-
-    /**
-     * @throws MockObjectException
-     */
-    #[Test]
-    public function getServerPidGetsPidFromRegistry(): void
-    {
-        $this->getRegistryMockObject()
-            ->expects(self::atLeastOnce())
-            ->method('get')
-            ->with('tx_tika', 'server.pid')
-            ->willReturn(1000);
-
-        $service = new ServerService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-
-        self::assertEquals(1000, $service->getServerPid());
-    }
-
-    /**
-     * @throws MockObjectException
-     */
-    #[Test]
-    public function getServerPidFallsBackToProcess(): void
-    {
-        $service = $this->getServerServiceTestable();
-        $pid = $service->getServerPid();
-
-        self::assertEquals(1000, $pid);
-    }
-
-    /**
-     * @throws MockObjectException
-     */
-    #[Test]
-    public function isServerRunningReturnsTrueForRunningServerFromRegistry(): void
-    {
-        $this->getRegistryMockObject()
-            ->expects(self::atLeastOnce())
-            ->method('get')
-            ->with('tx_tika', 'server.pid')
-            ->willReturn(1000);
-
-        $service = new ServerService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-        self::assertTrue($service->isServerRunning());
-    }
-
-    /**
-     * @throws MockObjectException
-     */
-    #[Test]
-    public function isServerRunningReturnsTrueForRunningServerFromProcess(): void
-    {
-        $service = $this->getServerServiceTestable();
-        self::assertTrue($service->isServerRunning());
-    }
-
-    /**
-     * @throws MockObjectException
-     */
-    #[Test]
-    public function isServerRunningReturnsFalseForStoppedServer(): void
-    {
-        $this->getRegistryMockObject()
-            ->expects(self::any())
-            ->method('get')
-            ->with('tx_tika', 'server.pid')
-            ->willReturn('');
-
-        /** @var Process|MockObject $processMock */
-        $processMock = $this->createMock(Process::class);
-        $processMock
-            ->expects(self::any())
-            ->method('findPid')
-            ->willReturn(null);
-        GeneralUtility::addInstance(Process::class, $processMock);
-
-        $service = new ServerService($this->getConfiguration());
-        $service->setLogger(new NullLogger());
-        self::assertFalse($service->isServerRunning());
-    }
-
     #[Test]
     public function getTikaUrlBuildsUrlFromConfiguration(): void
     {

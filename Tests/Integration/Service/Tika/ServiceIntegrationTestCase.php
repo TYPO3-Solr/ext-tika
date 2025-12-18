@@ -265,7 +265,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             'tikaPath' => getenv($envVarNamePrefix . 'APP_JAR_PATH') ?: "$tikaPath/tika-app-$tikaVersion.jar",
             'javaCommandOptions' => '-Dlog4j2.formatMsgNoLookups=true',
 
-            'tikaServerPath' => getenv($envVarNamePrefix . 'SERVER_JAR_PATH') ?: "$tikaPath/tika-server-$tikaVersion.jar",
             'tikaServerScheme' => getenv($envVarNamePrefix . 'SERVER_SCHEME') ?: 'http',
             'tikaServerHost' => getenv($envVarNamePrefix . 'SERVER_HOST') ?: 'localhost',
             'tikaServerPort' => getenv($envVarNamePrefix . 'SERVER_PORT') ?: '9998',

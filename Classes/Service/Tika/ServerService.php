@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
-use ApacheSolrForTypo3\Tika\Process;
-use ApacheSolrForTypo3\Tika\Utility\FileUtility;
 use GuzzleHttp\Exception\BadResponseException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -31,9 +29,7 @@ use Throwable;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;
-use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Resource\FileInterface;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use function str_starts_with;
@@ -82,97 +78,6 @@ class ServerService extends AbstractService
         if (!empty($this->configuration['tikaServerPort'])) {
             $this->tikaUri = $this->tikaUri->withPort((int)$this->configuration['tikaServerPort']);
         }
-    }
-
-    /**
-     * Initializes a Tika server process.
-     */
-    protected function getProcess(string $arguments = ''): Process
-    {
-        $arguments = trim($this->getAdditionalCommandOptions() . ' ' . $arguments);
-
-        return GeneralUtility::makeInstance(Process::class, (string)CommandUtility::getCommand('java'), $arguments);
-    }
-
-    /**
-     * Creates the command to start the Tika server.
-     */
-    protected function getStartCommand(): string
-    {
-        $tikaJar = FileUtility::getAbsoluteFilePath($this->configuration['tikaServerPath']);
-        $command = '-jar ' . escapeshellarg($tikaJar);
-        $command .= ' -p ' . escapeshellarg($this->configuration['tikaServerPort']);
-
-        return escapeshellcmd($command);
-    }
-
-    /**
-     * Starts the Tika server
-     */
-    public function startServer(): void
-    {
-        $process = $this->getProcess($this->getStartCommand());
-        $process->start();
-        $pid = $process->getPid();
-
-        /** @var Registry $registry */
-        $registry = GeneralUtility::makeInstance(Registry::class);
-        $registry->set('tx_tika', 'server.pid', $pid);
-    }
-
-    /**
-     * Stops the Tika server
-     */
-    public function stopServer(): void
-    {
-        $pid = $this->getServerPid();
-        if ($pid === null) {
-            return;
-        }
-
-        $process = $this->getProcess();
-        $process->setPid($pid);
-        $process->stop();
-
-        // unset pid in registry
-        /** @var Registry $registry */
-        $registry = GeneralUtility::makeInstance(Registry::class);
-        $registry->remove('tx_tika', 'server.pid');
-    }
-
-    /**
-     * Gets the Tika server pid.
-     *
-     * Tries to retrieve the pid from the TYPO3 registry first, then using ps.
-     *
-     * @return int|null Null if the pid can't be found, otherwise the pid
-     */
-    public function getServerPid(): ?int
-    {
-        /** @var Registry $registry */
-        $registry = GeneralUtility::makeInstance(Registry::class);
-        $pid = $registry->get('tx_tika', 'server.pid');
-
-        if (empty($pid)) {
-            $process = $this->getProcess($this->getStartCommand());
-            $pid = $process->findPid();
-        }
-
-        if (empty($pid)) {
-            return null;
-        }
-
-        return (int)$pid;
-    }
-
-    /**
-     * Check if the Tika server is running
-     */
-    public function isServerRunning(): bool
-    {
-        $pid = $this->getServerPid();
-
-        return !empty($pid);
     }
 
     /**
@@ -226,7 +131,7 @@ class ServerService extends AbstractService
     {
         $version = 'unknown';
 
-        if ($this->isAvailable() || $this->isServerRunning()) {
+        if ($this->isAvailable()) {
             $version = $this->queryTika($this->createRequestForEndpoint('/version'));
         }
 
