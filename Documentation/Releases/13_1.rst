@@ -9,7 +9,7 @@ Release 13.1.0
 ==============
 
 We are happy to announce new major version 13.1 of EXT:tika for TYPO3 13 LTS.
-This is security release  including support Apache Tika v. 3.2.3+ and Solr v. 9.10.1+
+This is security release including support Apache Tika v. 3.2.3+ and Solr v. 9.10.1+
 
 .. note::
 
@@ -56,10 +56,18 @@ Following commands and/or options do not exist anymore:
 *   :shell:`-s, -S, --server-only`
 
 
-All changes:
-------------
 
-- !!! [TASK] Remove Tika Server BE Module by Rafael Kähm `5c20be053 <https://github.com/TYPO3-Solr/ext-tika/commit/5c20be053>`_
+All changes since 13.0.0:
+-------------------------
+
+- [DOCS] Apache Solr 9.10.0 CELL does not extract metadata from binaries properly by Rafael Kähm `f5f83d5 <https://github.com/TYPO3-Solr/ext-tika/commit/f5f83d5>`_
+- [FIX] Use ubuntu-latest on GitHub Actions by Rafael Kähm `e1d0f68 <https://github.com/TYPO3-Solr/ext-tika/commit/e1d0f68>`_
+- [FIX] CS issues 2025.11.25 by Rafael Kähm `c36ed3d <https://github.com/TYPO3-Solr/ext-tika/commit/c36ed3d>`_
+- !!! [FEATURE] Support Apache Tika 3.2.3+ and Solr 9.10.1+ versions only by Rafael Kähm `064c018 <https://github.com/TYPO3-Solr/ext-tika/commit/064c018>`_
+- !!! [TASK] Remove Tika Server BE Module by Rafael Kähm `248d72d <https://github.com/TYPO3-Solr/ext-tika/commit/248d72d>`_
+- !!! [TASK] Remove possibility to download the Tika server binary by Rafael Kähm `e00550b <https://github.com/TYPO3-Solr/ext-tika/commit/e00550b>`_
+- !!! [TASK] Remove remains for Tika Server daemon management by Rafael Kähm `601db0a <https://github.com/TYPO3-Solr/ext-tika/commit/601db0a>`_
+
 
 Contributors
 ------------
