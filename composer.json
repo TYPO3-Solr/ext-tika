@@ -159,7 +159,7 @@
     "TYPO3-Solr": {
       "ext-tika": {
         "require": {
-          "Tika": "1.28.5",
+          "Tika": "3.2.3",
           "Solr": "9.10.*",
           "EXT:solr": "12.1.*"
         }

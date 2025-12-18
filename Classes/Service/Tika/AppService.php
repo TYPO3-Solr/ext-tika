@@ -121,7 +121,7 @@ class AppService extends AbstractService
             ]
         );
 
-        return $metaData;
+        return $this->applyBackwardCompatibility($metaData);
     }
 
     /**
@@ -255,7 +255,7 @@ class AppService extends AbstractService
                     continue;
                 }
 
-                // allow a meta data key to appear multiple times
+                // allow a metadata key to appear multiple times
                 if (!is_array($metaData[$key])) {
                     $metaData[$key] = [$metaData[$key]];
                 }

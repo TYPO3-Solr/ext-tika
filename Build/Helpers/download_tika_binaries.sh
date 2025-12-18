@@ -30,7 +30,7 @@ Examples:
   $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars
   $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars
   $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars -C -a
-  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars -C -a --tika-version 1.24.1
+  $(basename "${COMPOSER_BINARY}") tika:download -- -D /tmp/tika-jars -C -a --tika-version 3.2.3
 
 EOF
     exit
@@ -250,7 +250,7 @@ if [[ "${APP_ONLY}" -eq 0 ]] && [[ "${SERVER_ONLY}" -eq 0 ]]; then
   echo "Will download app and server: proceed..."
   downloadTika "app"
   EXIT_CODE=$((EXIT_CODE+$?))
-  downloadTika "server"
+  downloadTika "server-standard"
   EXIT_CODE=$((EXIT_CODE+$?))
 fi
 
@@ -262,7 +262,7 @@ fi
 
 if [[ "${SERVER_ONLY}" -eq 1 ]]; then
   echo "Will download server only: proceed..."
-  downloadTika "server"
+  downloadTika "server-standard"
   EXIT_CODE=$((EXIT_CODE+$?))
 fi
 

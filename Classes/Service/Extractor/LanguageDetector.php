@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Service\Extractor;
 
-use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use Psr\Http\Client\ClientExceptionInterface;
 use Throwable;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
@@ -58,7 +57,14 @@ class LanguageDetector extends AbstractExtractor
         $isSupportedFileType = in_array($file->getProperty('extension'), $this->supportedFileTypes);
         $isSizeBelowLimit = $this->fileSizeValidator->isBelowLimit($file);
 
-        return $isSupportedFileType && $isSizeBelowLimit;
+        try {
+            $tika = $this->getExtractor();
+            $canProcess = $isSupportedFileType && $isSizeBelowLimit
+                && (($this->configuration['skipSecurityChecks'] ?? false) || $tika->isSecure());
+        } catch (Throwable) {
+            return false;
+        }
+        return $canProcess;
     }
 
     /**
@@ -79,7 +85,7 @@ class LanguageDetector extends AbstractExtractor
     ): array {
         $metaData = [];
 
-        $tika = ServiceFactory::getTika($this->configuration['extractor']);
+        $tika = $this->getExtractor();
         $metaData['language'] = $tika->detectLanguageFromFile($file);
 
         return $metaData;

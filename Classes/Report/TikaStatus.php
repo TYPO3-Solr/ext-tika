@@ -18,7 +18,8 @@ declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Report;
 
 use ApacheSolrForTypo3\Solr\System\Solr\ResponseAdapter;
-use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
+use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
+use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
 use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Util;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
@@ -70,22 +71,83 @@ class TikaStatus implements StatusProviderInterface
     {
         $checks = [];
 
-        switch ($this->tikaConfiguration['extractor']) {
-            case 'jar':
-            case 'tika': // backwards compatibility only
-                // for the app java is required
-                $checks[] = $this->getJavaInstalledStatus();
-                $checks[] = $this->getAppConfigurationStatus();
+        try {
+            switch ($this->tikaConfiguration['extractor']) {
+                case 'jar':
+                case 'tika': // backwards compatibility only
+                    $checks[] = GeneralUtility::makeInstance(
+                        Status::class,
+                        'Apache Tika: Mode',
+                        'App v. ' . $this->getTikaServiceFromTikaConfiguration()->getTikaVersionString(),
+                        '<p>Please use Apache Solr Cell or Tika server instead.</p>' . PHP_EOL
+                        . '<p>Don\'t forget to uninstall or at least disallow Java runtime for PHP.</p>',
+                        ContextualFeedbackSeverity::WARNING,
+                    );
+                    $checks[] = $this->getJavaInstalledStatus();
+                    $checks[] = $this->getAppConfigurationStatus();
 
-                break;
-            case 'server':
-                // for the server only recommended since it could also run on another endpoint
-                $checks[] = $this->getJavaInstalledStatus(ContextualFeedbackSeverity::WARNING);
-                $checks[] = $this->getServerConfigurationStatus();
-                break;
-            case 'solr':
-                $checks[] = $this->getSolrCellConfigurationStatus();
-                break;
+                    break;
+                case 'server':
+                    $checks[] = GeneralUtility::makeInstance(
+                        Status::class,
+                        'Apache Tika: Mode',
+                        'Tika Server v. ' . $this->getTikaServiceFromTikaConfiguration()->getTikaVersionString(),
+                        '',
+                        ContextualFeedbackSeverity::OK,
+                    );
+                    $checks[] = $this->getServerConfigurationStatus();
+                    break;
+                case 'solr':
+                    $checks[] = GeneralUtility::makeInstance(
+                        Status::class,
+                        'Apache Tika: Mode',
+                        'Solr Cell v. ' . $this->getTikaServiceFromTikaConfiguration()->getTikaVersionString(),
+                        '',
+                        ContextualFeedbackSeverity::INFO,
+                    );
+                    $checks[] = $this->getSolrCellConfigurationStatus();
+                    break;
+            }
+
+            $checkSecurity = true;
+            foreach ($checks as $check) {
+                if ($check->getTitle() === 'Apache Tika: App') {
+                    continue;
+                }
+
+                if ($check->getSeverity()->value > ContextualFeedbackSeverity::OK->value) {
+                    $checkSecurity = false;
+                }
+            }
+            if ($checkSecurity) {
+                $checks[] = $this->getSecurityStatus();
+            }
+        } catch (Throwable $e) {
+            $additionalErrorInfos /* @lang HTML */
+                = "
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h3 class='panel-title'>
+                            <a href='#panel-reports-status-tika-exceptions' data-bs-toggle='collapse' class='collapsed' aria-expanded='false'>
+                                Exception: \"{$e->getMessage()}\" with code {$e->getCode()} in {$e->getFile()} line {$e->getLine()}
+                            </a>
+                        </h3>
+                    </div>
+
+                    <div id='panel-reports-status-tika-exceptions' class='panel-collapse collapse'>
+                        <div class='panel-body'>
+                            {$e->getTraceAsString()}
+                        </div>
+                    </div>
+                </div>
+                ";
+            $checks[] = GeneralUtility::makeInstance(
+                Status::class,
+                'Apache Tika: Stack-Trace',
+                'Configuration incomplete or wrong',
+                $additionalErrorInfos,
+                ContextualFeedbackSeverity::ERROR,
+            );
         }
 
         return $checks;
@@ -94,12 +156,12 @@ class TikaStatus implements StatusProviderInterface
     /**
      * Creates a configuration OK status.
      */
-    protected function getOkStatus(): Status
+    protected function getOkStatus(?string $topic = 'Configuration'): Status
     {
         return GeneralUtility::makeInstance(
             Status::class,
-            'Apache Tika',
-            'Configuration OK'
+            'Apache Tika: ' . $topic,
+            'OK',
         );
     }
 
@@ -108,17 +170,12 @@ class TikaStatus implements StatusProviderInterface
      */
     protected function getJavaInstalledStatus(ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::ERROR): Status
     {
-        /** @var Status $status */
-        $status = GeneralUtility::makeInstance(
-            Status::class,
-            'Apache Tika',
-            'Java OK'
-        );
+        $status = $this->getOkStatus('Java');
 
         if (!$this->isJavaInstalled()) {
             $status = GeneralUtility::makeInstance(
                 Status::class,
-                'Apache Tika',
+                'Apache Tika: Java',
                 'Java Not Found',
                 '<p>Please install Java.</p>',
                 $severity
@@ -137,7 +194,7 @@ class TikaStatus implements StatusProviderInterface
         if (!$this->isFilePresent($this->tikaConfiguration['tikaPath'])) {
             $status = GeneralUtility::makeInstance(
                 Status::class,
-                'Apache Tika',
+                'Apache Tika: Configuration',
                 'Configuration Incomplete',
                 '<p>Could not find Tika app jar.</p>',
                 ContextualFeedbackSeverity::ERROR
@@ -149,6 +206,9 @@ class TikaStatus implements StatusProviderInterface
 
     /**
      * Checks configuration for use with Tika server jar
+     *
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
     protected function getServerConfigurationStatus(): Status
     {
@@ -158,13 +218,34 @@ class TikaStatus implements StatusProviderInterface
         if (!$tikaServer->isAvailable()) {
             $status = GeneralUtility::makeInstance(
                 Status::class,
-                'Apache Tika',
+                'Apache Tika: Configuration',
                 'Configuration Incomplete',
                 '<p>Could not connect to Tika server.</p>',
                 ContextualFeedbackSeverity::ERROR
             );
         }
 
+        return $status;
+    }
+
+    /**
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     */
+    protected function getSecurityStatus(): Status
+    {
+        $status = $this->getOkStatus('Security');
+
+        $tikaService = $this->getTikaServiceFromTikaConfiguration();
+        if (!$tikaService->isSecure()) {
+            $status = GeneralUtility::makeInstance(
+                Status::class,
+                'Apache Tika: Security',
+                $this->tikaConfiguration['extractor'] === 'solr' ? 'Vulnerable against CVE-2025-66516' : 'Vulnerable against CVE-2025-54988',
+                $this->tikaConfiguration['extractor'] === 'solr' ? '<p>Please update Apache Solr to v. 9.10.1+</p>' : '<p>Please update Tika to v. 3.2.3+</p>',
+                ContextualFeedbackSeverity::ERROR,
+            );
+        }
         return $status;
     }
 
@@ -187,7 +268,7 @@ class TikaStatus implements StatusProviderInterface
             /** @var Query $query */
             $query = GeneralUtility::makeInstance(Query::class);
             $query->setExtractOnly(true);
-            $query->setFile(ExtensionManagementUtility::extPath('tika', 'ext_emconf.php'));
+            $query->setFile(ExtensionManagementUtility::extPath('tika', 'composer.json'));
             $query->addParam('extractFormat', 'text');
 
             /** @var ResponseAdapter $response */
@@ -235,7 +316,7 @@ class TikaStatus implements StatusProviderInterface
         if (!$solrCellConfigurationOk) {
             $status = GeneralUtility::makeInstance(
                 Status::class,
-                'Apache Tika',
+                'Apache Tika: Configuration',
                 'Configuration incomplete or wrong',
                 $additionalErrorInfos,
                 ContextualFeedbackSeverity::ERROR
@@ -245,12 +326,13 @@ class TikaStatus implements StatusProviderInterface
         return $status;
     }
 
-    protected function getTikaServiceFromTikaConfiguration(): ServerService
+    /**
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     */
+    protected function getTikaServiceFromTikaConfiguration(): AbstractService
     {
-        return GeneralUtility::makeInstance(
-            ServerService::class,
-            $this->tikaConfiguration
-        );
+        return ServiceFactory::getConfiguredTika();
     }
 
     /**
