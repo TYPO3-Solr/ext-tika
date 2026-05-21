@@ -72,15 +72,15 @@ class MetaDataExtractor extends AbstractExtractor
      *
      * @param File $file File to extract meta-data from
      * @param array $previousExtractedData Already extracted/existing data
-     *
-     * @throws ClientExceptionInterface
-     * @throws ExtensionConfigurationExtensionNotConfiguredException
-     * @throws ExtensionConfigurationPathDoesNotExistException
-     * @throws Throwable
      */
     public function extractMetaData(File $file, array $previousExtractedData = []): array
     {
-        $extractedMetaData = $this->getExtractedMetaDataFromTikaService($file);
+        try {
+            $extractedMetaData = $this->getExtractedMetaDataFromTikaService($file);
+        } catch (Throwable $e) {
+            $this->logger->warning('Error while processing file uid=' . $file->getUid() . ' via Ext:tika: ' . $e->getMessage());
+            $extractedMetaData = $previousExtractedData;
+        }
         return $this->normalizeMetaData($extractedMetaData);
     }
 
