@@ -24,6 +24,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Exception as MockObjectException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Resource\File;
@@ -93,6 +95,37 @@ class MetaDataExtractorTest extends UnitTestCase
         //@todo wrong data type should be int?
         self::assertSame($metaData['width'], '100', 'Could not extract width from meta data');
         self::assertSame($metaData['height'], '75', 'Could not extract height from meta data');
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws MockObjectException
+     */
+    #[Test]
+    public function extractMetaDataFallsBackToPreviousDataAndLogsWarningOnException(): void
+    {
+        /** @var MetaDataExtractor|MockObject $metaDataExtractor */
+        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)
+            ->setConstructorArgs([[]])
+            ->onlyMethods(['getExtractedMetaDataFromTikaService'])
+            ->getMock();
+        $metaDataExtractor->expects(self::once())->method('getExtractedMetaDataFromTikaService')->willThrowException(
+            new RuntimeException('Tika Server unavailable'),
+        );
+
+        $loggerMock = $this->createMock(LoggerInterface::class);
+        $loggerMock->expects(self::once())->method('warning')->with(
+            self::stringContains('Error while processing file uid=42 via Ext:tika: Tika Server unavailable'),
+        );
+        $metaDataExtractor->setLogger($loggerMock);
+
+        $fileMock = $this->createMock(File::class);
+        $fileMock->expects(self::any())->method('getUid')->willReturn(42);
+
+        $previousExtractedData = ['dc:title' => 'Previously extracted title'];
+        $metaData = $metaDataExtractor->extractMetaData($fileMock, $previousExtractedData);
+
+        self::assertSame('Previously extracted title', $metaData['title']);
     }
 
     /**
