@@ -27,7 +27,9 @@ class ShellUtility
     public static function getLanguagePrefix(): string
     {
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem']) && !Environment::isWindows()) {
-            return 'LC_CTYPE="' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'] . '" ';
+            // systemLocale is prepended to a shell command; escape it to avoid
+            // breaking out of the LC_CTYPE assignment.
+            return 'LC_CTYPE=' . escapeshellarg((string)$GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale']) . ' ';
         }
         return '';
     }
