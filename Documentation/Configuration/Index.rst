@@ -48,6 +48,27 @@ Server - variant (recommended)
 The Server variant is the best one by set on supported features and is more performant as the App,
 but requires additional service and maintenance.
 
+..  _configuration-skip-security-checks:
+
+Skip Security Checks
+====================
+
+Disables EXT:tika's built-in security gate that blocks extraction when the connected Tika / Solr version is known to be vulnerable.
+Defaults to *off* and should stay off.
+
+..  warning::
+
+    Enabling :php:`skipSecurityChecks` re-exposes your installation to the known vulnerabilities the gate protects against, in particular:
+
+    * `CVE-2025-54988 <https://tika.apache.org/security.html>`_ (Apache Tika)
+    * `CVE-2025-66516 <https://solr.apache.org/security.html#cve-2025-66516-apache-solr-extraction-module-vulnerable-to-xxe-attacks-via-xfa-content-in-pdfs>`_
+      (Apache Solr Cell, XXE via XFA content in PDFs)
+
+    Only turn it on as a temporary measure when you cannot update Apache Tika (v. 3.2.3+) or Apache Solr (v. 9.10.1+) yet,
+    and you fully understand and accept the risk. Prefer updating the underlying service, or applying the upstream mitigation in ``solrconfig.xml``, over skipping the check.
+
+    Untrusted documents processed while this is enabled may be able to exploit the extraction backend.
+
 Enable Logging
 ==============
 
