@@ -163,14 +163,12 @@ class MetaDataExtractor extends AbstractExtractor
                     $metaDataCleaned['note'] = $value;
                     break;
                 case 'dcterms:created':
-                    $metaDataCleaned['content_creation_date'] = strtotime($value);
-                    break;
                 case 'Date/Time Original':
                     $metaDataCleaned['content_creation_date'] = $this->exifDateToTimestamp($value);
                     break;
                 case 'dcterms:modified':
                 case 'meta:save-date':
-                    $metaDataCleaned['content_modification_date'] = strtotime($value);
+                    $metaDataCleaned['content_modification_date'] = $this->exifDateToTimestamp($value);
                     break;
                 case 'xmpTPg:NPages':
                 case 'meta:page-count':
@@ -197,12 +195,10 @@ class MetaDataExtractor extends AbstractExtractor
      */
     protected function exifDateToTimestamp(string $date): int
     {
-        if (($timestamp = strtotime($date)) === -1) {
-            $date = 0;
-        } else {
-            $date = $timestamp;
-        }
+        // strtotime() returns false (not -1, as in PHP < 5.1) when the date
+        // string cannot be parsed; fall back to 0 in that case.
+        $timestamp = strtotime($date);
 
-        return $date;
+        return $timestamp === false ? 0 : $timestamp;
     }
 }
