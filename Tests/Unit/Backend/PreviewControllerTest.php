@@ -27,9 +27,9 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewInterface;
 
 /**
  * Class PreviewControllerTest
@@ -55,7 +55,7 @@ class PreviewControllerTest extends UnitTestCase
             ])
             ->getMock();
 
-        $fileMock = $this->createMock(FileInterface::class);
+        $fileMock = $this->createMock(File::class);
         $fileResourceFactoryMock = $this->createMock(ResourceFactory::class);
         $fileResourceFactoryMock->expects(self::once())->method('getFileObjectFromCombinedIdentifier')->willReturn($fileMock);
 
@@ -68,7 +68,7 @@ class PreviewControllerTest extends UnitTestCase
 
         $controller->expects(self::once())->method('getIsAdmin')->willReturn(true);
         $controller->expects(self::once())->method('getConfiguredTikaService')->willReturn($serviceMock);
-        $controller->expects(self::once())->method('getInitializedPreviewView')->willReturn($this->createMock(StandaloneView::class));
+        $controller->expects(self::once())->method('getInitializedPreviewView')->willReturn($this->createMock(ViewInterface::class));
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::once())->method('getQueryParams')->willReturn(['identifier' => '']);

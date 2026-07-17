@@ -6,6 +6,13 @@ services:
   ApacheSolrForTypo3\Tika\:
     resource: '../Classes/*'
 
+  # Backend route target: needs to be public and autowired so the
+  # ViewFactoryInterface is injected into the constructor (the _defaults
+  # disable autowire for the rest of the extension).
+  ApacheSolrForTypo3\Tika\Controller\Backend\PreviewController:
+    public: true
+    autowire: true
+
   ApacheSolrForTypo3\Tika\Lowlevel\EventListener\BlindedSecrets:
     tags:
       - name: event.listener
