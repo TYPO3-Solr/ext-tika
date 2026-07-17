@@ -13,6 +13,10 @@ Configuration of Solr Cell
       and set :php:`$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['skipSecurityChecks'] = true` on EXT:tika v 13.1.0+
       if you can not update the Apache Solr server.
 
+      Only do this as a temporary measure and read
+      :ref:`Skip Security Checks <configuration-skip-security-checks>` first —
+      it re-exposes you to the vulnerability above.
+
 
 Requirements
 ------------
