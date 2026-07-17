@@ -31,13 +31,19 @@ use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExis
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 
 /**
  * Class PreviewController
  */
 class PreviewController
 {
+    public function __construct(
+        private readonly ViewFactoryInterface $viewFactory,
+    ) {}
+
     /**
      * @throws ClientExceptionInterface
      * @throws Throwable
@@ -73,13 +79,13 @@ class PreviewController
             $language = 'not detectable';
         }
 
-        $view = $this->getInitializedPreviewView();
+        $view = $this->getInitializedPreviewView($request);
 
         $view->assign('metadata', $metadata);
         $view->assign('content', $content);
         $view->assign('language', $language);
 
-        $response->getBody()->write($view->render() ?? '');
+        $response->getBody()->write($view->render('Backend/Preview'));
 
         return $response;
     }
@@ -98,13 +104,13 @@ class PreviewController
         return GeneralUtility::makeInstance(ResourceFactory::class);
     }
 
-    protected function getInitializedPreviewView(): StandaloneView
+    protected function getInitializedPreviewView(ServerRequestInterface $request): ViewInterface
     {
-        /** @var StandaloneView $view */
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $templatePathAndFile = 'EXT:tika/Resources/Private/Templates/Backend/Preview.html';
-        $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templatePathAndFile));
-        return $view;
+        $viewFactoryData = new ViewFactoryData(
+            templateRootPaths: ['EXT:tika/Resources/Private/Templates/'],
+            request: $request,
+        );
+        return $this->viewFactory->create($viewFactoryData);
     }
 
     protected function getIsAdmin(): bool
