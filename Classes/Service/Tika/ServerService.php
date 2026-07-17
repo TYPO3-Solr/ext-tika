@@ -22,6 +22,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Client\NetworkExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LogLevel;
@@ -161,13 +162,15 @@ class ServerService extends AbstractService
 
             $tikaOutput = $response->getBody()->getContents();
         } catch (Throwable $exception) {
+            // A genuinely unreachable Tika server surfaces as a PSR-18 network
+            // exception. Fall back to matching known connection-error messages
+            // for HTTP clients that do not throw the typed exception. Anything
+            // else is a real error and must propagate rather than be swallowed.
             $message = $exception->getMessage();
-            if (
-                !str_contains($message, 'Connection refused')   &&
-                !str_contains($message, 'HTTP request failed')
-            ) {
-                // If the server is simply not available it would say Connection refused
-                // since that is not the case something else went wrong
+            $serverUnavailable = $exception instanceof NetworkExceptionInterface
+                || str_contains($message, 'Connection refused')
+                || str_contains($message, 'HTTP request failed');
+            if (!$serverUnavailable) {
                 throw $exception;
             }
 
