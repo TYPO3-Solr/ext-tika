@@ -5,6 +5,23 @@
 Configuration of Solr Cell
 ==========================
 
+.. warning::
+
+      **Solr Cell is a legacy path.** Apache Solr deprecated the embedded
+      Tika backend (``LocalTikaExtractionBackend``) in Solr 9.10 and
+      **removed it in Solr 10.0** — from Solr 10 the extraction handler only
+      works by delegating to an *external* Apache Tika Server
+      (``tikaserver.url``). Apache itself states the embedded backend is
+      *"not recommended for use in a production system"* because a crashing
+      Tika parser can take down the whole Solr process.
+
+      For new setups, and for Solr 10+, prefer the
+      :ref:`Tika Server <configuration-tika-server>` extractor: same
+      features, better isolation, and independently patchable (see
+      :ref:`Skip Security Checks <configuration-skip-security-checks>` and
+      CVE-2025-66516). Solr Cell remains supported here for existing
+      installations.
+
 .. note::
 
       All Apache Solr versions prior v. 9.10.1 are vulnerable

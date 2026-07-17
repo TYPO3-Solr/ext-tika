@@ -34,13 +34,20 @@ App - variant (not recommended)
 So for example the App requires Java Runtime to exec and spawn a new java process for each processed file,
 but no network traffic for send files via wire.
 
-Solr Cell - variant
-~~~~~~~~~~~~~~~~~~~
+Solr Cell - variant (legacy)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Apache Solr Content Extraction Library (Solr Cell) variant does not support all the features supported by the App and by Server variants,
 but does not require to run and maintain any additional service/stack, if EXT:solr is already configured.
 Any connection/core used by EXT:solr can be reused there.
 Possible implications can be found on `Apache Solr docs page <https://solr.apache.org/guide/solr/latest/indexing-guide/indexing-with-tika.html#solr-cell-performance-implications>`_
+
+.. note::
+
+   Apache Solr is phasing Solr Cell out: the embedded Tika backend is deprecated
+   since Solr 9.10 and removed in Solr 10.0, where extraction is only possible by
+   delegating to an external Tika Server. Prefer the **Server** variant for new
+   setups. See :ref:`Configuration of Solr Cell <configuration-tika-solr-cell>`.
 
 Server - variant (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
