@@ -46,10 +46,14 @@ jobs:
              ghcr.io/typo3-documentation/render-guides:latest --config=Documentation --no-progress --fail-on-log
   tests:
     runs-on: ubuntu-latest
+    # v14 rows are experimental until the TYPO3 v14 / EXT:solr 14 test setup
+    # is proven green; do not let them fail the whole pipeline meanwhile.
+    continue-on-error: ${{ contains(matrix.TYPO3, '14') }}
     strategy:
+      fail-fast: false
       matrix:
         PHP: [ '8.2', '8.3', '8.4' ]
-        TYPO3: [ '^13.4', '13.4.x-dev' ]
+        TYPO3: [ '^13.4', '13.4.x-dev', '^14.3', '14.0.x-dev' ]
     env:
       typo3DatabaseName: 'typo3_ci'
       typo3DatabaseHost: '127.0.0.1'
