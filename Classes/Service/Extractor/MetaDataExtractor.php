@@ -78,7 +78,7 @@ class MetaDataExtractor extends AbstractExtractor
         try {
             $extractedMetaData = $this->getExtractedMetaDataFromTikaService($file);
         } catch (\Throwable $e) {
-            $this->logger->warning('Error while processing file uid=' . $file->getUid(). ' via Ext:tika: ' . $e->getMessage());
+            $this->logger->warning('Error while processing file uid=' . $file->getUid() . ' via Ext:tika: ' . $e->getMessage());
             $extractedMetaData = $previousExtractedData;
         }
         return $this->normalizeMetaData($extractedMetaData);
