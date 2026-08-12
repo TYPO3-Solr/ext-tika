@@ -1,6 +1,6 @@
 # Apache Tika for TYPO3
 
-[![Build Status](https://github.com/TYPO3-Solr/ext-tika/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TYPO3-Solr/ext-tika/actions?query=branch:main)
+[![Build Status](https://github.com/TYPO3-Solr/ext-tika/actions/workflows/ci.yml/badge.svg?branch=release-13.1.x)](https://github.com/TYPO3-Solr/ext-tika/actions?query=branch:release-13.1.x)
 [![Latest Stable Version](https://poser.pugx.org/apache-solr-for-typo3/tika/v/stable)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![License](https://poser.pugx.org/apache-solr-for-typo3/tika/license)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![Total Downloads](http://poser.pugx.org/apache-solr-for-typo3/tika/downloads)](https://packagist.org/packages/apache-solr-for-typo3/tika)
@@ -24,7 +24,7 @@ Please find further information regarding Apache Tika on the [project's homepage
 |                  | URL                                                             |
 |------------------|-----------------------------------------------------------------|
 | **Repository:**  | https://github.com/TYPO3-Solr/ext-tika                          |
-| **Read online:** | https://docs.typo3.org/p/apache-solr-for-typo3/tika/main/en-us/ |
+| **Read online:** | https://docs.typo3.org/p/apache-solr-for-typo3/tika/13.1/en-us/ |
 | **TER:**         | https://extensions.typo3.org/extension/tika                     |
 | **Homepage:**    | https://www.typo3-solr.com/                                     |
 | **Fund:**        | https://shop.dkd.de/Produkte/Apache-Solr-fuer-TYPO3/            |
@@ -41,9 +41,9 @@ To run the test suite locally, please use our DDEV docker environment https://gi
 
 **Note**:
   This requires a proper combination of branches:
-* solr-ddev-site on main branch
-    * packages/ext-solr on main
-    * packages/ext-tika on main
+* solr-ddev-site on release-13.1.x branch
+    * packages/ext-solr on release-13.1.x
+    * packages/ext-tika on release-13.1.x
 * Please refer to [version matrix](https://raw.githubusercontent.com/TYPO3-Solr/ext-solr/main/Documentation/Appendix/VersionMatrix.rst) for proper combination of branches
 
 ```shell

@@ -13,6 +13,4 @@ Releases
     :glob:
 
     13_1
-    11_0
-    10_0
     Archive/Index

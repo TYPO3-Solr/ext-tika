@@ -5,6 +5,8 @@
 Releases 13.0
 =============
 
+..  include:: ../HintAboutOutdatedChangelog.rst.txt
+
 Release 13.0.1
 ==============
 
