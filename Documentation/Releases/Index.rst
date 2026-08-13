@@ -12,7 +12,6 @@ Releases
     :titlesonly:
     :glob:
 
+    14_0
     13_1
-    11_0
-    10_0
     Archive/Index
