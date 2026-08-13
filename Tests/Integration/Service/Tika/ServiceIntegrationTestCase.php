@@ -325,10 +325,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
      */
     protected function inject(object $target, string $name, mixed $dependency): void
     {
-        if (!is_object($target)) {
-            throw new InvalidArgumentException('Wrong type for argument $target, must be object.', 1476107338);
-        }
-
         $objectReflection = new ReflectionObject($target);
         $methodNamePart = strtoupper($name[0]) . substr($name, 1);
         if ($objectReflection->hasMethod('set' . $methodNamePart)) {
