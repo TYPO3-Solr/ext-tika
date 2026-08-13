@@ -189,7 +189,7 @@ class AppService extends AbstractService
 
     public function getSupportedMimeTypes(): array
     {
-        if (is_array(self::$supportedMimeTypes) && count(self::$supportedMimeTypes) > 0) {
+        if (count(self::$supportedMimeTypes) > 0) {
             return self::$supportedMimeTypes;
         }
 

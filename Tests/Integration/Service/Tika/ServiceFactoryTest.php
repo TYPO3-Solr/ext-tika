@@ -99,7 +99,6 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
 
         $extractor = ServiceFactory::getTika('solr', $this->getConfiguration());
         self::assertInstanceOf(SolrCellService::class, $extractor);
-        self::assertInstanceOf(SolrCellService::class, $extractor);
     }
 
     /**

@@ -34,13 +34,13 @@
   },
   "require-dev": {
     "apache-solr-for-typo3/solr": "14.0.x-dev",
-    "dg/bypass-finals": "^1.6",
-    "phpstan/phpstan": "^1.12",
-    "phpstan/phpstan-phpunit": "^1.4",
-    "phpunit/phpunit": "^11.4",
+    "dg/bypass-finals": "^1.9",
+    "phpstan/phpstan": "^2.1.34",
+    "phpstan/phpstan-phpunit": "^2.0.18",
+    "phpunit/phpunit": "^11.5.55",
     "typo3/cms-lowlevel": "*",
     "typo3/coding-standards": "v0.8.0",
-    "typo3/testing-framework": "^9.0.1"
+    "typo3/testing-framework": "^9.5.0"
   },
   "suggest": {
     "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr.",
