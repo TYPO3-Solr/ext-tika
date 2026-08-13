@@ -5,7 +5,7 @@
 Release 10.0.2
 ==============
 
-..  include:: HintAboutOutdatedChangelog.rst.txt
+..  include:: ../HintAboutOutdatedChangelog.rst.txt
 
 **Important**:
 This version contains CVE-2021-44228 fixes for users, who starting

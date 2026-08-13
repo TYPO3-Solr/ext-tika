@@ -1,0 +1,53 @@
+..  index:: Releases
+..  _releases-tika-14_0:
+
+=============
+Releases 14.0
+=============
+
+Release 14.0.0
+==============
+
+We are happy to announce new major version 14.0 of EXT:tika for TYPO3 14 LTS.
+
+.. note::
+
+      Sol Cell support is dropped since EXT:solr 14.0.0, because Apache Solr dropped it.
+      See: https://github.com/TYPO3-Solr/ext-tika/issues/180 for more information.
+
+All changes since 13.1.0:
+-------------------------
+
+- TBD...
+
+
+Contributors
+------------
+
+*   Markus Friedrich
+*   Olivier Dobberkau
+*   Rafael Kähm
+
+Thanks to everyone who helped in creating this release!
+
+Also a big thank you to our partners who have already concluded one of our new development participation packages such
+as Apache Solr EB for TYPO3 14 LTS (Feature).
+
+
+How to Get Involved
+===================
+
+There are many ways to get involved with Apache Solr for TYPO3:
+
+* Submit bug reports and feature requests on `GitHub <https://github.com/TYPO3-Solr/ext-solr>`__
+* Ask or help or answer questions in our `Slack channel <https://typo3.slack.com/messages/ext-solr/>`__
+* Provide patches through Pull Request or review and comment on existing `Pull Requests <https://github.com/TYPO3-Solr/ext-solr/pulls>`__
+* Go to `www.typo3-solr.com <https://www.typo3-solr.com>`__ or call `dkd <http://www.dkd.de>`__ to sponsor the ongoing development of Apache Solr for TYPO3
+
+Support us by becoming an EB partner:
+
+https://shop.dkd.de/Produkte/Apache-Solr-fuer-TYPO3/
+
+or call:
+
++49 (0)69 - 2475218 0
