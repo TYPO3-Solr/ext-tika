@@ -21,7 +21,6 @@ use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
-use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -94,7 +93,7 @@ readonly class PreviewController
      * @throws ExtensionConfigurationPathDoesNotExistException
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      */
-    protected function getConfiguredTikaService(): AbstractService|AppService|ServerService|SolrCellService
+    protected function getConfiguredTikaService(): AbstractService|AppService|ServerService
     {
         return ServiceFactory::getConfiguredTika();
     }

@@ -20,7 +20,6 @@ namespace ApacheSolrForTypo3\Tika\Tests\Integration\Service\Tika;
 use ApacheSolrForTypo3\Tika\Service\Tika\AppService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServerService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
-use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
@@ -28,7 +27,6 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -84,21 +82,6 @@ class ServiceFactoryTest extends ServiceIntegrationTestCase
     {
         $extractor = ServiceFactory::getTika('server', $this->getConfiguration());
         self::assertInstanceOf(ServerService::class, $extractor);
-    }
-
-    /**
-     * @throws ExtensionConfigurationPathDoesNotExistException
-     * @throws ExtensionConfigurationExtensionNotConfiguredException
-     */
-    #[Test]
-    public function getTikaReturnsSolrCellServiceForSolrExtractor(): void
-    {
-        if (!ExtensionManagementUtility::isLoaded('solr')) {
-            self::markTestSkipped('EXT:solr is required for this test, but is not loaded.');
-        }
-
-        $extractor = ServiceFactory::getTika('solr', $this->getConfiguration());
-        self::assertInstanceOf(SolrCellService::class, $extractor);
     }
 
     /**

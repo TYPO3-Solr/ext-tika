@@ -5,7 +5,7 @@
 [![License](https://poser.pugx.org/apache-solr-for-typo3/tika/license)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![Total Downloads](http://poser.pugx.org/apache-solr-for-typo3/tika/downloads)](https://packagist.org/packages/apache-solr-for-typo3/tika)
 [![Monthly Downloads](https://poser.pugx.org/apache-solr-for-typo3/tika/d/monthly)](https://packagist.org/packages/apache-solr-for-typo3/tika)
-[![TYPO3 13](https://img.shields.io/badge/TYPO3-13-orange.svg?style=flat-square)](https://get.typo3.org/version/13)
+[![TYPO3 14](https://img.shields.io/badge/TYPO3-13-orange.svg?style=flat-square)](https://get.typo3.org/version/14)
 
 A TYPO3 CMS extension that provides Apache Tika functionality including
 
@@ -13,7 +13,7 @@ A TYPO3 CMS extension that provides Apache Tika functionality including
 * meta data extraction
 * language detection (from strings or files)
 
-Tika can be used as standalone Tika app/jar, Tika server, and via SolrCell integrated in Apache Solr.
+Tika can be used as standalone Tika app/jar and Tika server.
 
 We're open for [contributions](#Contributions) !
 

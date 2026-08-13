@@ -43,7 +43,6 @@
     "typo3/testing-framework": "^9.5.0"
   },
   "suggest": {
-    "apache-solr-for-typo3/solr": "Allows to use Solr Cell - Apache Tika embedded in Apache Solr.",
     "apache-solr-for-typo3/solrfal": "EXT:tika + EXT:solrfal make the files(TYPO3 FAL) indexable and searchable within EXT:solr."
   },
   "autoload": {
@@ -161,7 +160,7 @@
     "TYPO3-Solr": {
       "ext-tika": {
         "require": {
-          "Tika": "3.2.3"
+          "Tika": "3.3.1"
         }
       }
     }

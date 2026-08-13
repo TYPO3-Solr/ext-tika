@@ -12,12 +12,6 @@ env:
   CI_BUILD_DIRECTORY: '/home/runner/work/ext-tika/ext-tika/.Build'
   TIKA_PATH: '/home/runner/work/ext-tika/ext-tika/.Build/data-tika-binaries'
 
-  SOLR_IMAGE_TAG: '14.0.x-dev'
-  SOLR_CONTAINER_NAME: 'solrci-container'
-  TESTING_SOLR_PORT: 8983
-  SOLR_VOLUME_NAME: 'solrci-volume'
-  SOLR_VOLUME_PATH: '/home/runner/work/ext-tika/ext-tika/.Build/data-solr'
-
 jobs:
   test-docs:
     name: Test docs
@@ -87,9 +81,8 @@ jobs:
         run: |
           sudo mkdir -p ${{ env.CI_BUILD_DIRECTORY }}
           sudo mount -t tmpfs -o size=2560m none ${{ env.CI_BUILD_DIRECTORY }}
-            sudo mkdir -p ${{ env.CI_BUILD_DIRECTORY }}/data-{solr,mysql,tika-binaries} \
-            && sudo chown $USER ${{ env.CI_BUILD_DIRECTORY }}/data-{mysql,tika-binaries} \
-            && sudo chown 8983:8983 ${{ env.CI_BUILD_DIRECTORY }}/data-solr
+            sudo mkdir -p ${{ env.CI_BUILD_DIRECTORY }}/data-{mysql,tika-binaries} \
+            && sudo chown $USER ${{ env.CI_BUILD_DIRECTORY }}/data-{mysql,tika-binaries}
       -
         name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -104,9 +97,6 @@ jobs:
             -e MYSQL_DATABASE=$typo3DatabaseName \
             -e MYSQL_ROOT_PASSWORD=$typo3DatabasePassword \
             -d mysql:8.0 mysqld --default-authentication-plugin=mysql_native_password
-          sudo chmod g+w "$SOLR_VOLUME_PATH"
-          docker volume create --name "$SOLR_VOLUME_NAME" --opt type=none --opt device="$SOLR_VOLUME_PATH" --opt o=bind
-          docker run --rm --name="$SOLR_CONTAINER_NAME" -d -p 127.0.0.1:8983:8983 -v "$SOLR_VOLUME_NAME":"/var/solr" "typo3solr/ext-solr:$SOLR_IMAGE_TAG"
           docker run -d -p 9998:9998 apache/tika:$(composer tika:req:tika).0"-full"
           docker ps
       -

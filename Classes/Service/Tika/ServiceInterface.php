@@ -20,8 +20,7 @@ namespace ApacheSolrForTypo3\Tika\Service\Tika;
 use TYPO3\CMS\Core\Resource\FileInterface;
 
 /**
- * A common interface for the different ways of accessing Tika, e.g. app,
- * server, and Solr Cell.
+ * A common interface for the different ways of accessing Tika, e.g. app or server.
  */
 interface ServiceInterface
 {

@@ -31,7 +31,7 @@ class ServiceFactory
     /**
      * Creates an instance of a Tika service
      *
-     * @param string $tikaServiceType Tika Service type, one of jar, server, or solr (or tika for BC, same as jar)
+     * @param string $tikaServiceType Tika Service type, one of jar or server
      * @param array|null $configuration EXT:tika EM configuration (initialized by this factory, parameter exists for tests)
      *
      * @throws ExtensionConfigurationExtensionNotConfiguredException
@@ -40,7 +40,7 @@ class ServiceFactory
     public static function getTika(
         string $tikaServiceType,
         ?array $configuration = null,
-    ): ServerService|AppService|SolrCellService {
+    ): ServerService|AppService {
         if (empty($configuration)) {
             $configuration = Util::getTikaExtensionConfiguration();
         }
@@ -48,9 +48,8 @@ class ServiceFactory
         return match ($tikaServiceType) {
             'jar', 'tika' => GeneralUtility::makeInstance(AppService::class, $configuration),
             'server' => GeneralUtility::makeInstance(ServerService::class, $configuration),
-            'solr' => GeneralUtility::makeInstance(SolrCellService::class, $configuration),
             default => throw new InvalidArgumentException(
-                'Unknown Tika service type "' . $tikaServiceType . '". Must be one of jar, server, or solr.',
+                'Unknown Tika service type "' . $tikaServiceType . '". Must be one of jar or server.',
                 1423035119,
             ),
         };
@@ -62,7 +61,7 @@ class ServiceFactory
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public static function getConfiguredTika(): ServerService|AppService|SolrCellService
+    public static function getConfiguredTika(): ServerService|AppService
     {
         $tikaConfiguration = Util::getTikaExtensionConfiguration();
         return static::getTika($tikaConfiguration['extractor'], Util::getTikaExtensionConfiguration());

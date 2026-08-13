@@ -271,12 +271,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             'tikaServerScheme' => getenv($envVarNamePrefix . 'SERVER_SCHEME') ?: 'http',
             'tikaServerHost' => getenv($envVarNamePrefix . 'SERVER_HOST') ?: 'localhost',
             'tikaServerPort' => getenv($envVarNamePrefix . 'SERVER_PORT') ?: '9998',
-
-            'solrScheme' => getenv('TESTING_SOLR_SCHEME') ?: 'http',
-            'solrHost' => getenv('TESTING_SOLR_HOST') ?: 'localhost',
-            'solrPort' => getenv('TESTING_SOLR_PORT') ?: 8999,
-            'solrPath' => getenv('TESTING_SOLR_PATH') ?: '/',
-            'solrCore' => getenv('TESTING_SOLR_CORE') ?: 'core_en',
         ];
     }
 
