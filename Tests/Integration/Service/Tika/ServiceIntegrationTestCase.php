@@ -25,6 +25,8 @@ use RuntimeException;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use TYPO3\CMS\Core\Resource\File;
@@ -66,13 +68,13 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
     protected int $languagesStorageUid = 9001;
 
     protected array $testExtensionsToLoad = [
-        'typo3conf/ext/solr',
         'typo3conf/ext/tika',
     ];
 
     protected array $coreExtensionsToLoad = [
         'typo3/cms-scheduler',
         'typo3/cms-filemetadata',
+        'typo3/cms-reports',
     ];
 
     /**
@@ -111,7 +113,9 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
         $this->setUpLanguagesStorageMock();
 
         $metaDataRepositoryConstructorArgs = [
-            GeneralUtility::makeInstance(EventDispatcher::class),
+            $this->get(EventDispatcher::class),
+            $this->get(ConnectionPool::class),
+            $this->get(Context::class),
         ];
 
         /** @var MetaDataRepository|MockObject $mockedMetaDataRepository */
@@ -122,7 +126,6 @@ abstract class ServiceIntegrationTestCase extends FunctionalTestCase
             ->expects(self::any())
             ->method('findByFile')
             ->willReturn(['file' => 1]);
-        GeneralUtility::setSingletonInstance(MetaDataRepository::class, $mockedMetaDataRepository);
         // Set $GLOBALS['TYPO3_CONF_VARS'], to avoid PHP 8.0+ warning like "Undefined global variable"
         $GLOBALS['TYPO3_CONF_VARS']['BE']['disable_exec_function'] = false;
     }
