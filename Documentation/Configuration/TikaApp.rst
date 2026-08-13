@@ -6,7 +6,7 @@
       All Apache Tika App versions prior v. 3.2.2 are vulnerable
       against `CVE-2025-54988 <https://nvd.nist.gov/vuln/detail/CVE-2025-54988>`_
       please update the used binaries.
-      Do not use the App on your server. Use Solr Cell or better Tika Server instead.
+      Do not use the App on your server. Use Tika Server instead.
 
 
 Configuration of Tika App (not recommended)

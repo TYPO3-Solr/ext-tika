@@ -17,19 +17,15 @@ declare(strict_types=1);
 
 namespace ApacheSolrForTypo3\Tika\Report;
 
-use ApacheSolrForTypo3\Solr\System\Solr\ResponseAdapter;
 use ApacheSolrForTypo3\Tika\Service\Tika\AbstractService;
 use ApacheSolrForTypo3\Tika\Service\Tika\ServiceFactory;
-use ApacheSolrForTypo3\Tika\Service\Tika\SolrCellService;
 use ApacheSolrForTypo3\Tika\Util;
 use ApacheSolrForTypo3\Tika\Utility\FileUtility;
-use Solarium\QueryType\Extract\Query;
 use Throwable;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\CommandUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
@@ -79,7 +75,7 @@ class TikaStatus implements StatusProviderInterface
                         Status::class,
                         'Apache Tika: Mode',
                         'App v. ' . $this->getTikaServiceFromTikaConfiguration()->getTikaVersionString(),
-                        '<p>Please use Apache Solr Cell or Tika server instead.</p>' . PHP_EOL .
+                        '<p>Please use Tika server instead.</p>' . PHP_EOL .
                         '<p>Don\'t forget to uninstall or at least disallow Java runtime for PHP.</p>',
                         ContextualFeedbackSeverity::WARNING,
                     );
@@ -96,16 +92,6 @@ class TikaStatus implements StatusProviderInterface
                         ContextualFeedbackSeverity::OK,
                     );
                     $checks[] = $this->getServerConfigurationStatus();
-                    break;
-                case 'solr':
-                    $checks[] = GeneralUtility::makeInstance(
-                        Status::class,
-                        'Apache Tika: Mode',
-                        'Solr Cell v. ' . $this->getTikaServiceFromTikaConfiguration()->getTikaVersionString(),
-                        '',
-                        ContextualFeedbackSeverity::INFO,
-                    );
-                    $checks[] = $this->getSolrCellConfigurationStatus();
                     break;
             }
 
@@ -242,88 +228,11 @@ class TikaStatus implements StatusProviderInterface
             $status = GeneralUtility::makeInstance(
                 Status::class,
                 'Apache Tika: Security',
-                $this->tikaConfiguration['extractor'] === 'solr' ? 'Vulnerable against CVE-2025-66516' : 'Vulnerable against CVE-2025-54988',
-                $this->tikaConfiguration['extractor'] === 'solr' ? '<p>Please update Apache Solr to v. 9.10.1+</p>' : '<p>Please update Tika to v. 3.2.3+</p>',
+                'Vulnerable against CVE-2025-54988',
+                '<p>Please update Tika to v. 3.2.3+</p>',
                 ContextualFeedbackSeverity::ERROR,
             );
         }
-        return $status;
-    }
-
-    /**
-     * Checks configuration for use with Solr
-     */
-    protected function getSolrCellConfigurationStatus(): Status
-    {
-        $status = $this->getOkStatus();
-
-        $solrCellConfigurationOk = false;
-        $additionalErrorInfos = '';
-        try {
-            $solrConnection = GeneralUtility::makeInstance(
-                SolrCellService::class,
-                $this->tikaConfiguration,
-            )->getSolrConnection();
-
-            // try to extract text & meta data
-            /** @var Query $query */
-            $query = GeneralUtility::makeInstance(Query::class);
-            $query->setExtractOnly(true);
-            $query->setFile(ExtensionManagementUtility::extPath('tika', 'composer.json'));
-            $query->addParam('extractFormat', 'text');
-
-            /** @var ResponseAdapter $response */
-            [$extractedContent, $extractedMetadata, $response] = $solrConnection->getWriteService()->extractByQuery($query);
-
-            if (!is_null($extractedContent) && !empty($extractedMetadata)) {
-                $solrCellConfigurationOk = true;
-            } elseif ($response instanceof ResponseAdapter) {
-                $additionalErrorInfos = /* @lang HTML */
-                "
-                <table class='table table-condensed table-hover table-striped'>
-                    <tbody>
-                        <tr class='warning'>
-                            <th>Status:</th><td>{$response->getHttpStatus()} {$response->getHttpStatusMessage()}</td>
-                        </tr>
-                        <tr class='warning'>
-                            <th>Response body:</th>
-                            <td>{$response->getRawResponse()}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                ";
-            }
-        } catch (Throwable $e) {
-            $additionalErrorInfos = /* @lang HTML */
-                "
-                <div class='panel panel-default'>
-                    <div class='panel-heading'>
-                        <h3 class='panel-title'>
-                            <a href='#panel-reports-status-tika-solr-cell' data-bs-toggle='collapse' class='collapsed' aria-expanded='false'>
-                                Exception: \"{$e->getMessage()}\" with code {$e->getCode()} in {$e->getFile()} line {$e->getLine()}
-                            </a>
-                        </h3>
-                    </div>
-
-                    <div id='panel-reports-status-tika-solr-cell' class='panel-collapse collapse'>
-                        <div class='panel-body'>
-                            {$e->getTraceAsString()}
-                        </div>
-                    </div>
-                </div>
-                ";
-        }
-
-        if (!$solrCellConfigurationOk) {
-            $status = GeneralUtility::makeInstance(
-                Status::class,
-                'Apache Tika: Configuration',
-                'Configuration incomplete or wrong',
-                $additionalErrorInfos,
-                ContextualFeedbackSeverity::ERROR,
-            );
-        }
-
         return $status;
     }
 

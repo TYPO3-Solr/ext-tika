@@ -12,8 +12,8 @@ You will find them as reported from "Apache Tika".
 
 The extension checks whether you have Java installed when using the Tika app or Tika server.
 
-It will also check your configuration, whether the configured paths for Tika app and Tika server are
-available and whether Tika Server and Solr server can be reached depending on what you're using.
+It will also check your configuration, whether the configured path for Tika app is
+available and whether Tika Server can be reached depending on what you're using.
 
 If all is configured as expected, you'll get following in TYPO3 Reports:
 
