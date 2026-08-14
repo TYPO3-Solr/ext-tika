@@ -102,6 +102,30 @@ class MetaDataExtractorTest extends UnitTestCase
      * @throws MockObjectException
      */
     #[Test]
+    public function extractMetaDataDeduplicatesRepeatedArrayValues(): void
+    {
+        /** @var MetaDataExtractor|MockObject $metaDataExtractor */
+        $metaDataExtractor = $this->getMockBuilder(MetaDataExtractor::class)
+            ->setConstructorArgs([[]])
+            ->onlyMethods(['getExtractedMetaDataFromTikaService'])
+            ->getMock();
+        $metaDataExtractor->expects(self::once())->method('getExtractedMetaDataFromTikaService')->willReturn([
+            // IPTC Keywords and XMP dc:subject synced to the same value produce
+            // duplicated array entries, see https://github.com/TYPO3-Solr/ext-tika/issues/262
+            'dc:subject' => ['text', 'text'],
+        ]);
+
+        $fileMock = $this->createMock(File::class);
+        $metaData = $metaDataExtractor->extractMetaData($fileMock);
+
+        self::assertSame('text', $metaData['keywords']);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws MockObjectException
+     */
+    #[Test]
     public function extractMetaDataFallsBackToPreviousDataAndLogsWarningOnException(): void
     {
         /** @var MetaDataExtractor|MockObject $metaDataExtractor */
