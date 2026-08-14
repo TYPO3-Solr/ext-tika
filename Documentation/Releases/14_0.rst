@@ -41,12 +41,24 @@ See :ref:`Configuration of Tika Server <configuration-tika-server>` for details.
 All changes since 13.1.0:
 -------------------------
 
-- TBD...
+- [TASK] Prepare main branch for TYPO3 14 version by Rafael Kähm `3ffb5da <https://github.com/TYPO3-Solr/ext-tika/commit/3ffb5da>`_
+- [TASK] TYPO3 v14 compatibility by Rafael Kähm `7297be3 <https://github.com/TYPO3-Solr/ext-tika/commit/7297be3>`_
+- [TASK] TYPO3 v14 compatibility: PHPStan issues by Rafael Kähm `688d26d <https://github.com/TYPO3-Solr/ext-tika/commit/688d26d>`_
+- [TASK] update GitHub Actions versions by Rafael Kähm `ef1a0bd <https://github.com/TYPO3-Solr/ext-tika/commit/ef1a0bd>`_
+- [TASK] Replace removed StandaloneView with ViewFactoryInterface by Olivier Dobberkau `bf70b7b <https://github.com/TYPO3-Solr/ext-tika/commit/bf70b7b>`_
+- !!![TASK] remove Solr Cell support by Rafael Kähm `f628549 <https://github.com/TYPO3-Solr/ext-tika/commit/f628549>`_
+- [FEATURE] Add Basic-Auth and timeout configuration for Tika Server by Rafael Kähm `091025a <https://github.com/TYPO3-Solr/ext-tika/commit/091025a>`_
+- [SECURITY] Escape backend output to prevent XSS and shell injection by Olivier Dobberkau `e1bca94 <https://github.com/TYPO3-Solr/ext-tika/commit/e1bca94>`_
+- [DOCS] Warn about skipSecurityChecks re-exposing known CVEs by Olivier Dobberkau `97d391e <https://github.com/TYPO3-Solr/ext-tika/commit/97d391e>`_
+- [BUGFIX] Harden date parsing and Tika server error handling by Olivier Dobberkau `635db49 <https://github.com/TYPO3-Solr/ext-tika/commit/635db49>`_
+- [BUGFIX] Add exception handling to metadata extraction by Mario Lubenka `3c763b4 <https://github.com/TYPO3-Solr/ext-tika/commit/3c763b4>`_
+- [BUGFIX] Deduplicate array values in metadata normalization by Rafael Kähm `2f9cce4 <https://github.com/TYPO3-Solr/ext-tika/commit/2f9cce4>`_
 
 
 Contributors
 ------------
 
+*   Mario Lubenka
 *   Markus Friedrich
 *   Olivier Dobberkau
 *   Rafael Kähm
