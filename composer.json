@@ -5,6 +5,7 @@
   "license": "GPL-3.0-or-later",
   "keywords": ["typo3", "cms", "tika", "meta data", "language", "text", "extraction"],
   "homepage": "https://www.typo3-solr.com",
+  "version": "14.0.0",
   "authors": [
     {
       "name": "Ingo Renner",
