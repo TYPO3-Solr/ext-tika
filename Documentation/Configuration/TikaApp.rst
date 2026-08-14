@@ -48,7 +48,7 @@ Open Extension settings for EXT:tika **General** tab and choose **"Tika App"** a
 After that open the **Jar** tab and paste the path from downloaded :file:`tika-app-<required-version>.jar` into **Tika App Jar Path** input field.
 
 
-..  figure:: /Images/BE_Settings_ExtensionConfiguration_Jar.png
+..  figure:: /Images/BE_Settings_ExtensionConfiguration_App.png
     :class: with-shadow
     :alt: Extension configuration for EXT:tika - Provide the path to downloaded App file
 

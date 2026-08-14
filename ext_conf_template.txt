@@ -31,3 +31,15 @@ tikaServerHost = localhost
 
 # cat=server//40; type=string; label=Port
 tikaServerPort = 9998
+
+# cat=server//50; type=user[ApacheSolrForTypo3\Tika\Lowlevel\EventListener\BlindedSecrets->hideInExtConf]; label=Username: Username for Basic-Auth authentication on Tika Server
+tikaServerUsername =
+
+# cat=server//60; type=user[ApacheSolrForTypo3\Tika\Lowlevel\EventListener\BlindedSecrets->hideInExtConf]; label=Password: Password for Basic-Auth authentication on Tika Server
+tikaServerPassword =
+
+# cat=server//70; type=int+; label=Connect timeout (ms): Max. time to establish the connection to Tika Server. Range 100-60000, default 2000.
+tikaServerConnectTimeoutMs = 2000
+
+# cat=server//80; type=int+; label=Request timeout (ms): Max. total time for a Tika Server request/response (relevant for large files). Range 100-60000, default 10000.
+tikaServerRequestTimeoutMs = 10000

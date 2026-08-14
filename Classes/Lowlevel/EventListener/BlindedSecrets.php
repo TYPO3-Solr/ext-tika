@@ -28,15 +28,12 @@ class BlindedSecrets
         $options = $event->getBlindedConfigurationOptions();
 
         if ($event->getProviderIdentifier() === 'confVars') {
-            if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['solrUsername'])
-                && !str_contains($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['solrUsername'], '%env(')
-            ) {
-                $options['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['solrUsername'] = '***';
-            }
-            if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['solrPassword'])
-                && !str_contains($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['solrPassword'], '%env(')
-            ) {
-                $options['TYPO3_CONF_VARS']['EXTENSIONS']['tika']['solrPassword'] = '***';
+            foreach (['tikaServerUsername', 'tikaServerPassword'] as $fieldName) {
+                if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika'][$fieldName])
+                    && !str_contains($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tika'][$fieldName], '%env(')
+                ) {
+                    $options['TYPO3_CONF_VARS']['EXTENSIONS']['tika'][$fieldName] = '***';
+                }
             }
         }
 
@@ -47,7 +44,7 @@ class BlindedSecrets
      * Renders a single secret/credentials input field in BE -> Settings -> Extension Configuration -> tika
      * dependent on configured/saved value.
      * * \<input ... type="password"> for simple string, which masks the password in browser
-     * * \<input ... type="text"> for values %env(SOME_SOLR_CREDENTIAL)%, which prints the value as is
+     * * \<input ... type="text"> for values %env(SOME_TIKA_CREDENTIAL)%, which prints the value as is
      *
      * @noinspection PhpUnused
      */
