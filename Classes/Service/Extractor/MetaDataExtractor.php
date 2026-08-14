@@ -110,7 +110,7 @@ class MetaDataExtractor extends AbstractExtractor
 
         foreach ($metaData as $key => $value) {
             if (is_array($value)) {
-                $value = implode(', ', $value);
+                $value = implode(', ', array_unique($value));
             }
 
             if (empty($value)) {
