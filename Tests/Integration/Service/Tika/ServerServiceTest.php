@@ -123,6 +123,10 @@ class ServerServiceTest extends ServiceIntegrationTestCase
             'tikaServerScheme' => getenv($envVarNamePrefix . 'SERVER_SCHEME') ?: 'http',
             'tikaServerHost' => getenv($envVarNamePrefix . 'SERVER_HOST') ?: 'localhost',
             'tikaServerPort' => getenv($envVarNamePrefix . 'SERVER_PORT') ?: '9998',
+            'tikaServerUsername' => '',
+            'tikaServerPassword' => '',
+            'tikaServerConnectTimeoutMs' => 2000,
+            'tikaServerRequestTimeoutMs' => 10000,
         ];
     }
 

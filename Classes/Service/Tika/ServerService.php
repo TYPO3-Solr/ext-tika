@@ -18,8 +18,6 @@ declare(strict_types=1);
 namespace ApacheSolrForTypo3\Tika\Service\Tika;
 
 use GuzzleHttp\Exception\BadResponseException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -58,15 +56,11 @@ class ServerService extends AbstractService
     /**
      * Service initialization
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     *
      * @noinspection PhpUnused
      */
     protected function initializeService(): void
     {
-        /** @noinspection PhpInternalEntityUsedInspection */
-        $this->psr7Client = GeneralUtility::getContainer()->get(ClientInterface::class);
+        $this->psr7Client = GeneralUtility::makeInstance(ClientFactory::class)->getClient($this->configuration);
 
         // Fallback default configuration is with http protocol
         $this->tikaUri = new Uri(

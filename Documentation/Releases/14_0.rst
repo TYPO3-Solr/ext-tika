@@ -30,6 +30,14 @@ Both extractors already implement :php:`ExtractorInterface`, so TYPO3 14 registe
 *   :php:`extractor = solr` is no longer a valid EXT:tika configuration value.
 *   :php:`apache-solr-for-typo3/solr` is only required as a dev-dependency for tests and tooling, not at runtime anymore.
 
+
+[FEATURE] Basic-Auth and timeouts for Tika Server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Server extractor now supports HTTP Basic-Auth (:php:`tikaServerUsername`/:php:`tikaServerPassword`, both masked) and configurable connect/request timeouts (:php:`tikaServerConnectTimeoutMs`/:php:`tikaServerRequestTimeoutMs`, `100`-`60000` ms).
+Any other Guzzle client option (verify, proxy, cert, ...) can be set via :php:`tikaServerGuzzleOptions` in :file:`config/system/additional.php`.
+See :ref:`Configuration of Tika Server <configuration-tika-server>` for details.
+
 All changes since 13.1.0:
 -------------------------
 
