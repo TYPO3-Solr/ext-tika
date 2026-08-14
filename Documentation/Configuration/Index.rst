@@ -39,6 +39,25 @@ App - variant (not recommended)
 So for example the App requires Java Runtime to exec and spawn a new java process for each processed file,
 but no network traffic for send files via wire.
 
+..  _configuration-skip-security-checks:
+
+Skip Security Checks
+====================
+
+Disables EXT:tika's built-in security gate that blocks extraction when the connected Tika version is known to be vulnerable.
+Defaults to *off* and should stay off.
+
+..  warning::
+
+    Enabling :php:`skipSecurityChecks` re-exposes your installation to the known vulnerabilities the gate protects against, in particular:
+
+    * `CVE-2025-54988 <https://tika.apache.org/security.html>`_ (Apache Tika)
+
+    Only turn it on as a temporary measure when you cannot update Apache Tika (v. 3.2.3+) yet,
+    and you fully understand and accept the risk. Prefer updating the underlying service, over skipping the check.
+
+    Untrusted documents processed while this is enabled may be able to exploit the extraction backend.
+
 Enable Logging
 ==============
 
