@@ -2,10 +2,10 @@
 /.editorconfig export-ignore
 /.gitattributes export-ignore
 /.github export-ignore
+/.gitignore export-ignore
 /.styleci.yml export-ignore
 # Do not add Build/Helpers, it is used by composer.json
 /Build/Test/ export-ignore
-/Build/generate_documentation.sh export-ignore
 /CONTRIBUTING.md export-ignore
 /Dockerfile export-ignore
 /Tests/ export-ignore
