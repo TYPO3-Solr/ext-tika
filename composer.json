@@ -118,7 +118,8 @@
     "tests:env": [
       "if [ -z ${TYPO3_VERSION+x} ]; then >&2 echo \"Can not proceed, because env var TYPO3_VERSION is not set\"; exit 1; else echo \"Setup test environment for TYPO3 ${TYPO3_VERSION}\"; fi",
       "if [ -z ${TIKA_PATH+x} ]; then echo \"Can not proceed, because env var TIKA_PATH is not set\"; exit 1; fi",
-      "if echo $TYPO3_VERSION | grep -q \"dev\"; then $COMPOSER_BINARY config minimum-stability dev; fi"
+      "if echo $TYPO3_VERSION | grep -q \"dev\"; then $COMPOSER_BINARY config minimum-stability dev; fi",
+      "Build/Helpers/MATCHING_EXT_SOLR_UPSTREAM_BRANCH.sh"
     ],
     "tests:setup:global-require": [
       "echo \"Install global composer dependencies.\"",
@@ -127,7 +128,7 @@
     "tests:setup": [
       "# @todo: Abort if composer.json has not staged/commited changes on composer.json, to avoid losing necessery changes.",
       "@tests:env",
-      "@composer req --update-with-all-dependencies typo3/cms-core:${TYPO3_VERSION}",
+      "@composer req --update-with-all-dependencies typo3/cms-core:\"${TYPO3_VERSION}\"",
       "cp .Build/vendor/apache-solr-for-typo3/solr/.php-cs-fixer.php .",
       "@tests:restore-git",
       "if [ ! -f \"${TIKA_PATH}/tika-app-$($COMPOSER_BINARY tika:req:tika).jar\" ]; then $COMPOSER_BINARY tika:download -- -D \"${TIKA_PATH}\" -C -a; fi"
