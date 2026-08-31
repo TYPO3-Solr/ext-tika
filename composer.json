@@ -82,6 +82,8 @@
     "tests:lint-php": "Lints the PHP files.",
     "tests:lint-xml": "Lints the XML/XLF files.",
     "tests:phpstan": "Runs PHPStan analys",
+    "tests:known-tests": "Checks that no test case was lost",
+    "tests:known-tests:update": "Re-records the known test cases, after a justified removal",
     "tests:restore-git": "[Internal script], which is used after tests:setup to restore the composer.json.",
     "tests:setup": "Installs composer dependencies, required for tests.",
     "tests:unit": "Runs unit tests",
@@ -133,6 +135,14 @@
     "tests:integration": [ "phpunit --colors -c Build/Test/IntegrationTests.xml" ],
     "tests:phpstan": [
       "COMPOSER_VENDOR_DIR=$($COMPOSER_BINARY config vendor-dir) phpstan analyze -c Build/Test/phpstan.neon"
+    ],
+    "tests:known-tests": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php .Build/vendor/apache-solr-for-typo3/solr/Build/Test/known-tests.php"
+    ],
+    "tests:known-tests:update": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php .Build/vendor/apache-solr-for-typo3/solr/Build/Test/known-tests.php --update"
     ],
     "t3:standards:check": [
       "php-cs-fixer check --diff"

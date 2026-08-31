@@ -133,6 +133,12 @@ jobs:
         run: |
           composer tests:phpstan
       -
+        name: 'No test case lost'
+        id: 'known-tests'
+        if: ${{ always() }}
+        run: |
+          composer tests:known-tests
+      -
         name: 'Unit tests'
         id: 'unit-tests'
         if: ${{ always() }}
