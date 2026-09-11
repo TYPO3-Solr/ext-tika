@@ -6,7 +6,7 @@
 # cat=general//10; type=options[Tika App=jar,Tika Server=server,Solr Server=solr]; label=Extractor: Choose a service to use for extraction.
 extractor = server
 
-# cat=general//20; type=boolean; label=Skip Security Checks
+# cat=general//20; type=boolean; label=Skip Security Checks: SECURITY RISK. Disables the vulnerable-version gate (CVE-2025-54988 / CVE-2025-66516). Only enable temporarily if you cannot update Tika 3.2.3+ / Solr 9.10.1+. Keep off in production.
 skipSecurityChecks = 0
 
 # cat=general//21; type=boolean; label=Enable Logging
