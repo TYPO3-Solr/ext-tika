@@ -61,7 +61,10 @@ class BlindedSecrets
             $inputType = 'text';
         }
 
+        $fieldName = htmlspecialchars((string)$params['fieldName'], ENT_QUOTES);
+        $value = htmlspecialchars((string)$currentConfigValue, ENT_QUOTES);
+
         return /* @lang HTML */
-            "<input class='form-control' id='em-tika-{$params['fieldName']}' type='$inputType' name='{$params['fieldName']}' value='$currentConfigValue'>";
+            "<input class='form-control' id='em-tika-{$fieldName}' type='$inputType' name='{$fieldName}' value='$value'>";
     }
 }

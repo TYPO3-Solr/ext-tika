@@ -277,36 +277,50 @@ class TikaStatus implements StatusProviderInterface
             if (!is_null($extractedContent) && !empty($extractedMetadata)) {
                 $solrCellConfigurationOk = true;
             } elseif ($response instanceof ResponseAdapter) {
+                // Response data originates from an external Solr server and must be
+                // escaped before being rendered into the backend reports view.
+                $httpStatus = htmlspecialchars(
+                    $response->getHttpStatus() . ' ' . $response->getHttpStatusMessage(),
+                    ENT_QUOTES,
+                );
+                $responseBody = htmlspecialchars((string)$response->getRawResponse(), ENT_QUOTES);
                 $additionalErrorInfos /* @lang HTML */
                 = "
                 <table class='table table-condensed table-hover table-striped'>
                     <tbody>
                         <tr class='warning'>
-                            <th>Status:</th><td>{$response->getHttpStatus()} {$response->getHttpStatusMessage()}</td>
+                            <th>Status:</th><td>{$httpStatus}</td>
                         </tr>
                         <tr class='warning'>
                             <th>Response body:</th>
-                            <td>{$response->getRawResponse()}</td>
+                            <td>{$responseBody}</td>
                         </tr>
                     </tbody>
                 </table>
                 ";
             }
         } catch (Throwable $e) {
+            // Exception messages/traces can carry external server response data.
+            $exceptionSummary = htmlspecialchars(
+                'Exception: "' . $e->getMessage() . '" with code ' . $e->getCode()
+                . ' in ' . $e->getFile() . ' line ' . $e->getLine(),
+                ENT_QUOTES,
+            );
+            $exceptionTrace = htmlspecialchars($e->getTraceAsString(), ENT_QUOTES);
             $additionalErrorInfos /* @lang HTML */
                 = "
                 <div class='panel panel-default'>
                     <div class='panel-heading'>
                         <h3 class='panel-title'>
                             <a href='#panel-reports-status-tika-solr-cell' data-bs-toggle='collapse' class='collapsed' aria-expanded='false'>
-                                Exception: \"{$e->getMessage()}\" with code {$e->getCode()} in {$e->getFile()} line {$e->getLine()}
+                                {$exceptionSummary}
                             </a>
                         </h3>
                     </div>
 
                     <div id='panel-reports-status-tika-solr-cell' class='panel-collapse collapse'>
                         <div class='panel-body'>
-                            {$e->getTraceAsString()}
+                            {$exceptionTrace}
                         </div>
                     </div>
                 </div>
