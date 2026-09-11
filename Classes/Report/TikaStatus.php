@@ -124,20 +124,27 @@ class TikaStatus implements StatusProviderInterface
             }
 
         } catch (Throwable $e) {
+            // Exception messages/traces can carry external server response data.
+            $exceptionSummary = htmlspecialchars(
+                'Exception: "' . $e->getMessage() . '" with code ' . $e->getCode()
+                . ' in ' . $e->getFile() . ' line ' . $e->getLine(),
+                ENT_QUOTES,
+            );
+            $exceptionTrace = htmlspecialchars($e->getTraceAsString(), ENT_QUOTES);
             $additionalErrorInfos = /* @lang HTML */
                 "
                 <div class='panel panel-default'>
                     <div class='panel-heading'>
                         <h3 class='panel-title'>
                             <a href='#panel-reports-status-tika-exceptions' data-bs-toggle='collapse' class='collapsed' aria-expanded='false'>
-                                Exception: \"{$e->getMessage()}\" with code {$e->getCode()} in {$e->getFile()} line {$e->getLine()}
+                                {$exceptionSummary}
                             </a>
                         </h3>
                     </div>
 
                     <div id='panel-reports-status-tika-exceptions' class='panel-collapse collapse'>
                         <div class='panel-body'>
-                            {$e->getTraceAsString()}
+                            {$exceptionTrace}
                         </div>
                     </div>
                 </div>
