@@ -2,11 +2,11 @@ name: build
 
 on:
   push:
-    branches: [ 'main', 'release-12.1.x' ]
+    branches: [ 'release-12.1.x' ]
     tags:
       - "**"
   pull_request:
-    branches: [ 'main', 'release-12.1.x' ]
+    branches: [ 'release-12.1.x' ]
 
 env:
   CI_BUILD_DIRECTORY: '/home/runner/work/ext-tika/ext-tika/.Build'
@@ -18,6 +18,9 @@ env:
   SOLR_VOLUME_NAME: 'solrci-volume'
   SOLR_VOLUME_PATH: '/home/runner/work/ext-tika/ext-tika/.Build/data-solr'
 
+  COMPOSER_NO_AUDIT: 1
+  COMPOSER_NO_BLOCKING: 1
+
 jobs:
   test-docs:
     name: Test docs
@@ -27,14 +30,14 @@ jobs:
       -
         name: Checkout current state of Pull Request
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2
           ref: ${{ github.event.pull_request.head.sha }}
       -
         name: Checkout current state of Branch
         if: github.event_name == 'push'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2
       # End: Workaround for issue with actions/checkout@v4 wrong PR commit checkout
@@ -49,7 +52,7 @@ jobs:
     strategy:
       matrix:
         PHP: [ '8.1', '8.2', '8.3', '8.4' ]
-        TYPO3: [ '^12.4', '12.4.x-dev' ]
+        TYPO3: [ '^12.4' ]
     env:
       TYPO3_DATABASE_NAME: 'typo3_ci'
       TYPO3_DATABASE_HOST: '127.0.0.1'
@@ -63,21 +66,21 @@ jobs:
       -
         name: Checkout current state of Pull Request
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2
           ref: ${{ github.event.pull_request.head.sha }}
       -
         name: Checkout current state of Branch
         if: github.event_name == 'push'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2
       # End: Workaround for issue with actions/checkout@v4 wrong PR commit checkout
       -
         name: Cache Apache Tika Binaries
         id: tika-binaries
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: $TIKA_PATH
           key: tika-binaries
@@ -135,7 +138,7 @@ jobs:
     steps:
       -
         name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       -
@@ -147,17 +150,21 @@ jobs:
       -
         name: Get version
         id: get-version
-        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+        run: echo "version=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_OUTPUT"
       -
         name: Get comment
         id: get-comment
         run: |
-          readonly local comment=$(git tag -n99 -l ${{ steps.get-version.outputs.version }} | sed "s/^[0-9.]*[ ]*//g")
+          comment=$(git tag -n99 -l ${{ steps.get-version.outputs.version }} | sed "s/^[0-9.]*[ ]*//g")
           if [[ -z "${comment// }" ]]; then
-            echo ::set-output name=comment::Released version ${{ steps.get-version.outputs.version }} of EXT:tika
-          else
-            echo ::set-output name=comment::$comment
+            comment="Released version ${{ steps.get-version.outputs.version }} of EXT:tika"
           fi
+          # Annotated tags may carry a multi-line message, so use the delimiter form.
+          {
+            echo "comment<<TAG_COMMENT_EOF"
+            echo "$comment"
+            echo "TAG_COMMENT_EOF"
+          } >> "$GITHUB_OUTPUT"
       -
         name: Setup PHP
         uses: shivammathur/setup-php@v2
