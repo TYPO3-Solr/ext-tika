@@ -133,7 +133,7 @@
     "tests:unit": [ "phpunit --colors -c Build/Test/UnitTests.xml" ],
     "tests:integration": [ "phpunit --colors -c Build/Test/IntegrationTests.xml" ],
     "tests:phpstan": [
-      "COMPOSER_VENDOR_DIR=$($COMPOSER_BINARY config vendor-dir) phpstan analyze -c Build/Test/phpstan.neon"
+      "phpstan analyze -c Build/Test/phpstan.neon"
     ],
     "t3:standards:check": [
       "php-cs-fixer check --diff"
