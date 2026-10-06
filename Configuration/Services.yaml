@@ -13,6 +13,9 @@ services:
     public: true
     autowire: true
 
+  ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor:
+    autowire: true
+
   ApacheSolrForTypo3\Tika\Lowlevel\EventListener\BlindedSecrets:
     tags:
       - name: event.listener
